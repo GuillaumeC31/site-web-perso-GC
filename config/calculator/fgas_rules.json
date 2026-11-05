@@ -1,0 +1,108 @@
+{
+    "_comment": "Interdictions du règlement (UE) 2024/573 appliquées par la chambre froide : mise sur le marché (placing, annexe IV, règles R1 à R4 de docs/CHAMBRE_FROIDE_V2.md, section 1.1) et entretien (servicing, article 13, règles S1 et S2, section 1.2). Données initiales, chargées par app:calculator:load-reference-data (n'ajoute que les codes manquants). verified = false : non affichées sur le site tant que la règle n'est pas cochée « Vérifiée » dans l'admin, après lecture du texte officiel. Types : self_contained (groupe autonome), split (groupe de condensation à distance), centralised (centrale multipostes). Seuils de charge de l'article 13 (minChargeTonnes) : à relever dans le texte (null en attendant).",
+    "rules": [
+        {
+            "code": "R1",
+            "kind": "placing",
+            "equipment": "Équipement de réfrigération fixe",
+            "types": [
+                "self_contained",
+                "split",
+                "centralised"
+            ],
+            "minCapacityKw": null,
+            "gwp": 2500,
+            "since": "2020-01-01",
+            "exception": "Applications refroidissant des produits en dessous de −50 °C",
+            "article": "art. 11, paragraphe 1 (à confirmer)",
+            "annexPoint": "annexe IV, point à confirmer (repris du règlement (UE) n° 517/2014)",
+            "source": "Synthèses secondaires consultées le 23/10/2026 (refrigerants.net, egolog.ro, projetcelsius.com) ; à confirmer sur le texte consolidé (EUR-Lex)",
+            "minChargeTonnes": null
+        },
+        {
+            "code": "R2",
+            "kind": "placing",
+            "equipment": "Centrale multipostes à usage commercial, puissance nominale ≥ 40 kW",
+            "types": [
+                "centralised"
+            ],
+            "minCapacityKw": 40,
+            "gwp": 150,
+            "since": "2022-01-01",
+            "exception": "Circuit primaire d'une cascade : PRG < 1 500 admis",
+            "article": "art. 11, paragraphe 1 (à confirmer)",
+            "annexPoint": "annexe IV, point à confirmer (repris du règlement (UE) n° 517/2014)",
+            "source": "Synthèses secondaires consultées le 23/10/2026 (refrigerants.net, egolog.ro, projetcelsius.com) ; à confirmer sur le texte consolidé (EUR-Lex)",
+            "minChargeTonnes": null
+        },
+        {
+            "code": "R3",
+            "kind": "placing",
+            "equipment": "Réfrigération autonome (groupe autonome, monobloc), hors refroidisseurs de liquide",
+            "types": [
+                "self_contained"
+            ],
+            "minCapacityKw": null,
+            "gwp": 150,
+            "since": "2025-01-01",
+            "exception": "Sauf si nécessaire pour les exigences de sécurité du site",
+            "article": "art. 11, paragraphe 1 (à confirmer)",
+            "annexPoint": "annexe IV, point à confirmer",
+            "source": "Synthèses secondaires consultées le 23/10/2026 (refrigerants.net, egolog.ro, projetcelsius.com) ; à confirmer sur le texte consolidé (EUR-Lex)",
+            "minChargeTonnes": null
+        },
+        {
+            "code": "R4",
+            "kind": "placing",
+            "equipment": "Autre réfrigération fixe (split, groupe de condensation à distance…), hors refroidisseurs et catégories déjà citées",
+            "types": [
+                "split",
+                "centralised"
+            ],
+            "minCapacityKw": null,
+            "gwp": 150,
+            "since": "2030-01-01",
+            "exception": "Sauf si nécessaire pour les exigences de sécurité du site",
+            "article": "art. 11, paragraphe 1 (à confirmer)",
+            "annexPoint": "annexe IV, point à confirmer",
+            "source": "Synthèses secondaires consultées le 23/10/2026 (refrigerants.net, egolog.ro, projetcelsius.com) ; à confirmer sur le texte consolidé (EUR-Lex)",
+            "minChargeTonnes": null
+        },
+        {
+            "code": "S1",
+            "kind": "servicing",
+            "equipment": "Équipement de réfrigération",
+            "types": [
+                "self_contained",
+                "split",
+                "centralised"
+            ],
+            "minCapacityKw": null,
+            "gwp": 2500,
+            "since": "2025-01-01",
+            "exception": "Gaz régénérés ou recyclés (jusqu'en 2030, à confirmer)",
+            "article": "art. 13 (à confirmer)",
+            "annexPoint": null,
+            "source": "Synthèses secondaires consultées le 23/10/2026 (refrigerants.net, egolog.ro, projetcelsius.com) ; à confirmer sur le texte consolidé (EUR-Lex)",
+            "minChargeTonnes": null
+        },
+        {
+            "code": "S2",
+            "kind": "servicing",
+            "equipment": "Réfrigération fixe, hors refroidisseurs",
+            "types": [
+                "self_contained",
+                "split",
+                "centralised"
+            ],
+            "minCapacityKw": null,
+            "gwp": 750,
+            "since": "2032-01-01",
+            "exception": "Exceptions de l'article 13 (gaz régénérés ou recyclés, à confirmer)",
+            "article": "art. 13 (à confirmer)",
+            "annexPoint": null,
+            "source": "Synthèses secondaires consultées le 23/10/2026 (refrigerants.net, egolog.ro, projetcelsius.com) ; à confirmer sur le texte consolidé (EUR-Lex)",
+            "minChargeTonnes": null
+        }
+    ]
+}

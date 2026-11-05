@@ -1,0 +1,225 @@
+{
+  "_comment": "Cas de référence de la chambre froide v2, produits par scripts/calculator/cold_room_hand_check.py --write (contre-calcul indépendant). Ne pas modifier à la main.",
+  "cases": {
+    "default": {
+      "lines": {
+        "walls": {
+          "watts": 438.257637,
+          "kwhDay": 10.518183
+        },
+        "doorTransmission": {
+          "watts": 60.5268,
+          "kwhDay": 1.452643
+        },
+        "doorHeaters": {
+          "watts": 162.4,
+          "kwhDay": 3.8976
+        },
+        "infiltration": {
+          "watts": 219.066676,
+          "kwhDay": 5.2576
+        },
+        "antiFreeze": {
+          "watts": 5.4,
+          "kwhDay": 0.1296
+        },
+        "defrost": {
+          "watts": 46.518108,
+          "kwhDay": 1.116435
+        },
+        "drain": {
+          "watts": 0.666667,
+          "kwhDay": 0.016
+        },
+        "reliefValve": {
+          "watts": 20.0,
+          "kwhDay": 0.48
+        },
+        "lighting": {
+          "watts": 48.0,
+          "kwhDay": 1.152
+        },
+        "fans": {
+          "watts": 75.0,
+          "kwhDay": 1.8
+        },
+        "products": {
+          "watts": 65.972222,
+          "kwhDay": 0.791667
+        }
+      },
+      "totalW": 1141.80811,
+      "kwhDay": 26.611728,
+      "frigoKw": 1.67465189,
+      "cop": 1.56644366
+    },
+    "case1": {
+      "lines": {
+        "walls": {
+          "watts": 583.970744,
+          "kwhDay": 14.015298
+        },
+        "doorTransmission": {
+          "watts": 39.0852,
+          "kwhDay": 0.938045
+        },
+        "infiltration": {
+          "watts": 49.680918,
+          "kwhDay": 1.192342
+        },
+        "lighting": {
+          "watts": 83.333333,
+          "kwhDay": 2.0
+        },
+        "people": {
+          "watts": 20.5,
+          "kwhDay": 0.492
+        },
+        "fans": {
+          "watts": 120.0,
+          "kwhDay": 2.88
+        },
+        "respiration": {
+          "watts": 128.0,
+          "kwhDay": 3.072
+        },
+        "defrost": {
+          "watts": 0.0,
+          "kwhDay": 0.0
+        },
+        "products": {
+          "watts": 1527.777778,
+          "kwhDay": 12.222222
+        },
+        "packaging": {
+          "watts": 51.944444,
+          "kwhDay": 0.415556
+        }
+      },
+      "totalW": 2604.292418,
+      "kwhDay": 37.227462,
+      "frigoKw": 4.29708249,
+      "cop": 2.47178571
+    },
+    "case2": {
+      "lines": {
+        "walls": {
+          "watts": 708.338754,
+          "kwhDay": 17.00013
+        },
+        "doorTransmission": {
+          "watts": 150.74,
+          "kwhDay": 3.61776
+        },
+        "doorHeaters": {
+          "watts": 453.6,
+          "kwhDay": 10.8864
+        },
+        "infiltration": {
+          "watts": 311.656116,
+          "kwhDay": 7.479747
+        },
+        "antiFreeze": {
+          "watts": 13.5,
+          "kwhDay": 0.324
+        },
+        "drain": {
+          "watts": 1.166667,
+          "kwhDay": 0.028
+        },
+        "reliefValve": {
+          "watts": 20.0,
+          "kwhDay": 0.48
+        },
+        "lighting": {
+          "watts": 80.0,
+          "kwhDay": 1.92
+        },
+        "people": {
+          "watts": 65.0,
+          "kwhDay": 1.56
+        },
+        "fans": {
+          "watts": 132.627942,
+          "kwhDay": 3.183071
+        },
+        "defrost": {
+          "watts": 104.166667,
+          "kwhDay": 2.5
+        },
+        "products": {
+          "watts": 219.907407,
+          "kwhDay": 2.638889
+        }
+      },
+      "totalW": 2260.703553,
+      "kwhDay": 51.617996,
+      "frigoKw": 3.31569854,
+      "cop": 1.51119863
+    },
+    "case3": {
+      "lines": {
+        "walls": {
+          "watts": 434.875367,
+          "kwhDay": 10.437009
+        },
+        "glazing": {
+          "watts": 40.0,
+          "kwhDay": 0.96
+        },
+        "glazingHeaters": {
+          "watts": 42.0,
+          "kwhDay": 1.008
+        },
+        "doorTransmission": {
+          "watts": 70.38,
+          "kwhDay": 1.68912
+        },
+        "doorHeaters": {
+          "watts": 162.4,
+          "kwhDay": 3.8976
+        },
+        "infiltration": {
+          "watts": 171.553206,
+          "kwhDay": 4.117277
+        },
+        "antiFreeze": {
+          "watts": 7.2,
+          "kwhDay": 0.1728
+        },
+        "drain": {
+          "watts": 0.666667,
+          "kwhDay": 0.016
+        },
+        "reliefValve": {
+          "watts": 20.0,
+          "kwhDay": 0.48
+        },
+        "lighting": {
+          "watts": 25.0,
+          "kwhDay": 0.6
+        },
+        "fans": {
+          "watts": 150.0,
+          "kwhDay": 3.6
+        },
+        "defrost": {
+          "watts": 55.555556,
+          "kwhDay": 1.333333
+        },
+        "products": {
+          "watts": 1826.071429,
+          "kwhDay": 25.565
+        },
+        "packaging": {
+          "watts": 13.75,
+          "kwhDay": 0.1925
+        }
+      },
+      "totalW": 3019.452224,
+      "kwhDay": 54.068639,
+      "frigoKw": 4.42852993,
+      "cop": 1.38548077
+    }
+  }
+}

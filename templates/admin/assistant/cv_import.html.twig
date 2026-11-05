@@ -1,0 +1,74 @@
+{#
+  Écran : import de CV par l'IA (lecture seule) : envoi d'un PDF ou d'un texte, données personnelles
+  retirées avant l'envoi, aperçu des expériences, formations, compétences et langues extraites.
+  Rien n'est enregistré : le contenu du site se gère par la synchronisation des textes et l'admin.
+  Affiché par : Admin\AssistantController::cvImport() (route admin_assistant_cv_import).
+  Variables attendues :
+    - result : null, ou CvImportAnalyzer::analyze() (experiences, educations, skills, languages, removed, model, tokens)
+    - error  : message d'erreur, ou null
+#}
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}{{ 'admin.assistant.cv_import.title'|trans }}{% endblock %}
+
+{% block body %}
+    <p class="mb-4"><a href="{{ path('admin_assistant_index') }}" class="link">← {{ 'admin.assistant.title'|trans }}</a></p>
+    <h1 class="text-2xl font-bold dark:text-white">{{ 'admin.assistant.cv_import.title'|trans }}</h1>
+    <p class="form-help mb-6">{{ 'admin.assistant.cv_import.intro'|trans }}</p>
+
+    {% if error %}<twig:Alert type="danger" class="mb-6">{{ error }}</twig:Alert>{% endif %}
+
+    <twig:Card class="mb-6">
+        <form method="post" enctype="multipart/form-data" class="space-y-4">
+            <input type="hidden" name="_token" value="{{ csrf_token('admin_assistant_cv_import') }}">
+            <div>
+                <label for="cv_file" class="form-label">{{ 'admin.assistant.cv_import.file'|trans }}</label>
+                <input type="file" id="cv_file" name="cv_file" accept="application/pdf" class="form-input">
+            </div>
+            <div>
+                <label for="cv_text" class="form-label">{{ 'admin.assistant.cv_import.text'|trans }}</label>
+                <textarea id="cv_text" name="cv_text" rows="8" class="form-input w-full"></textarea>
+                <p class="form-help">{{ 'admin.assistant.cv_import.help'|trans }}</p>
+            </div>
+            <twig:Button type="submit">{{ 'admin.assistant.cv_import.submit'|trans }}</twig:Button>
+        </form>
+    </twig:Card>
+
+    {% if result %}
+        <twig:Alert type="info" class="mb-6">
+            {{ 'admin.assistant.cv_import.read_only'|trans({'%model%': result.model, '%tokens%': result.tokens|format_number}) }}
+            {% if result.removed is not empty %} {{ 'admin.assistant.cv_import.removed'|trans({'%types%': result.removed|join(', ')}) }}{% endif %}
+        </twig:Alert>
+        <div class="grid gap-6 lg:grid-cols-2">
+            <twig:Card title="{{ 'admin.assistant.cv_import.experiences'|trans }}" class="lg:col-span-2">
+                <ul class="space-y-3 text-sm">
+                    {% for xp in result.experiences %}
+                        <li><span class="font-semibold">{{ xp.job_title }}</span>{% if xp.company %} · {{ xp.company }}{% endif %}{% if xp.location %} ({{ xp.location }}){% endif %}
+                            <span class="text-secondary-600 dark:text-secondary-400">{{ xp.start }} – {{ xp.end ?: 'admin.assistant.cv_import.ongoing'|trans }}</span>
+                            {% if xp.summary %}<br>{{ xp.summary }}{% endif %}</li>
+                    {% else %}
+                        <li>{{ 'admin.crud.empty'|trans }}</li>
+                    {% endfor %}
+                </ul>
+            </twig:Card>
+            <twig:Card title="{{ 'admin.assistant.cv_import.educations'|trans }}">
+                <ul class="space-y-1 text-sm">
+                    {% for education in result.educations %}
+                        <li>{{ education.year }} — {{ education.title }}{% if education.institution %} ({{ education.institution }}){% endif %}</li>
+                    {% else %}
+                        <li>{{ 'admin.crud.empty'|trans }}</li>
+                    {% endfor %}
+                </ul>
+            </twig:Card>
+            <twig:Card title="{{ 'admin.assistant.cv_import.skills'|trans }}">
+                <p class="text-sm">{{ result.skills is empty ? 'admin.crud.empty'|trans : result.skills|join(' · ') }}</p>
+                {% if result.languages is not empty %}
+                    <h3 class="mt-4 text-sm font-semibold">{{ 'admin.assistant.cv_import.languages'|trans }}</h3>
+                    <ul class="mt-1 text-sm">
+                        {% for language in result.languages %}<li>{{ language.name }}{% if language.level %} : {{ language.level }}{% endif %}</li>{% endfor %}
+                    </ul>
+                {% endif %}
+            </twig:Card>
+        </div>
+    {% endif %}
+{% endblock %}

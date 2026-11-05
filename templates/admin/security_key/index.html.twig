@@ -1,0 +1,60 @@
+{#
+  Écran : clés de sécurité YubiKey du compte.
+  Affiché par : Admin\SecurityKeyController::index() (route admin_security_key_index, /{ADMIN_PATH}/securite/mes-cles).
+  Variables attendues :
+    - credentials : liste de WebauthnCredential du compte (la plus récente d'abord)
+  La dernière clé ne peut pas être retirée (secours : commande app:admin:reset-webauthn).
+  Encadré « Appareils de confiance » : révocation de tous les cookies du lien vers l'admin
+  (route admin_security_key_revoke_trusted_devices, Security\TrustedDeviceCookie).
+#}
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}{{ 'admin.security_key.title'|trans }}{% endblock %}
+
+{% block body %}
+    <div class="mb-6 flex flex-wrap items-center justify-between gap-4">
+        <div>
+            <h1 class="text-2xl font-bold dark:text-white">{{ 'admin.security_key.title'|trans }}</h1>
+            <p class="form-help">{{ 'admin.security_key.intro'|trans }}</p>
+        </div>
+        <twig:Button href="{{ path('admin_second_factor_enroll') }}" data-turbo="false">{{ 'admin.security_key.add'|trans }}</twig:Button>
+    </div>
+
+    {% if credentials|length < 2 %}
+        <twig:Alert type="warning" class="mb-6">{{ 'admin.security_key.backup_advice'|trans }}</twig:Alert>
+    {% endif %}
+
+    <div class="grid gap-4 md:grid-cols-2">
+        {% for credential in credentials %}
+            <twig:Card title="{{ credential.label ?: 'YubiKey' }}">
+                <dl class="space-y-1 text-sm text-secondary-700 dark:text-secondary-300">
+                    <div><dt class="inline font-medium">{{ 'admin.security_key.created_at'|trans }} :</dt> <dd class="inline">{{ credential.createdAt|format_datetime('medium', 'short') }}</dd></div>
+                    <div><dt class="inline font-medium">{{ 'admin.security_key.last_used_at'|trans }} :</dt> <dd class="inline">{{ credential.lastUsedAt ? credential.lastUsedAt|format_datetime('medium', 'short') : 'admin.security_key.never_used'|trans }}</dd></div>
+                </dl>
+                {% if credentials|length > 1 %}
+                    {% import '_partials/_confirm.html.twig' as confirmation %}
+                    <form method="post" action="{{ path('admin_security_key_delete', {id: credential.id}) }}" class="mt-4"
+                          {{ confirmation.attributes('admin.security_key.delete_confirm'|trans({'%name%': credential.label}), '', 'admin.crud.delete'|trans, true) }}>
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete_security_key_' ~ credential.id) }}">
+                        {{ confirmation.field() }}
+                        <twig:Button type="submit" variant="danger" size="sm">{{ 'admin.crud.delete'|trans }}</twig:Button>
+                    </form>
+                {% endif %}
+            </twig:Card>
+        {% endfor %}
+    </div>
+
+    <section class="mt-8" aria-labelledby="trusted-devices-title">
+        <twig:Card>
+            <h2 id="trusted-devices-title" class="text-lg font-semibold dark:text-white">{{ 'admin.security_key.trusted_devices.title'|trans }}</h2>
+            <p class="form-help mt-1">{{ 'admin.security_key.trusted_devices.intro'|trans }}</p>
+            {% import '_partials/_confirm.html.twig' as confirmation %}
+            <form method="post" action="{{ path('admin_security_key_revoke_trusted_devices') }}" class="mt-4"
+                  {{ confirmation.attributes('admin.security_key.trusted_devices.revoke_confirm'|trans, '', 'admin.security_key.trusted_devices.revoke'|trans, true) }}>
+                <input type="hidden" name="_token" value="{{ csrf_token('revoke_trusted_devices') }}">
+                {{ confirmation.field() }}
+                <twig:Button type="submit" variant="danger" size="sm" data-testid="revoke-trusted-devices">{{ 'admin.security_key.trusted_devices.revoke'|trans }}</twig:Button>
+            </form>
+        </twig:Card>
+    </section>
+{% endblock %}

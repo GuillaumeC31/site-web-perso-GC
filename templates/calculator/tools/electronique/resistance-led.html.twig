@@ -1,0 +1,32 @@
+{#
+  Outil : résistance série d'une LED (valeur théorique, série E24, puissance dissipée).
+  Inclus par : calculator/tool.html.twig. Contrôleur : calculator--resistance-led.
+  Tensions de LED et courant par défaut (20 mA) repris de l'ancien site ; corrections B1 (conseil de
+  puissance avec une marge de 2) et B2 (E24 affichée avec ses décimales) : docs/CALCULATRICE_ANOMALIES.md.
+#}
+{% import 'calculator/_macros.html.twig' as calc %}
+{% set c = 'calculator--resistance-led' %}
+{% set input = 'input->' ~ c ~ '#calculate' %}
+
+<div data-controller="{{ c }}" class="space-y-6">
+    {% set fields %}
+        {{ calc.field('led-supply', 'Alimentation', 'V', {('data-' ~ c ~ '-target'): 'supply', 'data-action': input}, null, 'ex. 5') }}
+        {{ calc.select('led-color', 'Couleur de la LED', {'': 'Choisir…', '1.8': 'Rouge (1,8 V)', '2.0': 'Jaune (2,0 V)', '2.1': 'Verte (2,1 V)', '3.2': 'Bleue ou blanche (3,2 V)', custom: 'Personnalisée'}, {('data-' ~ c ~ '-target'): 'color', 'data-action': 'change->' ~ c ~ '#chooseColor'}) }}
+        {{ calc.field('led-voltage', 'Tension de la LED', 'V', {('data-' ~ c ~ '-target'): 'led', 'data-action': input}, null, 'ex. 2,2') }}
+        {{ calc.field('led-current', 'Courant de la LED', 'mA', {('data-' ~ c ~ '-target'): 'current', 'data-action': input}, '20') }}
+        {{ calc.message({('data-' ~ c ~ '-target'): 'message'}) }}
+    {% endset %}
+    {{ calc.block('Résistance de protection', 'R = (V alim − V LED) / I LED', fields) }}
+
+    {% set fields %}
+        {{ calc.result('led-r', 'Résistance théorique', 'Ω', {('data-' ~ c ~ '-target'): 'resistance'}, 'led-supply led-voltage led-current') }}
+        <div>
+            <span id="led-e24-label" class="form-label">Valeur normalisée E24 (supérieure)</span>
+            <output id="led-e24" aria-labelledby="led-e24-label" aria-live="polite" class="flex min-h-[2.625rem] items-center rounded-lg border border-primary-200 bg-primary-50 px-3 py-2 font-mono text-lg font-bold text-primary-800 dark:border-primary-800 dark:bg-primary-950/50 dark:text-primary-200"
+                    data-{{ c }}-target="e24">—</output>
+        </div>
+        {{ calc.result('led-p', 'Puissance dissipée', 'W', {('data-' ~ c ~ '-target'): 'power'}, 'led-supply led-voltage led-current') }}
+        {{ calc.note({('data-' ~ c ~ '-target'): 'advice'}, 'Puissance conseillée : valeur normalisée ≥ 2 × la puissance dissipée.') }}
+    {% endset %}
+    {{ calc.block('Résultats', null, fields) }}
+</div>

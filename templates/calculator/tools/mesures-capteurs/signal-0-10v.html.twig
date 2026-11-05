@@ -1,0 +1,5 @@
+{#
+  Outil : Mise à l'échelle 0-10 V. Inclus par : calculator/tool.html.twig.
+  Gabarit : _scaling.html.twig (contrôleur calculator--scaling). Textes, plages et valeurs repris de l'ancien site.
+#}
+{{ include('calculator/tools/mesures-capteurs/_scaling.html.twig', {signal_min: 0, signal_max: 10, signal_unit: 'V', intro: 'Tension analogique : 0 V = bas de plage, 10 V = pleine échelle (automate, variateur, entrée analogique).', default_signal: '5', default_physical: '50', output_types: false, physical_unit: null, presets: [{label: 'Pression 0–10 bar', min: 0, max: 10, unit: 'bar'}, {label: 'Température −50/150 °C', min: -50, max: 150, unit: '°C'}, {label: 'Niveau 0–100 %', min: 0, max: 100, unit: '%'}]}, with_context = false) }}

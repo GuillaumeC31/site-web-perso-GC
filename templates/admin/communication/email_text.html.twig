@@ -1,0 +1,83 @@
+{#
+  Communication › E-mails › Contenu d'un e-mail : objet, phrase d'introduction et signature modifiables (texte simple,
+  variables {nom}, {entreprise}, {delai}), aperçu HTML et texte AVANT d'enregistrer, « Rétablir le texte d'origine »,
+  historique des modifications. Structure, liens de connexion, boutons et mentions obligatoires restent fixes.
+  Affiché par : Admin\CommunicationController::emailText() (route admin_communication_email_text).
+  Variables attendues :
+    - tab, type (EmailType), form (EmailTextType), modified (textes modifiés ?), variables (liste des variables)
+    - preview   : {subject, html, text} (données d'exemple, aucun envoi) ou null
+    - revisions : derniers EmailTextRevision
+  L'aperçu HTML est affiché dans un cadre isolé (sandbox, sans script) : le contenu saisi y est échappé.
+#}
+{% extends 'admin/communication/_layout.html.twig' %}
+{% import 'admin/communication/_macros.html.twig' as ui %}
+{% import '_partials/_confirm.html.twig' as confirmation %}
+
+{% block tab_content %}
+    <p class="mb-4 text-sm"><a href="{{ path('admin_communication_emails') }}#contenu" class="link">{{ 'admin.communication.back_to_emails'|trans }}</a></p>
+    <h2 class="mb-1 text-xl font-semibold dark:text-white">{{ type.translationKey|trans }}</h2>
+    <p class="mb-4 text-sm">
+        <twig:Badge tone="{{ modified ? 'primary' : 'neutral' }}">{{ (modified ? 'admin.communication.text_modified' : 'admin.communication.text_original')|trans }}</twig:Badge>
+        {% if type.isForUnvalidatedRequest %}<span class="ml-2">{{ 'admin.communication.text_no_reply'|trans }}</span>{% elseif type.isForValidatedRecruiter %}<span class="ml-2">{{ 'admin.communication.text_reply'|trans }}</span>{% endif %}
+    </p>
+    {{ ui.info('email_text') }}
+
+    <div class="grid gap-6 xl:grid-cols-2">
+        <section class="card">
+            <h2 class="mb-3 text-lg font-semibold text-secondary-900 dark:text-white">{{ 'admin.communication.text_form'|trans }}</h2>
+            <p class="form-help mb-4" data-testid="variables">{{ 'admin.communication.variables'|trans({'%variables%': variables|join(', ')}) }}</p>
+            {# Hors de Turbo : l'aperçu répond 200 à l'envoi du formulaire (Turbo n'afficherait pas la page) #}
+            {{ form_start(form, {attr: {novalidate: 'novalidate', 'data-turbo': 'false'}}) }}
+                {{ form_row(form.subject) }}
+                {{ form_row(form.intro) }}
+                {{ form_row(form.signature) }}
+                {{ form_rest(form) }}
+                <div class="mt-4 flex flex-wrap gap-2">
+                    <button type="submit" name="action" value="preview" class="btn btn-secondary">{{ 'admin.communication.preview_button'|trans }}</button>
+                    <button type="submit" name="action" value="save" class="btn btn-primary">{{ 'admin.crud.save'|trans }}</button>
+                </div>
+            {{ form_end(form) }}
+            {% if modified %}
+                <form method="post" action="{{ path('admin_communication_email_text_reset', {type: type.value}) }}" class="mt-4" {{ confirmation.attributes('admin.communication.confirm_reset_title'|trans, 'admin.communication.confirm_reset_text'|trans, 'admin.communication.reset'|trans, true) }}>
+                    <input type="hidden" name="_token" value="{{ csrf_token('email_text_reset') }}">
+                    {{ confirmation.field() }}
+                    <twig:Button type="submit" variant="secondary" size="sm">{{ 'admin.communication.reset'|trans }}</twig:Button>
+                </form>
+            {% endif %}
+        </section>
+
+        <section class="card" id="apercu">
+            <h2 class="mb-3 text-lg font-semibold text-secondary-900 dark:text-white">{{ 'admin.communication.preview'|trans }}</h2>
+            {% if preview %}
+                <p class="mb-2 text-sm"><span class="font-semibold">{{ 'admin.communication.preview_subject'|trans }}</span> <span data-testid="preview-subject">{{ preview.subject }}</span></p>
+                <p class="form-help mb-2">{{ 'admin.communication.preview_help'|trans }}</p>
+                <h3 class="mb-2 text-sm font-semibold dark:text-white">{{ 'admin.communication.preview_html'|trans }}</h3>
+                <iframe srcdoc="{{ preview.html|e('html_attr') }}" sandbox="" title="{{ 'admin.communication.preview_html_frame'|trans }}" class="h-[28rem] w-full rounded-lg border border-secondary-200 bg-white dark:border-secondary-700" data-testid="preview-html"></iframe>
+                <h3 class="mt-4 mb-2 text-sm font-semibold dark:text-white">{{ 'admin.communication.preview_text'|trans }}</h3>
+                <pre class="max-h-80 overflow-auto rounded-lg border border-secondary-200 bg-secondary-50 p-3 text-xs whitespace-pre-wrap text-secondary-900 dark:border-secondary-700 dark:bg-secondary-900 dark:text-secondary-100" data-testid="preview-text" tabindex="0">{{ preview.text }}</pre>
+            {% else %}
+                <p class="text-sm">{{ 'admin.communication.preview_none'|trans }}</p>
+            {% endif %}
+        </section>
+
+        <section class="card xl:col-span-2">
+            <h2 class="mb-3 text-lg font-semibold text-secondary-900 dark:text-white">{{ 'admin.communication.history'|trans }}</h2>
+            {% if revisions is empty %}
+                <p class="text-sm">{{ 'admin.communication.history_empty'|trans }}</p>
+            {% else %}
+                <ul class="space-y-3 text-sm" data-testid="text-history">
+                    {% for revision in revisions %}
+                        <li class="rounded-xl border border-secondary-200 p-3 dark:border-secondary-700">
+                            <p class="font-semibold">{{ revision.savedAt|format_datetime('short', 'short') }} · {{ ('admin.communication.history_' ~ revision.action)|trans }}</p>
+                            {% if revision.action == 'saved' %}
+                                <p><span class="font-semibold">{{ 'admin.communication.field.subject'|trans }} :</span> {{ revision.subject ?? 'admin.communication.text_original'|trans }}</p>
+                                <p class="whitespace-pre-line"><span class="font-semibold">{{ 'admin.communication.field.intro'|trans }} :</span> {{ revision.intro ?? 'admin.communication.text_original'|trans }}</p>
+                                <p class="whitespace-pre-line"><span class="font-semibold">{{ 'admin.communication.field.signature'|trans }} :</span> {{ revision.signature ?? 'admin.communication.text_original'|trans }}</p>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </section>
+    </div>
+{% endblock %}

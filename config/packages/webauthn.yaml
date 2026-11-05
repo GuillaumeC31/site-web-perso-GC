@@ -1,0 +1,31 @@
+# Clé de sécurité YubiKey (WebAuthn) pour l'administration.
+#
+# Les contrôleurs automatiques du bundle sont désactivés : les cérémonies passent par
+# App\Controller\Admin\SecurityKeyController, qui applique nos propres règles
+# (lien d'enrôlement, marqueur de session « clé vérifiée », journal).
+#
+# RELYING_PARTY_ID : domaine sans port ni sous-domaine (guillaume-couget.fr en production,
+# localhost en développement). Une clé est liée à ce domaine : jamais un sous-domaine.
+# WEBAUTHN_ORIGIN : origine principale autorisée ; ses sous-domaines le sont aussi.
+webauthn:
+    credential_repository: App\Repository\WebauthnCredentialRepository
+    user_repository: App\Security\WebauthnUserEntityRepository
+    allowed_origins: ['%env(WEBAUTHN_ORIGIN)%']
+    allow_subdomains: true
+    creation_profiles:
+        default:
+            rp:
+                id: '%env(RELYING_PARTY_ID)%'
+                name: '%env(RELYING_PARTY_NAME)%'
+            authenticator_selection_criteria:
+                # YubiKey : clé externe (USB / NFC), pas d'identifiant résident
+                authenticator_attachment: !php/const Webauthn\AuthenticatorSelectionCriteria::AUTHENTICATOR_ATTACHMENT_CROSS_PLATFORM
+                user_verification: !php/const Webauthn\AuthenticatorSelectionCriteria::USER_VERIFICATION_REQUIREMENT_PREFERRED
+                resident_key: !php/const Webauthn\AuthenticatorSelectionCriteria::RESIDENT_KEY_REQUIREMENT_DISCOURAGED
+            attestation_conveyance: none
+            timeout: 120000
+    request_profiles:
+        default:
+            rp_id: '%env(RELYING_PARTY_ID)%'
+            user_verification: !php/const Webauthn\AuthenticatorSelectionCriteria::USER_VERIFICATION_REQUIREMENT_PREFERRED
+            timeout: 120000

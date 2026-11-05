@@ -1,0 +1,1198 @@
+{
+  "source": "ancien site guillaume_c (capture automatique)",
+  "category": "eclairage",
+  "results": [
+    {
+      "tool": "adresse-dmx",
+      "steps": [
+        {
+          "set": {
+            "addressInput": 1
+          }
+        },
+        {
+          "call": "onAddressInput"
+        }
+      ],
+      "outputs": {
+        "addressInput": "1",
+        "@switch:state": "on,off,off,off,off,off,off,off,off,off",
+        "calculationDetails": "1 = 1",
+        "binaryLabel": "0b0000000001"
+      }
+    },
+    {
+      "tool": "adresse-dmx",
+      "steps": [
+        {
+          "set": {
+            "addressInput": 2
+          }
+        },
+        {
+          "call": "onAddressInput"
+        }
+      ],
+      "outputs": {
+        "addressInput": "2",
+        "@switch:state": "off,on,off,off,off,off,off,off,off,off",
+        "calculationDetails": "2 = 2",
+        "binaryLabel": "0b0000000010"
+      }
+    },
+    {
+      "tool": "adresse-dmx",
+      "steps": [
+        {
+          "set": {
+            "addressInput": 10
+          }
+        },
+        {
+          "call": "onAddressInput"
+        }
+      ],
+      "outputs": {
+        "addressInput": "10",
+        "@switch:state": "off,on,off,on,off,off,off,off,off,off",
+        "calculationDetails": "2 + 8 = 10",
+        "binaryLabel": "0b0000001010"
+      }
+    },
+    {
+      "tool": "adresse-dmx",
+      "steps": [
+        {
+          "set": {
+            "addressInput": 33
+          }
+        },
+        {
+          "call": "onAddressInput"
+        }
+      ],
+      "outputs": {
+        "addressInput": "33",
+        "@switch:state": "on,off,off,off,off,on,off,off,off,off",
+        "calculationDetails": "1 + 32 = 33",
+        "binaryLabel": "0b0000100001"
+      }
+    },
+    {
+      "tool": "adresse-dmx",
+      "steps": [
+        {
+          "set": {
+            "addressInput": 100
+          }
+        },
+        {
+          "call": "onAddressInput"
+        }
+      ],
+      "outputs": {
+        "addressInput": "100",
+        "@switch:state": "off,off,on,off,off,on,on,off,off,off",
+        "calculationDetails": "4 + 32 + 64 = 100",
+        "binaryLabel": "0b0001100100"
+      }
+    },
+    {
+      "tool": "adresse-dmx",
+      "steps": [
+        {
+          "set": {
+            "addressInput": 255
+          }
+        },
+        {
+          "call": "onAddressInput"
+        }
+      ],
+      "outputs": {
+        "addressInput": "255",
+        "@switch:state": "on,on,on,on,on,on,on,on,off,off",
+        "calculationDetails": "1 + 2 + 4 + 8 + 16 + 32 + 64 + 128 = 255",
+        "binaryLabel": "0b0011111111"
+      }
+    },
+    {
+      "tool": "adresse-dmx",
+      "steps": [
+        {
+          "set": {
+            "addressInput": 256
+          }
+        },
+        {
+          "call": "onAddressInput"
+        }
+      ],
+      "outputs": {
+        "addressInput": "256",
+        "@switch:state": "off,off,off,off,off,off,off,off,on,off",
+        "calculationDetails": "256 = 256",
+        "binaryLabel": "0b0100000000"
+      }
+    },
+    {
+      "tool": "adresse-dmx",
+      "steps": [
+        {
+          "set": {
+            "addressInput": 511
+          }
+        },
+        {
+          "call": "onAddressInput"
+        }
+      ],
+      "outputs": {
+        "addressInput": "511",
+        "@switch:state": "on,on,on,on,on,on,on,on,on,off",
+        "calculationDetails": "1 + 2 + 4 + 8 + 16 + 32 + 64 + 128 + 256 = 511",
+        "binaryLabel": "0b0111111111"
+      }
+    },
+    {
+      "tool": "adresse-dmx",
+      "steps": [
+        {
+          "set": {
+            "addressInput": 512
+          }
+        },
+        {
+          "call": "onAddressInput"
+        }
+      ],
+      "outputs": {
+        "addressInput": "512",
+        "@switch:state": "off,off,off,off,off,off,off,off,off,on",
+        "calculationDetails": "512 = 512",
+        "binaryLabel": "0b1000000000"
+      }
+    },
+    {
+      "tool": "adresse-dmx",
+      "steps": [
+        {
+          "set": {
+            "addressInput": 513
+          }
+        },
+        {
+          "call": "onAddressInput"
+        }
+      ],
+      "outputs": {
+        "addressInput": "513",
+        "@switch:state": "off,off,off,off,off,off,off,off,off,on",
+        "calculationDetails": "512 = 512",
+        "binaryLabel": "0b1000000000"
+      }
+    },
+    {
+      "tool": "adresse-dmx",
+      "steps": [
+        {
+          "set": {
+            "addressInput": 0
+          }
+        },
+        {
+          "call": "onAddressInput"
+        }
+      ],
+      "outputs": {
+        "addressInput": "0",
+        "@switch:state": "off,off,off,off,off,off,off,off,off,off",
+        "calculationDetails": "0 (Toutes positions OFF)",
+        "binaryLabel": "0b0000000000"
+      }
+    },
+    {
+      "tool": "adresse-dmx",
+      "steps": [
+        {
+          "set": {
+            "addressInput": -5
+          }
+        },
+        {
+          "call": "onAddressInput"
+        }
+      ],
+      "outputs": {
+        "addressInput": "-5",
+        "@switch:state": "off,off,off,off,off,off,off,off,off,off",
+        "calculationDetails": "0 (Toutes positions OFF)",
+        "binaryLabel": "0b0000000000"
+      }
+    },
+    {
+      "tool": "adresse-dmx",
+      "steps": [
+        {
+          "set": {
+            "addressInput": ""
+          }
+        },
+        {
+          "call": "onAddressInput"
+        }
+      ],
+      "outputs": {
+        "addressInput": "",
+        "@switch:state": "off,off,off,off,off,off,off,off,off,off",
+        "calculationDetails": "0 (Toutes positions OFF)",
+        "binaryLabel": "0b0000000000"
+      }
+    },
+    {
+      "tool": "adresse-dmx",
+      "steps": [
+        {
+          "set": {
+            "addressInput": 7
+          }
+        },
+        {
+          "call": "onAddressInput"
+        },
+        {
+          "call": "toggleSwitch",
+          "event": "switch",
+          "eventIndex": 3
+        }
+      ],
+      "outputs": {
+        "addressInput": "15",
+        "@switch:state": "on,on,on,on,off,off,off,off,off,off",
+        "calculationDetails": "1 + 2 + 4 + 8 = 15",
+        "binaryLabel": "0b0000001111"
+      }
+    },
+    {
+      "tool": "adresse-dmx",
+      "steps": [
+        {
+          "set": {
+            "addressInput": 1
+          }
+        },
+        {
+          "call": "onAddressInput"
+        },
+        {
+          "call": "toggleSwitch",
+          "event": "switch",
+          "eventIndex": 0
+        }
+      ],
+      "outputs": {
+        "addressInput": "0",
+        "@switch:state": "off,off,off,off,off,off,off,off,off,off",
+        "calculationDetails": "0 (Toutes positions OFF)",
+        "binaryLabel": "0b0000000000"
+      }
+    },
+    {
+      "tool": "adresse-dmx",
+      "steps": [
+        {
+          "set": {
+            "addressInput": 512
+          }
+        },
+        {
+          "call": "onAddressInput"
+        },
+        {
+          "call": "toggleSwitch",
+          "event": "switch",
+          "eventIndex": 0
+        }
+      ],
+      "outputs": {
+        "addressInput": "512",
+        "@switch:state": "on,off,off,off,off,off,off,off,off,on",
+        "calculationDetails": "512 = 512",
+        "binaryLabel": "0b1000000000"
+      }
+    },
+    {
+      "tool": "adresse-dmx",
+      "steps": [
+        {
+          "set": {
+            "addressInput": 511
+          }
+        },
+        {
+          "call": "onAddressInput"
+        },
+        {
+          "call": "toggleSwitch",
+          "event": "switch",
+          "eventIndex": 9
+        }
+      ],
+      "outputs": {
+        "addressInput": "512",
+        "@switch:state": "on,on,on,on,on,on,on,on,on,on",
+        "calculationDetails": "512 = 512",
+        "binaryLabel": "0b1000000000"
+      }
+    },
+    {
+      "tool": "adresse-dmx",
+      "steps": [
+        {
+          "set": {
+            "addressInput": 41
+          }
+        },
+        {
+          "call": "increment"
+        }
+      ],
+      "outputs": {
+        "addressInput": "42",
+        "@switch:state": "off,on,off,on,off,on,off,off,off,off",
+        "calculationDetails": "2 + 8 + 32 = 42",
+        "binaryLabel": "0b0000101010"
+      }
+    },
+    {
+      "tool": "adresse-dmx",
+      "steps": [
+        {
+          "set": {
+            "addressInput": 512
+          }
+        },
+        {
+          "call": "increment"
+        }
+      ],
+      "outputs": {
+        "addressInput": "512",
+        "@switch:state": "off,off,off,off,off,off,off,off,off,off",
+        "calculationDetails": "",
+        "binaryLabel": ""
+      }
+    },
+    {
+      "tool": "adresse-dmx",
+      "steps": [
+        {
+          "set": {
+            "addressInput": 41
+          }
+        },
+        {
+          "call": "decrement"
+        }
+      ],
+      "outputs": {
+        "addressInput": "40",
+        "@switch:state": "off,off,off,on,off,on,off,off,off,off",
+        "calculationDetails": "8 + 32 = 40",
+        "binaryLabel": "0b0000101000"
+      }
+    },
+    {
+      "tool": "adresse-dmx",
+      "steps": [
+        {
+          "set": {
+            "addressInput": 1
+          }
+        },
+        {
+          "call": "decrement"
+        }
+      ],
+      "outputs": {
+        "addressInput": "1",
+        "@switch:state": "off,off,off,off,off,off,off,off,off,off",
+        "calculationDetails": "",
+        "binaryLabel": ""
+      }
+    },
+    {
+      "tool": "vieillissement-uv",
+      "steps": [
+        {
+          "call": "calcDose"
+        }
+      ],
+      "outputs": {
+        "resDoseKj": "3204",
+        "resDoseMj": "Soit 3.2 MJ/m²"
+      }
+    },
+    {
+      "tool": "vieillissement-uv",
+      "steps": [
+        {
+          "set": {
+            "irradianceToDose": 0.71,
+            "hoursToDose": 500
+          }
+        },
+        {
+          "call": "calcDose"
+        }
+      ],
+      "outputs": {
+        "resDoseKj": "1278",
+        "resDoseMj": "Soit 1.28 MJ/m²"
+      }
+    },
+    {
+      "tool": "vieillissement-uv",
+      "steps": [
+        {
+          "set": {
+            "irradianceToDose": 1.55,
+            "hoursToDose": 2000
+          }
+        },
+        {
+          "call": "calcDose"
+        }
+      ],
+      "outputs": {
+        "resDoseKj": "11160",
+        "resDoseMj": "Soit 11.16 MJ/m²"
+      }
+    },
+    {
+      "tool": "vieillissement-uv",
+      "steps": [
+        {
+          "set": {
+            "irradianceToDose": -0.89
+          }
+        },
+        {
+          "call": "calcDose"
+        }
+      ],
+      "outputs": {
+        "resDoseKj": "-3204",
+        "resDoseMj": "Soit -3.2 MJ/m²"
+      }
+    },
+    {
+      "tool": "vieillissement-uv",
+      "steps": [
+        {
+          "call": "calcTime"
+        }
+      ],
+      "outputs": {
+        "resTimeHours": "1000",
+        "resTimeDays": "Soit 41.7 jours (sans cycle)"
+      }
+    },
+    {
+      "tool": "vieillissement-uv",
+      "steps": [
+        {
+          "set": {
+            "targetDose": 5000,
+            "irradianceToTime": 0.71
+          }
+        },
+        {
+          "call": "calcTime"
+        }
+      ],
+      "outputs": {
+        "resTimeHours": "1956.2",
+        "resTimeDays": "Soit 81.5 jours (sans cycle)"
+      }
+    },
+    {
+      "tool": "vieillissement-uv",
+      "steps": [
+        {
+          "set": {
+            "targetDose": 1000,
+            "irradianceToTime": 1.2
+          }
+        },
+        {
+          "call": "calcTime"
+        }
+      ],
+      "outputs": {
+        "resTimeHours": "231.5",
+        "resTimeDays": "Soit 9.6 jours (sans cycle)"
+      }
+    },
+    {
+      "tool": "vieillissement-uv",
+      "steps": [
+        {
+          "set": {
+            "irradianceToTime": 0
+          }
+        },
+        {
+          "call": "calcTime"
+        }
+      ],
+      "outputs": {
+        "resTimeHours": "0",
+        "resTimeDays": "Soit 0 jours (sans cycle)"
+      }
+    },
+    {
+      "tool": "vieillissement-uv",
+      "steps": [
+        {
+          "call": "calcCycles"
+        }
+      ],
+      "outputs": {
+        "resMachineHours": "1500 Heures",
+        "resMachineDays": "Soit 62.5 jours"
+      }
+    },
+    {
+      "tool": "vieillissement-uv",
+      "steps": [
+        {
+          "set": {
+            "cycleUvHours": 4,
+            "cycleDarkHours": 4,
+            "cycleTargetUv": 500
+          }
+        },
+        {
+          "call": "calcCycles"
+        }
+      ],
+      "outputs": {
+        "resMachineHours": "1000 Heures",
+        "resMachineDays": "Soit 41.7 jours"
+      }
+    },
+    {
+      "tool": "vieillissement-uv",
+      "steps": [
+        {
+          "set": {
+            "cycleUvHours": 102,
+            "cycleDarkHours": 18,
+            "cycleTargetUv": 2000
+          }
+        },
+        {
+          "call": "calcCycles"
+        }
+      ],
+      "outputs": {
+        "resMachineHours": "2352.9 Heures",
+        "resMachineDays": "Soit 98 jours"
+      }
+    },
+    {
+      "tool": "vieillissement-uv",
+      "steps": [
+        {
+          "set": {
+            "cycleUvHours": 0
+          }
+        },
+        {
+          "call": "calcCycles"
+        }
+      ],
+      "outputs": {
+        "resMachineHours": "0 Heures",
+        "resMachineDays": "Soit 0 jours"
+      }
+    },
+    {
+      "tool": "vieillissement-uv",
+      "steps": [
+        {
+          "set": {
+            "cycleDarkHours": -4
+          }
+        },
+        {
+          "call": "calcCycles"
+        }
+      ],
+      "outputs": {
+        "resMachineHours": "500 Heures",
+        "resMachineDays": "Soit 20.8 jours"
+      }
+    },
+    {
+      "tool": "eclairage-phyto",
+      "steps": [
+        {
+          "set": {
+            "reqPlant": "high",
+            "reqStage": "production"
+          }
+        },
+        {
+          "call": "calcReq"
+        }
+      ],
+      "outputs": {
+        "resReqPpfd": "800",
+        "resReqPpfdRange": "500–900",
+        "resReqDli": "34.6",
+        "resReqPpf": "960",
+        "resReqWatts": "384 W",
+        "resReqPpeNote": "2.5"
+      }
+    },
+    {
+      "tool": "eclairage-phyto",
+      "steps": [
+        {
+          "set": {
+            "reqPlant": "low",
+            "reqStage": "seedling"
+          }
+        },
+        {
+          "call": "calcReq"
+        }
+      ],
+      "outputs": {
+        "resReqPpfd": "100",
+        "resReqPpfdRange": "100–250",
+        "resReqDli": "4.3",
+        "resReqPpf": "120",
+        "resReqWatts": "48 W",
+        "resReqPpeNote": "2.5"
+      }
+    },
+    {
+      "tool": "eclairage-phyto",
+      "steps": [
+        {
+          "set": {
+            "reqPlant": "medium",
+            "reqStage": "vegetative"
+          }
+        },
+        {
+          "call": "calcReq"
+        }
+      ],
+      "outputs": {
+        "resReqPpfd": "400",
+        "resReqPpfdRange": "250–500",
+        "resReqDli": "17.3",
+        "resReqPpf": "480",
+        "resReqWatts": "192 W",
+        "resReqPpeNote": "2.5"
+      }
+    },
+    {
+      "tool": "eclairage-phyto",
+      "steps": [
+        {
+          "set": {
+            "reqPlant": "ultra",
+            "reqStage": "production"
+          }
+        },
+        {
+          "call": "calcReq"
+        }
+      ],
+      "outputs": {
+        "resReqPpfd": "1200",
+        "resReqPpfdRange": "900–1500",
+        "resReqDli": "51.8",
+        "resReqPpf": "1440",
+        "resReqWatts": "576 W",
+        "resReqPpeNote": "2.5"
+      }
+    },
+    {
+      "tool": "eclairage-phyto",
+      "steps": [
+        {
+          "set": {
+            "reqPlant": "high",
+            "reqStage": "seedling"
+          }
+        },
+        {
+          "call": "calcReq"
+        }
+      ],
+      "outputs": {
+        "resReqPpfd": "350",
+        "resReqPpfdRange": "500–900",
+        "resReqDli": "15.1",
+        "resReqPpf": "420",
+        "resReqWatts": "168 W",
+        "resReqPpeNote": "2.5"
+      }
+    },
+    {
+      "tool": "eclairage-phyto",
+      "steps": [
+        {
+          "set": {
+            "reqArea": 2.4,
+            "reqHours": 16,
+            "reqLoss": "10",
+            "reqPpe": 3.1
+          }
+        },
+        {
+          "call": "calcReq"
+        }
+      ],
+      "outputs": {
+        "resReqPpfd": "800",
+        "resReqDli": "46.1",
+        "resReqPpf": "2112",
+        "resReqWatts": "681 W",
+        "resReqPpeNote": "3.1"
+      }
+    },
+    {
+      "tool": "eclairage-phyto",
+      "steps": [
+        {
+          "set": {
+            "reqHours": 30,
+            "reqLoss": "0"
+          }
+        },
+        {
+          "call": "calcReq"
+        }
+      ],
+      "outputs": {
+        "resReqDli": "69.1",
+        "resReqPpf": "800",
+        "resReqWatts": "320 W"
+      }
+    },
+    {
+      "tool": "eclairage-phyto",
+      "steps": [
+        {
+          "set": {
+            "reqArea": -1
+          }
+        },
+        {
+          "call": "calcReq"
+        }
+      ],
+      "outputs": {
+        "resReqPpf": "0",
+        "resReqWatts": "0 W"
+      }
+    },
+    {
+      "tool": "eclairage-phyto",
+      "steps": [
+        {
+          "set": {
+            "reqPpe": 0
+          }
+        },
+        {
+          "call": "calcReq"
+        }
+      ],
+      "outputs": {
+        "resReqWatts": "384 W",
+        "resReqPpeNote": "2.5"
+      }
+    },
+    {
+      "tool": "eclairage-phyto",
+      "steps": [
+        {
+          "call": "calcArch"
+        }
+      ],
+      "outputs": {
+        "resArchUV": "0",
+        "resArchBlue": "16",
+        "resArchCold": "19",
+        "resArchGreen": "15",
+        "resArchWarm": "20",
+        "resArchRed": "33",
+        "resArchIR": "17",
+        "resArchTotal": "120",
+        "resArchWatts": "264 W",
+        "archSum": "100",
+        "!archError": "masqué"
+      }
+    },
+    {
+      "tool": "eclairage-phyto",
+      "steps": [
+        {
+          "set": {
+            "archPpf": 960,
+            "archLedWatts": 3
+          }
+        },
+        {
+          "call": "calcArch"
+        }
+      ],
+      "outputs": {
+        "resArchUV": "0",
+        "resArchBlue": "14",
+        "resArchCold": "17",
+        "resArchGreen": "13",
+        "resArchWarm": "18",
+        "resArchRed": "29",
+        "resArchIR": "15",
+        "resArchTotal": "106",
+        "resArchWatts": "316 W",
+        "archSum": "100",
+        "!archError": "masqué"
+      }
+    },
+    {
+      "tool": "eclairage-phyto",
+      "steps": [
+        {
+          "set": {
+            "archPpf": 1500,
+            "archSUV": 5,
+            "archSBlue": 20,
+            "archSCold": 10,
+            "archSGreen": 5,
+            "archSWarm": 10,
+            "archSRed": 40,
+            "archSIR": 10
+          }
+        },
+        {
+          "call": "calcArch"
+        }
+      ],
+      "outputs": {
+        "resArchUV": "17",
+        "resArchBlue": "39",
+        "resArchCold": "24",
+        "resArchGreen": "14",
+        "resArchWarm": "25",
+        "resArchRed": "72",
+        "resArchIR": "31",
+        "resArchTotal": "222",
+        "resArchWatts": "488 W",
+        "archSum": "100",
+        "!archError": "masqué"
+      }
+    },
+    {
+      "tool": "eclairage-phyto",
+      "steps": [
+        {
+          "set": {
+            "archSUV": 0,
+            "archSBlue": 50,
+            "archSCold": 0,
+            "archSGreen": 0,
+            "archSWarm": 0,
+            "archSRed": 50,
+            "archSIR": 0
+          }
+        },
+        {
+          "call": "calcArch"
+        }
+      ],
+      "outputs": {
+        "resArchUV": "0",
+        "resArchBlue": "52",
+        "resArchCold": "0",
+        "resArchGreen": "0",
+        "resArchWarm": "0",
+        "resArchRed": "48",
+        "resArchIR": "0",
+        "resArchTotal": "100",
+        "resArchWatts": "220 W",
+        "archSum": "100",
+        "!archError": "masqué"
+      }
+    },
+    {
+      "tool": "eclairage-phyto",
+      "steps": [
+        {
+          "set": {
+            "archSUV": 0,
+            "archSBlue": 20,
+            "archSCold": 20,
+            "archSGreen": 10,
+            "archSWarm": 15,
+            "archSRed": 35,
+            "archSIR": 10
+          }
+        },
+        {
+          "call": "calcArch"
+        }
+      ],
+      "outputs": {
+        "resArchUV": "0",
+        "resArchBlue": "16",
+        "resArchCold": "19",
+        "resArchGreen": "15",
+        "resArchWarm": "20",
+        "resArchRed": "33",
+        "resArchIR": "17",
+        "resArchTotal": "120",
+        "resArchWatts": "264 W",
+        "archSum": "110",
+        "!archError": "visible"
+      }
+    },
+    {
+      "tool": "eclairage-phyto",
+      "steps": [
+        {
+          "set": {
+            "archSRed": 50
+          }
+        },
+        {
+          "call": "balanceSliders",
+          "event": "archSRed"
+        }
+      ],
+      "outputs": {
+        "resArchUV": "0",
+        "resArchBlue": "10",
+        "resArchCold": "16",
+        "resArchGreen": "12",
+        "resArchWarm": "16",
+        "resArchRed": "48",
+        "resArchIR": "13",
+        "resArchTotal": "115",
+        "resArchWatts": "253 W",
+        "archSum": "100",
+        "!archError": "masqué",
+        "archSUV": "0",
+        "archSBlue": "10",
+        "archSCold": "12",
+        "archSGreen": "8",
+        "archSWarm": "12",
+        "archSRed": "50",
+        "archSIR": "8"
+      }
+    },
+    {
+      "tool": "eclairage-phyto",
+      "steps": [
+        {
+          "set": {
+            "archSUV": 0,
+            "archSBlue": 0,
+            "archSCold": 0,
+            "archSGreen": 0,
+            "archSWarm": 0,
+            "archSRed": 0,
+            "archSIR": 0
+          }
+        },
+        {
+          "set": {
+            "archSBlue": 30
+          }
+        },
+        {
+          "call": "balanceSliders",
+          "event": "archSBlue"
+        }
+      ],
+      "outputs": {
+        "resArchUV": "22",
+        "resArchBlue": "31",
+        "resArchCold": "16",
+        "resArchGreen": "17",
+        "resArchWarm": "16",
+        "resArchRed": "11",
+        "resArchIR": "18",
+        "resArchTotal": "131",
+        "resArchWatts": "288 W",
+        "archSum": "100",
+        "!archError": "masqué",
+        "archSUV": "12",
+        "archSBlue": "30",
+        "archSCold": "12",
+        "archSGreen": "12",
+        "archSWarm": "12",
+        "archSRed": "11",
+        "archSIR": "11"
+      }
+    },
+    {
+      "tool": "eclairage-phyto",
+      "steps": [
+        {
+          "set": {
+            "simBlue": 20,
+            "simRed": 60,
+            "simCold": 10
+          }
+        },
+        {
+          "call": "calcSim"
+        }
+      ],
+      "outputs": {
+        "resSimPpf": "495",
+        "resSimWatts": "198 W",
+        "!simSafetyWarning": "masqué"
+      }
+    },
+    {
+      "tool": "eclairage-phyto",
+      "steps": [
+        {
+          "set": {
+            "simUV": 4,
+            "simBlue": 30,
+            "simRed": 80,
+            "simIR": 6,
+            "simPPE": 2.8,
+            "simLedWatts": 3
+          }
+        },
+        {
+          "call": "calcSim"
+        }
+      ],
+      "outputs": {
+        "resSimPpf": "1008",
+        "resSimWatts": "360 W",
+        "!simSafetyWarning": "visible"
+      }
+    },
+    {
+      "tool": "eclairage-phyto",
+      "steps": [
+        {
+          "set": {
+            "simRed": -10
+          }
+        },
+        {
+          "call": "calcSim"
+        }
+      ],
+      "outputs": {
+        "resSimPpf": "-55",
+        "resSimWatts": "-22 W",
+        "!simSafetyWarning": "masqué"
+      }
+    },
+    {
+      "tool": "eclairage-phyto",
+      "steps": [
+        {
+          "call": "calcDli1"
+        }
+      ],
+      "outputs": {
+        "resDli1": "25.9"
+      }
+    },
+    {
+      "tool": "eclairage-phyto",
+      "steps": [
+        {
+          "set": {
+            "dliPpfdInput": 350,
+            "dliHoursInput": 18
+          }
+        },
+        {
+          "call": "calcDli1"
+        }
+      ],
+      "outputs": {
+        "resDli1": "22.7"
+      }
+    },
+    {
+      "tool": "eclairage-phyto",
+      "steps": [
+        {
+          "set": {
+            "dliHoursInput": 30
+          }
+        },
+        {
+          "call": "calcDli1"
+        }
+      ],
+      "outputs": {
+        "resDli1": "51.8"
+      }
+    },
+    {
+      "tool": "eclairage-phyto",
+      "steps": [
+        {
+          "call": "calcDli2"
+        }
+      ],
+      "outputs": {
+        "resDli2": "13.9"
+      }
+    },
+    {
+      "tool": "eclairage-phyto",
+      "steps": [
+        {
+          "set": {
+            "dliTargetInput": 17,
+            "dliPpfdInput2": 250
+          }
+        },
+        {
+          "call": "calcDli2"
+        }
+      ],
+      "outputs": {
+        "resDli2": "18.9"
+      }
+    },
+    {
+      "tool": "eclairage-phyto",
+      "steps": [
+        {
+          "set": {
+            "dliPpfdInput2": 0
+          }
+        },
+        {
+          "call": "calcDli2"
+        }
+      ],
+      "outputs": {
+        "resDli2": "—"
+      }
+    }
+  ]
+}

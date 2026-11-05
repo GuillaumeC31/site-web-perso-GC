@@ -1,0 +1,5 @@
+{#
+  Outil : sonde PT1000 (1000 Ω à 0 °C). Inclus par : calculator/tool.html.twig.
+  Gabarit : _pt-sensor.html.twig (contrôleur calculator--pt-sensor). Texte repris de l'ancien site.
+#}
+{{ include('calculator/tools/mesures-capteurs/_pt-sensor.html.twig', {r0: 1000, label: 'PT1000', default_resistance: '1000,00', intro: 'Une sonde PT1000 a une résistance de 1000 Ω à 0 °C. Idéale pour les câbles longs ou une meilleure résolution.'}, with_context = false) }}

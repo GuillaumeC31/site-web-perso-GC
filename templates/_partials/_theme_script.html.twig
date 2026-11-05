@@ -1,0 +1,17 @@
+{#
+  Script en ligne qui applique le mode sombre avant l'affichage (évite le flash blanc).
+  Inclus par : base.html.twig, admin/base.html.twig (dans <head>).
+  Même règle que assets/lib/theme.js (resolveTheme) : choix enregistré, sinon préférence système.
+  Pose aussi la classe « js » (JavaScript actif) : les messages confiés au contrôleur « notify » sont
+  masqués d'emblée (assets/styles/app.css, « Fenêtres et messages »).
+  Le nonce CSP est obligatoire ; data-turbo-eval="false" évite de le rejouer à chaque navigation Turbo.
+#}
+<script nonce="{{ csp_nonce() }}" data-turbo-eval="false">
+    (function () {
+        var stored = null;
+        try { stored = localStorage.getItem('theme'); } catch (e) {}
+        var isDark = stored === 'dark' || (stored !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        document.documentElement.classList.toggle('dark', isDark);
+        document.documentElement.classList.add('js');
+    })();
+</script>

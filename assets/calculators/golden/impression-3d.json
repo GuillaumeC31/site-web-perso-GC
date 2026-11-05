@@ -1,0 +1,212 @@
+{
+  "source": "ancien site guillaume_c (capture automatique)",
+  "category": "impression-3d",
+  "results": [
+    {
+      "tool": "steps-mm",
+      "method": "calculateSteps",
+      "event": null,
+      "inputs": {
+        "oldSteps": 93,
+        "expectedDist": 100,
+        "actualDist": 98.5
+      },
+      "outputs": {
+        "resultSteps": "94.42"
+      }
+    },
+    {
+      "tool": "steps-mm",
+      "method": "calculateSteps",
+      "event": null,
+      "inputs": {
+        "oldSteps": 80,
+        "expectedDist": 100,
+        "actualDist": 100.8
+      },
+      "outputs": {
+        "resultSteps": "79.37"
+      }
+    },
+    {
+      "tool": "steps-mm",
+      "method": "calculateSteps",
+      "event": null,
+      "inputs": {
+        "oldSteps": 415,
+        "expectedDist": 50,
+        "actualDist": 47.2
+      },
+      "outputs": {
+        "resultSteps": "439.62"
+      }
+    },
+    {
+      "tool": "steps-mm",
+      "method": "calculateSteps",
+      "event": null,
+      "inputs": {
+        "oldSteps": 93,
+        "expectedDist": 100,
+        "actualDist": 0
+      },
+      "outputs": {
+        "resultSteps": ""
+      }
+    },
+    {
+      "tool": "steps-mm",
+      "method": "calculateSteps",
+      "event": null,
+      "inputs": {
+        "oldSteps": 93,
+        "expectedDist": 100,
+        "actualDist": -98.5
+      },
+      "outputs": {
+        "resultSteps": "-94.42"
+      }
+    },
+    {
+      "tool": "steps-mm",
+      "method": "calculateSteps",
+      "event": null,
+      "inputs": {
+        "oldSteps": "",
+        "expectedDist": 100,
+        "actualDist": 98.5
+      },
+      "outputs": {
+        "resultSteps": ""
+      }
+    },
+    {
+      "tool": "cout-impression",
+      "method": "calculateCost",
+      "event": null,
+      "inputs": {
+        "weightPart": 150,
+        "priceSpool": 20,
+        "timePrintHours": 4,
+        "timePrintMinutes": 30,
+        "powerPrint": 150,
+        "priceKwh": 0.25
+      },
+      "outputs": {
+        "resultCost": "3.17"
+      }
+    },
+    {
+      "tool": "cout-impression",
+      "method": "calculateCost",
+      "event": null,
+      "inputs": {
+        "weightPart": 42,
+        "priceSpool": 24.9,
+        "timePrintHours": 1,
+        "timePrintMinutes": 45,
+        "powerPrint": 350,
+        "priceKwh": 0.194
+      },
+      "outputs": {
+        "resultCost": "1.16"
+      }
+    },
+    {
+      "tool": "cout-impression",
+      "method": "calculateCost",
+      "event": null,
+      "inputs": {
+        "weightPart": 1000,
+        "priceSpool": 18,
+        "timePrintHours": 36,
+        "timePrintMinutes": "",
+        "powerPrint": 1000,
+        "priceKwh": 0.1568
+      },
+      "outputs": {
+        "resultCost": "23.64"
+      }
+    },
+    {
+      "tool": "cout-impression",
+      "method": "calculateCost",
+      "event": null,
+      "inputs": {
+        "weightPart": 20,
+        "priceSpool": 25,
+        "timePrintHours": "",
+        "timePrintMinutes": 40,
+        "powerPrint": 200,
+        "priceKwh": 0.25
+      },
+      "outputs": {
+        "resultCost": "0.53"
+      }
+    },
+    {
+      "tool": "cout-impression",
+      "method": "calculateCost",
+      "event": null,
+      "inputs": {
+        "weightPart": 150,
+        "priceSpool": 20,
+        "timePrintHours": "",
+        "timePrintMinutes": "",
+        "powerPrint": 150,
+        "priceKwh": 0.25
+      },
+      "outputs": {
+        "resultCost": ""
+      }
+    },
+    {
+      "tool": "cout-impression",
+      "method": "calculateCost",
+      "event": null,
+      "inputs": {
+        "weightPart": -150,
+        "priceSpool": 20,
+        "timePrintHours": 4,
+        "timePrintMinutes": 0,
+        "powerPrint": 150,
+        "priceKwh": 0.25
+      },
+      "outputs": {
+        "resultCost": "-2.85"
+      }
+    },
+    {
+      "tool": "cout-impression",
+      "method": "calculateCost",
+      "event": null,
+      "inputs": {
+        "weightPart": 150,
+        "priceSpool": 20,
+        "timePrintHours": 4,
+        "timePrintMinutes": 75,
+        "powerPrint": 150,
+        "priceKwh": 0.25
+      },
+      "outputs": {
+        "resultCost": "3.20"
+      }
+    },
+    {
+      "tool": "cout-impression",
+      "method": "calculateCost",
+      "event": null,
+      "inputs": {
+        "weightPart": 150,
+        "priceSpool": "",
+        "timePrintHours": 4,
+        "timePrintMinutes": 0,
+        "powerPrint": 150,
+        "priceKwh": 0.25
+      },
+      "outputs": {
+        "resultCost": ""
+      }
+    }
+  ]
+}

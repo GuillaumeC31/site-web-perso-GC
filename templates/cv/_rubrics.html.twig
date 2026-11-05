@@ -1,0 +1,82 @@
+{#
+  Rubriques du bas du CV (pleine largeur), dans l'ordre demandé : outils techniques, expertises, logiciels,
+  savoir-être, langues, formations et certifications, centres d'intérêt.
+  Inclus par : cv/show.html.twig (CV public synthétique : résumés publics, sans centres d'intérêt),
+  recruiter_area/home.html.twig (détail complet).
+  Variables attendues :
+    - sections       : noms des rubriques à afficher, dans l'ordre (tools, expertise, software, soft_skill,
+                       languages, educations, interest) ; une rubrique vide n'est pas affichée
+    - entries        : rubriques « liste » de CvContentProvider (CvEntry, ou {title, content} pour un résumé public)
+    - languages, educations, certifications
+    - heading        : balise des titres de rubrique (« h2 » sur /cv, « h3 » dans l'espace recruteur)
+    - id_prefix      : préfixe des identifiants des titres (« cv », « recruiter-cv »)
+#}
+{% for section in sections %}
+    {% set heading_id = id_prefix ~ '-' ~ section|replace({'_': '-'}) %}
+    {% if section in ['tools', 'expertise', 'software', 'interest'] and entries[section] is defined %}
+        <section aria-labelledby="{{ heading_id }}">
+            <{{ heading }} id="{{ heading_id }}" class="cv-heading">{{ ('cv.section.' ~ section)|trans }}</{{ heading }}>
+            {# Logiciels : liste de noms, jamais justifiée #}
+            {{ include('cv/_entries.html.twig', {entries: entries[section], justify: section != 'software'}, with_context = false) }}
+        </section>
+    {% elseif section == 'soft_skill' and entries.soft_skill is defined %}
+        <section aria-labelledby="{{ heading_id }}">
+            <{{ heading }} id="{{ heading_id }}" class="cv-heading">{{ 'cv.section.soft_skill'|trans }}</{{ heading }}>
+            <ul class="grid gap-4 sm:grid-cols-3">
+                {% for entry in entries.soft_skill %}
+                    <li class="card p-5 text-sm">
+                        {% if entry.title %}<p class="font-semibold text-secondary-900 dark:text-white">{{ entry.title }}</p>{% endif %}
+                        <p class="mt-1 text-secondary-600 dark:text-secondary-300">{{ entry.content|capitalize_first|cv_bold }}</p>
+                    </li>
+                {% endfor %}
+            </ul>
+        </section>
+    {% elseif section == 'languages' and languages is not empty %}
+        <section aria-labelledby="{{ heading_id }}">
+            <{{ heading }} id="{{ heading_id }}" class="cv-heading">{{ 'cv.section.languages'|trans }}</{{ heading }}>
+            <ul class="grid gap-x-6 gap-y-2 text-sm sm:grid-cols-2">
+                {% for language in languages %}
+                    <li><span class="font-semibold text-secondary-900 dark:text-white">{{ language.name }}</span> <span class="text-secondary-600 dark:text-secondary-400">— {{ language.proficiency }}</span></li>
+                {% endfor %}
+            </ul>
+        </section>
+    {% elseif section == 'educations' and (educations is not empty or certifications is not empty) %}
+        <section aria-labelledby="{{ heading_id }}">
+            <{{ heading }} id="{{ heading_id }}" class="cv-heading">{{ 'cv.section.educations'|trans }}</{{ heading }}>
+            {% set sub = heading == 'h2' ? 'h3' : 'h4' %}
+            {# Deux listes, chacune de la plus récente à la plus ancienne (CvContentProvider, correction de recette n° 3) #}
+            {% if educations is not empty %}
+                <{{ sub }} class="mb-2 text-sm font-semibold text-secondary-900 dark:text-white">{{ 'cv.section.diplomas'|trans }}</{{ sub }}>
+                <ol class="divide-y divide-secondary-100 dark:divide-secondary-800" data-testid="cv-diplomas">
+                    {% for education in educations %}
+                        <li class="cv-row py-2 first:pt-0">
+                            <p class="cv-date">{{ education.year }}</p>
+                            <div class="min-w-0 text-sm">
+                                <p class="font-semibold text-secondary-900 dark:text-white">{{ education.title }}</p>
+                                {% set where = [education.location, education.institution]|filter(value => value) %}
+                                {% if where is not empty %}<p class="text-secondary-600 dark:text-secondary-400">{{ where|join(' · ') }}</p>{% endif %}
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ol>
+            {% endif %}
+            {% if certifications is not empty %}
+                <{{ sub }} class="mt-6 mb-2 text-sm font-semibold text-secondary-900 dark:text-white">{{ 'cv.section.certifications'|trans }}</{{ sub }}>
+                <ol class="divide-y divide-secondary-100 dark:divide-secondary-800" data-testid="cv-certifications">
+                    {% for certification in certifications %}
+                        <li class="cv-row py-2 first:pt-0">
+                            <p class="cv-date">{{ certification.obtainedOn ? certification.obtainedOn|date('Y') : '' }}</p>
+                            <div class="min-w-0 text-sm">
+                                <p class="font-semibold text-secondary-900 dark:text-white">{{ certification.name }}</p>
+                                <p class="text-secondary-600 dark:text-secondary-400">
+                                    {%- if certification.issuer %}{{ certification.issuer }}{% endif -%}
+                                    {%- if certification.expiresOn %} · {{ (certification.expired ? 'cv.certification.expired' : 'cv.certification.valid_until')|trans({'%date%': certification.expiresOn|format_date(pattern: 'MMMM y')}) }}{% endif -%}
+                                </p>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ol>
+            {% endif %}
+        </section>
+    {% endif %}
+{% endfor %}

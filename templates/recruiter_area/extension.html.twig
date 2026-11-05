@@ -1,0 +1,35 @@
+{#
+  Page : demande de prolongation de l'accès (lien signé de l'e-mail de rappel). Confirmation par un
+  bouton (POST), pour qu'un scanner de liens ne déclenche pas la demande.
+  Affichée par : RecruiterAreaController::extension() (route recruiter_extension).
+  Variables attendues :
+    - recruiter_id   : identifiant du recruteur (jeton CSRF)
+    - signed_url     : lien signé, renvoyé avec le formulaire
+    - done           : vrai une fois la demande enregistrée
+    - expires_at     : échéance de l'accès (ou null)
+    - response_delay : délai de réponse affiché
+#}
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'recruiter_area.extension.title'|trans }} · {{ site_owner_name }}{% endblock %}
+{% block robots %}noindex, nofollow{% endblock %}
+
+{% block body %}
+    <div class="container mx-auto max-w-xl px-4 py-16 lg:py-24">
+        <div class="card">
+            <h1 class="text-2xl font-bold text-secondary-900 dark:text-white">{{ 'recruiter_area.extension.title'|trans }}</h1>
+            {% if done %}
+                <twig:Alert type="success" class="mt-4">{{ 'recruiter_area.extension.done'|trans({'%delay%': response_delay}) }}</twig:Alert>
+            {% else %}
+                <p class="mt-3 text-secondary-700 dark:text-secondary-300">
+                    {{ 'recruiter_area.extension.text'|trans({'%date%': expires_at ? expires_at|format_date('long') : '—'}) }}
+                </p>
+                <form method="post" class="mt-6" data-turbo="false">
+                    <input type="hidden" name="signed_url" value="{{ signed_url }}">
+                    <input type="hidden" name="_token" value="{{ csrf_token('recruiter_extension_' ~ recruiter_id) }}">
+                    <twig:Button type="submit">{{ 'recruiter_area.extension.submit'|trans }}</twig:Button>
+                </form>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,35 @@
+{#
+  Écran : arguments « Pourquoi me recruter » (liste générique) et interrupteur général du bloc de l'accueil.
+  Affiché par : Admin\RecruitmentArgumentController::index() (route admin_recruitment_argument_index,
+  /{ADMIN_PATH}/pourquoi-me-recruter).
+  Variables attendues : celles de admin/crud/index.html.twig, plus
+    - block_enabled : vrai si le bloc est activé (SiteSettings::isRecruitmentBlockEnabled())
+    - visible_count : nombre d'arguments marqués « Afficher »
+  Le bloc n'apparaît sur l'accueil que si block_enabled est vrai ET visible_count > 0.
+#}
+{% extends 'admin/crud/index.html.twig' %}
+
+{% block crud_before_list %}
+    <twig:Card class="mb-6" data-testid="recruitment-block-switch">
+        <div class="flex flex-wrap items-center justify-between gap-4">
+            <div>
+                <p class="font-semibold dark:text-white">
+                    {{ 'admin.recruitment_argument.block_label'|trans }} :
+                    <twig:Badge tone="{{ block_enabled ? 'success' : 'neutral' }}">{{ (block_enabled ? 'admin.recruitment_argument.block_state_on' : 'admin.recruitment_argument.block_state_off')|trans }}</twig:Badge>
+                </p>
+                <p class="form-help">
+                    {% if block_enabled and visible_count > 0 %}
+                        {{ 'admin.recruitment_argument.block_shown'|trans({'%count%': visible_count}) }}
+                    {% else %}
+                        {{ 'admin.recruitment_argument.block_hidden'|trans({'%count%': visible_count}) }}
+                    {% endif %}
+                </p>
+            </div>
+            <form method="post" action="{{ path('admin_recruitment_argument_block') }}" data-turbo-frame="_top">
+                <input type="hidden" name="_token" value="{{ csrf_token('admin_recruitment_argument_block') }}">
+                <input type="hidden" name="enabled" value="{{ block_enabled ? '0' : '1' }}">
+                <twig:Button type="submit" variant="{{ block_enabled ? 'secondary' : 'primary' }}" data-testid="recruitment-block-toggle">{{ (block_enabled ? 'admin.recruitment_argument.block_disable' : 'admin.recruitment_argument.block_enable')|trans }}</twig:Button>
+            </form>
+        </div>
+    </twig:Card>
+{% endblock %}

@@ -1,0 +1,423 @@
+{
+  "source": "ancien site guillaume_c (capture automatique)",
+  "category": "mecanique",
+  "results": [
+    {
+      "tool": "engrenages",
+      "method": "calculateGears",
+      "event": null,
+      "inputs": {
+        "gearZ3": "",
+        "gearZ4": "",
+        "gearEff": 95,
+        "gearZ1": 12,
+        "gearZ2": 48,
+        "gearVin": 3000,
+        "gearCin": 5
+      },
+      "outputs": {
+        "gearRatio": "1 : 4.00",
+        "gearVout": "750.0",
+        "gearCout": "19.00",
+        "gearAlerts": "Attention à l'interférence : Un pignon a moins de 13 dents. Risque de fragilisation à la racine (dépouille). Usure localisée : Paires non premières entre elles (PGCD = 12). Chaque dent touchera souvent les mêmes en face. Envisagez d'ajouter/retirer 1 dent pour optimiser l'usure."
+      }
+    },
+    {
+      "tool": "engrenages",
+      "method": "calculateGears",
+      "event": null,
+      "inputs": {
+        "gearZ3": "",
+        "gearZ4": "",
+        "gearEff": 95,
+        "gearZ1": 13,
+        "gearZ2": 47,
+        "gearVin": 1500,
+        "gearCin": 10
+      },
+      "outputs": {
+        "gearRatio": "1 : 3.62",
+        "gearVout": "414.9",
+        "gearCout": "34.35",
+        "gearAlerts": "Dent de chasse optimale : Les nombres de dents sont premiers entre eux. L'usure sera parfaitement répartie !"
+      }
+    },
+    {
+      "tool": "engrenages",
+      "method": "calculateGears",
+      "event": null,
+      "inputs": {
+        "gearZ3": 15,
+        "gearZ4": 45,
+        "gearEff": 90,
+        "gearZ1": 20,
+        "gearZ2": 60,
+        "gearVin": 3000,
+        "gearCin": 2
+      },
+      "outputs": {
+        "gearRatio": "1 : 9.00",
+        "gearVout": "333.3",
+        "gearCout": "16.20",
+        "gearAlerts": "Usure localisée : Paires non premières entre elles (PGCD = 20 et 15). Chaque dent touchera souvent les mêmes en face. Envisagez d'ajouter/retirer 1 dent pour optimiser l'usure."
+      }
+    },
+    {
+      "tool": "engrenages",
+      "method": "calculateGears",
+      "event": null,
+      "inputs": {
+        "gearZ3": 19,
+        "gearZ4": 61,
+        "gearEff": 95,
+        "gearZ1": 17,
+        "gearZ2": 53,
+        "gearVin": 1450,
+        "gearCin": 12.5
+      },
+      "outputs": {
+        "gearRatio": "1 : 10.01",
+        "gearVout": "144.9",
+        "gearCout": "118.86",
+        "gearAlerts": "Dent de chasse optimale : Les nombres de dents sont premiers entre eux. L'usure sera parfaitement répartie !"
+      }
+    },
+    {
+      "tool": "engrenages",
+      "method": "calculateGears",
+      "event": null,
+      "inputs": {
+        "gearZ3": "",
+        "gearZ4": "",
+        "gearEff": 95,
+        "gearZ1": 40,
+        "gearZ2": 20,
+        "gearVin": 1000,
+        "gearCin": 3
+      },
+      "outputs": {
+        "gearRatio": "1 : 0.50",
+        "gearVout": "2000.0",
+        "gearCout": "1.42",
+        "gearAlerts": "Usure localisée : Paires non premières entre elles (PGCD = 20). Chaque dent touchera souvent les mêmes en face. Envisagez d'ajouter/retirer 1 dent pour optimiser l'usure."
+      }
+    },
+    {
+      "tool": "engrenages",
+      "method": "calculateGears",
+      "event": null,
+      "inputs": {
+        "gearZ3": "",
+        "gearZ4": "",
+        "gearEff": 95,
+        "gearZ1": 12,
+        "gearZ2": 48,
+        "gearVin": "",
+        "gearCin": ""
+      },
+      "outputs": {
+        "gearRatio": "1 : 4.00",
+        "gearVout": "",
+        "gearCout": "",
+        "gearAlerts": "Attention à l'interférence : Un pignon a moins de 13 dents. Risque de fragilisation à la racine (dépouille). Usure localisée : Paires non premières entre elles (PGCD = 12). Chaque dent touchera souvent les mêmes en face. Envisagez d'ajouter/retirer 1 dent pour optimiser l'usure."
+      }
+    },
+    {
+      "tool": "engrenages",
+      "method": "calculateGears",
+      "event": null,
+      "inputs": {
+        "gearZ3": "",
+        "gearZ4": "",
+        "gearEff": 0,
+        "gearZ1": 12,
+        "gearZ2": 48,
+        "gearVin": 3000,
+        "gearCin": 5
+      },
+      "outputs": {
+        "gearRatio": "1 : 4.00",
+        "gearVout": "750.0",
+        "gearCout": "",
+        "gearAlerts": "Attention à l'interférence : Un pignon a moins de 13 dents. Risque de fragilisation à la racine (dépouille). Usure localisée : Paires non premières entre elles (PGCD = 12). Chaque dent touchera souvent les mêmes en face. Envisagez d'ajouter/retirer 1 dent pour optimiser l'usure."
+      }
+    },
+    {
+      "tool": "engrenages",
+      "method": "calculateGears",
+      "event": null,
+      "inputs": {
+        "gearZ3": "",
+        "gearZ4": "",
+        "gearEff": 95,
+        "gearZ1": 12.5,
+        "gearZ2": 48,
+        "gearVin": 3000,
+        "gearCin": 5
+      },
+      "outputs": {
+        "gearRatio": "1 : 3.84",
+        "gearVout": "781.3",
+        "gearCout": "18.24",
+        "gearAlerts": "Attention à l'interférence : Un pignon a moins de 13 dents. Risque de fragilisation à la racine (dépouille). Usure localisée : Paires non premières entre elles (PGCD = 0.5). Chaque dent touchera souvent les mêmes en face. Envisagez d'ajouter/retirer 1 dent pour optimiser l'usure."
+      }
+    },
+    {
+      "tool": "engrenages",
+      "method": "calculateGears",
+      "event": null,
+      "inputs": {
+        "gearZ3": "",
+        "gearZ4": "",
+        "gearEff": 95,
+        "gearZ1": 0,
+        "gearZ2": 48,
+        "gearVin": 3000,
+        "gearCin": 5
+      },
+      "outputs": {
+        "gearRatio": "",
+        "gearVout": "",
+        "gearCout": "",
+        "gearAlerts": ""
+      }
+    },
+    {
+      "tool": "engrenages",
+      "method": "calculateGears",
+      "event": null,
+      "inputs": {
+        "gearZ3": "",
+        "gearZ4": "",
+        "gearEff": 120,
+        "gearZ1": 12,
+        "gearZ2": 48,
+        "gearVin": -3000,
+        "gearCin": 5
+      },
+      "outputs": {
+        "gearRatio": "1 : 4.00",
+        "gearVout": "-750.0",
+        "gearCout": "24.00",
+        "gearAlerts": "Attention à l'interférence : Un pignon a moins de 13 dents. Risque de fragilisation à la racine (dépouille). Usure localisée : Paires non premières entre elles (PGCD = 12). Chaque dent touchera souvent les mêmes en face. Envisagez d'ajouter/retirer 1 dent pour optimiser l'usure."
+      }
+    },
+    {
+      "tool": "verin",
+      "method": "calculateCylinder",
+      "event": null,
+      "inputs": {
+        "cylP": 6,
+        "cylD": 32,
+        "cylDrod": 12
+      },
+      "outputs": {
+        "cylFpushN": "482.5",
+        "cylFpushKg": "49.2",
+        "cylFpullN": "414.7",
+        "cylFpullKg": "42.3"
+      }
+    },
+    {
+      "tool": "verin",
+      "method": "calculateCylinder",
+      "event": null,
+      "inputs": {
+        "cylP": 10,
+        "cylD": 50,
+        "cylDrod": 20
+      },
+      "outputs": {
+        "cylFpushN": "1963.5",
+        "cylFpushKg": "200.2",
+        "cylFpullN": "1649.3",
+        "cylFpullKg": "168.2"
+      }
+    },
+    {
+      "tool": "verin",
+      "method": "calculateCylinder",
+      "event": null,
+      "inputs": {
+        "cylP": 160,
+        "cylD": 80,
+        "cylDrod": 45
+      },
+      "outputs": {
+        "cylFpushN": "80424.8",
+        "cylFpushKg": "8201.0",
+        "cylFpullN": "54977.9",
+        "cylFpullKg": "5606.2"
+      }
+    },
+    {
+      "tool": "verin",
+      "method": "calculateCylinder",
+      "event": null,
+      "inputs": {
+        "cylP": 6,
+        "cylD": 32,
+        "cylDrod": ""
+      },
+      "outputs": {
+        "cylFpushN": "482.5",
+        "cylFpushKg": "49.2",
+        "cylFpullN": "",
+        "cylFpullKg": ""
+      }
+    },
+    {
+      "tool": "verin",
+      "method": "calculateCylinder",
+      "event": null,
+      "inputs": {
+        "cylP": 6,
+        "cylD": 32,
+        "cylDrod": 40
+      },
+      "outputs": {
+        "cylFpushN": "482.5",
+        "cylFpushKg": "49.2",
+        "cylFpullN": "",
+        "cylFpullKg": ""
+      }
+    },
+    {
+      "tool": "verin",
+      "method": "calculateCylinder",
+      "event": null,
+      "inputs": {
+        "cylP": 0,
+        "cylD": 32,
+        "cylDrod": 12
+      },
+      "outputs": {
+        "cylFpushN": "",
+        "cylFpushKg": "",
+        "cylFpullN": "",
+        "cylFpullKg": ""
+      }
+    },
+    {
+      "tool": "verin",
+      "method": "calculateCylinder",
+      "event": null,
+      "inputs": {
+        "cylP": 6,
+        "cylD": -32,
+        "cylDrod": 12
+      },
+      "outputs": {
+        "cylFpushN": "",
+        "cylFpushKg": "",
+        "cylFpullN": "",
+        "cylFpullKg": ""
+      }
+    },
+    {
+      "tool": "flexion-poutre",
+      "method": "calculateBeam",
+      "event": null,
+      "inputs": {
+        "beamF": 1000,
+        "beamL": 500,
+        "beamE": 210000,
+        "beamI": 416000
+      },
+      "outputs": {
+        "beamDeflect": "0.477",
+        "beamMoment": "500.00"
+      }
+    },
+    {
+      "tool": "flexion-poutre",
+      "method": "calculateBeam",
+      "event": null,
+      "inputs": {
+        "beamF": 250,
+        "beamL": 1200,
+        "beamE": 69000,
+        "beamI": 125000
+      },
+      "outputs": {
+        "beamDeflect": "16.696",
+        "beamMoment": "300.00"
+      }
+    },
+    {
+      "tool": "flexion-poutre",
+      "method": "calculateBeam",
+      "event": null,
+      "inputs": {
+        "beamF": 50,
+        "beamL": 300,
+        "beamE": 210000,
+        "beamI": 833.3
+      },
+      "outputs": {
+        "beamDeflect": "2.572",
+        "beamMoment": "15.00"
+      }
+    },
+    {
+      "tool": "flexion-poutre",
+      "method": "calculateBeam",
+      "event": null,
+      "inputs": {
+        "beamF": -1000,
+        "beamL": 500,
+        "beamE": 210000,
+        "beamI": 416000
+      },
+      "outputs": {
+        "beamDeflect": "-0.477",
+        "beamMoment": "-500.00"
+      }
+    },
+    {
+      "tool": "flexion-poutre",
+      "method": "calculateBeam",
+      "event": null,
+      "inputs": {
+        "beamF": 1000,
+        "beamL": -500,
+        "beamE": 210000,
+        "beamI": 416000
+      },
+      "outputs": {
+        "beamDeflect": "-0.477",
+        "beamMoment": "-500.00"
+      }
+    },
+    {
+      "tool": "flexion-poutre",
+      "method": "calculateBeam",
+      "event": null,
+      "inputs": {
+        "beamF": 1000,
+        "beamL": 500,
+        "beamE": 0,
+        "beamI": 416000
+      },
+      "outputs": {
+        "beamDeflect": "",
+        "beamMoment": ""
+      }
+    },
+    {
+      "tool": "flexion-poutre",
+      "method": "calculateBeam",
+      "event": null,
+      "inputs": {
+        "beamF": 1000,
+        "beamL": 500,
+        "beamE": 210000,
+        "beamI": ""
+      },
+      "outputs": {
+        "beamDeflect": "",
+        "beamMoment": ""
+      }
+    }
+  ]
+}

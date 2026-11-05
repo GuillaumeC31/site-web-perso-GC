@@ -1,0 +1,114 @@
+{#
+  Écran : fiche d'un recruteur : demande, score (aide à la décision) et son détail, accès, signaux
+  d'intérêt, décisions (valider, refuser, révoquer, renouveler), suppression.
+  Affiché par : Admin\RecruiterController::show() (route admin_recruiter_show).
+  Variables attendues :
+    - recruiter         : Recruiter
+    - events            : derniers signaux d'intérêt (RecruiterEvent)
+    - has_active_access : vrai si l'accès est ouvert aujourd'hui
+    - chat_count        : nombre d'échanges avec l'assistant (journal)
+#}
+{% extends 'admin/base.html.twig' %}
+
+{% set levels = {success: 'text-emerald-700 dark:text-emerald-300', warning: 'text-amber-700 dark:text-amber-300', danger: 'text-red-700 dark:text-red-300'} %}
+
+{% block title %}{{ recruiter.fullName }} · {{ 'admin.recruiter.title'|trans }}{% endblock %}
+
+{% block body %}
+    <nav class="mb-4 text-sm"><a href="{{ path('admin_recruiter_index') }}" class="link">← {{ 'admin.recruiter.title'|trans }}</a></nav>
+    <div class="mb-6 flex flex-wrap items-center gap-3">
+        <h1 class="text-2xl font-bold dark:text-white">{{ recruiter.fullName }}</h1>
+        {{ include('admin/recruiter/_status_badge.html.twig', {status: recruiter.status}) }}
+        {% if recruiter.extensionRequestedAt %}<twig:Badge tone="accent">{{ 'admin.recruiter.extension_requested'|trans }}</twig:Badge>{% endif %}
+    </div>
+
+    <div class="grid gap-6 lg:grid-cols-2">
+        <twig:Card title="{{ 'admin.recruiter.request'|trans }}">
+            <dl class="grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 text-sm">
+                <dt class="font-semibold">{{ 'admin.recruiter.field.email'|trans }}</dt><dd class="break-all">{{ recruiter.email }}</dd>
+                <dt class="font-semibold">{{ 'admin.recruiter.field.company'|trans }}</dt><dd>{{ recruiter.company }}</dd>
+                {% if recruiter.jobTitle %}<dt class="font-semibold">{{ 'admin.recruiter.field.job_title'|trans }}</dt><dd>{{ recruiter.jobTitle }}</dd>{% endif %}
+                {# Site web en texte simple, jamais en lien (saisi par le demandeur) #}
+                {% if recruiter.companyWebsite %}<dt class="font-semibold">{{ 'admin.recruiter.field.company_website'|trans }}</dt><dd class="break-all" data-testid="recruiter-website">{{ recruiter.companyWebsite }}</dd>{% endif %}
+                <dt class="font-semibold">{{ 'admin.recruiter.field.requested_at'|trans }}</dt><dd>{{ recruiter.requestedAt|format_datetime('short', 'short') }}{% if recruiter.createdManually %} · {{ 'admin.recruiter.created_manually'|trans }}{% endif %}</dd>
+                <dt class="font-semibold">{{ 'admin.recruiter.field.access_expires_at'|trans }}</dt><dd>{{ recruiter.accessExpiresAt ? recruiter.accessExpiresAt|format_date('long') : '—' }}</dd>
+                <dt class="font-semibold">{{ 'admin.recruiter.field.last_login_at'|trans }}</dt><dd>{{ recruiter.lastLoginAt ? recruiter.lastLoginAt|format_datetime('short', 'short') : '—' }}</dd>
+                {% if recruiter.extensionRequestedAt %}<dt class="font-semibold">{{ 'admin.recruiter.extension_requested'|trans }}</dt><dd>{{ recruiter.extensionRequestedAt|format_datetime('short', 'short') }}</dd>{% endif %}
+            </dl>
+            {% if recruiter.message %}
+                <h3 class="mt-4 text-sm font-semibold">{{ 'admin.recruiter.field.message'|trans }}</h3>
+                <p class="mt-1 text-sm whitespace-pre-line text-secondary-700 dark:text-secondary-300">{{ recruiter.message }}</p>
+            {% endif %}
+            <div class="mt-6 flex flex-wrap gap-2">
+                {% if recruiter.status.value in ['pending', 'refused', 'revoked', 'expired'] %}
+                    {{ include('admin/recruiter/_decision_form.html.twig', {recruiter: recruiter, decision: 'approve', label: 'admin.recruiter.action.approve'|trans, variant: 'primary', confirm: 'admin.recruiter.confirm.approve'|trans, confirm_title: 'admin.recruiter.confirm_title.approve'|trans({'%name%': recruiter.fullName})}) }}
+                {% endif %}
+                {% if recruiter.status.value == 'pending' %}
+                    {{ include('admin/recruiter/_decision_form.html.twig', {recruiter: recruiter, decision: 'refuse', label: 'admin.recruiter.action.refuse'|trans, variant: 'secondary', confirm: 'admin.recruiter.confirm.refuse'|trans, confirm_title: 'admin.recruiter.confirm_title.refuse'|trans({'%name%': recruiter.fullName}), danger: true}) }}
+                {% endif %}
+                {% if recruiter.status.value == 'approved' %}
+                    {{ include('admin/recruiter/_decision_form.html.twig', {recruiter: recruiter, decision: 'renew', label: 'admin.recruiter.action.renew'|trans, variant: 'primary'}) }}
+                    {{ include('admin/recruiter/_decision_form.html.twig', {recruiter: recruiter, decision: 'revoke', label: 'admin.recruiter.action.revoke'|trans, variant: 'secondary', confirm: 'admin.recruiter.confirm.revoke'|trans, confirm_title: 'admin.recruiter.confirm_title.revoke'|trans({'%name%': recruiter.fullName}), danger: true}) }}
+                {% endif %}
+            </div>
+            <p class="form-help mt-3">{{ 'admin.recruiter.decision_help'|trans }}</p>
+        </twig:Card>
+
+        <twig:Card title="{{ 'admin.recruiter.score_title'|trans({'%score%': recruiter.score}) }}">
+            <p class="form-help mb-3">{{ 'admin.recruiter.score_help'|trans }}</p>
+            {% if recruiter.scoringDetails is empty %}
+                <p class="text-sm text-secondary-600 dark:text-secondary-300">{{ 'admin.recruiter.score_none'|trans }}</p>
+            {% else %}
+                <ul class="space-y-2 text-sm">
+                    {% for detail in recruiter.scoringDetails %}
+                        <li><span class="font-semibold">{{ detail.label }} :</span> <span class="{{ levels[detail.level] ?? '' }}">{{ detail.result }}</span></li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </twig:Card>
+
+        <twig:Card title="{{ 'admin.recruiter.synthesis_title'|trans }}">
+            {% if recruiter.companySynthesis %}
+                <dl class="grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 text-sm" data-testid="company-synthesis">
+                    {% for line in recruiter.companySynthesis|split("\n") %}
+                        {% set parts = line|split(' : ', 2) %}
+                        <dt class="font-semibold">{{ parts[0] }}</dt><dd>{{ parts[1] ?? '' }}</dd>
+                    {% endfor %}
+                </dl>
+                <p class="form-help mt-3">{{ 'admin.recruiter.synthesis_meta'|trans({'%date%': recruiter.companySynthesisAt|format_datetime('short', 'short')}) }}</p>
+            {% else %}
+                <p class="text-sm text-secondary-600 dark:text-secondary-300">{{ 'admin.recruiter.synthesis_empty'|trans }}</p>
+            {% endif %}
+            <form method="post" action="{{ path('admin_recruiter_synthesize', {id: recruiter.id}) }}" class="mt-4">
+                <input type="hidden" name="_token" value="{{ csrf_token('recruiter_synthesize_' ~ recruiter.id) }}">
+                <twig:Button type="submit" variant="secondary" size="sm">{{ (recruiter.companySynthesis ? 'admin.recruiter.synthesis_regenerate' : 'admin.recruiter.synthesis_generate')|trans }}</twig:Button>
+            </form>
+            <p class="form-help mt-2">{{ 'admin.recruiter.synthesis_help'|trans }}</p>
+            {% if chat_count > 0 %}
+                <p class="mt-4 text-sm"><a href="{{ path('admin_assistant_index') }}" class="link">{{ 'admin.recruiter.chat_count'|trans({'%count%': chat_count}) }}</a></p>
+            {% endif %}
+        </twig:Card>
+
+        <twig:Card title="{{ 'admin.recruiter.events_title'|trans }}">
+            {% if events is empty %}
+                <p class="text-sm text-secondary-600 dark:text-secondary-300">{{ 'admin.recruiter.events_none'|trans }}</p>
+            {% else %}
+                <ul class="space-y-1 text-sm">
+                    {% for event in events %}
+                        <li>{{ event.occurredAt|format_datetime('short', 'short') }} · {{ event.type.translationKey|trans }}{% if event.notifiedAt is null %} <span class="text-secondary-500">({{ 'admin.recruiter.event_pending'|trans }})</span>{% endif %}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </twig:Card>
+
+        <twig:Card title="{{ 'admin.recruiter.privacy_title'|trans }}">
+            <p class="text-sm text-secondary-700 dark:text-secondary-300">{{ 'admin.recruiter.privacy_text'|trans }}</p>
+            {% import '_partials/_confirm.html.twig' as confirmation %}
+            <form method="post" action="{{ path('admin_recruiter_delete', {id: recruiter.id}) }}" class="mt-4" {{ confirmation.attributes('admin.recruiter.confirm.delete'|trans({'%name%': recruiter.fullName}), 'admin.recruiter.confirm.delete_text'|trans, 'admin.recruiter.action.delete'|trans, true) }}>
+                <input type="hidden" name="_token" value="{{ csrf_token('recruiter_delete_' ~ recruiter.id) }}">
+                {{ confirmation.field() }}
+                <twig:Button type="submit" variant="danger" size="sm">{{ 'admin.recruiter.action.delete'|trans }}</twig:Button>
+            </form>
+        </twig:Card>
+    </div>
+{% endblock %}

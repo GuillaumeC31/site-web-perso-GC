@@ -1,0 +1,14 @@
+{#
+  Liens vers les réseaux sociaux : simples liens (jamais de badge, widget ni bouton officiel : aucun traceur), icône
+  SVG locale, nouvel onglet annoncé aux lecteurs d'écran, rel="me noopener noreferrer".
+  Inclus par : templates/_partials/_footer.html.twig (pied de page), templates/recruiter_area/home.html.twig.
+  Variables attendues :
+    - links      : liste de SocialLink (fonction Twig social_links())
+    - link_class : classes CSS de chaque lien
+#}
+{% for link in links %}
+    <a href="{{ link.url }}" class="{{ link_class }}" rel="me noopener noreferrer" target="_blank" data-network="{{ link.network.value }}">
+        {{- include('_partials/_social_icon.html.twig', {network: link.network.value, class: 'size-4'}, with_context = false) -}}
+        {{ link.displayName }}<span class="sr-only"> {{ 'footer.new_window'|trans }}</span>
+    </a>
+{% endfor %}

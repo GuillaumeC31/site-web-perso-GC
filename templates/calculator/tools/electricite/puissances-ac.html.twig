@@ -1,0 +1,81 @@
+{#
+  Outil : puissances active, apparente et réactive en monophasé (sept calculs indépendants).
+  Inclus par : calculator/tool.html.twig. Contrôleur : calculator--puissances-ac.
+  Champs et valeurs par défaut (cos φ = 0,80) repris de l'ancien site ; saisies invalides refusées avec un
+  message (anomalie A3, docs/CALCULATRICE_ANOMALIES.md).
+#}
+{% import 'calculator/_macros.html.twig' as calc %}
+{% set c = 'calculator--puissances-ac' %}
+{% macro f(c, id, label, unit, target, method, value = null, placeholder = null) %}
+    {% import 'calculator/_macros.html.twig' as calc %}
+    {{ calc.field(id, label, unit, {('data-' ~ c ~ '-target'): target, 'data-action': 'input->' ~ c ~ '#' ~ method}, value, placeholder) }}
+{% endmacro %}
+{% macro r(c, id, label, unit, target) %}
+    {% import 'calculator/_macros.html.twig' as calc %}
+    {{ calc.result(id, label, unit, {('data-' ~ c ~ '-target'): target}) }}
+{% endmacro %}
+
+<div data-controller="{{ c }}" class="space-y-6">
+    <h2 class="text-xl font-bold text-secondary-900 dark:text-white">Puissance active (P)</h2>
+    {% set fields %}
+        {{ _self.f(c, 'p-u', 'Tension (U)', 'V', 'activeU', 'activePower', null, 'ex. 230') }}
+        {{ _self.f(c, 'p-i', 'Courant (I)', 'A', 'activeI', 'activePower', null, 'ex. 10') }}
+        {{ _self.f(c, 'p-cos', 'cos φ', null, 'activeCos', 'activePower', '0,80') }}
+        {{ _self.r(c, 'p-result', 'Puissance (P)', 'W', 'activeResult') }}
+        {{ calc.message({('data-' ~ c ~ '-target'): 'activeMessage'}) }}
+    {% endset %}
+    {{ calc.block('Calcul de la puissance', 'P = U × I × cos φ', fields) }}
+
+    {% set fields %}
+        {{ _self.f(c, 'ip-p', 'Puissance (P)', 'W', 'currentP', 'currentFromActive', null, 'ex. 2000') }}
+        {{ _self.f(c, 'ip-u', 'Tension (U)', 'V', 'currentU', 'currentFromActive', null, 'ex. 230') }}
+        {{ _self.f(c, 'ip-cos', 'cos φ', null, 'currentCos', 'currentFromActive', '0,80') }}
+        {{ _self.r(c, 'ip-result', 'Courant (I)', 'A', 'currentResult') }}
+        {{ calc.message({('data-' ~ c ~ '-target'): 'currentMessage'}) }}
+    {% endset %}
+    {{ calc.block('Calcul du courant', 'I = P / (U × cos φ)', fields) }}
+
+    {% set fields %}
+        {{ _self.f(c, 'up-p', 'Puissance (P)', 'W', 'voltageP', 'voltageFromActive', null, 'ex. 2000') }}
+        {{ _self.f(c, 'up-i', 'Courant (I)', 'A', 'voltageI', 'voltageFromActive', null, 'ex. 10') }}
+        {{ _self.f(c, 'up-cos', 'cos φ', null, 'voltageCos', 'voltageFromActive', '0,80') }}
+        {{ _self.r(c, 'up-result', 'Tension (U)', 'V', 'voltageResult') }}
+        {{ calc.message({('data-' ~ c ~ '-target'): 'voltageMessage'}) }}
+    {% endset %}
+    {{ calc.block('Calcul de la tension', 'U = P / (I × cos φ)', fields) }}
+
+    <h2 class="pt-4 text-xl font-bold text-secondary-900 dark:text-white">Puissance apparente (S)</h2>
+    {% set fields %}
+        {{ _self.f(c, 's-u', 'Tension (U)', 'V', 'apparentU', 'apparentPower', null, 'ex. 230') }}
+        {{ _self.f(c, 's-i', 'Courant (I)', 'A', 'apparentI', 'apparentPower', null, 'ex. 10') }}
+        {{ _self.r(c, 's-result', 'Puissance apparente (S)', 'VA', 'apparentResult') }}
+        {{ calc.message({('data-' ~ c ~ '-target'): 'apparentMessage'}) }}
+    {% endset %}
+    {{ calc.block('Calcul de S', 'S = U × I', fields) }}
+
+    {% set fields %}
+        {{ _self.f(c, 'is-s', 'Puissance apparente (S)', 'VA', 'apparentCurrentS', 'currentFromApparent', null, 'ex. 2300') }}
+        {{ _self.f(c, 'is-u', 'Tension (U)', 'V', 'apparentCurrentU', 'currentFromApparent', null, 'ex. 230') }}
+        {{ _self.r(c, 'is-result', 'Courant (I)', 'A', 'apparentCurrentResult') }}
+        {{ calc.message({('data-' ~ c ~ '-target'): 'apparentCurrentMessage'}) }}
+    {% endset %}
+    {{ calc.block('Calcul de I', 'I = S / U', fields) }}
+
+    {% set fields %}
+        {{ _self.f(c, 'us-s', 'Puissance apparente (S)', 'VA', 'apparentVoltageS', 'voltageFromApparent', null, 'ex. 2300') }}
+        {{ _self.f(c, 'us-i', 'Courant (I)', 'A', 'apparentVoltageI', 'voltageFromApparent', null, 'ex. 10') }}
+        {{ _self.r(c, 'us-result', 'Tension (U)', 'V', 'apparentVoltageResult') }}
+        {{ calc.message({('data-' ~ c ~ '-target'): 'apparentVoltageMessage'}) }}
+    {% endset %}
+    {{ calc.block('Calcul de U', 'U = S / I', fields) }}
+
+    <h2 class="pt-4 text-xl font-bold text-secondary-900 dark:text-white">Puissance réactive (Q)</h2>
+    {% set fields %}
+        {{ _self.f(c, 'q-u', 'Tension (U)', 'V', 'reactiveU', 'reactivePower', null, 'ex. 230') }}
+        {{ _self.f(c, 'q-i', 'Courant (I)', 'A', 'reactiveI', 'reactivePower', null, 'ex. 10') }}
+        {{ _self.f(c, 'q-cos', 'cos φ', null, 'reactiveCos', 'reactivePower', '0,80') }}
+        {{ _self.r(c, 'q-result', 'Puissance réactive (Q)', 'var', 'reactiveResult') }}
+        {{ calc.message({('data-' ~ c ~ '-target'): 'reactiveMessage'}) }}
+    {% endset %}
+    {{ calc.block('Calcul de Q', 'Q = U × I × sin φ', fields) }}
+</div>

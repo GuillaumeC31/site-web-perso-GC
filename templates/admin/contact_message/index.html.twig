@@ -1,0 +1,133 @@
+{#
+  Écran : messages reçus (formulaire de contact public et questions des recruteurs) avec filtres, recherche, tri,
+  pagination et actions groupées (décision du 2026-10-29). Tout fonctionne sans JavaScript : filtres et recherche en
+  GET, actions groupées en POST (suppression : page de confirmation du serveur) ; avec JavaScript, la suppression
+  groupée est confirmée par une fenêtre et une case « Tout sélectionner » apparaît.
+  Affiché par : Admin\ContactMessageController::index() (route admin_contact_message_index).
+  Variables attendues :
+    - messages     : page de ContactMessage ; total : nombre de messages du filtre ; page, pages : pagination
+    - params       : {filtre, type, tri} (valeurs de l'adresse) ; search : recherche en cours
+    - filters      : filtre (tous, non-lus, lus, repondus, archives) => nombre de messages
+    - types, sorts : valeurs permises des listes « Type » et « Tri »
+    - return_query : chaîne de requête des filtres en cours (retour après une action groupée)
+#}
+{% extends 'admin/base.html.twig' %}
+{% import '_partials/_confirm.html.twig' as confirmation %}
+
+{% block title %}{{ 'admin.contact_message.title'|trans }}{% endblock %}
+
+{# Statut d'un message : lu ou non lu, répondu le, archivé (colonne Statut ; sous md, sous le nom) #}
+{% macro status_badges(message) %}
+    <twig:Badge tone="{{ message.status.value == 'new' ? 'accent' : 'neutral' }}">{{ message.status.translationKey|trans }}</twig:Badge>
+    {% if message.replied %}<twig:Badge tone="success">{{ 'admin.contact_message.replied_on'|trans({'%date%': message.repliedAt|format_date('short')}) }}</twig:Badge>{% endif %}
+    {% if message.archived %}<twig:Badge tone="neutral">{{ 'admin.contact_message.archived'|trans }}</twig:Badge>{% endif %}
+{% endmacro %}
+
+{% block body %}
+    <h1 class="text-2xl font-bold dark:text-white">{{ 'admin.contact_message.title'|trans }}</h1>
+    <p class="form-help mb-4">{{ 'admin.contact_message.intro'|trans }}</p>
+
+    {% set keep = {type: params.type, tri: params.tri}|merge(search ? {q: search} : {}) %}
+    <nav aria-label="{{ 'admin.contact_message.filters_label'|trans }}" class="mb-4 overflow-x-auto border-b border-secondary-200 dark:border-secondary-700" data-testid="message-filters">
+        <ul class="flex min-w-max gap-1">
+            {% for filter, count in filters %}
+                <li>
+                    <a href="{{ path('admin_contact_message_index', keep|merge({filtre: filter})) }}"
+                       class="inline-flex items-center gap-2 border-b-2 px-3 py-2 text-sm font-semibold {{ params.filtre == filter ? 'border-primary-700 text-primary-800 dark:border-primary-400 dark:text-primary-200' : 'border-transparent text-secondary-700 hover:border-secondary-300 hover:text-secondary-950 dark:text-secondary-300 dark:hover:text-white' }}"
+                       {% if params.filtre == filter %}aria-current="page"{% endif %} data-filter="{{ filter }}">
+                        {{ ('admin.contact_message.filter.' ~ filter)|trans }}
+                        <span class="rounded-full bg-secondary-100 px-2 py-0.5 text-xs tabular-nums text-secondary-800 dark:bg-secondary-800 dark:text-secondary-100" data-testid="filter-count">{{ count }}</span>
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    </nav>
+    {% if params.filtre == 'tous' %}<p class="form-help mb-4">{{ 'admin.contact_message.all_help'|trans }}</p>{% endif %}
+
+    <form method="get" action="{{ path('admin_contact_message_index') }}" class="mb-6 grid gap-3 sm:grid-cols-[1fr_auto_auto_auto] sm:items-end" role="search" data-testid="message-search">
+        <input type="hidden" name="filtre" value="{{ params.filtre }}">
+        <div>
+            <label for="message-q" class="form-label">{{ 'admin.contact_message.search'|trans }}</label>
+            <input type="search" id="message-q" name="q" value="{{ search }}" maxlength="100" class="form-input w-full" placeholder="{{ 'admin.contact_message.search_placeholder'|trans }}">
+        </div>
+        <div>
+            <label for="message-type" class="form-label">{{ 'admin.contact_message.type'|trans }}</label>
+            <select id="message-type" name="type" class="form-input">
+                {% for type in types %}<option value="{{ type }}" {{ params.type == type ? 'selected' }}>{{ ('admin.contact_message.type_option.' ~ type)|trans }}</option>{% endfor %}
+            </select>
+        </div>
+        <div>
+            <label for="message-sort" class="form-label">{{ 'admin.contact_message.sort'|trans }}</label>
+            <select id="message-sort" name="tri" class="form-input">
+                {% for sort in sorts %}<option value="{{ sort }}" {{ params.tri == sort ? 'selected' }}>{{ ('admin.contact_message.sort_option.' ~ sort)|trans }}</option>{% endfor %}
+            </select>
+        </div>
+        <div><twig:Button type="submit" variant="secondary">{{ 'admin.contact_message.apply'|trans }}</twig:Button></div>
+    </form>
+
+    {% if messages is empty %}
+        <twig:Card><p class="text-secondary-700 dark:text-secondary-300" data-testid="messages-empty">{{ (search ? 'admin.contact_message.empty_search' : 'admin.crud.empty')|trans }}</p></twig:Card>
+    {% else %}
+        <form method="post" action="{{ path('admin_contact_message_bulk') }}" id="bulk-form" data-controller="notify select-all" data-action="submit->notify#confirm"
+              data-notify-if-submitter-value="delete" data-notify-title-value="{{ 'admin.contact_message.confirm_bulk_delete_js'|trans }}" data-notify-text-value="{{ 'admin.contact_message.confirm_bulk_delete_text'|trans }}"
+              data-notify-confirm-label-value="{{ 'admin.contact_message.delete'|trans }}" data-notify-cancel-label-value="{{ 'confirmation.cancel'|trans }}" data-notify-danger-value="true">
+            <input type="hidden" name="_token" value="{{ csrf_token('contact_message_bulk') }}">
+            <input type="hidden" name="retour" value="{{ return_query }}">
+            {{ confirmation.field() }}
+            <fieldset class="mb-3 flex flex-wrap items-center gap-2" data-testid="bulk-actions">
+                <legend class="sr-only">{{ 'admin.contact_message.bulk_legend'|trans }}</legend>
+                <span class="text-sm font-semibold text-secondary-800 dark:text-secondary-200" aria-hidden="true">{{ 'admin.contact_message.bulk_legend'|trans }}</span>
+                {% for action in ['read', 'replied', 'archive'] %}
+                    <button type="submit" name="action" value="{{ action }}" class="btn btn-secondary btn-sm">{{ ('admin.contact_message.bulk.' ~ action)|trans }}</button>
+                {% endfor %}
+                <button type="submit" name="action" value="delete" class="btn btn-danger btn-sm">{{ 'admin.contact_message.bulk.delete'|trans }}</button>
+            </fieldset>
+            <div tabindex="0" role="region" aria-label="{{ 'admin.crud.table_region'|trans }}" class="overflow-x-auto rounded-2xl border border-secondary-200 bg-white dark:border-secondary-700 dark:bg-secondary-800">
+                <table class="min-w-full divide-y divide-secondary-200 text-sm dark:divide-secondary-700" data-testid="messages-table">
+                    <caption class="sr-only">{{ 'admin.contact_message.table_caption'|trans({'%count%': total}) }}</caption>
+                    <thead class="bg-secondary-50 dark:bg-secondary-800/80">
+                        <tr>
+                            <th scope="col" class="w-10 px-4 py-3 text-left">
+                                <input type="checkbox" class="size-4 rounded border-secondary-400 dark:border-secondary-500" hidden data-select-all-target="all" data-action="select-all#toggle" aria-label="{{ 'admin.contact_message.select_all'|trans }}">
+                                <span class="sr-only">{{ 'admin.contact_message.select'|trans }}</span>
+                            </th>
+                            <th scope="col" class="px-4 py-3 text-left font-semibold">{{ 'admin.contact_message.field.date'|trans }}</th>
+                            <th scope="col" class="px-4 py-3 text-left font-semibold">{{ 'admin.contact_message.field.name'|trans }}</th>
+                            {# Sous md : type et objet sous le nom (colonnes masquées, tableau lisible à 375 px) #}
+                            <th scope="col" class="hidden px-4 py-3 text-left font-semibold md:table-cell">{{ 'admin.contact_message.type'|trans }}</th>
+                            <th scope="col" class="hidden px-4 py-3 text-left font-semibold md:table-cell">{{ 'admin.contact_message.field.subject'|trans }}</th>
+                            <th scope="col" class="hidden px-4 py-3 text-left font-semibold md:table-cell">{{ 'admin.contact_message.field.status'|trans }}</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-secondary-100 dark:divide-secondary-700/60">
+                        {% for message in messages %}
+                            <tr class="{{ message.status.value == 'new' ? 'font-semibold' : '' }}" data-message="{{ message.id }}">
+                                <td class="px-4 py-2">
+                                    <input type="checkbox" name="ids[]" value="{{ message.id }}" id="message-{{ message.id }}" class="size-4 rounded border-secondary-400 dark:border-secondary-500" data-select-all-target="item" data-action="select-all#sync">
+                                    <label for="message-{{ message.id }}" class="sr-only">{{ 'admin.contact_message.select_one'|trans({'%name%': message.name}) }}</label>
+                                </td>
+                                <td class="px-4 py-2 md:whitespace-nowrap">{{ message.createdAt|format_datetime('short', 'short') }}</td>
+                                <td class="min-w-40 px-4 py-2">
+                                    <a href="{{ path('admin_contact_message_show', {id: message.id}) }}" class="link">{{ message.name }}</a>{% if message.company %} <span class="text-secondary-700 dark:text-secondary-300">· {{ message.company }}</span>{% endif %}
+                                    <span class="mt-1 block text-xs font-normal text-secondary-700 md:hidden dark:text-secondary-300">{{ message.source.translationKey|trans }} · {{ message.subject.translationKey|trans }}</span>
+                                    <span class="mt-1 flex flex-wrap gap-1 md:hidden">{{ _self.status_badges(message) }}</span>
+                                </td>
+                                <td class="hidden px-4 py-2 md:table-cell">{{ message.source.translationKey|trans }}</td>
+                                <td class="hidden px-4 py-2 md:table-cell">{{ message.subject.translationKey|trans }}</td>
+                                <td class="hidden px-4 py-2 md:table-cell"><span class="flex flex-wrap gap-1">{{ _self.status_badges(message) }}</span></td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </form>
+        {% if pages > 1 %}
+            <nav aria-label="{{ 'admin.contact_message.pagination'|trans }}" class="mt-4 flex flex-wrap items-center justify-between gap-2 text-sm" data-testid="pagination">
+                {% set base = keep|merge({filtre: params.filtre}) %}
+                {% if page > 1 %}<a href="{{ path('admin_contact_message_index', base|merge({page: page - 1})) }}" class="link" rel="prev">{{ 'admin.contact_message.previous'|trans }}</a>{% else %}<span></span>{% endif %}
+                <span aria-current="page">{{ 'admin.contact_message.page'|trans({'%page%': page, '%pages%': pages}) }}</span>
+                {% if page < pages %}<a href="{{ path('admin_contact_message_index', base|merge({page: page + 1})) }}" class="link" rel="next">{{ 'admin.contact_message.next'|trans }}</a>{% else %}<span></span>{% endif %}
+            </nav>
+        {% endif %}
+    {% endif %}
+{% endblock %}

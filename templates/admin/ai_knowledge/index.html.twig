@@ -1,0 +1,156 @@
+{#
+  Écran : « Cerveau de l'IA » : ce que l'assistant de l'espace recruteur sait, en trois niveaux (socle fixe,
+  résumé du site en lecture seule, fiches modifiables), jetons et plafond, banc d'essai.
+  Affiché par : Admin\AiKnowledgeController::index() et ::test() (routes admin_ai_knowledge_index, _test).
+  Variables attendues :
+    - groups           : catégorie => {category: AiKnowledgeCategory, entries: list<AiKnowledgeEntry>}
+    - budget           : AiKnowledgeBudget::getSummary()
+    - site_summary     : résumé du site envoyé au modèle (ChatContextBuilder::buildSiteSummary())
+    - instructions     : socle de sécurité (ChatContextBuilder::buildInstructions())
+    - unanswered_count : questions sans réponse à traiter
+    - blocked_count    : réponses bloquées sur 7 jours
+    - floor_check      : vrai si le contrôle du plancher est possible (TEXTES_SITE.md, sinon SALARY_FLOOR du serveur)
+    - test             : ChatTestResult du banc d'essai, ou null
+    - test_error       : message d'erreur du banc d'essai, ou null
+    - test_question    : question posée au banc d'essai
+#}
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}{{ 'admin.ai_knowledge.title'|trans }}{% endblock %}
+
+{% block body %}
+    <div class="mb-6 flex flex-wrap items-start justify-between gap-4">
+        <div>
+            <h1 class="text-2xl font-bold dark:text-white">{{ 'admin.ai_knowledge.title'|trans }}</h1>
+            <p class="form-help">{{ 'admin.ai_knowledge.intro'|trans }}</p>
+        </div>
+        <div class="flex flex-wrap gap-2">
+            <twig:Button href="{{ path('admin_ai_knowledge_new') }}" size="sm">{{ 'admin.ai_knowledge.new'|trans }}</twig:Button>
+            <twig:Button href="{{ path('admin_ai_knowledge_unanswered') }}" variant="secondary" size="sm">{{ 'admin.ai_knowledge.unanswered_link'|trans({'%count%': unanswered_count}) }}</twig:Button>
+            <twig:Button href="{{ path('admin_ai_knowledge_export') }}" variant="secondary" size="sm" data-turbo="false">{{ 'admin.ai_knowledge.export'|trans }}</twig:Button>
+        </div>
+    </div>
+
+    <twig:Alert type="warning" class="mb-6" data-testid="ai-knowledge-reminder">{{ 'admin.ai_knowledge.reminder'|trans }}</twig:Alert>
+    {% if not floor_check %}
+        <twig:Alert type="info" class="mb-6">{{ 'admin.ai_knowledge.floor_unavailable'|trans }}</twig:Alert>
+    {% endif %}
+
+    {# Budget de jetons #}
+    <twig:Card title="{{ 'admin.ai_knowledge.budget.title'|trans }}" class="mb-6">
+        <dl class="grid gap-x-6 gap-y-2 text-sm sm:grid-cols-2" data-testid="ai-knowledge-budget">
+            <div><dt class="font-semibold">{{ 'admin.ai_knowledge.budget.total'|trans }}</dt><dd class="{{ budget.over_limit ? 'font-semibold text-red-700 dark:text-red-300' }}">{{ 'admin.ai_knowledge.budget.total_value'|trans({'%total%': budget.total|format_number, '%limit%': budget.limit|format_number}) }}</dd></div>
+            <div><dt class="font-semibold">{{ 'admin.ai_knowledge.budget.question_cost'|trans }}</dt><dd>{{ 'admin.ai_knowledge.budget.question_cost_value'|trans({'%cost%': budget.question_cost|format_number, '%base%': budget.base_tokens|format_number, '%answer%': budget.answer_tokens|format_number}) }}</dd></div>
+            <div class="sm:col-span-2"><dt class="font-semibold">{{ 'admin.ai_knowledge.budget.questions'|trans }}</dt><dd>{{ 'admin.ai_knowledge.budget.questions_value'|trans({'%with%': budget.questions_with|format_number, '%without%': budget.questions_without|format_number, '%monthly%': budget.monthly_limit|format_number}) }}</dd></div>
+        </dl>
+        {% if budget.warning %}
+            <twig:Alert type="warning" class="mt-4" data-testid="ai-knowledge-budget-warning">{{ 'admin.ai_knowledge.budget.warning'|trans({'%percent%': budget.reduction_percent}) }}</twig:Alert>
+        {% endif %}
+        <p class="form-help mt-3">{{ 'admin.ai_knowledge.budget.help'|trans }} <a href="{{ path('admin_site_settings_edit') }}" class="link">{{ 'admin.assistant.settings_link'|trans }}</a></p>
+    </twig:Card>
+
+    {# Niveaux a et b : socle et résumé du site, en lecture seule #}
+    <div class="mb-6 grid gap-4 lg:grid-cols-2">
+        <twig:Card title="{{ 'admin.ai_knowledge.level.instructions'|trans }}">
+            <p class="form-help">{{ 'admin.ai_knowledge.level.instructions_help'|trans }}</p>
+            <details class="mt-3">
+                <summary class="cursor-pointer text-sm font-medium text-primary-700 dark:text-primary-300">{{ 'admin.ai_knowledge.show_text'|trans }}</summary>
+                <pre class="mt-2 max-h-96 overflow-auto rounded-lg bg-secondary-50 p-3 text-xs whitespace-pre-wrap dark:bg-secondary-900" tabindex="0">{{ instructions }}</pre>
+            </details>
+        </twig:Card>
+        <twig:Card title="{{ 'admin.ai_knowledge.level.summary'|trans }}">
+            <p class="form-help">{{ 'admin.ai_knowledge.level.summary_help'|trans({'%tokens%': budget.base_tokens|format_number}) }}</p>
+            <details class="mt-3" data-testid="ai-site-summary">
+                <summary class="cursor-pointer text-sm font-medium text-primary-700 dark:text-primary-300">{{ 'admin.ai_knowledge.show_text'|trans }}</summary>
+                <pre class="mt-2 max-h-96 overflow-auto rounded-lg bg-secondary-50 p-3 text-xs whitespace-pre-wrap dark:bg-secondary-900" tabindex="0">{{ site_summary }}</pre>
+            </details>
+        </twig:Card>
+    </div>
+
+    {# Niveau c : fiches #}
+    <h2 class="mb-3 text-xl font-bold dark:text-white">{{ 'admin.ai_knowledge.level.entries'|trans }}</h2>
+    <div class="mb-8 space-y-6">
+        {% for group in groups %}
+            <section aria-labelledby="category-{{ group.category.value }}" data-testid="ai-category-{{ group.category.value }}">
+                <h3 id="category-{{ group.category.value }}" class="mb-2 text-sm font-semibold tracking-wide text-secondary-700 uppercase dark:text-secondary-300">{{ group.category.translationKey|trans }}</h3>
+                {% if group.entries is empty %}
+                    <p class="text-sm text-secondary-600 dark:text-secondary-400">{{ 'admin.ai_knowledge.none'|trans }}</p>
+                {% else %}
+                    <ul class="space-y-3">
+                        {% for entry in group.entries %}
+                            <li class="rounded-2xl border border-secondary-200 bg-white p-4 dark:border-secondary-700 dark:bg-secondary-800" data-testid="ai-entry">
+                                <div class="flex flex-wrap items-start justify-between gap-2">
+                                    <div class="min-w-0">
+                                        <p class="font-semibold text-secondary-900 dark:text-white">{{ entry.title }}</p>
+                                        <p class="mt-1 text-sm whitespace-pre-line text-secondary-700 dark:text-secondary-300">{{ entry.content }}</p>
+                                    </div>
+                                    <div class="flex flex-wrap items-center gap-2">
+                                        <twig:Badge tone="{{ entry.active ? 'success' : 'neutral' }}">{{ (entry.active ? 'admin.ai_knowledge.active' : 'admin.ai_knowledge.draft')|trans }}</twig:Badge>
+                                        <twig:Badge tone="neutral">{{ 'admin.ai_knowledge.tokens'|trans({'%count%': budget.entries[entry.id]|default(0)}) }}</twig:Badge>
+                                    </div>
+                                </div>
+                                <div class="mt-3 flex flex-wrap items-center gap-2 text-sm">
+                                    <span class="text-secondary-600 dark:text-secondary-400">{{ 'admin.ai_knowledge.updated_at'|trans({'%date%': entry.updatedAt|format_datetime('short', 'short'), '%position%': entry.position}) }}</span>
+                                    <twig:Button href="{{ path('admin_ai_knowledge_edit', {id: entry.id}) }}" variant="secondary" size="sm">{{ 'admin.crud.edit'|trans }}</twig:Button>
+                                    <form method="post" action="{{ path('admin_ai_knowledge_toggle', {id: entry.id}) }}">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('ai_knowledge_toggle_' ~ entry.id) }}">
+                                        <twig:Button type="submit" variant="secondary" size="sm">{{ (entry.active ? 'admin.ai_knowledge.deactivate' : 'admin.ai_knowledge.activate')|trans }}</twig:Button>
+                                    </form>
+                                    <twig:Button href="{{ path('admin_ai_knowledge_history', {id: entry.id}) }}" variant="secondary" size="sm">{{ 'admin.ai_knowledge.history'|trans }}</twig:Button>
+                                    {% import '_partials/_confirm.html.twig' as confirmation %}
+                                    <form method="post" action="{{ path('admin_ai_knowledge_delete', {id: entry.id}) }}" {{ confirmation.attributes('admin.ai_knowledge.confirm_delete'|trans({'%title%': entry.title}), 'admin.ai_knowledge.confirm_delete_text'|trans, 'admin.crud.delete'|trans, true) }}>
+                                        <input type="hidden" name="_token" value="{{ csrf_token('ai_knowledge_delete_' ~ entry.id) }}">
+                                        {{ confirmation.field() }}
+                                        <twig:Button type="submit" variant="danger" size="sm">{{ 'admin.crud.delete'|trans }}</twig:Button>
+                                    </form>
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </section>
+        {% endfor %}
+    </div>
+
+    {# Banc d'essai #}
+    <twig:Card title="{{ 'admin.ai_knowledge.test.title'|trans }}" id="banc-essai">
+        <p class="form-help">{{ 'admin.ai_knowledge.test.help'|trans({'%blocked%': blocked_count}) }}</p>
+        <form method="post" action="{{ path('admin_ai_knowledge_test') }}#banc-essai" class="mt-3 space-y-3" data-turbo="false">
+            <input type="hidden" name="_token" value="{{ csrf_token('ai_knowledge_test') }}">
+            <label for="ai-test-question" class="form-label">{{ 'admin.ai_knowledge.test.question'|trans }}</label>
+            <textarea id="ai-test-question" name="question" rows="2" maxlength="500" class="form-input" required>{{ test_question }}</textarea>
+            <twig:Button type="submit">{{ 'admin.ai_knowledge.test.submit'|trans }}</twig:Button>
+        </form>
+        {% if test_error %}
+            <twig:Alert type="danger" class="mt-4">{{ test_error }}</twig:Alert>
+        {% endif %}
+        {% if test %}
+            <div class="mt-5 space-y-3 text-sm" data-testid="ai-test-result">
+                <div>
+                    <p class="font-semibold">{{ 'admin.ai_knowledge.test.answer'|trans }}</p>
+                    <p class="mt-1 rounded-xl bg-secondary-100 px-4 py-2 text-secondary-900 dark:bg-secondary-900 dark:text-secondary-100">{{ test.message.answer }}</p>
+                </div>
+                {% if test.message.blocked %}
+                    <twig:Alert type="warning" data-testid="ai-test-blocked">
+                        {{ 'admin.ai_knowledge.test.blocked'|trans({'%element%': test.message.blockedElement}) }}
+                        {% if test.rawAnswer %}<span class="mt-1 block font-normal">{{ 'admin.ai_knowledge.test.raw'|trans({'%answer%': test.rawAnswer}) }}</span>{% endif %}
+                    </twig:Alert>
+                {% endif %}
+                {% if test.message.suspicious %}
+                    <twig:Alert type="warning">{{ 'admin.ai_knowledge.test.suspicious'|trans({'%reason%': test.message.suspiciousReason}) }}</twig:Alert>
+                {% endif %}
+                <div>
+                    <p class="font-semibold">{{ 'admin.ai_knowledge.test.used'|trans }}</p>
+                    {% if test.usedEntries is empty %}
+                        <p class="text-secondary-600 dark:text-secondary-400">{{ 'admin.ai_knowledge.test.used_none'|trans }}</p>
+                    {% else %}
+                        <ul class="mt-1 list-disc pl-5" data-testid="ai-test-used">
+                            {% for entry in test.usedEntries %}<li><a href="{{ path('admin_ai_knowledge_edit', {id: entry.id}) }}" class="link">{{ entry.title }}</a> <span class="text-secondary-600 dark:text-secondary-400">— {{ 'admin.ai_knowledge.test.probably_used'|trans }}</span></li>{% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+                <p class="text-secondary-600 dark:text-secondary-400">{{ 'admin.ai_knowledge.test.tokens'|trans({'%model%': test.message.model ?? '—', '%tokens%': test.message.totalTokens|format_number}) }}</p>
+            </div>
+        {% endif %}
+    </twig:Card>
+{% endblock %}

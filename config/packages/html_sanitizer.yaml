@@ -1,0 +1,37 @@
+# Nettoyage du HTML produit à partir du Markdown des projets (MarkdownRenderer).
+# Tout ce qui n'est pas listé ici est retiré : scripts, styles, iframes, attributs
+# d'événements (onclick…), liens javascript:, images externes.
+framework:
+    html_sanitizer:
+        sanitizers:
+            app.project_content:
+                # Éléments et attributs « sûrs » de la norme W3C (titres, listes, liens, images, tableaux…)
+                allow_safe_elements: true
+                # Le titre de niveau 1 est celui de la page : un # dans le contenu devient du texte simple.
+                block_elements: [h1]
+                # Liens : web uniquement (pas de mailto:, aucune adresse e-mail en public), forcés en https
+                allowed_link_schemes: [https, http]
+                force_https_urls: true
+                allow_relative_links: true
+                # Images : seulement celles du site (chemins relatifs, ex. /uploads/projects/…)
+                allowed_media_schemes: [https]
+                allowed_media_hosts: []
+                allow_relative_medias: true
+                force_attributes:
+                    a:
+                        rel: noopener noreferrer
+            # Journal des versions (CHANGELOG.md du dépôt, affiché dans l'admin seulement) : mêmes règles, mais
+            # sans la limite de 20 000 octets du nettoyeur, qui coupait la fin du journal (2026-10-27)
+            app.changelog:
+                allow_safe_elements: true
+                block_elements: [h1]
+                allowed_link_schemes: [https, http]
+                force_https_urls: true
+                allow_relative_links: true
+                allowed_media_schemes: [https]
+                allowed_media_hosts: []
+                allow_relative_medias: true
+                max_input_length: 500000
+                force_attributes:
+                    a:
+                        rel: noopener noreferrer

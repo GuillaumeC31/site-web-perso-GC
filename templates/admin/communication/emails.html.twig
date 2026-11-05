@@ -1,0 +1,211 @@
+{#
+  Communication › E-mails : adresses de réception (Recrutement, Général du site, Calculatrice à venir), nom
+  d'expéditeur, expéditeur et serveur (lecture seule), adresses gérées dans le panneau de l’hébergeur, santé de l'envoi (dernier envoi,
+  e-mails en échec avec « Renvoyer », e-mail de test par adresse), délivrabilité (SPF, DKIM, DMARC), contenu des
+  e-mails, historique des 50 derniers envois (destinataire masqué).
+  Affiché par : Admin\CommunicationController::emails() (route admin_communication_emails).
+  Variables attendues :
+    - tab, form (CommunicationAddressesType), addresses (catégorie => {address, source, fictitious})
+    - sender         : {address, name, host, port, configured, domain}
+    - last_success   : date du dernier envoi réussi, ou null
+    - failed_emails  : liste de FailedEmail (plus anciens d'abord)
+    - deliverability : DeliverabilityChecker::check() ; dkim_source : source du sélecteur par défaut (l’hébergeur)
+    - email_types    : liste {type: EmailType, modified: bool}
+    - logs           : 50 derniers EmailLog ; categories : MailCategory::cases()
+  Aucun secret n'est affiché : mot de passe SMTP seulement « configuré / non configuré » (.env.local).
+#}
+{% extends 'admin/communication/_layout.html.twig' %}
+{% import 'admin/communication/_macros.html.twig' as ui %}
+{% import '_partials/_confirm.html.twig' as confirmation %}
+
+{% block tab_content %}
+    {{ ui.info('emails') }}
+
+    {# min-w-0 : une adresse longue ne doit jamais élargir la grille (débordement horizontal sur mobile) #}
+    <div class="grid gap-6 *:min-w-0 lg:grid-cols-2">
+        <section class="card lg:col-span-2" id="adresses">
+            <h2 class="mb-3 text-lg font-semibold text-secondary-900 dark:text-white">{{ 'admin.communication.emails.addresses'|trans }}</h2>
+            <p class="form-help mb-4">{{ 'admin.communication.emails.addresses_help'|trans }}</p>
+            {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
+                <div class="grid gap-x-6 *:min-w-0 md:grid-cols-3">
+                    {% for field, category in {recruitmentEmail: 'recruitment', generalEmail: 'general', calculatorEmail: 'calculator'} %}
+                        <div data-testid="address-{{ category }}">
+                            {{ form_row(form[field]) }}
+                            <p class="-mt-2 mb-2 text-sm wrap-anywhere text-secondary-700 dark:text-secondary-300">
+                                {% set current = addresses[category] %}
+                                {% if current.address is null %}
+                                    {{ ui.state('problem', 'admin.communication.address_none'|trans) }}
+                                {% elseif current.fictitious %}
+                                    {{ ui.state(app.environment == 'prod' ? 'problem' : 'warning', 'admin.communication.address_fictitious_badge'|trans({'%address%': current.address})) }}
+                                {% else %}
+                                    {{ ui.state('ok', ('admin.communication.address_source.' ~ current.source)|trans({'%address%': current.address})) }}
+                                {% endif %}
+                            </p>
+                            {% if category == 'calculator' %}<twig:Badge tone="accent">{{ 'admin.communication.coming_soon'|trans }}</twig:Badge>{% endif %}
+                            <p class="mt-2 text-xs text-secondary-700 dark:text-secondary-300">{{ ('admin.communication.category_events.' ~ category)|trans }}</p>
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="mt-4 grid gap-x-6 md:grid-cols-2">
+                    <div>
+                        {{ form_label(form.mailFromName) }} {{ ui.help('admin.communication.field.from_name'|trans, 'admin.communication.help.from_name_more'|trans) }}
+                        {{ form_widget(form.mailFromName) }}
+                        {{ form_help(form.mailFromName) }}
+                        {{ form_errors(form.mailFromName) }}
+                    </div>
+                    <div>
+                        {{ form_label(form.dkimSelector) }} {{ ui.help('admin.communication.field.dkim_selector'|trans, 'admin.communication.help.dkim_selector_more'|trans) }}
+                        {{ form_widget(form.dkimSelector) }}
+                        {{ form_help(form.dkimSelector) }}
+                        {{ form_errors(form.dkimSelector) }}
+                    </div>
+                    <div data-testid="unvalidated-cap">
+                        {{ form_label(form.unvalidatedEmailDailyCap) }} {{ ui.help('admin.communication.field.unvalidated_cap'|trans, 'admin.communication.help.unvalidated_cap_more'|trans) }}
+                        {{ form_widget(form.unvalidatedEmailDailyCap) }}
+                        {{ form_help(form.unvalidatedEmailDailyCap) }}
+                        {{ form_errors(form.unvalidatedEmailDailyCap) }}
+                    </div>
+                </div>
+                {{ form_rest(form) }}
+                <div class="mt-4"><twig:Button type="submit">{{ 'admin.crud.save'|trans }}</twig:Button></div>
+            {{ form_end(form) }}
+        </section>
+
+        <section class="card" id="expediteur">
+            <h2 class="mb-3 text-lg font-semibold text-secondary-900 dark:text-white">{{ 'admin.communication.emails.sender'|trans }}</h2>
+            <dl class="grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 text-sm" data-testid="sender">
+                <dt class="font-semibold">{{ 'admin.communication.emails.sender_address'|trans }}</dt><dd class="break-all">{{ sender.address }}</dd>
+                <dt class="font-semibold">{{ 'admin.communication.emails.sender_name'|trans }}</dt><dd>{{ sender.name }}</dd>
+                <dt class="font-semibold">{{ 'admin.communication.emails.smtp_host'|trans }}</dt><dd class="break-all">{{ sender.host ?? '—' }}</dd>
+                <dt class="font-semibold">{{ 'admin.communication.emails.smtp_port'|trans }}</dt><dd>{{ sender.port ?? '—' }}</dd>
+                <dt class="font-semibold">{{ 'admin.communication.emails.smtp_password'|trans }}</dt>
+                <dd>{{ ui.state(sender.configured ? 'ok' : 'warning', (sender.configured ? 'admin.communication.configured' : 'admin.communication.not_configured')|trans) }}</dd>
+            </dl>
+            <p class="form-help mt-4">{{ 'admin.communication.emails.sender_help'|trans }}</p>
+        </section>
+
+        <section class="card" id="panneau">
+            <h2 class="mb-3 text-lg font-semibold text-secondary-900 dark:text-white">{{ 'admin.communication.emails.panneau'|trans }}</h2>
+            <p class="form-help mb-3">{{ 'admin.communication.emails.panneau_help'|trans }}</p>
+            <ul class="space-y-3 text-sm" data-testid="panneau-addresses">
+                {% for box in ['noreply', 'rgpd', 'dmarc'] %}
+                    <li>
+                        <p class="font-semibold break-all">{{ box }}@{{ sender.domain }}</p>
+                        <p class="text-secondary-700 dark:text-secondary-300">{{ ('admin.communication.emails.panneau_' ~ box)|trans }}</p>
+                    </li>
+                {% endfor %}
+            </ul>
+        </section>
+
+        <section class="card lg:col-span-2" id="sante">
+            <h2 class="mb-3 text-lg font-semibold text-secondary-900 dark:text-white">{{ 'admin.communication.emails.health'|trans }}</h2>
+            <p class="text-sm">
+                {% if last_success %}
+                    {{ ui.state('ok', 'admin.communication.emails.last_success'|trans({'%date%': last_success|format_datetime('short', 'short')})) }}
+                {% else %}
+                    {{ ui.state('not_applicable', 'admin.communication.emails.no_success'|trans) }}
+                {% endif %}
+            </p>
+            {% if failed_emails is not empty %}
+                <div class="mt-4" data-testid="failed-emails">
+                    {{ ui.state('problem', 'admin.mail.failed_alert'|trans({'%count%': failed_emails|length})) }}
+                    <ul class="mt-2 list-disc pl-6 text-sm">
+                        {% for failed in failed_emails|slice(0, 10) %}
+                            <li>{{ failed.createdAt|format_datetime('short', 'short') }} · {{ ('admin.communication.kind.' ~ failed.kind)|trans }} · {{ failed.lastError }}</li>
+                        {% endfor %}
+                    </ul>
+                    <form method="post" action="{{ path('admin_mail_resend') }}" class="mt-3" {{ confirmation.attributes('admin.mail.confirm_resend_title'|trans({'%count%': failed_emails|length}), 'admin.mail.confirm_resend_text'|trans, 'admin.mail.resend'|trans) }}>
+                        <input type="hidden" name="_token" value="{{ csrf_token('mail_resend') }}">
+                        <input type="hidden" name="back" value="communication">
+                        {{ confirmation.field() }}
+                        <twig:Button type="submit" size="sm">{{ 'admin.mail.resend'|trans }}</twig:Button>
+                    </form>
+                </div>
+            {% endif %}
+            <h3 class="mt-6 text-base font-semibold dark:text-white">{{ 'admin.communication.emails.test_title'|trans }}</h3>
+            <p class="form-help mb-3">{{ 'admin.communication.emails.test_help'|trans }}</p>
+            <ul class="flex flex-wrap gap-2" data-testid="email-tests">
+                {% for category in categories %}
+                    <li>
+                        <form method="post" action="{{ path('admin_communication_email_test', {category: category.value}) }}">
+                            <input type="hidden" name="_token" value="{{ csrf_token('email_test') }}">
+                            <button type="submit" class="btn btn-secondary btn-sm">{{ 'admin.communication.emails.test_button'|trans({'%category%': category.translationKey|trans}) }}</button>
+                        </form>
+                    </li>
+                {% endfor %}
+            </ul>
+        </section>
+
+        <section class="card lg:col-span-2" id="delivrabilite">
+            <h2 class="mb-3 text-lg font-semibold text-secondary-900 dark:text-white">{{ 'admin.communication.deliverability.title'|trans }}</h2>
+            <p class="form-help mb-4">{{ 'admin.communication.deliverability.help'|trans({'%domain%': sender.domain}) }}</p>
+            {% if not deliverability.applicable %}
+                <p data-testid="deliverability-na">{{ ui.state('not_applicable', 'admin.communication.deliverability.not_applicable'|trans) }}</p>
+            {% else %}
+                <ul class="space-y-4" data-testid="deliverability">
+                    {% for key, item in deliverability.items %}
+                        <li class="rounded-xl border border-secondary-200 p-4 dark:border-secondary-700">
+                            <p class="flex flex-wrap items-center gap-2"><span class="font-semibold">{{ ('admin.communication.deliverability.' ~ key)|trans }}</span> {{ ui.state(item.ok ? 'ok' : 'problem', (item.ok ? 'admin.communication.deliverability.valid' : 'admin.communication.deliverability.invalid')|trans) }}</p>
+                            <p class="mt-1 text-sm text-secondary-700 dark:text-secondary-300">{{ ('admin.communication.deliverability.' ~ key ~ '_explain')|trans }}</p>
+                            <p class="mt-1 text-sm break-all"><span class="font-semibold">{{ 'admin.communication.deliverability.host'|trans }}</span> {{ item.host }}</p>
+                            <p class="text-sm break-all"><span class="font-semibold">{{ 'admin.communication.deliverability.found'|trans }}</span> {{ item.found ?? 'admin.communication.deliverability.nothing'|trans }}</p>
+                            {% if not item.ok %}<p class="mt-2 text-sm font-medium text-red-800 dark:text-red-200">{{ ('admin.communication.deliverability.' ~ key ~ '_fix')|trans({'%domain%': sender.domain, '%host%': item.host}) }}</p>{% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+                {% if deliverability.checked_at %}<p class="form-help mt-3">{{ 'admin.communication.deliverability.checked_at'|trans({'%date%': deliverability.checked_at|format_datetime('short', 'short')}) }}</p>{% endif %}
+            {% endif %}
+            <p class="form-help mt-3">{{ 'admin.communication.deliverability.source'|trans }} <a href="{{ dkim_source }}" class="link" rel="noopener" target="_blank">{{ dkim_source }}<span class="sr-only"> {{ 'admin.site_settings.new_tab'|trans }}</span></a></p>
+            <form method="post" action="{{ path('admin_communication_deliverability') }}" class="mt-3">
+                <input type="hidden" name="_token" value="{{ csrf_token('deliverability') }}">
+                <twig:Button type="submit" variant="secondary" size="sm">{{ 'admin.communication.deliverability.check_now'|trans }}</twig:Button>
+            </form>
+        </section>
+
+        <section class="card lg:col-span-2" id="contenu">
+            <h2 class="mb-3 text-lg font-semibold text-secondary-900 dark:text-white">{{ 'admin.communication.emails.contents'|trans }}</h2>
+            <p class="form-help mb-3">{{ 'admin.communication.emails.contents_help'|trans }}</p>
+            <ul class="grid gap-2 sm:grid-cols-2 lg:grid-cols-3" data-testid="email-types">
+                {% for item in email_types %}
+                    <li class="flex items-center justify-between gap-2 rounded-xl border border-secondary-200 p-3 dark:border-secondary-700">
+                        <a href="{{ path('admin_communication_email_text', {type: item.type.value}) }}" class="link text-sm">{{ item.type.translationKey|trans }}</a>
+                        <twig:Badge tone="{{ item.modified ? 'primary' : 'neutral' }}">{{ (item.modified ? 'admin.communication.text_modified' : 'admin.communication.text_original')|trans }}</twig:Badge>
+                    </li>
+                {% endfor %}
+            </ul>
+        </section>
+
+        <section class="card lg:col-span-2" id="historique">
+            <h2 class="mb-3 text-lg font-semibold text-secondary-900 dark:text-white">{{ 'admin.communication.emails.log'|trans }}</h2>
+            <p class="form-help mb-3">{{ 'admin.communication.emails.log_help'|trans }}</p>
+            {% if logs is empty %}
+                <p class="text-sm">{{ 'admin.communication.emails.log_empty'|trans }}</p>
+            {% else %}
+                {# Zone qui défile sur mobile : atteignable au clavier (tabindex), nommée pour les lecteurs d'écran #}
+                <div class="overflow-x-auto" tabindex="0" role="region" aria-label="{{ 'admin.communication.emails.log'|trans }}">
+                    <table class="w-full text-left text-sm" data-testid="email-log">
+                        <caption class="sr-only">{{ 'admin.communication.emails.log'|trans }}</caption>
+                        <thead><tr class="border-b border-secondary-200 dark:border-secondary-700">
+                            <th scope="col" class="py-2 pr-3">{{ 'admin.communication.emails.log_date'|trans }}</th>
+                            <th scope="col" class="py-2 pr-3">{{ 'admin.communication.emails.log_type'|trans }}</th>
+                            <th scope="col" class="py-2 pr-3">{{ 'admin.communication.emails.log_category'|trans }}</th>
+                            <th scope="col" class="py-2 pr-3">{{ 'admin.communication.emails.log_recipient'|trans }}</th>
+                            <th scope="col" class="py-2">{{ 'admin.communication.emails.log_status'|trans }}</th>
+                        </tr></thead>
+                        <tbody>
+                            {% for log in logs %}
+                                <tr class="border-b border-secondary-100 dark:border-secondary-800">
+                                    <td class="py-2 pr-3 whitespace-nowrap">{{ log.sentAt|format_datetime('short', 'short') }}</td>
+                                    <td class="py-2 pr-3">{{ ('admin.communication.kind.' ~ log.kind)|trans }}</td>
+                                    <td class="py-2 pr-3">{{ log.category ? log.category.translationKey|trans : '—' }}</td>
+                                    <td class="py-2 pr-3 break-all">{{ log.recipient }}</td>
+                                    <td class="py-2">{{ ui.state(log.success ? 'ok' : 'problem', (log.success ? 'admin.communication.emails.log_sent' : 'admin.communication.emails.log_failed')|trans) }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% endif %}
+        </section>
+    </div>
+{% endblock %}

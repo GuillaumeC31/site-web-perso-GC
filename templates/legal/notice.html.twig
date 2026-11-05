@@ -1,0 +1,64 @@
+{#
+  Page : mentions légales (éditeur non professionnel, hébergeur, propriété intellectuelle, outils de calcul,
+  crédits, lien vers la politique de confidentialité). Aucune adresse, aucun téléphone ni e-mail de l'éditeur.
+  Affichée par : LegalController::notice() (route legal_notice, /mentions-legales).
+  Variables attendues :
+    - updated_at : date de dernière mise à jour des textes
+    - settings   : SiteSettings (hébergeur : hostName, hostAddress, hostPhone, hostWebsite, réglables dans l'admin)
+  Les autres textes sont fixes (traductions legal.notice.*), choix du 24/10/2026.
+#}
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'legal.notice.title'|trans }} · {{ site_owner_name }}{% endblock %}
+{% block description %}{{ 'legal.notice.meta_description'|trans }}{% endblock %}
+
+{% block body %}
+    <div class="container mx-auto px-4 py-16 lg:px-8 lg:py-24 xl:max-w-4xl">
+        <twig:SectionHeading title="{{ 'legal.notice.title'|trans }}" :level="1" />
+
+        <div class="mt-10 space-y-10 text-secondary-800 dark:text-secondary-200">
+            {% embed 'legal/_section.html.twig' with {id: 'editeur', title: 'legal.notice.publisher.title'|trans} %}
+                {% block content %}
+                    <p>{{ 'legal.notice.publisher.text'|trans }}</p>
+                    <p>{{ 'legal.notice.publisher.contact'|trans }} <a href="{{ path('contact_show') }}" class="link">{{ 'legal.contact_link'|trans }}</a>.</p>
+                    <p>{{ 'legal.notice.publisher.lcen'|trans }}</p>
+                {% endblock %}
+            {% endembed %}
+
+            {% embed 'legal/_section.html.twig' with {id: 'hebergeur', title: 'legal.notice.host.title'|trans} %}
+                {% block content %}
+                    <address class="not-italic">
+                        {{ settings.hostName }}<br>
+                        {{ settings.hostAddress }}<br>
+                        {{ 'legal.notice.host.phone'|trans({'%phone%': settings.hostPhone}) }}<br>
+                        <a href="{{ settings.hostWebsite }}" class="link" rel="noopener">{{ settings.hostWebsite|replace({'https://': '', 'http://': ''})|trim('/') }}</a>
+                    </address>
+                {% endblock %}
+            {% endembed %}
+
+            {% embed 'legal/_section.html.twig' with {id: 'propriete-intellectuelle', title: 'legal.notice.ip.title'|trans} %}
+                {% block content %}<p>{{ 'legal.notice.ip.text'|trans }}</p>{% endblock %}
+            {% endembed %}
+
+            {% embed 'legal/_section.html.twig' with {id: 'outils-de-calcul', title: 'legal.notice.calculator.title'|trans} %}
+                {% block content %}<p>{{ 'legal.notice.calculator.text'|trans }}</p>{% endblock %}
+            {% endembed %}
+
+            {% embed 'legal/_section.html.twig' with {id: 'credits', title: 'legal.notice.credits.title'|trans} %}
+                {% block content %}
+                    <ul class="list-disc space-y-1 pl-5">
+                        {% for index in 0..5 %}<li>{{ ('legal.notice.credits.items.' ~ index)|trans }}</li>{% endfor %}
+                    </ul>
+                {% endblock %}
+            {% endembed %}
+
+            {% embed 'legal/_section.html.twig' with {id: 'donnees-personnelles', title: 'legal.notice.privacy.title'|trans} %}
+                {% block content %}
+                    <p>{{ 'legal.notice.privacy.text'|trans }} <a href="{{ path('legal_privacy') }}" class="link">{{ 'legal.privacy.title'|trans|lower }}</a>.</p>
+                {% endblock %}
+            {% endembed %}
+        </div>
+
+        <p class="mt-12 text-sm text-secondary-600 dark:text-secondary-400">{{ 'legal.updated'|trans({'%date%': updated_at|format_date('long')}) }}</p>
+    </div>
+{% endblock %}

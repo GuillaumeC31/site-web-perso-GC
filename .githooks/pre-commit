@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# Hook Git exécuté avant chaque commit : refuse les secrets, les fichiers sensibles
+# et les fichiers lourds ou non optimisés dans public/.
+# Activation (une fois par clone) : git config core.hooksPath .githooks
+# (ou bash scripts/security/install-githooks.sh / pwsh scripts/security/install-githooks.ps1)
+set -euo pipefail
+
+ROOT="$(git rev-parse --show-toplevel)"
+
+if command -v pwsh >/dev/null 2>&1; then
+    pwsh -NoProfile -File "$ROOT/scripts/security/check-staged-secrets.ps1"
+    pwsh -NoProfile -File "$ROOT/scripts/security/check-staged-assets.ps1"
+else
+    bash "$ROOT/scripts/security/check-staged-secrets.sh"
+    bash "$ROOT/scripts/security/check-staged-assets.sh"
+fi

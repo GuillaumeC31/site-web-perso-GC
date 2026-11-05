@@ -1,0 +1,10 @@
+# Messenger : hébergement mutualisé, donc aucun worker permanent.
+# Tout passe par le transport synchrone. Si un jour une file est nécessaire,
+# la consommer par cron : bin/console messenger:consume async --time-limit=50
+framework:
+    messenger:
+        transports:
+            sync: 'sync://'
+
+        routing:
+            Symfony\Component\Mailer\Messenger\SendEmailMessage: sync

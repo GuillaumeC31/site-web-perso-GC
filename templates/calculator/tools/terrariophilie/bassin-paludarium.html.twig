@@ -1,0 +1,24 @@
+{#
+  Outil : volume et poids d'un bassin (paludarium, bac à tortues), débit de pompe.
+  Inclus par : calculator/tool.html.twig. Contrôleur : calculator--bassin-paludarium.
+  Valeurs par défaut et conseils repris de l'ancien site.
+#}
+{% import 'calculator/_macros.html.twig' as calc %}
+{% set c = 'calculator--bassin-paludarium' %}
+{% set t = 'data-' ~ c ~ '-target' %}
+{% set input = 'input->' ~ c ~ '#calculate' %}
+
+<div data-controller="{{ c }}" class="space-y-6">
+    {% set fields %}
+        {{ calc.field('tp-length', 'Longueur d\'eau', 'cm', {(t): 'length', 'data-action': input}, '120') }}
+        {{ calc.field('tp-width', 'Largeur d\'eau', 'cm', {(t): 'width', 'data-action': input}, '60') }}
+        {{ calc.field('tp-depth', 'Hauteur d\'eau réelle', 'cm', {(t): 'depth', 'data-action': input}, '25') }}
+        {{ calc.note({}, 'Hauteur d\'eau : le niveau d\'eau maximal, pas la hauteur du terrarium.') }}
+        {{ calc.result('tp-litres', 'Volume d\'eau libre', 'L', {(t): 'litres'}, 'tp-length tp-width tp-depth') }}
+        {{ calc.result('tp-weight', 'Poids de l\'eau (charge sur le meuble)', 'kg', {(t): 'weight'}, 'tp-length tp-width tp-depth') }}
+        {{ calc.result('tp-filter', 'Débit de pompe et filtre', 'L/h', {(t): 'filter'}, 'tp-length tp-width tp-depth') }}
+        {{ calc.message({(t): 'message'}) }}
+        {{ calc.note({}, 'Poids de l\'eau seule (1 kg par litre), sans le bac, le décor ni le substrat. Brassage : 4 fois le volume par heure.') }}
+    {% endset %}
+    {{ calc.block('Volume et poids du bassin', 'V (L) = longueur × largeur × hauteur d\'eau (cm) / 1000 · pompe = 4 × V par heure', fields) }}
+</div>

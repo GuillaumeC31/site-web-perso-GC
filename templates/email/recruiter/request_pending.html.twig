@@ -1,0 +1,13 @@
+{#
+  E-mail : demande déjà en cours d'examen (aucun lien de connexion, aucune adresse de réponse).
+  Envoyé par : RecruiterMailer::sendRequestPending(). Variables : recruiter, texts (EmailTexts : intro, signature),
+  subject, contact_url (pied : formulaire de contact du site).
+#}
+{% extends 'email/_layout.html.twig' %}
+
+{% block content %}
+    <p style="margin:0 0 12px;">Bonjour {{ recruiter.fullName }},</p>
+    <p style="margin:0 0 12px;">{{ texts.intro|nl2br }}</p>
+    <p style="margin:0 0 12px;">Si vous n'êtes pas à l'origine de cette demande, ignorez simplement ce message : aucun accès ne sera ouvert sans validation.</p>
+    <p style="margin:0;">{{ texts.signature|nl2br }}</p>
+{% endblock %}

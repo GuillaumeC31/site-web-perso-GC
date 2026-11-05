@@ -1,0 +1,35 @@
+{#
+  Page de confirmation d'une action importante, quand la fenêtre de confirmation n'a pas pu s'ouvrir
+  (JavaScript désactivé) : renvoie les champs reçus avec _confirmed=1, ou annule.
+  Rendue par : App\Service\ActionConfirmation::render().
+  Variables attendues :
+    - layout        : gabarit parent (admin/base.html.twig ou base.html.twig)
+    - title         : question posée
+    - text          : précision (peut être vide)
+    - confirm_label : libellé du bouton de confirmation
+    - cancel_url    : adresse du lien « Annuler »
+    - danger        : vrai pour une action irréversible (bouton rouge)
+    - action        : adresse du formulaire (celle de l'action)
+    - fields        : liste de {name, value} à renvoyer
+#}
+{% extends layout %}
+
+{% block title %}{{ 'confirmation.page_title'|trans }}{% endblock %}
+{% block robots %}noindex, nofollow{% endblock %}
+
+{% block body %}
+    <div class="{{ layout == 'base.html.twig' ? 'container mx-auto px-4 py-12 lg:px-8 lg:py-16 xl:max-w-2xl' : 'max-w-2xl' }}">
+        <section role="alertdialog" aria-labelledby="confirm-title" aria-describedby="confirm-text" class="rounded-2xl border {{ danger ? 'border-red-300 dark:border-red-800' : 'border-secondary-200 dark:border-secondary-700' }} p-6" data-testid="confirmation-page">
+            <h1 id="confirm-title" class="text-xl font-bold text-secondary-900 dark:text-white">{{ title }}</h1>
+            <p id="confirm-text" class="mt-2 text-sm text-secondary-700 dark:text-secondary-300">{{ text is not empty ? text : 'confirmation.default_text'|trans }}</p>
+            <form method="post" action="{{ action }}" class="mt-6 flex flex-wrap items-center gap-3" data-turbo="false">
+                {% for field in fields %}
+                    <input type="hidden" name="{{ field.name }}" value="{{ field.value }}">
+                {% endfor %}
+                <input type="hidden" name="_confirmed" value="1">
+                <button type="submit" class="btn {{ danger ? 'btn-danger' : 'btn-primary' }}">{{ confirm_label }}</button>
+                <a href="{{ cancel_url }}" class="btn btn-secondary">{{ 'confirmation.cancel'|trans }}</a>
+            </form>
+        </section>
+    </div>
+{% endblock %}

@@ -1,0 +1,30 @@
+{#
+  Bloc « Pourquoi me recruter » : arguments en cartes (une colonne sur téléphone, deux sur tablette, trois sur
+  ordinateur), même style que les cartes « Expertise ».
+  Inclus par : home/index.html.twig (si RecruitmentArguments::getDisplayed() n'est pas vide),
+  admin/recruitment_argument/preview.html.twig (aperçu).
+  Variables attendues :
+    - arguments : liste de RecruitmentArgument (titre, texte), dans l'ordre d'affichage
+    - drafts    : vrai dans l'aperçu avec brouillons (badge « Masqué » sur les arguments non affichés)
+#}
+<section class="bg-white dark:bg-secondary-900" aria-labelledby="recruitment-title" data-testid="recruitment-arguments">
+    <div class="container mx-auto px-4 py-16 lg:px-8 lg:py-20 xl:max-w-7xl">
+        <h2 id="recruitment-title" class="text-2xl font-bold tracking-tight text-secondary-900 sm:text-3xl dark:text-white">{{ 'home.recruitment.title'|trans }}</h2>
+        <ul class="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {% for argument in arguments %}
+                <li class="card" data-testid="recruitment-argument">
+                    <div class="mb-4 inline-flex size-11 items-center justify-center rounded-xl bg-primary-50 text-primary-700 dark:bg-primary-500/10 dark:text-primary-300">
+                        <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="m5 12.5 4.5 4.5L19 7.5"/></svg>
+                    </div>
+                    <h3 class="font-bold dark:text-white">
+                        {{ argument.title }}
+                        {% if (drafts ?? false) and not argument.visible %}
+                            <span class="ml-1 inline-block rounded-full bg-secondary-100 px-2 py-0.5 text-xs font-semibold text-secondary-700 dark:bg-secondary-800 dark:text-secondary-300">{{ 'admin.recruitment_argument.draft'|trans }}</span>
+                        {% endif %}
+                    </h3>
+                    <p class="mt-2 text-sm/relaxed text-secondary-600 dark:text-secondary-300">{{ argument.text }}</p>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</section>

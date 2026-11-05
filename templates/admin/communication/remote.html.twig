@@ -1,0 +1,65 @@
+{#
+  Communication › Validation à distance : interrupteur, code PIN (saisi deux fois, confirmation avant
+  enregistrement, jamais affiché), état (Telegram, Discord, code PIN), rappel de sécurité, journal des dernières
+  actions à distance (date, action, canal, résultat ; jamais de jeton ni de code). Déplacé de Paramètres le 2026-10-29.
+  Affiché par : Admin\CommunicationController::remote() (route admin_communication_remote).
+  Variables attendues :
+    - tab, form (RemoteValidationType), readiness ({telegram, discord, pin})
+    - journal : liste {date, channel, action, success}
+#}
+{% extends 'admin/communication/_layout.html.twig' %}
+{% import 'admin/communication/_macros.html.twig' as ui %}
+
+{% block tab_content %}
+    {{ ui.info('remote') }}
+    <div class="grid gap-6 *:min-w-0 lg:grid-cols-2">
+        <section class="card">
+            <h2 class="mb-3 text-lg font-semibold text-secondary-900 dark:text-white">{{ 'admin.communication.remote.settings'|trans }}</h2>
+            <ul class="mb-4 space-y-1 text-sm" data-testid="remote-readiness">
+                <li>{{ ui.state(readiness.telegram ? 'ok' : 'not_applicable', (readiness.telegram ? 'admin.site_settings.remote_telegram_ready' : 'admin.site_settings.remote_telegram_missing')|trans) }}</li>
+                <li>{{ ui.state(readiness.discord ? 'ok' : 'not_applicable', (readiness.discord ? 'admin.communication.remote.discord_ready' : 'admin.communication.remote.discord_missing')|trans) }}</li>
+                <li>{{ ui.state(readiness.pin ? 'ok' : 'warning', (readiness.pin ? 'admin.site_settings.remote_pin_set' : 'admin.site_settings.remote_pin_missing')|trans) }}</li>
+            </ul>
+            {# Changer le code PIN : confirmation (fenêtre ; sans JavaScript, le serveur enregistre après la double saisie) #}
+            {{ form_start(form, {attr: {novalidate: 'novalidate', 'data-controller': 'notify', 'data-action': 'submit->notify#confirm', 'data-notify-title-value': 'admin.communication.remote.confirm_title'|trans, 'data-notify-text-value': 'admin.communication.remote.confirm_text'|trans, 'data-notify-confirm-label-value': 'admin.crud.save'|trans, 'data-notify-cancel-label-value': 'confirmation.cancel'|trans}}) }}
+                {{ form_row(form.remoteValidationEnabled) }}
+                {{ form_row(form.remotePin) }}
+                {{ form_rest(form) }}
+                <div class="mt-4"><twig:Button type="submit">{{ 'admin.crud.save'|trans }}</twig:Button></div>
+            {{ form_end(form) }}
+        </section>
+        <section class="card">
+            <h2 class="mb-3 text-lg font-semibold text-secondary-900 dark:text-white">{{ 'admin.communication.remote.security'|trans }}</h2>
+            <twig:Alert type="warning">{{ 'admin.communication.remote.security_text'|trans }}</twig:Alert>
+        </section>
+        <section class="card lg:col-span-2">
+            <h2 class="mb-3 text-lg font-semibold text-secondary-900 dark:text-white">{{ 'admin.communication.remote.journal'|trans }}</h2>
+            {% if journal is empty %}
+                <p class="text-sm">{{ 'admin.communication.remote.journal_empty'|trans }}</p>
+            {% else %}
+                {# Zone qui défile sur mobile : atteignable au clavier (tabindex), nommée pour les lecteurs d'écran #}
+                <div class="overflow-x-auto" tabindex="0" role="region" aria-label="{{ 'admin.communication.remote.journal'|trans }}">
+                    <table class="w-full text-left text-sm" data-testid="remote-journal">
+                        <caption class="sr-only">{{ 'admin.communication.remote.journal'|trans }}</caption>
+                        <thead><tr class="border-b border-secondary-200 dark:border-secondary-700">
+                            <th scope="col" class="py-2 pr-3">{{ 'admin.communication.emails.log_date'|trans }}</th>
+                            <th scope="col" class="py-2 pr-3">{{ 'admin.communication.remote.action'|trans }}</th>
+                            <th scope="col" class="py-2 pr-3">{{ 'admin.communication.remote.channel'|trans }}</th>
+                            <th scope="col" class="py-2">{{ 'admin.communication.remote.result'|trans }}</th>
+                        </tr></thead>
+                        <tbody>
+                            {% for row in journal %}
+                                <tr class="border-b border-secondary-100 dark:border-secondary-800">
+                                    <td class="py-2 pr-3 whitespace-nowrap">{{ row.date|format_datetime('short', 'short') }}</td>
+                                    <td class="py-2 pr-3">{{ row.action }}</td>
+                                    <td class="py-2 pr-3">{{ row.channel|capitalize }}</td>
+                                    <td class="py-2">{{ ui.state(row.success ? 'ok' : 'problem', (row.success ? 'admin.communication.remote.done' : 'admin.communication.remote.rejected')|trans) }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% endif %}
+        </section>
+    </div>
+{% endblock %}

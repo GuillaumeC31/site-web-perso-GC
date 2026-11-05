@@ -1,0 +1,75 @@
+{#
+  Écran : paramètres généraux du site : délai de réponse affiché, validation automatique des demandes recruteurs,
+  assistant IA (plafonds, débit, alerte), référencement, hébergeur, maintenance. Notifications, adresses e-mail et
+  validation à distance : page Communication (renvoi par la carte « Déplacé »).
+  Affiché par : Admin\SiteSettingsController::edit() (route admin_site_settings_edit).
+  Variables attendues :
+    - form        : formulaire SiteSettingsType
+    - share_image : image de partage installée (url, width, height) ou null
+#}
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}{{ 'admin.site_settings.title'|trans }}{% endblock %}
+
+{% block body %}
+    <h1 class="mb-6 text-2xl font-bold dark:text-white">{{ 'admin.site_settings.title'|trans }}</h1>
+    {# Activer le mode maintenance : confirmation (fenêtre « notify » ; sans JavaScript, page du serveur) #}
+    {{ form_start(form, {attr: {novalidate: 'novalidate', 'data-controller': 'notify', 'data-action': 'submit->notify#confirm', 'data-notify-title-value': 'admin.site_settings.confirm_maintenance_title'|trans, 'data-notify-text-value': 'admin.site_settings.confirm_maintenance_text'|trans, 'data-notify-confirm-label-value': 'admin.site_settings.confirm_maintenance_submit'|trans, 'data-notify-cancel-label-value': 'confirmation.cancel'|trans, 'data-notify-danger-value': 'true', 'data-notify-if-checked-value': '#' ~ form.maintenanceEnabled.vars.id}}) }}
+        <div class="grid gap-6 lg:grid-cols-2">
+            <twig:Card title="{{ 'admin.site_settings.display'|trans }}">
+                {{ form_row(form.responseDelay) }}
+            </twig:Card>
+            <twig:Card title="{{ 'admin.site_settings.recruiters'|trans }}">
+                {{ form_row(form.autoApprovalEnabled) }}
+                {{ form_row(form.autoApprovalThreshold) }}
+            </twig:Card>
+            <twig:Card title="{{ 'admin.site_settings.ai'|trans }}" class="lg:col-span-2">
+                <p class="form-help mb-4">{{ 'admin.site_settings.ai_help'|trans }}</p>
+                {{ form_row(form.aiAssistantEnabled) }}
+                <div class="grid gap-x-6 sm:grid-cols-2">
+                    {{ form_row(form.aiRecruiterDailyLimit) }}
+                    {{ form_row(form.aiSiteDailyLimit) }}
+                    {{ form_row(form.aiMonthlyTokenLimit) }}
+                    {{ form_row(form.aiRequestsPerSecond) }}
+                    {{ form_row(form.aiAlertPercent) }}
+                    {{ form_row(form.aiKnowledgeTokenLimit) }}
+                </div>
+            </twig:Card>
+            <twig:Card title="{{ 'admin.site_settings.seo'|trans }}">
+                {{ form_row(form.seoTitle) }}
+                {{ form_row(form.seoDescription) }}
+                <p class="form-label mt-4">{{ 'admin.site_settings.share_image'|trans }}</p>
+                {% if share_image %}
+                    <img src="{{ asset('partage/guillaume-couget-partage.jpg') }}" alt="" width="300" height="158" class="mt-1 rounded-lg border border-secondary-200 dark:border-secondary-700">
+                {% endif %}
+                <p class="form-help mt-1">{{ (share_image ? 'admin.site_settings.share_image_ok' : 'admin.site_settings.share_image_missing')|trans }}</p>
+            </twig:Card>
+            <twig:Card title="{{ 'admin.site_settings.host'|trans }}">
+                <p class="form-help mb-4">{{ 'admin.site_settings.host_help'|trans }}</p>
+                {{ form_row(form.hostName) }}
+                {{ form_row(form.hostAddress) }}
+                {{ form_row(form.hostPhone) }}
+                {{ form_row(form.hostWebsite) }}
+            </twig:Card>
+            <twig:Card title="{{ 'admin.site_settings.maintenance'|trans }}">
+                {{ form_row(form.maintenanceEnabled) }}
+                {{ form_row(form.maintenanceMessage) }}
+                {{ form_row(form.maintenanceUntil) }}
+                {{ form_row(form.maintenanceAllowedIps) }}
+                <twig:Button href="{{ path('admin_site_settings_maintenance_preview') }}" variant="secondary" size="sm" target="_blank" rel="noopener">{{ 'admin.site_settings.maintenance_preview'|trans }}<span class="sr-only"> {{ 'admin.site_settings.new_tab'|trans }}</span></twig:Button>
+            </twig:Card>
+            <twig:Card title="{{ 'admin.site_settings.moved_title'|trans }}" class="lg:col-span-2" id="notifications">
+                {# Ancres gardées (#notifications, #validation-distance) : anciens liens vers Paramètres #}
+                <span id="validation-distance"></span>
+                <p class="text-sm text-secondary-700 dark:text-secondary-300">{{ 'admin.site_settings.moved_text'|trans }}</p>
+                <p class="mt-3 flex flex-wrap gap-2">
+                    <twig:Button href="{{ path('admin_communication') }}" variant="secondary" size="sm">{{ 'admin.nav.communication'|trans }}</twig:Button>
+                    <twig:Button href="{{ path('admin_communication_notifications') }}" variant="secondary" size="sm">{{ 'admin.communication.tab.notifications'|trans }}</twig:Button>
+                    <twig:Button href="{{ path('admin_communication_remote') }}" variant="secondary" size="sm">{{ 'admin.communication.tab.remote'|trans }}</twig:Button>
+                </p>
+            </twig:Card>
+        </div>
+        {{ form_rest(form) }}
+        <div class="mt-6"><twig:Button type="submit">{{ 'admin.crud.save'|trans }}</twig:Button></div>
+    {{ form_end(form) }}
+{% endblock %}

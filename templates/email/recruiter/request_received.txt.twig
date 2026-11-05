@@ -1,0 +1,15 @@
+{#
+  E-mail (version texte) : accusé de réception d'une demande d'accès (aucun lien de connexion, aucune adresse de réponse).
+  Envoyé par : RecruiterMailer::sendRequestReceived(). Variables : recruiter, texts (EmailTexts : intro, signature), contact_url.
+#}
+{% autoescape false %}
+Bonjour {{ recruiter.fullName }},
+
+{{ texts.intro }}
+
+Si vous n'êtes pas à l'origine de cette demande, ignorez simplement ce message : aucun accès ne sera ouvert sans validation.
+
+{{ texts.signature }}
+guillaume-couget.fr
+{{ include('email/_text_footer.txt.twig') }}
+{% endautoescape %}

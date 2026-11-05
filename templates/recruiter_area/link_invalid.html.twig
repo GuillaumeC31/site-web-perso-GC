@@ -1,0 +1,26 @@
+{#
+  Page : lien de connexion invalide, expiré, déjà utilisé, ou accès fermé (sans préciser lequel).
+  Affichée par : RecruiterAreaController::linkInvalid() (route recruiter_link_invalid ; failure_path du pare-feu).
+  Variables attendues :
+    - link_form : formulaire LoginLinkRequestType (envoyé à recruiter_access)
+#}
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'recruiter_area.link_invalid.title'|trans }} · {{ site_owner_name }}{% endblock %}
+{% block robots %}noindex, nofollow{% endblock %}
+
+{% block body %}
+    <div class="container mx-auto max-w-xl px-4 py-16 lg:py-24">
+        <div class="card">
+            <h1 class="text-2xl font-bold text-secondary-900 dark:text-white">{{ 'recruiter_area.link_invalid.title'|trans }}</h1>
+            <p class="mt-3 mb-6 text-secondary-700 dark:text-secondary-300">{{ 'recruiter_area.link_invalid.text'|trans }}</p>
+            {{ form_start(link_form, {attr: {novalidate: 'novalidate'}}) }}
+                {{ form_row(link_form.email) }}
+                {{ form_row(link_form.website) }}
+                {{ include('_partials/_turnstile.html.twig') }}
+                <twig:Button type="submit">{{ 'recruiter_area.link_submit'|trans }}</twig:Button>
+                {{ include('_partials/_form_privacy_notice.html.twig', {notice: 'login_link', section: 'espace-recruteur'}, with_context = false) }}
+            {{ form_end(link_form) }}
+        </div>
+    </div>
+{% endblock %}

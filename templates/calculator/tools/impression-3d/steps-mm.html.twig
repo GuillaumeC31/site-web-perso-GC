@@ -1,0 +1,20 @@
+{#
+  Outil : calibrage des steps/mm d'une imprimante 3D.
+  Inclus par : calculator/tool.html.twig. Contrôleur : calculator--steps-mm.
+  Astuce reprise de l'ancien site ; le calcul se fait à la saisie (plus de bouton « Calculer »).
+#}
+{% import 'calculator/_macros.html.twig' as calc %}
+{% set c = 'calculator--steps-mm' %}
+{% set input = 'input->' ~ c ~ '#calculate' %}
+
+<div data-controller="{{ c }}" class="space-y-6">
+    {% set fields %}
+        {{ calc.field('steps-current', 'Steps/mm actuel', null, {('data-' ~ c ~ '-target'): 'current', 'data-action': input}, null, 'ex. 93') }}
+        {{ calc.field('steps-expected', 'Distance demandée', 'mm', {('data-' ~ c ~ '-target'): 'expected', 'data-action': input}, null, 'ex. 100') }}
+        {{ calc.field('steps-measured', 'Distance obtenue', 'mm', {('data-' ~ c ~ '-target'): 'measured', 'data-action': input}, null, 'ex. 98,5') }}
+        {{ calc.result('steps-result', 'Nouveau réglage', 'steps/mm', {('data-' ~ c ~ '-target'): 'result'}, 'steps-current steps-expected steps-measured') }}
+        {{ calc.message({('data-' ~ c ~ '-target'): 'message'}) }}
+        {{ calc.note({}, 'Astuce : la même formule calibre les axes X, Y, Z ou l\'extrudeur (E-steps).') }}
+    {% endset %}
+    {{ calc.block('Nouveau paramètre steps/mm', 'Nouveau = (Actuel × Distance demandée) / Distance obtenue', fields) }}
+</div>

@@ -1,0 +1,36 @@
+{#
+  Outil : relèvement du facteur de puissance d'un réseau triphasé (batterie de condensateurs).
+  Inclus par : calculator/tool.html.twig. Contrôleur : calculator--relevement-cos-phi.
+  Valeurs par défaut reprises de l'ancien site (400 V, 50 Hz, cos φ cible 0,93). Capacité par phase
+  en étoile et en triangle (anomalie A5, docs/CALCULATRICE_ANOMALIES.md).
+#}
+{% import 'calculator/_macros.html.twig' as calc %}
+{% set c = 'calculator--relevement-cos-phi' %}
+{% set action = 'input->' ~ c ~ '#calculate' %}
+
+<div data-controller="{{ c }}" class="space-y-6">
+    {% set fields %}
+        {{ calc.field('pf-p', 'Puissance active (P)', 'kW', {('data-' ~ c ~ '-target'): 'power', 'data-action': action}, null, 'ex. 150') }}
+        {{ calc.field('pf-u', 'Tension entre phases (U)', 'V', {('data-' ~ c ~ '-target'): 'voltage', 'data-action': action}, '400') }}
+        {{ calc.field('pf-f', 'Fréquence', 'Hz', {('data-' ~ c ~ '-target'): 'frequency', 'data-action': action}, '50') }}
+    {% endset %}
+    {{ calc.block('Données de l\'installation (réseau triphasé)', null, fields) }}
+
+    {% set fields %}
+        {{ calc.field('pf-ini', 'cos φ initial (mesuré)', null, {('data-' ~ c ~ '-target'): 'initial', 'data-action': action}, null, 'ex. 0,75') }}
+        {{ calc.field('pf-cib', 'cos φ cible (souhaité)', null, {('data-' ~ c ~ '-target'): 'target', 'data-action': action}, '0,93') }}
+    {% endset %}
+    {{ calc.block('Facteurs de puissance', null, fields) }}
+
+    {% set fields %}
+        {{ calc.result('pf-qc', 'Batterie de condensateurs (Qc)', 'kvar', {('data-' ~ c ~ '-target'): 'reactive'}, 'pf-p pf-ini pf-cib') }}
+        {{ calc.result('pf-cap-star', 'Capacité par phase (étoile)', 'µF', {('data-' ~ c ~ '-target'): 'capacitanceStar'}, 'pf-p pf-u pf-f pf-ini pf-cib') }}
+        {{ calc.result('pf-cap-delta', 'Capacité par phase (triangle)', 'µF', {('data-' ~ c ~ '-target'): 'capacitanceDelta'}, 'pf-p pf-u pf-f pf-ini pf-cib') }}
+        {{ calc.message({('data-' ~ c ~ '-target'): 'message'}) }}
+    {% endset %}
+    {{ calc.block('Résultats', 'Qc = P × (tan φ1 − tan φ2) · étoile : C = Qc / (U² × 2πf) · triangle : C = Qc / (3 × U² × 2πf)', fields) }}
+
+    <p class="text-sm text-secondary-600 dark:text-secondary-300">
+        En étoile, chaque condensateur est sous U/√3 ; en triangle, sous la tension entre phases U : il faut alors trois fois moins de capacité par phase, avec une tenue en tension adaptée.
+    </p>
+</div>

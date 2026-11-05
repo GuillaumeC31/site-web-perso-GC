@@ -1,0 +1,319 @@
+/*
+ * Design system du site (Tailwind CSS v4).
+ *
+ * Un seul thème + le mode sombre (classe .dark sur <html>, posée par
+ * templates/_partials/_theme_script.html.twig et assets/controllers/theme_controller.js).
+ *
+ * Couleurs :
+ * - primary   : turquoise du logo (palette teal ; le turquoise du logo #16b89e est proche
+ *               de primary-500). Contrastes vérifiés (WCAG AA) :
+ *               · texte et boutons en mode clair : primary-700 (5,4:1 sur blanc, blanc dessus 5,4:1) ;
+ *               · survols : primary-800 (primary-600 n'atteint que 3,7:1 : réservé aux icônes et contours) ;
+ *               · mode sombre : primary-300 sur fonds slate-900/950 (12:1 et plus) ;
+ * - secondary : gris ardoise (textes, fonds, bordures), nom attendu par les composants Tailkit ;
+ * - accent    : ambre (mise en avant ponctuelle, chiffres clés).
+ *
+ * Les composants Twig de templates/components/ utilisent les classes ci-dessous.
+ */
+@import "tailwindcss";
+
+/*
+ * Styles de base des champs seulement : la stratégie « class » du plugin créerait ses propres
+ * classes .form-input, .form-select… (fond blanc) placées après les nôtres, qui annuleraient
+ * le fond du mode sombre (texte blanc sur fond blanc).
+ */
+@plugin "@tailwindcss/forms" {
+    strategy: "base";
+}
+@plugin "@tailwindcss/typography";
+
+@source "../../templates";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/*
+ * Police de secours aux dimensions d'Inter (lot 8, performance) : pendant le chargement d'Inter, le texte
+ * s'affiche en Arial ajustée ; le remplacement ne décale plus la mise en page (CLS mesuré par Lighthouse
+ * sur les pages de texte long, ex. mentions légales à 375 px). Valeurs usuelles pour Inter sur Arial.
+ */
+@font-face {
+    font-family: "Inter Fallback";
+    src: local("Arial");
+    ascent-override: 90.44%;
+    descent-override: 22.52%;
+    line-gap-override: 0%;
+    size-adjust: 107.12%;
+}
+
+@theme inline {
+    --font-sans: "Inter Variable", "Inter Fallback", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+
+    --color-primary-50: var(--color-teal-50);
+    --color-primary-100: var(--color-teal-100);
+    --color-primary-200: var(--color-teal-200);
+    --color-primary-300: var(--color-teal-300);
+    --color-primary-400: var(--color-teal-400);
+    --color-primary-500: var(--color-teal-500);
+    --color-primary-600: var(--color-teal-600);
+    --color-primary-700: var(--color-teal-700);
+    --color-primary-800: var(--color-teal-800);
+    --color-primary-900: var(--color-teal-900);
+    --color-primary-950: var(--color-teal-950);
+
+    --color-secondary-50: var(--color-slate-50);
+    --color-secondary-100: var(--color-slate-100);
+    --color-secondary-200: var(--color-slate-200);
+    --color-secondary-300: var(--color-slate-300);
+    --color-secondary-400: var(--color-slate-400);
+    --color-secondary-500: var(--color-slate-500);
+    --color-secondary-600: var(--color-slate-600);
+    --color-secondary-700: var(--color-slate-700);
+    --color-secondary-800: var(--color-slate-800);
+    --color-secondary-900: var(--color-slate-900);
+    --color-secondary-950: var(--color-slate-950);
+
+    --color-accent-100: var(--color-amber-100);
+    --color-accent-500: var(--color-amber-500);
+    --color-accent-700: var(--color-amber-700);
+
+    /* Largeur maximale du contenu admin (layout Tailkit) */
+    --container-10xl: 120rem;
+}
+
+/*
+ * Texte courant justifié (profil, accroche, missions des expériences, rubriques en phrases, projets, pages
+ * légales, présentation des outils de calcul). À poser sur le paragraphe ou la liste de texte courant,
+ * jamais sur un titre, un bouton, un badge, un menu, un tableau, un formulaire, une liste de logiciels ou
+ * de mots-clés, les bulles de l'assistant, le pied de page ni l'admin.
+ * - Moins de 640 px (mobile) : aligné à gauche, sans césure (colonnes trop étroites pour justifier).
+ * - 640 px et plus : justifié, avec césure. Les césures conditionnelles (U+00AD) sont posées côté serveur
+ *   par le filtre Twig hyphenate (App\Service\Content\Hyphenator) : Edge et Chrome sous Windows ne coupent
+ *   pas le français d'eux-mêmes ; hyphens: auto reste pour les navigateurs qui le font (<html lang="fr">).
+ * - Toujours : coupure des mots très longs (adresses, références de normes) plutôt qu'un débordement.
+ * - Titres, tableaux et code placés dans un bloc justifié (contenu des projets) restent alignés à gauche.
+ * Le CV PDF « mis en page » (mPDF) a son propre réglage : templates/cv/pdf/design.html.twig.
+ */
+@utility text-prose-justify {
+    overflow-wrap: break-word;
+    -webkit-hyphens: none;
+    hyphens: none;
+
+    @media (width >= 40rem) {
+        text-align: justify;
+        -webkit-hyphens: auto;
+        hyphens: auto;
+    }
+
+    & :where(h1, h2, h3, h4, h5, h6, th, td, caption, figcaption, pre) {
+        text-align: start;
+        -webkit-hyphens: manual;
+        hyphens: manual;
+    }
+}
+
+@layer base {
+    html {
+        scroll-behavior: smooth;
+        /* En-tête fixe : les ancres s'arrêtent sous sa partie visible (site_header_controller.js) */
+        scroll-padding-top: var(--header-offset, 0px);
+        /* Contrôles natifs (listes déroulantes, calendrier, barres de défilement) au thème du site */
+        color-scheme: light;
+    }
+
+    html.dark {
+        color-scheme: dark;
+    }
+
+    body {
+        @apply bg-white text-secondary-900 antialiased dark:bg-secondary-900 dark:text-secondary-100;
+    }
+
+    /* Focus visible pour la navigation au clavier (WCAG) */
+    :focus-visible {
+        @apply outline-2 outline-offset-2 outline-primary-600 dark:outline-primary-400;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        html {
+            scroll-behavior: auto;
+        }
+
+        *,
+        *::before,
+        *::after {
+            transition-duration: 0.01ms !important;
+            animation-duration: 0.01ms !important;
+        }
+    }
+}
+
+@layer components {
+    /* Boutons (d'après les boutons Tailkit) */
+    .btn {
+        @apply inline-flex items-center justify-center gap-2 rounded-xl border px-5 py-3 leading-6 font-semibold transition focus:ring-3 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60;
+    }
+
+    .btn-sm {
+        @apply rounded-lg px-3 py-2 text-sm leading-5;
+    }
+
+    .btn-primary {
+        @apply border-primary-700 bg-primary-700 text-white hover:border-primary-800 hover:bg-primary-800 focus:ring-primary-400/50 active:border-primary-700 active:bg-primary-700 dark:focus:ring-primary-400/90;
+    }
+
+    .btn-secondary {
+        @apply border-secondary-200 bg-white text-secondary-800 hover:border-secondary-300 hover:text-secondary-900 hover:shadow-xs focus:ring-secondary-300/25 dark:border-secondary-700 dark:bg-transparent dark:text-secondary-200 dark:hover:border-secondary-600 dark:hover:text-white dark:focus:ring-secondary-600/40;
+    }
+
+    .btn-danger {
+        @apply border-red-700 bg-red-700 text-white hover:border-red-600 hover:bg-red-600 focus:ring-red-400/50;
+    }
+
+    /* Champ piège des formulaires publics (HoneypotOptions) : hors écran, ignoré par les visiteurs et
+       les lecteurs d'écran (aria-hidden), rempli seulement par les robots */
+    .hp-field {
+        @apply absolute -left-[9999px] h-px w-px overflow-hidden;
+    }
+
+    /* Trame de points du haut de l'accueil (maquette) */
+    .bg-dots {
+        background-image: radial-gradient(circle at 1px 1px, rgb(148 163 184 / 0.45) 1px, transparent 0);
+        background-size: 24px 24px;
+    }
+
+    /* CV (page /cv, espace recruteur) : rubriques et grille régulière, colonne des dates de largeur fixe */
+    .cv-heading {
+        @apply mb-5 border-b-2 border-primary-700 pb-2 text-sm font-bold tracking-wider text-secondary-900 uppercase dark:border-primary-400 dark:text-white;
+    }
+
+    .cv-row {
+        @apply grid gap-x-6 gap-y-1 sm:grid-cols-[8.5rem_minmax(0,1fr)];
+    }
+
+    .cv-date {
+        @apply text-sm font-semibold whitespace-nowrap text-primary-700 tabular-nums sm:pt-px dark:text-primary-300;
+    }
+
+    .cv-list {
+        @apply list-disc space-y-1 pl-5 text-sm/relaxed text-secondary-700 marker:text-primary-600 dark:text-secondary-300 dark:marker:text-primary-400;
+    }
+
+    /* Cartes */
+    .card {
+        @apply rounded-2xl border border-secondary-200 bg-white p-6 shadow-xs dark:border-secondary-700/70 dark:bg-secondary-800/60;
+    }
+
+    /* Liens dans le texte */
+    .link {
+        @apply font-medium text-primary-700 underline decoration-primary-300 underline-offset-4 hover:text-primary-800 dark:text-primary-300 dark:decoration-primary-700 dark:hover:text-primary-200;
+    }
+
+    /* Champs de formulaire (thème templates/form/tailwind_theme.html.twig) */
+    .form-label {
+        @apply mb-1 block text-sm font-medium text-secondary-800 dark:text-secondary-200;
+    }
+
+    /*
+     * Champs (input, select, textarea : le thème de formulaire leur donne tous .form-input).
+     * Couleurs de texte et de fond explicites et opaques : le texte reste lisible quel que
+     * soit le fond imposé par le navigateur.
+     */
+    .form-input {
+        @apply block w-full rounded-lg border border-secondary-200 bg-white px-3 py-2 leading-6 text-secondary-900 placeholder-secondary-400 focus:border-primary-600 focus:ring-3 focus:ring-primary-600/40 dark:border-secondary-600 dark:bg-secondary-900 dark:text-white dark:placeholder-secondary-500 dark:focus:border-primary-400;
+    }
+
+    /*
+     * Remplissage automatique (Chrome, Edge, gestionnaires de mots de passe) : le navigateur
+     * impose un fond clair qu'on ne peut pas changer avec background-color. On le recouvre
+     * par une ombre intérieure de la couleur du fond, et on force la couleur du texte et du
+     * curseur. Au focus, l'anneau de focus est reconstruit dans la même ombre.
+     */
+    .form-input:-webkit-autofill,
+    .form-input:-webkit-autofill:hover,
+    .form-input:autofill,
+    select.form-input:-webkit-autofill,
+    textarea.form-input:-webkit-autofill {
+        -webkit-text-fill-color: var(--color-secondary-900);
+        caret-color: var(--color-secondary-900);
+        box-shadow: 0 0 0 1000px var(--color-white) inset;
+        transition: background-color 9999s ease-out 0s;
+    }
+
+    .form-input:-webkit-autofill:focus,
+    select.form-input:-webkit-autofill:focus,
+    textarea.form-input:-webkit-autofill:focus {
+        -webkit-text-fill-color: var(--color-secondary-900);
+        caret-color: var(--color-secondary-900);
+        box-shadow:
+            0 0 0 1000px var(--color-white) inset,
+            0 0 0 3px color-mix(in oklab, var(--color-primary-600) 40%, transparent);
+    }
+
+    .dark .form-input:-webkit-autofill,
+    .dark .form-input:-webkit-autofill:hover,
+    .dark .form-input:autofill,
+    .dark select.form-input:-webkit-autofill,
+    .dark textarea.form-input:-webkit-autofill {
+        -webkit-text-fill-color: var(--color-white);
+        caret-color: var(--color-white);
+        box-shadow: 0 0 0 1000px var(--color-secondary-900) inset;
+    }
+
+    .dark .form-input:-webkit-autofill:focus,
+    .dark select.form-input:-webkit-autofill:focus,
+    .dark textarea.form-input:-webkit-autofill:focus {
+        -webkit-text-fill-color: var(--color-white);
+        caret-color: var(--color-white);
+        box-shadow:
+            0 0 0 1000px var(--color-secondary-900) inset,
+            0 0 0 3px color-mix(in oklab, var(--color-primary-400) 40%, transparent);
+    }
+
+    .form-help {
+        @apply mt-1 text-sm text-secondary-600 dark:text-secondary-400;
+    }
+
+    .form-error {
+        @apply mt-1 text-sm font-medium text-red-700 dark:text-red-400;
+    }
+}
+
+/* Version imprimable : pas de navigation ni de boutons, texte noir sur blanc */
+@media print {
+    .no-print,
+    header[role="banner"],
+    footer[role="contentinfo"] {
+        display: none !important;
+    }
+
+    body {
+        background: #fff !important;
+        color: #000 !important;
+    }
+
+    a[href^="http"]::after {
+        content: " (" attr(href) ")";
+        font-size: 0.85em;
+    }
+}
+
+/*
+ * Fenêtres et messages (contrôleur « notify ») : ici seulement ce qui sert avant le chargement de
+ * SweetAlert2 (messages masqués d'emblée avec JavaScript). Le thème des fenêtres est dans
+ * assets/styles/notify.css, chargé à la demande avec SweetAlert2 (pas de poids sur les autres pages).
+ */
+.js [data-notify-target="toast"],
+.js [data-controller~="notify"][data-notify-dialog-value="true"] {
+    display: none;
+}
+
+.js .notify-fallback [data-notify-target="toast"],
+.js [data-controller~="notify"][data-notify-dialog-value="true"].notify-fallback {
+    display: block;
+}
+
+/* Messages flash seulement en toasts : sans JavaScript, l'espace au-dessus reste celui d'origine */
+html:not(.js) .notify-toasts-only,
+.notify-toasts-only.notify-fallback {
+    padding-top: 1.5rem;
+}

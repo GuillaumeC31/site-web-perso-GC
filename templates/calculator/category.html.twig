@@ -1,0 +1,46 @@
+{#
+  Page : outils d'une catégorie de la calculatrice.
+  Affichée par : CalculatorController::category() (route calculator_category, /calculatrice/{category}).
+  Variables attendues :
+    - category : CalculatorCategory (au moins un outil public)
+#}
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ category.name }} · {{ 'calculator.title'|trans }} · {{ site_owner_name }}{% endblock %}
+{% block description %}{{ 'calculator.category_meta_description'|trans({'%category%': category.name, '%description%': category.description}) }}{% endblock %}
+
+{% block body %}
+    <div class="container mx-auto px-4 py-12 lg:px-8 lg:py-16 xl:max-w-7xl">
+        <nav aria-label="{{ 'calculator.breadcrumb'|trans }}" class="text-sm">
+            <ol class="flex flex-wrap items-center gap-2 text-secondary-600 dark:text-secondary-300">
+                <li><a href="{{ path('calculator_dashboard') }}" class="font-medium text-primary-700 hover:text-primary-800 dark:text-primary-300">{{ 'calculator.title'|trans }}</a></li>
+                <li aria-hidden="true">/</li>
+                <li aria-current="page">{{ category.name }}</li>
+            </ol>
+        </nav>
+
+        <twig:SectionHeading title="{{ category.name }}" :level="1" class="mt-6">
+            {{ category.description }}
+        </twig:SectionHeading>
+
+        <div class="mt-10 space-y-10">
+            {% for group, tools in category.publicToolsByGroup %}
+                <section {% if group %}aria-labelledby="group-{{ loop.index }}"{% endif %}>
+                    {% if group %}<h2 id="group-{{ loop.index }}" class="text-lg font-bold text-secondary-900 dark:text-white">{{ group }}</h2>{% endif %}
+                    <ul class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                        {% for tool in tools %}
+                            <li>
+                                <a href="{{ path('calculator_tool', {category: category.slug, tool: tool.slug}) }}" class="card block h-full p-5 transition hover:border-primary-700 dark:hover:border-primary-300">
+                                    <span class="block font-semibold text-secondary-900 dark:text-white">{{ tool.title }}</span>
+                                    {% if tool.summary %}<span class="mt-1 block text-sm/relaxed text-secondary-600 dark:text-secondary-300">{{ tool.summary }}</span>{% endif %}
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </section>
+            {% endfor %}
+        </div>
+
+        {{ include('calculator/_author.html.twig') }}
+    </div>
+{% endblock %}

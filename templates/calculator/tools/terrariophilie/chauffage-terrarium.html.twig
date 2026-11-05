@@ -1,0 +1,78 @@
+{#
+  Outil : puissance de chauffage d'un terrarium (lampe ou tapis chauffant).
+  Inclus par : calculator/tool.html.twig. Contrôleur : calculator--chauffage-terrarium.
+  D5 (2026-10-23) : méthode par les parois, P = [Σ(U × S) × ΔT + 0,34 × débit × ΔT] × sécurité, un
+  matériau par paroi, U = 1 / (0,17 + e/λ) affiché et modifiable ; l'ancienne règle au volume reste une
+  « estimation rapide (empirique) ». Valeurs par défaut de l'ancien site (90 × 45 × 60 cm, verre, 20 → 35 °C).
+#}
+{% import 'calculator/_macros.html.twig' as calc %}
+{% set c = 'calculator--chauffage-terrarium' %}
+{% set t = 'data-' ~ c ~ '-target' %}
+{% set input = 'input->' ~ c ~ '#calculate' %}
+{% set materials = {glass: 'Verre 4 mm', osb: 'OSB 18 mm', pvc: 'PVC expansé 10 mm', xps: 'XPS 20 mm'} %}
+{% set faces = [{key: 'front', label: 'Façade'}, {key: 'back', label: 'Fond'}, {key: 'left', label: 'Côté gauche'}, {key: 'right', label: 'Côté droit'}, {key: 'top', label: 'Dessus'}, {key: 'bottom', label: 'Dessous'}] %}
+
+<div data-controller="{{ c }}" class="space-y-6">
+    {% set fields %}
+        {{ calc.field('th-length', 'Longueur', 'cm', {(t): 'length', 'data-action': input}, '90') }}
+        {{ calc.field('th-width', 'Profondeur', 'cm', {(t): 'width', 'data-action': input}, '45') }}
+        {{ calc.field('th-height', 'Hauteur', 'cm', {(t): 'height', 'data-action': input}, '60') }}
+        {{ calc.field('th-room', 'Température de la pièce', '°C', {(t): 'tRoom', 'data-action': input}, '20') }}
+        {{ calc.field('th-target', 'Point chaud visé', '°C', {(t): 'tTarget', 'data-action': input}, '35') }}
+        {{ calc.field('th-air', 'Renouvellement d\'air', 'vol/h', {(t): 'airChanges', 'data-action': input}, '1') }}
+        {{ calc.field('th-safety', 'Coefficient de sécurité', null, {(t): 'safety', 'data-action': input}, '1,2') }}
+    {% endset %}
+    {{ calc.block('Terrarium', null, fields) }}
+
+    <section class="card" aria-labelledby="th-walls-title">
+        <h2 id="th-walls-title" class="text-lg font-bold text-secondary-900 dark:text-white">Parois</h2>
+        <p class="mt-1 text-sm text-secondary-600 dark:text-secondary-300">Choisissez le matériau de chaque paroi : son coefficient U s'affiche, calculé par U = 1 / (0,17 + e/λ), et reste modifiable (fiche technique).</p>
+        <div class="mt-4 overflow-x-auto">
+            <table class="min-w-full text-sm">
+                <thead>
+                    <tr class="border-b border-secondary-200 text-left text-secondary-700 dark:border-secondary-700 dark:text-secondary-200">
+                        <th scope="col" class="py-2 pr-3">Paroi</th>
+                        <th scope="col" class="py-2 pr-3">Matériau</th>
+                        <th scope="col" class="py-2 pr-3">U (W/(m²·K))</th>
+                        <th scope="col" class="py-2 pr-3 text-right">Surface (m²)</th>
+                        <th scope="col" class="py-2 text-right">Pertes (W)</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-secondary-100 dark:divide-secondary-700/60">
+                    {% for face in faces %}
+                        <tr>
+                            <th scope="row" class="py-2 pr-3 text-left font-medium text-secondary-900 dark:text-white">{{ face.label }}</th>
+                            <td class="py-2 pr-3">
+                                <select class="form-input min-w-40" aria-label="Matériau : {{ face.label|lower }}" {{ t }}="material" data-index="{{ loop.index0 }}" data-action="change->{{ c }}#chooseMaterial">
+                                    {% for value, label in materials %}<option value="{{ value }}">{{ label }}</option>{% endfor %}
+                                </select>
+                            </td>
+                            <td class="py-2 pr-3"><input type="text" inputmode="decimal" autocomplete="off" class="form-input w-24 font-mono" aria-label="Coefficient U : {{ face.label|lower }}" {{ t }}="u" data-action="{{ input }}"></td>
+                            <td class="py-2 pr-3 text-right font-mono" {{ t }}="area">—</td>
+                            <td class="py-2 text-right font-mono" {{ t }}="faceLoss">—</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    {% set fields %}
+        {{ calc.result('th-conduction', 'Pertes par les parois', 'W', {(t): 'conduction'}) }}
+        {{ calc.result('th-ventilation', 'Pertes par l\'air', 'W', {(t): 'ventilation'}) }}
+        {{ calc.result('th-total', 'Besoin avec sécurité', 'W', {(t): 'total'}) }}
+        {{ calc.result('th-power', 'Puissance recommandée', 'W', {(t): 'power'}, 'th-length th-width th-height th-room th-target th-air th-safety') }}
+        {{ calc.message({(t): 'message'}) }}
+        <p class="font-medium text-secondary-900 sm:col-span-2 lg:col-span-4 dark:text-white" aria-live="polite" {{ t }}="rounding"></p>
+        <p class="rounded-lg border-l-4 border-amber-500 bg-amber-50 p-3 text-sm font-medium text-amber-900 sm:col-span-2 lg:col-span-4 dark:bg-amber-950/50 dark:text-amber-100">Thermostat obligatoire : sans régulation, la puissance installée surchauffe le terrarium.</p>
+        {{ calc.note({}, 'Puissance arrondie aux 25 W supérieurs (puissances du commerce). Le point chaud visé sert de température intérieure : estimation prudente. U de 0,17 m²·K/W pour les échanges en surface ; λ : verre 1,0, OSB 0,13, PVC expansé 0,06, XPS 0,034 W/(m·K) (valeurs usuelles, à vérifier).') }}
+    {% endset %}
+    {{ calc.block('Résultat', 'P = [Σ(U × S) × ΔT + 0,34 × débit (m³/h) × ΔT] × sécurité', fields) }}
+
+    {% set fields %}
+        {{ calc.select('th-material', 'Matériau du terrarium', {glass: 'Verre (dissipe la chaleur)', wood: 'Bois / OSB (conserve la chaleur)'}, {(t): 'quickMaterial', 'data-action': 'change->' ~ c ~ '#calculate'}) }}
+        {{ calc.result('th-quick', 'Estimation rapide', 'W', {(t): 'quick'}) }}
+        {{ calc.note({}, 'Règle empirique de l\'ancien site, au volume : à comparer avec la méthode par les parois, qui la remplace.') }}
+    {% endset %}
+    {{ calc.block('Estimation rapide (empirique)', 'P ≈ volume (L) × ΔT × facteur (verre 0,045 ; bois 0,025), arrondie aux 25 W supérieurs', fields) }}
+</div>

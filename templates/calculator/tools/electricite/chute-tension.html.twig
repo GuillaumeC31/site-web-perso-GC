@@ -1,0 +1,26 @@
+{#
+  Outil : chute de tension d'une ligne monophasée (méthode simplifiée, charge résistive).
+  Inclus par : calculator/tool.html.twig. Contrôleur : calculator--chute-tension.
+  Résistivités de calcul de la NF C 15-100 / UTE C 15-105, communes avec le dimensionnement des
+  câbles (anomalie A1, docs/CALCULATRICE_ANOMALIES.md) ; valeur et norme affichées sous le résultat.
+#}
+{% import 'calculator/_macros.html.twig' as calc %}
+{% set c = 'calculator--chute-tension' %}
+{% set action = c ~ '#calculate' %}
+
+<div data-controller="{{ c }}" class="space-y-6">
+    {% set fields %}
+        {{ calc.select('drop-mat', 'Matériau', {cu: 'Cuivre', al: 'Aluminium'}, {('data-' ~ c ~ '-target'): 'material', 'data-action': 'change->' ~ action}) }}
+        {{ calc.field('drop-l', 'Longueur (L)', 'm', {('data-' ~ c ~ '-target'): 'length', 'data-action': 'input->' ~ action}, null, 'ex. 50') }}
+        {{ calc.field('drop-i', 'Courant (I)', 'A', {('data-' ~ c ~ '-target'): 'current', 'data-action': 'input->' ~ action}, null, 'ex. 32') }}
+        {{ calc.select('drop-s', 'Section (S)', {'1.5': '1,5 mm²', '2.5': '2,5 mm²', '4': '4 mm²', '6': '6 mm²', '10': '10 mm²', '16': '16 mm²', '25': '25 mm²', '35': '35 mm²'}, {('data-' ~ c ~ '-target'): 'section', 'data-action': 'change->' ~ action}) }}
+        {{ calc.result('drop-result', 'Chute de tension (ΔU)', 'V', {('data-' ~ c ~ '-target'): 'result'}, 'drop-mat drop-l drop-i drop-s') }}
+        {{ calc.message({('data-' ~ c ~ '-target'): 'message'}) }}
+        {{ calc.note({('data-' ~ c ~ '-target'): 'note'}, 'ρ = 0,0225 Ω·mm²/m (cuivre) — NF C 15-100 / UTE C 15-105') }}
+    {% endset %}
+    {{ calc.block('Chute de tension en monophasé', 'ΔU = 2 × ρ × (L / S) × I', fields) }}
+
+    <p class="text-sm text-secondary-600 dark:text-secondary-300">
+        Calcul simplifié pour un courant alternatif monophasé et une charge purement résistive (cos φ = 1), sans la réactance de la ligne.
+    </p>
+</div>

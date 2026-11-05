@@ -1,0 +1,117 @@
+###> symfony/framework-bundle ###
+/.env
+/.env.local
+/.env.local.php
+/.env.*.local
+/config/secrets/prod/prod.decrypt.private.php
+/public/bundles/
+/var/
+/vendor/
+###< symfony/framework-bundle ###
+
+###> friendsofphp/php-cs-fixer ###
+/.php-cs-fixer.php
+/.php-cs-fixer.cache
+###< friendsofphp/php-cs-fixer ###
+
+###> phpunit/phpunit ###
+/phpunit.xml
+/.phpunit.cache/
+###< phpunit/phpunit ###
+
+###> phpstan ###
+/phpstan.neon
+###< phpstan ###
+
+###> front (Vite) ###
+/node_modules/
+/public/build/
+###< front (Vite) ###
+
+# Fichiers déposés par les visiteurs ou l'admin (le .htaccess reste versionné)
+/public/uploads/*
+!/public/uploads/.htaccess
+
+# Fichiers sensibles : ne jamais versionner
+*.sql
+*.sql.gz
+*.pem
+*.key
+*.p12
+*.pfx
+.env.local.bak.*
+**/error_log
+
+# Système et éditeurs
+.DS_Store
+Thumbs.db
+
+# .htaccess propre au serveur, à la racine du projet (mot de passe d'un environnement de test)
+/.htaccess
+
+# public/images : uniquement des versions optimisées (WebP ou SVG, moins de 200 Ko).
+# Les originaux sont rangés hors du dépôt, dans ../medias_originaux/ (voir scripts/images/optimize-image.php).
+/public/images/**/*.png
+/public/images/**/*.jpg
+/public/images/**/*.jpeg
+/public/images/**/*.gif
+
+###> playwright ###
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+###< playwright ###
+
+###> CV de référence (contient le téléphone : jamais sur le web ni sur GitHub) ###
+/reference/
+/public/cv/
+###< CV de référence ###
+
+# Captures de validation des lots (locales, jamais dans le dépôt)
+/captures-lot*/
+
+# Sessions des tests de bout en bout (comptes de test des pages privées, supprimés après les tests)
+/tests/e2e/.auth/
+/captures-justifie/
+/captures-connexion/
+/captures-tableau-de-bord/
+/captures-cerveau-ia/
+/captures-notifications/
+/captures-maintenance/
+/captures-pied-de-page/
+/captures-communication/
+/captures-messages/
+/captures-lighthouse*/
+/captures-reseaux/
+/captures-rgpd/
+/captures-securite/
+/captures-cv-public/
+
+# Identifiants personnels : ne jamais versionner (reste sur le poste)
+IDENTIFIANT_NE_PAS_PUSH.md
+# Fichiers d'identifiants (texte et Markdown ; casse prise en compte sur les systèmes sensibles) : jamais
+# versionnés, bloqués aussi par scripts/security/check-staged-assets.sh. Le code (ex.
+# check-staged-secrets.sh, ResetAdminPasswordCommand.php) n'est pas concerné.
+*NE_PAS_PUSH*
+*ne_pas_push*
+*identifiant*.md
+*identifiant*.txt
+*IDENTIFIANT*.md
+*IDENTIFIANT*.txt
+*Identifiant*.md
+*Identifiant*.txt
+*password*.md
+*password*.txt
+*PASSWORD*.md
+*PASSWORD*.txt
+*Password*.md
+*Password*.txt
+*secret*.md
+*secret*.txt
+*SECRET*.md
+*SECRET*.txt
+*Secret*.md
+*Secret*.txt
+/captures-cv-public-v2/
+/captures-titres-v2.0.2/

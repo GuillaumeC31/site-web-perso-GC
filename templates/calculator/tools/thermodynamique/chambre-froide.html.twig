@@ -1,0 +1,466 @@
+{#
+  Outil : bilan frigorifique d'une chambre froide, version 2 (lot 5e), mode simple (moins de champs,
+  hypothèses affichées) ou pro (tout saisi, listes de portes, de vitrages et de produits).
+  Mise en page commune avec l'enceinte climatique (2026-10-23) : sections numérotées 1 Chambre, 2 Portes et
+  vitrages, 3 Apports internes, 4 Produits, 5 Air neuf et dégivrage, 6 Fonctionnement et fluide, 7 Résultats ;
+  navigation interne et résumé collant (alertes courtes, avec un lien vers le texte complet) : contrôleur
+  calculator--layout.
+  Inclus par : calculator/tool.html.twig. Contrôleurs : calculator--chambre-froide, calculator--layout.
+  Champs simples : attribut data-field ; éléments des listes : modèles <template>, champs data-item-field.
+  Variables attendues (CalculatorController::toolData()) :
+    - refrigerants : fluides de l'admin (Refrigerant) ; fgas_rules : règles F-Gas vérifiées (FGasRule) ;
+      panel_models : modèles de panneaux des marques (PanelModel)
+  Valeurs par défaut : docs/CHAMBRE_FROIDE_V2.md (toutes indicatives, à vérifier).
+#}
+{% import 'calculator/_macros.html.twig' as calc %}
+{% import 'calculator/_layout_macros.html.twig' as ui %}
+{% set c = 'calculator--chambre-froide' %}
+{% set t = 'data-' ~ c ~ '-target' %}
+{% set input = 'input->' ~ c ~ '#calculate' %}
+{% set change = 'change->' ~ c ~ '#calculate' %}
+{% set yesNo = {no: 'Non', yes: 'Oui'} %}
+{% set generic = {PIR: 'Générique PIR (λ 0,022)', PUR: 'Générique PUR (λ 0,023)', XPS: 'Générique XPS (λ 0,034)', EPS: 'Générique EPS (λ 0,036)', rockwool: 'Générique laine de roche (λ 0,040)'} %}
+{% set thicknesses = {60: '60 mm', 80: '80 mm', 100: '100 mm', 120: '120 mm', 150: '150 mm', 180: '180 mm', 200: '200 mm'} %}
+{% set protections = {none: 'Aucune', strips: 'Rideau à lanières', air_curtain: 'Rideau d\'air', airlock: 'Sas'} %}
+{% set installations = {split: 'Split (groupe à distance)', self_contained: 'Groupe autonome (monobloc)', centralised: 'Centrale multipostes'} %}
+{% set panelSelect %}
+    <optgroup label="Panneaux génériques (par λ)">
+        {% for value, text in generic %}<option value="generic:{{ value }}" {% if value == 'PIR' %}selected{% endif %}>{{ text }}</option>{% endfor %}
+    </optgroup>
+    {% if panel_models|default([]) is not empty %}
+        <optgroup label="Modèles des marques">
+            {% for model in panel_models %}<option value="model:{{ model.id }}">{{ model.toCalculatorArray().label }}</option>{% endfor %}
+        </optgroup>
+    {% endif %}
+{% endset %}
+{% set icons = {
+    1: 'M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9',
+    2: 'M13.5 10.5V6.75a4.5 4.5 0 119 0v3.75M3.75 21.75h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H3.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z',
+    3: 'M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z',
+    4: 'M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z',
+    5: 'M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5',
+    6: 'M12 3v18m0-18l-3 3m3-3l3 3m-3 15l-3-3m3 3l3-3M3 12h18M3 12l3-3m-3 3l3 3m15-3l-3-3m3 3l-3 3',
+    7: 'M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z',
+} %}
+{% set sections = {
+    1: {title: 'Chambre', short: 'Chambre'}, 2: {title: 'Portes et vitrages', short: 'Portes'}, 3: {title: 'Apports internes', short: 'Apports'},
+    4: {title: 'Produits', short: 'Produits'}, 5: {title: 'Air neuf et dégivrage', short: 'Air, dégivrage'}, 6: {title: 'Fonctionnement et fluide', short: 'Fluide'},
+    7: {title: 'Résultats', short: 'Résultats', id: 'cf-section-7'},
+} %}
+
+<div data-controller="{{ c }} calculator--layout" class="max-lg:pb-28"
+     data-{{ c }}-refrigerants-value="{{ (refrigerants ?? [])|map(r => r.toCalculatorArray())|json_encode }}"
+     data-{{ c }}-rules-value="{{ (fgas_rules ?? [])|map(r => r.toCalculatorArray())|json_encode }}"
+     data-{{ c }}-panels-value="{{ (panel_models ?? [])|map(p => p.toCalculatorArray())|json_encode }}"
+     data-{{ c }}-today-value="{{ 'now'|date('Y-m-d') }}">
+    <div class="flex flex-wrap items-center gap-4">
+        <div class="inline-flex rounded-xl border border-secondary-200 p-1 dark:border-secondary-700" role="group" aria-label="Mode de calcul">
+            <button type="button" class="rounded-lg px-4 py-2 text-sm font-semibold aria-pressed:bg-primary-700 aria-pressed:text-white" aria-pressed="true" {{ t }}="modeButton" data-mode="simple" data-action="{{ c }}#setMode calculator--layout#refresh">Simple</button>
+            <button type="button" class="rounded-lg px-4 py-2 text-sm font-semibold aria-pressed:bg-primary-700 aria-pressed:text-white" aria-pressed="false" {{ t }}="modeButton" data-mode="pro" data-action="{{ c }}#setMode calculator--layout#refresh">Pro</button>
+        </div>
+        <p class="max-w-2xl text-sm text-secondary-600 dark:text-secondary-300">Simple : l'essentiel, le reste en hypothèses affichées. Pro : toutes les valeurs.</p>
+    </div>
+
+    {{ ui.navPills(sections, 'Sections de l\'outil', 'cf-s') }}
+
+    <div class="mt-6 lg:grid lg:grid-cols-[minmax(0,1fr)_17rem] lg:items-start lg:gap-8">
+        <div class="min-w-0 space-y-6">
+            {# --- Mode simple --- #}
+            <div class="space-y-6" {{ t }}="form" data-mode="simple">
+                {% set content %}
+                    {% set fields %}
+                        {{ calc.field('cf-s-length', 'Longueur', 'm', {'data-field': 'length', 'data-action': input}, '4') }}
+                        {{ calc.field('cf-s-width', 'Largeur', 'm', {'data-field': 'width', 'data-action': input}, '3') }}
+                        {{ calc.field('cf-s-height', 'Hauteur', 'm', {'data-field': 'height', 'data-action': input}, '2,5') }}
+                        {{ calc.select('cf-s-usage', 'Usage', {storage: 'Stockage', prep: 'Atelier de préparation'}, {'data-field': 'usage', 'data-action': change}) }}
+                        {{ calc.select('cf-s-regime', 'Régime', {positive: 'Positif (+2 °C)', positive0: 'Positif (0 °C)', negative: 'Négatif (−18 °C)', negative25: 'Négatif (−25 °C)'}, {'data-field': 'regime', 'data-action': 'change->' ~ c ~ '#changeRegime'}, 'negative') }}
+                    {% endset %}
+                    {{ ui.group('Dimensions et régime', fields) }}
+                    {% set fields %}
+                        <div class="sm:col-span-2">
+                            <label for="cf-s-panel" class="form-label">Panneaux</label>
+                            <select id="cf-s-panel" class="form-input" data-field="panel" data-action="change->{{ c }}#changePanel">{{ panelSelect }}</select>
+                        </div>
+                        {{ calc.select('cf-s-thickness', 'Épaisseur', thicknesses, {'data-field': 'thickness', 'data-action': 'change->' ~ c ~ '#changePanel', 'data-panel-generic': ''}, '120') }}
+                        {{ calc.select('cf-s-floor', 'Sol isolé', {yes: 'Oui', no: 'Non'}, {'data-field': 'floorInsulated', 'data-action': change}) }}
+                        <p class="text-sm text-secondary-600 sm:col-span-2 xl:col-span-3 dark:text-secondary-300" data-panel-info></p>
+                    {% endset %}
+                    {{ ui.group('Isolation', fields) }}
+                {% endset %}
+                {% set formulas %}
+                    {{ ui.formula('U = 1 / (0,17 + e/λ) · Q = U × S × ΔT') }}
+                    <p>Parois à 25 °C, plafond à 32 °C, sol sur terre-plein à 12 °C (sol non isolé : U = 1,5 W/(m²·K)) ; humidité de la chambre 85 % (sur la glace en négatif).</p>
+                    <p>Négatif : câble antigel sous dalle 15 W/m² (30 % du temps, 10 % réintroduits) si le sol est isolé.</p>
+                {% endset %}
+                {{ ui.section('cf-s-section-1', 1, 'Chambre', icons[1], content, formulas) }}
+
+                {% set content %}
+                    {% set fields %}
+                        {{ calc.select('cf-s-protection', 'Protection de la porte', protections, {'data-field': 'doorProtection', 'data-action': change}) }}
+                        {{ calc.select('cf-s-glazing', 'Vitrage (double, non chauffé)', yesNo, {'data-field': 'glazing', 'data-action': change}) }}
+                        {{ calc.field('cf-s-glazing-area', 'Surface vitrée', 'm²', {'data-field': 'glazingArea', 'data-action': input}, '0') }}
+                    {% endset %}
+                    {{ ui.group(null, fields) }}
+                {% endset %}
+                {% set formulas %}
+                    {{ ui.formula('Infiltrations ASHRAE : q × D_t × D_f × (1 − E)') }}
+                    <p>Porte battante isotherme de 0,9 × 2 m (U = 0,55), 15 ouvertures de 25 s par jour, local devant la porte à 25 °C et 50 % ; atelier : 2 portes de 1 × 2 m, 40 ouvertures.</p>
+                    <p>Efficacité de la protection : lanières 70 % (85 à 95 % si neuf et bien entretenu), rideau d'air 65 %, sas 90 % ; D_f = 0,8. Négatif : cordon chauffant 40 W/m (70 % réintroduits). Vitrage double U = 2,8, non chauffé.</p>
+                {% endset %}
+                {{ ui.section('cf-s-section-2', 2, 'Portes et vitrages', icons[2], content, formulas) }}
+
+                {% set content %}
+                    <p class="text-sm text-secondary-700 dark:text-secondary-300">Éclairage 8 W/m² pendant 12 h ; ventilateurs d'évaporateur 2,5 W/m³, 24 h/24 ; atelier : 1 personne pendant 4 h. Négatif : câble d'évacuation des condensats (2 m à 40 W/m pendant le dégivrage et 10 min d'égouttage, 10 % réintroduits) et soupape chauffée 20 W.</p>
+                {% endset %}
+                {% set formulas %}<p>Personnes : 270 − 6 × T (W, ASHRAE). Ces apports se saisissent en mode pro.</p>{% endset %}
+                {{ ui.section('cf-s-section-3', 3, 'Apports internes', icons[3], content, formulas) }}
+
+                {% set content %}
+                    {% set fields %}
+                        {{ calc.select('cf-s-load', 'État de charge', {empty: 'Vide (maintien)', loaded: 'En charge'}, {'data-field': 'loadMode', 'data-action': change}, 'loaded') }}
+                        <div class="sm:col-span-2">
+                            <label for="cf-s-profile" class="form-label">Profil produit</label>
+                            <select id="cf-s-profile" class="form-input" data-field="productProfile" data-product-profile data-action="change->{{ c }}#applyProfile"></select>
+                        </div>
+                        {{ calc.field('cf-s-cp', 'Capacité thermique (cp)', 'kJ/(kg·K)', {'data-field': 'productCp', 'data-action': input}, '3,5') }}
+                        {{ calc.field('cf-s-water', 'Teneur en eau', '%', {'data-field': 'productWaterPct', 'data-action': input}, '75') }}
+                        {{ calc.field('cf-s-daily', 'Entrées', 'kg/j', {'data-field': 'dailyKg', 'data-action': input}, '500') }}
+                        {{ calc.field('cf-s-entry', 'Température d\'entrée', '°C', {'data-field': 'entryTemp', 'data-action': input}, '10') }}
+                        {{ calc.field('cf-s-pulldown', 'Durée de refroidissement', 'h', {'data-field': 'pullDownHours', 'data-action': input}, '12') }}
+                        <p class="text-sm text-secondary-600 sm:col-span-2 xl:col-span-3 dark:text-secondary-300" data-product-hint></p>
+                    {% endset %}
+                    {{ ui.group(null, fields) }}
+                {% endset %}
+                {% set formulas %}
+                    {{ ui.formula('P = masse × cp × (T entrée − T consigne) / durée de refroidissement') }}
+                    <p>En chambre négative, les produits entrent déjà congelés à −15 °C : la congélation sur place, la respiration et les emballages se calculent en mode pro. Durée de refroidissement : celle du profil, modifiable.</p>
+                {% endset %}
+                {{ ui.section('cf-s-section-4', 4, 'Produits', icons[4], content, formulas) }}
+
+                {% set content %}
+                    {% set fields %}
+                        {{ calc.field('cf-s-air', 'Renouvellement d\'air', 'm³/h', {'data-field': 'airRenewal', 'data-action': input}, '0') }}
+                        {{ calc.field('cf-s-rh-ext', 'Humidité de l\'air entrant', '%', {'data-field': 'airRhExt', 'data-action': input}, '50') }}
+                    {% endset %}
+                    {{ ui.group(null, fields) }}
+                {% endset %}
+                {% set formulas %}
+                    {{ ui.formula('sensible Q = 0,335 × qv × ΔT ; latent Q = ṁ × Δw × Lv (+ givre)') }}
+                    <p>Air entrant à 25 °C. Dégivrage électrique en négatif (résistances de 1 kW par kW frigorifique, 4 dégivrages de 20 min par jour, 50 % réintroduits) ; naturel (à l'arrêt du froid) en positif.</p>
+                {% endset %}
+                {{ ui.section('cf-s-section-5', 5, 'Air neuf et dégivrage', icons[5], content, formulas) }}
+
+                {% set content %}
+                    {% set fields %}
+                        {{ calc.field('cf-s-run', 'Fonctionnement', 'h/j', {'data-field': 'runHours', 'data-run-hours': '', 'data-action': input ~ ' input->' ~ c ~ '#markEdited'}, '18') }}
+                        {{ calc.field('cf-s-margin', 'Marge de sécurité', '%', {'data-field': 'margin', 'data-action': input}, '10') }}
+                        {{ calc.note({'data-run-hint': ''}, '') }}
+                    {% endset %}
+                    {{ ui.group('Fonctionnement', fields) }}
+                    {% set fields %}
+                        <div class="sm:col-span-2">
+                            <label for="cf-s-fluid" class="form-label">Fluide frigorigène</label>
+                            <select id="cf-s-fluid" class="form-input" data-field="fluid" data-fluid-select data-action="change->{{ c }}#changeFluid"></select>
+                        </div>
+                        {{ calc.select('cf-s-installation', 'Installation', installations, {'data-field': 'installation', 'data-action': 'change->' ~ c ~ '#changeInstallation'}, null, true) }}
+                        {{ calc.select('cf-s-hermetic', 'Hermétiquement scellé', yesNo, {'data-field': 'hermetic', 'data-action': change}, 'no') }}
+                    {% endset %}
+                    {{ ui.group('Fluide', fields, 'sm:grid-cols-2') }}
+                {% endset %}
+                {% set formulas %}
+                    {{ ui.formula('P frigo = Σ charges × 24 / heures de marche × (1 + marge) · COP = 0,45 × T_év / (T_cond − T_év)') }}
+                    <p>Fluide : R-290 par défaut (modifiable dans l'admin), groupe autonome hermétiquement scellé ; liaisons de 10 m (split), air au condenseur à 35 °C. Exemption des contrôles d'étanchéité sous 10 t éq. CO₂ seulement si l'équipement est déclaré hermétiquement scellé (« étiqueté par le fabricant »).</p>
+                {% endset %}
+                {{ ui.section('cf-s-section-6', 6, 'Fonctionnement et fluide', icons[6], content, formulas) }}
+            </div>
+
+            {# --- Mode pro --- #}
+            <div class="space-y-6" hidden {{ t }}="form" data-mode="pro">
+                {% set content %}
+                    {% set fields %}
+                        {{ calc.field('cf-p-length', 'Longueur', 'm', {'data-field': 'length', 'data-action': input}, '4') }}
+                        {{ calc.field('cf-p-width', 'Largeur', 'm', {'data-field': 'width', 'data-action': input}, '3') }}
+                        {{ calc.field('cf-p-height', 'Hauteur', 'm', {'data-field': 'height', 'data-action': input}, '2,5') }}
+                        {{ calc.field('cf-p-tset', 'Consigne', '°C', {'data-field': 'tSet', 'data-action': input ~ ' change->' ~ c ~ '#changeTemperature'}, '-18') }}
+                        {{ calc.field('cf-p-rhset', 'Humidité de la chambre', '%', {'data-field': 'rhSet', 'data-action': input}, '85') }}
+                    {% endset %}
+                    {{ ui.group('Dimensions et consigne', fields) }}
+                    {% set fields %}
+                        {{ calc.field('cf-p-wall', 'Autour des parois', '°C', {'data-field': 'tExtWall', 'data-action': input}, '25') }}
+                        {{ calc.field('cf-p-ceiling', 'Au-dessus du plafond', '°C', {'data-field': 'tExtCeiling', 'data-action': input}, '32') }}
+                        {{ calc.field('cf-p-floor-t', 'Sous le sol', '°C', {'data-field': 'tExtFloor', 'data-action': input}, '12') }}
+                    {% endset %}
+                    {{ ui.group('Températures autour', fields) }}
+                    {% set fields %}
+                        <div class="sm:col-span-2">
+                            <label for="cf-p-panel" class="form-label">Panneaux</label>
+                            <select id="cf-p-panel" class="form-input" data-field="panel" data-action="change->{{ c }}#changePanel">
+                                {{ panelSelect }}
+                                <optgroup label="Personnalisé">
+                                    <option value="custom_lambda">Personnalisé : λ et épaisseur</option>
+                                    <option value="custom_u">Personnalisé : coefficient U</option>
+                                </optgroup>
+                            </select>
+                        </div>
+                        {{ calc.select('cf-p-thickness', 'Épaisseur', thicknesses, {'data-field': 'thickness', 'data-action': 'change->' ~ c ~ '#changePanel', 'data-panel-generic': ''}, '120') }}
+                        <div data-panel-custom-lambda hidden>{{ calc.field('cf-p-lambda', 'λ', 'W/(m·K)', {'data-field': 'lambda', 'data-action': input}, '0,022') }}</div>
+                        <div data-panel-custom-lambda hidden>{{ calc.field('cf-p-custom-thickness', 'Épaisseur', 'mm', {'data-field': 'customThickness', 'data-action': input}, '120') }}</div>
+                        <div data-panel-custom-u hidden>{{ calc.field('cf-p-u', 'U', 'W/(m²·K)', {'data-field': 'customU', 'data-action': input}, '0,18') }}</div>
+                        {{ calc.field('cf-p-bridge', 'Ponts thermiques', '%', {'data-field': 'bridgePct', 'data-action': input}, '0') }}
+                        {{ calc.select('cf-p-floor', 'Sol isolé', {yes: 'Oui', no: 'Non'}, {'data-field': 'floorInsulated', 'data-action': change}) }}
+                        <p class="text-sm text-secondary-600 sm:col-span-2 xl:col-span-3 dark:text-secondary-300" data-panel-info></p>
+                    {% endset %}
+                    {{ ui.group('Isolation', fields) }}
+                    {% set fields %}
+                        {{ calc.select('cf-p-antifreeze', 'Câble antigel sous dalle', yesNo, {'data-field': 'antiFreeze', 'data-action': change}, 'yes') }}
+                        {{ calc.field('cf-p-antifreeze-w', 'Puissance', 'W/m²', {'data-field': 'antiFreezeWPerM2', 'data-action': input}, '15') }}
+                        {{ calc.field('cf-p-antifreeze-duty', 'Fonctionnement', '%', {'data-field': 'antiFreezeDutyPct', 'data-action': input}, '30') }}
+                        {{ calc.field('cf-p-antifreeze-fraction', 'Fraction réintroduite', '0 à 1', {'data-field': 'antiFreezeFraction', 'data-action': input}, '0,1') }}
+                    {% endset %}
+                    {{ ui.group('Sol : dispositif antigel', fields, 'sm:grid-cols-2 xl:grid-cols-4') }}
+                {% endset %}
+                {% set formulas %}
+                    {{ ui.formula('U = 1 / (0,17 + e/λ) · Q = U × S × ΔT (+ ponts thermiques) · antigel : W/m² × S × taux × fraction') }}
+                    <p>Repères : local chauffé 20 °C, non chauffé 25 °C, extérieur ensoleillé 32 °C ; sous le sol : terre-plein 12 °C, local 20 °C, vide sanitaire 10 °C. Humidité de la chambre rapportée à la glace en négatif.</p>
+                {% endset %}
+                {{ ui.section('cf-p-section-1', 1, 'Chambre', icons[1], content, formulas) }}
+
+                {% set content %}
+                    <div>
+                        <h3 class="mb-3 text-sm font-semibold tracking-wide text-secondary-500 uppercase dark:text-secondary-400">Portes</h3>
+                        <div class="space-y-4" {{ t }}="doorList" data-list="doors"></div>
+                        {{ ui.addButton('Ajouter une porte', 'doors', c) }}
+                    </div>
+                    <div>
+                        <h3 class="mb-3 text-sm font-semibold tracking-wide text-secondary-500 uppercase dark:text-secondary-400">Vitrages</h3>
+                        <div class="space-y-4" {{ t }}="glazingList" data-list="glazings"></div>
+                        <p class="mt-2 text-sm text-secondary-600 dark:text-secondary-300" data-empty-note="glazings">Aucun vitrage.</p>
+                        {{ ui.addButton('Ajouter un vitrage', 'glazings', c) }}
+                    </div>
+                {% endset %}
+                {% set formulas %}
+                    {{ ui.formula('Infiltrations ASHRAE : q = 0,221 × A × Δh × ρ_int × (1 − ρ_ext/ρ_int)^0,5 × (g·H)^0,5 × F_m ; charge = q × D_t × D_f × (1 − E)') }}
+                    <p>Transmission : (U porte × S + U cadre 1,2 × périmètre × 0,06 m) × ΔT. Cordon chauffant : W/m × (périmètre + montant central si 2 vantaux) × 0,7. Vitrage chauffé : 70 % réintroduits.</p>
+                {% endset %}
+                {{ ui.section('cf-p-section-2', 2, 'Portes et vitrages', icons[2], content, formulas) }}
+
+                {% set content %}
+                    {% set fansMode %}
+                        <label for="cf-p-fans-mode" class="sr-only">Ventilateurs : mode de saisie</label>
+                        <select id="cf-p-fans-mode" class="form-input py-1 text-xs" data-field="fansMode" data-action="{{ change }}">
+                            <option value="power">Puissance saisie (W)</option>
+                            <option value="ratio">Ratio (W par kW frigorifique)</option>
+                        </select>
+                    {% endset %}
+                    <div>
+                        <h3 class="mb-3 text-sm font-semibold tracking-wide text-secondary-500 uppercase dark:text-secondary-400">Équipements</h3>
+                        {{ ui.powerTable([
+                            {label: 'Éclairage', power: {field: 'lightingW', value: '96', unit: 'W'}, duration: {field: 'lightHours', value: '12'}},
+                            {label: 'Personnes', hint: '270 − 6 × T W chacune', power: {field: 'people', value: '1', unit: 'pers.', name: 'nombre'}, duration: {field: 'peopleHours', value: '2'}},
+                            {label: 'Ventilateurs d\'évaporateur', extra: fansMode, power: {field: 'fansValue', value: '75', unit: 'W', name: 'valeur'}, duration: '24 h/j'},
+                            {label: 'Autres équipements', power: {field: 'otherW', value: '0', unit: 'W'}, duration: '24 h/j'},
+                        ], input) }}
+                        <p class="mt-2 text-sm text-secondary-600 dark:text-secondary-300" data-fans-hint></p>
+                    </div>
+                    {% set fields %}
+                        {{ calc.select('cf-p-drain', 'Câble d\'évacuation', yesNo, {'data-field': 'drain', 'data-action': change}, 'yes') }}
+                        {{ calc.field('cf-p-drain-length', 'Longueur', 'm', {'data-field': 'drainLength', 'data-action': input}, '2') }}
+                        {{ calc.field('cf-p-drain-w', 'Puissance', 'W/m', {'data-field': 'drainWPerM', 'data-action': input}, '40') }}
+                        {{ calc.field('cf-p-drain-drip', 'Égouttage', 'min', {'data-field': 'dripMinutes', 'data-action': input}, '10') }}
+                        {{ calc.select('cf-p-valve', 'Soupape chauffée', yesNo, {'data-field': 'reliefValve', 'data-action': change}, 'yes') }}
+                        {{ calc.field('cf-p-valve-w', 'Puissance de la soupape', 'W', {'data-field': 'reliefValveW', 'data-action': input}, '20') }}
+                    {% endset %}
+                    {{ ui.group('Évacuation des condensats et soupape', fields, 'sm:grid-cols-2 xl:grid-cols-4') }}
+                {% endset %}
+                {% set formulas %}
+                    {{ ui.formula('Personnes : Q = 270 − 6 × T (W, ASHRAE) · éclairage : P × heures / 24') }}
+                    <p>Câble d'évacuation : sous tension pendant le dégivrage et l'égouttage, 10 % réintroduits (pas d'échange d'air). Soupape : toute sa puissance est réintroduite.</p>
+                {% endset %}
+                {{ ui.section('cf-p-section-3', 3, 'Apports internes', icons[3], content, formulas) }}
+
+                {% set content %}
+                    <div class="space-y-4" {{ t }}="productList" data-list="products"></div>
+                    <div>{{ ui.addButton('Ajouter un produit', 'products', c) }}</div>
+                {% endset %}
+                {% set formulas %}
+                    {{ ui.formula('P = masse × chaleur par kg / durée de refroidissement') }}
+                    <p>Congélation sur place : Q = m × [cp frais × (T entrée − T congélation) + L + cp congelé × (T congélation − T consigne)], avec L = teneur en eau × 334 kJ/kg. Respiration (chambre positive) : W par tonne stockée, à prendre dans les tables ASHRAE pour le produit ; les valeurs proposées sont des moyennes indicatives.</p>
+                {% endset %}
+                {{ ui.section('cf-p-section-4', 4, 'Produits', icons[4], content, formulas) }}
+
+                {% set content %}
+                    {% set fields %}
+                        {{ calc.field('cf-p-air', 'Débit', 'm³/h', {'data-field': 'airRenewal', 'data-action': input}, '0') }}
+                        {{ calc.field('cf-p-air-t', 'Température', '°C', {'data-field': 'airTExt', 'data-action': input}, '25') }}
+                        {{ calc.field('cf-p-rh-ext', 'Humidité', '%', {'data-field': 'airRhExt', 'data-action': input}, '50') }}
+                    {% endset %}
+                    {{ ui.group('Air neuf', fields) }}
+                    {% set fields %}
+                        {{ calc.select('cf-p-defrost', 'Type', {electric: 'Électrique', hot_gas: 'Gaz chauds', air: 'Naturel (à l\'arrêt du froid)'}, {'data-field': 'defrostType', 'data-action': 'change->' ~ c ~ '#changeDefrost'}) }}
+                        {{ calc.field('cf-p-defrost-kw', 'Puissance', 'kW', {'data-field': 'defrostKw', 'data-action': input}, '1,5') }}
+                        {{ calc.field('cf-p-defrost-cycles', 'Dégivrages par jour', null, {'data-field': 'defrostCycles', 'data-action': input}, '4') }}
+                        {{ calc.field('cf-p-defrost-min', 'Durée d\'un dégivrage', 'min', {'data-field': 'defrostMin', 'data-action': input}, '20') }}
+                        {{ calc.field('cf-p-defrost-fraction', 'Fraction réintroduite', '0 à 1', {'data-field': 'defrostFraction', 'data-action': input}, '0,5') }}
+                    {% endset %}
+                    {{ ui.group('Dégivrage', fields) }}
+                {% endset %}
+                {% set formulas %}
+                    {{ ui.formula('Air neuf : sensible 0,335 × qv × ΔT ; latent ṁ × Δw × Lv (+ givre) · dégivrage : P × nombre × durée × fraction') }}
+                    <p>Fraction de la chaleur de dégivrage réintroduite : électrique 0,5 ; gaz chauds 0,3 ; naturel 0.</p>
+                {% endset %}
+                {{ ui.section('cf-p-section-5', 5, 'Air neuf et dégivrage', icons[5], content, formulas) }}
+
+                {% set content %}
+                    {% set fields %}
+                        {{ calc.field('cf-p-run', 'Fonctionnement', 'h/j', {'data-field': 'runHours', 'data-run-hours': '', 'data-action': input ~ ' input->' ~ c ~ '#markEdited'}, '18') }}
+                        {{ calc.field('cf-p-margin', 'Marge de sécurité', '%', {'data-field': 'margin', 'data-action': input}, '10') }}
+                        {{ calc.note({'data-run-hint': ''}, '') }}
+                    {% endset %}
+                    {{ ui.group('Fonctionnement', fields) }}
+                    {% set fields %}
+                        <div class="sm:col-span-2">
+                            <label for="cf-p-fluid" class="form-label">Fluide frigorigène</label>
+                            <select id="cf-p-fluid" class="form-input" data-field="fluid" data-fluid-select data-action="change->{{ c }}#changeFluid"></select>
+                        </div>
+                        {{ calc.select('cf-p-installation', 'Installation', installations, {'data-field': 'installation', 'data-action': 'change->' ~ c ~ '#changeInstallation'}, null, true) }}
+                        {{ calc.select('cf-p-hermetic', 'Hermétiquement scellé', yesNo, {'data-field': 'hermetic', 'data-action': change}, 'no') }}
+                        {{ calc.field('cf-p-lines', 'Liaisons (split)', 'm', {'data-field': 'lineLength', 'data-action': input}, '10') }}
+                        {{ calc.field('cf-p-cond', 'Air au condenseur', '°C', {'data-field': 'condenserAir', 'data-action': input}, '35') }}
+                        {{ calc.select('cf-p-detection', 'Détection des fuites', yesNo, {'data-field': 'detection', 'data-action': change}) }}
+                        {{ calc.field('cf-p-cop', 'COP (vide : estimé)', null, {'data-field': 'copOverride', 'data-action': input}) }}
+                        {{ calc.field('cf-p-charge-ratio', 'Charge (vide : estimée)', 'kg/kW', {'data-field': 'chargeRatio', 'data-action': input}) }}
+                    {% endset %}
+                    {{ ui.group('Fluide', fields, 'sm:grid-cols-2 xl:grid-cols-4') }}
+                {% endset %}
+                {% set formulas %}
+                    {{ ui.formula('P frigo = Σ charges × 24 / heures de marche × (1 + marge) · COP = 0,45 × T_év / (T_cond − T_év)') }}
+                    <p>T_év = consigne − 8 K, T_cond = air au condenseur + 10 K. Charge estimée : groupe autonome 0,3 kg/kW (R-290 : 0,15 kg/kW), split 0,6 kg/kW + 0,05 kg/m de liaison, centrale 2 kg/kW ; à vérifier avec les fiches constructeurs.</p>
+                {% endset %}
+                {{ ui.section('cf-p-section-6', 6, 'Fonctionnement et fluide', icons[6], content, formulas) }}
+            </div>
+
+            {# --- 7. Résultats (les deux modes) --- #}
+            {% set content %}
+                <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+                    {{ calc.result('cf-frigo', 'Puissance frigorifique à installer', 'kW', {(t): 'frigoKw'}) }}
+                    {{ calc.result('cf-elec', 'Puissance du compresseur', 'kW', {(t): 'compressorKw'}) }}
+                    {{ calc.result('cf-consumption', 'Consommation électrique', 'kWh/j', {(t): 'consumption'}) }}
+                    {{ calc.result('cf-need', 'Besoin frigorifique', 'kWh/j', {(t): 'kwhDay'}) }}
+                    {{ calc.result('cf-total', 'Charge thermique', 'kW', {(t): 'totalKw'}) }}
+                    {{ calc.result('cf-cop', 'COP estimé', null, {(t): 'cop'}) }}
+                    {{ calc.result('cf-frost', 'Givre (ou condensats)', 'kg/j', {(t): 'frost'}) }}
+                    {{ calc.result('cf-volume', 'Volume', 'm³', {(t): 'volume'}) }}
+                </div>
+                {{ calc.message({(t): 'message'}) }}
+                <p class="text-sm text-secondary-600 dark:text-secondary-300" aria-live="polite" {{ t }}="summary"></p>
+                <p class="text-sm text-secondary-600 dark:text-secondary-300" aria-live="polite" {{ t }}="productSummary"></p>
+                <div>
+                    <h3 class="mb-3 text-sm font-semibold tracking-wide text-secondary-500 uppercase dark:text-secondary-400">Détail poste par poste</h3>
+                    <table class="w-full table-fixed text-sm">
+                        <thead>
+                            <tr class="border-b border-secondary-200 text-left text-secondary-700 dark:border-secondary-700 dark:text-secondary-200">
+                                <th scope="col" class="w-1/2 py-2 pr-4 sm:w-3/5">Poste, formule et hypothèses</th>
+                                <th scope="col" class="py-2 pr-2 text-right">Charge</th>
+                                <th scope="col" class="py-2 pr-2 text-right">Besoin</th>
+                                <th scope="col" class="hidden py-2 text-right sm:table-cell">Part</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-secondary-100 break-words dark:divide-secondary-700/60" {{ t }}="breakdown"></tbody>
+                    </table>
+                    <p class="mt-3 text-sm text-secondary-600 dark:text-secondary-300">Charge des produits comptée sur leur durée de refroidissement ; besoin en kWh/j : énergie réelle de chaque poste, et part de chacun dans ce besoin. Valeurs par défaut indicatives, à vérifier pour un dimensionnement réel.</p>
+                </div>
+                <div>
+                    <h3 class="mb-3 text-sm font-semibold tracking-wide text-secondary-500 uppercase dark:text-secondary-400">Fluide et réglementation</h3>
+                    <div class="space-y-2 text-sm text-secondary-700 dark:text-secondary-300" aria-live="polite" {{ t }}="fluidReport"></div>
+                </div>
+            {% endset %}
+            {{ ui.section('cf-section-7', 7, 'Résultats', icons[7], content) }}
+        </div>
+
+        {# --- Colonne collante (ordinateur) ou barre en bas (mobile) : navigation et puissances --- #}
+        <aside class="lg:sticky lg:top-[calc(var(--header-offset,0px)+1.5rem)] lg:space-y-4" aria-label="Navigation et résumé">
+            {{ ui.navList(sections, 'Sections de l\'outil', 'cf-s') }}
+            <div role="region" aria-label="Résumé des résultats" class="fixed inset-x-0 bottom-0 z-30 border-t border-secondary-200 bg-white/95 pb-[env(safe-area-inset-bottom)] shadow-lg backdrop-blur lg:static lg:rounded-2xl lg:border lg:bg-white lg:p-4 lg:pb-4 lg:shadow-none dark:border-secondary-700 dark:bg-secondary-900/95 lg:dark:bg-secondary-800/60">
+                <div class="px-4 pt-2 lg:p-0">
+                    <div class="flex items-center justify-between gap-2">
+                        <p class="text-sm font-bold text-secondary-900 dark:text-white">Résumé</p>
+                        <button type="button" class="inline-flex items-center gap-1 rounded-lg px-2 py-1 text-sm font-semibold text-primary-700 hover:bg-primary-50 focus-visible:outline-2 focus-visible:outline-primary-700 lg:hidden dark:text-primary-300 dark:hover:bg-primary-500/10"
+                                aria-expanded="false" aria-controls="cf-summary-panel" data-calculator--layout-target="barToggle" data-action="calculator--layout#toggleBar">
+                            Alertes <span class="rounded-full bg-secondary-200 px-1.5 text-xs text-secondary-800 data-alerts:bg-amber-100 data-alerts:text-amber-900 dark:bg-secondary-700 dark:text-secondary-100 dark:data-alerts:bg-amber-900 dark:data-alerts:text-amber-100" {{ t }}="alertCount">0</span>
+                        </button>
+                    </div>
+                    <dl class="mt-1 grid grid-cols-3 gap-2 pb-2 lg:mt-3 lg:grid-cols-1 lg:pb-0">
+                        {{ ui.summaryItem('Froid à installer', 'Froid', t ~ '=summaryFrigo', null, 'kW') }}
+                        {{ ui.summaryItem('Compresseur', 'Compresseur', t ~ '=summaryCompressor', null, 'kW') }}
+                        {{ ui.summaryItem('Consommation électrique', 'Conso.', t ~ '=summaryConsumption', null, 'kWh/j') }}
+                    </dl>
+                </div>
+                <div id="cf-summary-panel" class="max-h-[50vh] space-y-2 overflow-y-auto px-4 pb-3 max-lg:hidden max-lg:data-open:block lg:mt-3 lg:max-h-none lg:p-0" data-calculator--layout-target="barPanel" {{ t }}="summaryAlerts"></div>
+            </div>
+        </aside>
+    </div>
+
+    {# --- Modèles des éléments des listes (mode pro) ; __ID__ est remplacé par un numéro unique --- #}
+    <template {{ t }}="doorTemplate">
+        <fieldset class="rounded-xl border border-secondary-200 p-4 dark:border-secondary-700" data-item>
+            <legend class="px-1 text-sm font-bold text-secondary-900 dark:text-white" data-item-title>Porte</legend>
+            <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+                {{ calc.select('cf-door-__ID__-type', 'Type', {swing: 'Battante isotherme', sliding: 'Coulissante', sectional: 'Sectionnelle', rapid: 'Rideau rapide', pivot: 'Pivot isotherme'}, {'data-item-field': 'type', 'data-action': 'change->' ~ c ~ '#changeDoorType'}) }}
+                {{ calc.select('cf-door-__ID__-leaves', 'Vantaux', {1: '1 vantail', 2: '2 vantaux'}, {'data-item-field': 'leaves', 'data-action': change}) }}
+                {{ calc.field('cf-door-__ID__-width', 'Largeur', 'm', {'data-item-field': 'width', 'data-action': input}, '0,9') }}
+                {{ calc.field('cf-door-__ID__-height', 'Hauteur', 'm', {'data-item-field': 'height', 'data-action': input}, '2') }}
+                {{ calc.field('cf-door-__ID__-u', 'U', 'W/(m²·K)', {'data-item-field': 'u', 'data-action': input}, '0,55') }}
+                {{ calc.select('cf-door-__ID__-protection', 'Protection', protections, {'data-item-field': 'protection', 'data-action': 'change->' ~ c ~ '#changeProtection'}) }}
+                {{ calc.field('cf-door-__ID__-efficiency', 'Efficacité E', '%', {'data-item-field': 'efficiency', 'data-action': input}, '0') }}
+                {{ calc.field('cf-door-__ID__-openings', 'Ouvertures', '/j', {'data-item-field': 'openingsPerDay', 'data-action': input}, '15') }}
+                {{ calc.field('cf-door-__ID__-seconds', 'Durée d\'ouverture', 's', {'data-item-field': 'openSeconds', 'data-action': input}, '25') }}
+                {{ calc.field('cf-door-__ID__-local-t', 'Local : température', '°C', {'data-item-field': 'localTemp', 'data-action': input}, '25') }}
+                {{ calc.field('cf-door-__ID__-local-rh', 'Local : humidité', '%', {'data-item-field': 'localRh', 'data-action': input}, '50') }}
+                {{ calc.field('cf-door-__ID__-heater', 'Cordon chauffant', 'W/m', {'data-item-field': 'heaterWPerM', 'data-action': input}, '40') }}
+                <p class="text-sm text-secondary-600 sm:col-span-2 xl:col-span-3 dark:text-secondary-300" data-protection-note></p>
+                <div class="flex items-end justify-end">{{ ui.removeButton('Supprimer cette porte', 'Supprimer cette porte ?', c) }}</div>
+            </div>
+        </fieldset>
+    </template>
+
+    <template {{ t }}="glazingTemplate">
+        <fieldset class="rounded-xl border border-secondary-200 p-4 dark:border-secondary-700" data-item>
+            <legend class="px-1 text-sm font-bold text-secondary-900 dark:text-white" data-item-title>Vitrage</legend>
+            <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+                {{ calc.field('cf-glazing-__ID__-area', 'Surface', 'm²', {'data-item-field': 'area', 'data-action': input}, '0,5') }}
+                {{ calc.select('cf-glazing-__ID__-type', 'Type', {double: 'Double vitrage', triple: 'Triple vitrage'}, {'data-item-field': 'glazingType', 'data-action': 'change->' ~ c ~ '#changeGlazingType'}) }}
+                {{ calc.field('cf-glazing-__ID__-u', 'U', 'W/(m²·K)', {'data-item-field': 'u', 'data-action': input}, '2,8') }}
+                {{ calc.field('cf-glazing-__ID__-local-t', 'Côté local', '°C', {'data-item-field': 'localTemp', 'data-action': input}, '25') }}
+                {{ calc.select('cf-glazing-__ID__-heated', 'Chauffé', yesNo, {'data-item-field': 'heated', 'data-action': change}) }}
+                {{ calc.field('cf-glazing-__ID__-heater', 'Chauffage', 'W', {'data-item-field': 'heaterW', 'data-action': input}, '0') }}
+                <div class="flex items-end justify-end sm:col-span-2">{{ ui.removeButton('Supprimer ce vitrage', 'Supprimer ce vitrage ?', c) }}</div>
+            </div>
+        </fieldset>
+    </template>
+
+    <template {{ t }}="productTemplate">
+        <fieldset class="rounded-xl border border-secondary-200 p-4 dark:border-secondary-700" data-item>
+            <legend class="px-1 text-sm font-bold text-secondary-900 dark:text-white" data-item-title>Produit</legend>
+            <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+                <div class="sm:col-span-2">
+                    <label for="cf-product-__ID__-profile" class="form-label">Profil produit</label>
+                    <select id="cf-product-__ID__-profile" class="form-input" data-item-field="profile" data-product-profile data-action="change->{{ c }}#applyProfile"></select>
+                </div>
+                {{ calc.field('cf-product-__ID__-daily', 'Entrées', 'kg/j', {'data-item-field': 'dailyKg', 'data-action': input}, '500') }}
+                {{ calc.field('cf-product-__ID__-stored', 'Stock', 'kg', {'data-item-field': 'storedKg', 'data-action': input}, '0') }}
+                {{ calc.field('cf-product-__ID__-entry', 'Température d\'entrée', '°C', {'data-item-field': 'entryTemp', 'data-action': input}) }}
+                {{ calc.field('cf-product-__ID__-cp', 'cp', 'kJ/(kg·K)', {'data-item-field': 'cp', 'data-action': input}) }}
+                {{ calc.field('cf-product-__ID__-water', 'Teneur en eau', '%', {'data-item-field': 'waterPct', 'data-action': input}) }}
+                {{ calc.field('cf-product-__ID__-pulldown', 'Durée de refroidissement', 'h', {'data-item-field': 'pullDown', 'data-action': input}) }}
+                {{ calc.select('cf-product-__ID__-freezing', 'Congélation sur place', yesNo, {'data-item-field': 'freezing', 'data-action': change}) }}
+                {{ calc.field('cf-product-__ID__-freeze-point', 'Point de congélation', '°C', {'data-item-field': 'freezePoint', 'data-action': input}) }}
+                {{ calc.field('cf-product-__ID__-cp-frozen', 'cp congelé', 'kJ/(kg·K)', {'data-item-field': 'cpFrozen', 'data-action': input}) }}
+                {{ calc.field('cf-product-__ID__-respiration', 'Respiration (positif)', 'W/t', {'data-item-field': 'respiration', 'data-action': input}) }}
+                {{ calc.select('cf-product-__ID__-packaging', 'Emballages', {none: 'Aucun', cardboard: 'Carton (cp 1,4)', wood: 'Bois, palettes (cp 1,7)', plastic: 'Plastique (cp 1,9)'}, {'data-item-field': 'packaging', 'data-action': change}) }}
+                {{ calc.field('cf-product-__ID__-packaging-kg', 'Emballages', 'kg/j', {'data-item-field': 'packagingKg', 'data-action': input}, '0') }}
+                <p class="text-sm text-secondary-600 sm:col-span-2 xl:col-span-3 dark:text-secondary-300" data-product-hint></p>
+                <div class="flex items-end justify-end">{{ ui.removeButton('Supprimer ce produit', 'Supprimer ce produit ?', c) }}</div>
+            </div>
+        </fieldset>
+    </template>
+</div>

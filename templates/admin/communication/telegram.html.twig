@@ -1,0 +1,43 @@
+{#
+  Communication › Telegram : jeton, conversation, secret du webhook (configuré ou non, jamais la valeur), webhook
+  déclaré (vérifié à la demande, lecture seule), relève en développement, notification de test, rappel de la
+  validation en deux étapes du compte Telegram.
+  Affiché par : Admin\CommunicationController::telegram() (route admin_communication_telegram).
+  Variables attendues : tab, token, chat_id, secret, configured, poll ({active, last} en développement, sinon null).
+#}
+{% extends 'admin/communication/_layout.html.twig' %}
+{% import 'admin/communication/_macros.html.twig' as ui %}
+
+{% block tab_content %}
+    {{ ui.info('telegram') }}
+    <div class="grid gap-6 lg:grid-cols-2">
+        <section class="card">
+            <h2 class="mb-3 text-lg font-semibold text-secondary-900 dark:text-white">{{ 'admin.communication.telegram.state'|trans }}</h2>
+            <dl class="grid grid-cols-[1fr_auto] gap-x-4 gap-y-2 text-sm" data-testid="telegram-state">
+                {% for key, ok in {token: token, chat_id: chat_id, secret: secret} %}
+                    <dt>{{ ('admin.communication.telegram.' ~ key)|trans }} {{ ui.help(('admin.communication.telegram.' ~ key)|trans, ('admin.communication.help.telegram_' ~ key)|trans) }}</dt>
+                    <dd>{{ ui.state(ok ? 'ok' : 'not_applicable', (ok ? 'admin.communication.configured' : 'admin.communication.not_configured')|trans) }}</dd>
+                {% endfor %}
+                {% if poll %}
+                    <dt>{{ 'admin.communication.telegram.poll'|trans }} {{ ui.help('admin.communication.telegram.poll'|trans, 'admin.communication.help.telegram_poll'|trans) }}</dt>
+                    <dd data-testid="telegram-poll">{{ ui.state(poll.active ? 'ok' : 'warning', (poll.active ? 'admin.site_settings.poll_active' : 'admin.site_settings.poll_stopped')|trans({'%date%': poll.last ? poll.last|format_datetime('short', 'medium') : 'admin.site_settings.poll_never'|trans})) }}</dd>
+                {% endif %}
+            </dl>
+            <form method="post" action="{{ path('admin_communication_telegram_webhook') }}" class="mt-4">
+                <input type="hidden" name="_token" value="{{ csrf_token('telegram_webhook_check') }}">
+                <twig:Button type="submit" variant="secondary" size="sm">{{ 'admin.communication.telegram.check_webhook'|trans }}</twig:Button>
+            </form>
+            <p class="form-help mt-2">{{ 'admin.communication.telegram.check_webhook_help'|trans }}</p>
+        </section>
+        <section class="card">
+            <h2 class="mb-3 text-lg font-semibold text-secondary-900 dark:text-white">{{ 'admin.communication.test_and_security'|trans }}</h2>
+            <form method="post" action="{{ path('admin_communication_test_channel', {channel: 'telegram'}) }}">
+                <input type="hidden" name="_token" value="{{ csrf_token('notification_test_telegram') }}">
+                <input type="hidden" name="back" value="telegram">
+                <button type="submit" class="btn btn-secondary btn-sm">{{ 'admin.site_settings.test_button'|trans }}<span class="sr-only"> (Telegram)</span></button>
+            </form>
+            <p class="form-help mt-2">{{ 'admin.communication.test_real'|trans }}</p>
+            <twig:Alert type="warning" class="mt-4">{{ 'admin.communication.telegram.two_factor'|trans }}</twig:Alert>
+        </section>
+    </div>
+{% endblock %}

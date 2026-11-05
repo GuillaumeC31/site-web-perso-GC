@@ -1,0 +1,5 @@
+{#
+  Outil : sonde PT100 (100 Ω à 0 °C). Inclus par : calculator/tool.html.twig.
+  Gabarit : _pt-sensor.html.twig (contrôleur calculator--pt-sensor). Texte repris de l'ancien site.
+#}
+{{ include('calculator/tools/mesures-capteurs/_pt-sensor.html.twig', {r0: 100, label: 'PT100', default_resistance: '100,00', intro: 'Une sonde PT100 a une résistance de 100 Ω à 0 °C. Saisissez une température ou une résistance pour convertir.'}, with_context = false) }}

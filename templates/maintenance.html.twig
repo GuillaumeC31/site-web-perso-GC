@@ -1,0 +1,167 @@
+{#
+  Page : site en maintenance (réponse 503), AUTONOME et légère : styles et script en ligne, police Inter et
+  logos servis depuis public/ (fichiers statiques, hors Symfony), aucune requête en base dans le template,
+  aucun fichier compilé du site. Fonctionne sans JavaScript (date de retour écrite en clair ; date dépassée :
+  rechargement toutes les 60 s par l'en-tête HTTP « Refresh », posé par MaintenancePage) ; le compte à rebours n'est qu'un plus, masqué aux lecteurs
+  d'écran (aria-hidden). Fond sombre animé discret (dégradé, grille, lueurs), coupé si l'utilisateur demande
+  moins d'animations. Thème clair et sombre selon le système.
+  ADAPTATIVE : la carte occupe environ 66 % de la largeur sur grand écran (92 % sur mobile) et toute la page
+  grandit avec elle : une taille de base (--base, clamp() sur la largeur ET la hauteur de l'écran), tout le
+  reste en em. Bannière du logo sur ordinateur (WebP 1200 et 2000 px, srcset : nette sur écran haute densité),
+  logo carré « GC » (SVG) sous 640 px.
+  Affichée par : MaintenancePage::render() (MaintenanceSubscriber : 503 ; Admin\SiteSettingsController :
+  aperçu, 200).
+  Variables attendues :
+    - message  : message choisi dans l'admin (null : message par défaut)
+    - until    : date et heure de réactivation à venir (DateTimeImmutable) ou null
+    - imminent : vrai si la date de réactivation est dépassée (« Retour imminent », rechargement 60 s)
+    - social_links : liens sociaux visibles cochés « page de maintenance » (SocialLink ; Communication › Réseaux sociaux)
+    - preview  : vrai pour l'aperçu de l'admin (bandeau « Aperçu »)
+#}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="color-scheme" content="dark light">
+    <title>{{ 'maintenance.title'|trans }} · {{ site_owner_name }}</title>
+    <link rel="icon" href="/favicon.ico" sizes="48x48">
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="preload" href="/maintenance/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+    <style>
+        @font-face { font-family: "Inter"; font-style: normal; font-weight: 100 900; font-display: swap; src: url("/maintenance/inter-latin-wght-normal.woff2") format("woff2"); }
+        :root {
+            --bg: #04100f; --bg-2: #0a1f1d; --text: #f0fdfa; --muted: #99c7c1; --accent: #2dd4bf; --accent-strong: #5eead4;
+            --card: rgba(8, 28, 26, .72); --border: rgba(45, 212, 191, .28); --grid: rgba(45, 212, 191, .07); --digit-bg: rgba(4, 16, 15, .7);
+            /* Taille de base : grandit avec la largeur ET la hauteur (aucun défilement sur un écran large et bas) */
+            --base: clamp(14px, calc(.5vw + .7vh + 4px), 27px);
+        }
+        @media (prefers-color-scheme: light) {
+            :root {
+                --bg: #f0fdfa; --bg-2: #ccfbf1; --text: #042f2e; --muted: #285e5a; --accent: #0f766e; --accent-strong: #115e59;
+                --card: rgba(255, 255, 255, .78); --border: rgba(15, 118, 110, .25); --grid: rgba(15, 118, 110, .08); --digit-bg: rgba(255, 255, 255, .85);
+            }
+        }
+        * { box-sizing: border-box; }
+        html, body { margin: 0; min-height: 100%; }
+        body {
+            min-height: 100dvh; display: grid; place-items: center; padding: clamp(12px, 2.5vh, 40px) 16px; overflow-x: hidden;
+            font-family: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif; color: var(--text); font-size: var(--base);
+            background: radial-gradient(1200px 600px at 15% -10%, var(--bg-2), transparent 60%), radial-gradient(900px 500px at 110% 110%, var(--bg-2), transparent 60%), var(--bg);
+        }
+        /* Grille et lueurs : décor seulement */
+        .decor { position: fixed; inset: 0; pointer-events: none; overflow: hidden; }
+        .decor::before {
+            content: ""; position: absolute; inset: -50%;
+            background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+            background-size: 48px 48px; transform: perspective(700px) rotateX(55deg) translateY(0); transform-origin: center top;
+            mask-image: radial-gradient(ellipse at center, #000 30%, transparent 70%);
+            animation: grid 18s linear infinite;
+        }
+        .glow { position: absolute; width: 42vmax; height: 42vmax; border-radius: 50%; filter: blur(70px); opacity: .28; background: var(--accent); animation: float 16s ease-in-out infinite alternate; }
+        .glow.one { top: -18vmax; left: -12vmax; }
+        .glow.two { bottom: -20vmax; right: -14vmax; animation-duration: 21s; opacity: .18; }
+        @keyframes grid { to { transform: perspective(700px) rotateX(55deg) translateY(48px); } }
+        @keyframes float { to { transform: translate(6vmax, 4vmax) scale(1.08); } }
+        @media (prefers-reduced-motion: reduce) { .decor::before, .glow, .pulse::after { animation: none !important; } }
+
+        /* Carte : environ 66 % de la largeur sur grand écran, 92 % sur mobile */
+        main { position: relative; width: min(92vw, clamp(700px, 66vw, 1700px)); text-align: center; }
+        .card { background: var(--card); border: 1px solid var(--border); border-radius: 1.4em; padding: clamp(20px, 2.2em, 72px) clamp(16px, 2.6em, 88px); backdrop-filter: blur(12px); box-shadow: 0 20px 60px rgba(0, 0, 0, .25); }
+        .logo { display: block; margin: 0 auto 1.6em; }
+        /* Logo agrandi de 30 % (2026-10-27) : bannière 3:1 nette jusqu'à 2000 px de large (srcset) */
+        .logo img { display: block; width: min(100%, calc(3 * clamp(156px, 31vh, 468px))); height: auto; aspect-ratio: 3 / 1; border-radius: .7em; background: #000; margin: 0 auto; }
+        .status { display: inline-flex; align-items: center; gap: .5em; margin: 0 0 .8em; padding: .35em .8em; border: 1px solid var(--border); border-radius: 999px; font-size: .78em; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--accent-strong); }
+        .pulse { position: relative; width: .5em; height: .5em; border-radius: 50%; background: var(--accent); }
+        .pulse::after { content: ""; position: absolute; inset: -.25em; border-radius: 50%; border: 2px solid var(--accent); animation: ping 2s ease-out infinite; }
+        @keyframes ping { from { transform: scale(.6); opacity: .9; } to { transform: scale(1.8); opacity: 0; } }
+        h1 { margin: 0; font-size: 2.3em; line-height: 1.1; font-weight: 800; letter-spacing: -.02em; }
+        .message { margin: .7em auto 0; max-width: 34em; font-size: 1.12em; line-height: 1.55; color: var(--muted); white-space: pre-line; }
+        .return { margin: 1.2em 0 0; font-size: 1.05em; font-weight: 600; }
+        /* Quatre colonnes souples : tient dans 320 px sans débordement */
+        .countdown { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .5em; max-width: 26em; margin: .7em auto 0; padding: 0; list-style: none; }
+        /* Caché tant que le script ne l'a pas rempli (sans JavaScript : la date en clair suffit) */
+        .countdown[hidden] { display: none; }
+        .countdown li { min-width: 0; padding: .6em .2em; border: 1px solid var(--border); border-radius: .8em; background: var(--digit-bg); }
+        .countdown strong { display: block; font-size: 2.1em; line-height: 1.15; font-weight: 800; font-variant-numeric: tabular-nums; color: var(--accent-strong); }
+        .countdown span { display: block; font-size: .64em; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); }
+        .footer { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: .4em 1.2em; margin: 1.3em 0 0; font-size: .85em; color: var(--muted); }
+        .footer a { display: inline-flex; align-items: center; gap: .4em; color: var(--muted); text-decoration: underline; text-decoration-color: var(--border); text-underline-offset: .2em; }
+        .footer a:hover, .footer a:focus-visible { color: var(--accent-strong); }
+        .footer a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+        .footer svg { width: 1em; height: 1em; }
+        .preview { position: fixed; top: 12px; left: 50%; transform: translateX(-50%); padding: 6px 14px; border-radius: 999px; background: #fbbf24; color: #1c1917; font-size: 13px; font-weight: 700; z-index: 1; }
+        .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+        /* Mobile : logo carré « GC » à la place de la bannière */
+        @media (max-width: 639px) {
+            .logo img { width: 94px; height: 94px; aspect-ratio: 1; border-radius: 22px; background: transparent; }
+            .countdown span { font-size: .6em; letter-spacing: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="decor" aria-hidden="true"><span class="glow one"></span><span class="glow two"></span></div>
+    {% if preview %}<p class="preview">{{ 'maintenance.preview'|trans }}</p>{% endif %}
+    <main>
+        <div class="card">
+            <picture class="logo">
+                <source media="(max-width: 639px)" srcset="/favicon.svg" width="94" height="94">
+                <img src="/images/logos/logo-labo-fond-noir.webp" srcset="/images/logos/logo-labo-fond-noir.webp 1200w, /maintenance/logo-bandeau-2000.webp 2000w" sizes="min(93vh, 1404px, 86vw)" width="1200" height="400" alt="{{ site_owner_name }}">
+            </picture>
+            <p class="status"><span class="pulse" aria-hidden="true"></span>{{ 'maintenance.status'|trans }}</p>
+            <h1>{{ 'maintenance.title'|trans }}</h1>
+            <p class="message">{{ message ?? 'maintenance.text'|trans }}</p>
+            {% if until %}
+                <p class="return" data-return>{{ 'maintenance.return_at'|trans({'%date%': until|format_datetime(pattern: "EEEE d MMMM 'à' HH' h 'mm")|replace({' h ': ' h '})}) }}</p>
+                {# Compte à rebours : rempli par le script, ignoré des lecteurs d'écran ; sans JavaScript, la date ci-dessus suffit #}
+                <ul class="countdown" data-until="{{ until|date('c') }}" data-imminent="{{ 'maintenance.imminent'|trans }}" hidden aria-hidden="true">
+                    <li><strong data-unit="days">0</strong><span>{{ 'maintenance.days'|trans }}</span></li>
+                    <li><strong data-unit="hours">00</strong><span>{{ 'maintenance.hours'|trans }}</span></li>
+                    <li><strong data-unit="minutes">00</strong><span>{{ 'maintenance.minutes'|trans }}</span></li>
+                    <li><strong data-unit="seconds">00</strong><span>{{ 'maintenance.seconds'|trans }}</span></li>
+                </ul>
+            {% elseif imminent %}
+                <p class="return">{{ 'maintenance.imminent'|trans }}</p>
+            {% elseif 'bientôt' not in (message ?? '')|lower %}
+                {# Sans date : « Retour très bientôt », sauf si le message le dit déjà (pas de répétition) #}
+                <p class="return">{{ 'maintenance.soon'|trans }}</p>
+            {% endif %}
+            <p class="footer">
+                <span>{{ site_owner_name }}</span>
+                {% for link in social_links %}
+                    <a href="{{ link.url }}" rel="me noopener noreferrer" target="_blank">{{ include('_partials/_social_icon.html.twig', {network: link.network.value, class: 'social-icon'}, with_context = false) }}{{ link.displayName }}<span class="sr-only"> {{ 'footer.new_window'|trans }}</span></a>
+                {% endfor %}
+            </p>
+        </div>
+    </main>
+    {% if until %}
+        <script nonce="{{ csp_nonce() }}">
+            (() => {
+                const list = document.querySelector(".countdown");
+                const end = Date.parse(list.dataset.until);
+                const pad = (n) => String(n).padStart(2, "0");
+                let timer = 0;
+                const tick = () => {
+                    const left = Math.max(0, Math.floor((end - Date.now()) / 1000));
+                    list.querySelector('[data-unit="days"]').textContent = Math.floor(left / 86400);
+                    list.querySelector('[data-unit="hours"]').textContent = pad(Math.floor(left / 3600) % 24);
+                    list.querySelector('[data-unit="minutes"]').textContent = pad(Math.floor(left / 60) % 60);
+                    list.querySelector('[data-unit="seconds"]').textContent = pad(left % 60);
+                    if (left === 0) {
+                        // À zéro : « Retour imminent », puis un essai de rechargement toutes les 60 s
+                        clearInterval(timer);
+                        list.hidden = true;
+                        document.querySelector("[data-return]").textContent = list.dataset.imminent;
+                        setInterval(() => location.reload(), 60000);
+                    }
+                };
+                list.hidden = false;
+                timer = setInterval(tick, 1000);
+                tick();
+            })();
+        </script>
+    {% endif %}
+</body>
+</html>

@@ -1,0 +1,66 @@
+{#
+  Outil : fluides frigorigènes et règlement F-Gas (équivalent tonnes CO2, base de données filtrable).
+  Inclus par : calculator/tool.html.twig. Contrôleur : calculator--fluides-frigorifiques (liste des
+  fluides et tableau construits en JavaScript).
+  Variables attendues (CalculatorController::toolData()) :
+    - refrigerants : fluides de l'admin (Refrigerant), dans l'ordre de l'admin ; vide : base initiale
+      de assets/calculators/refrigerants.js
+  Texte du bandeau F-Gas et charge par défaut (2,5 kg de R-410A) repris de l'ancien site.
+#}
+{% import 'calculator/_macros.html.twig' as calc %}
+{% set c = 'calculator--fluides-frigorifiques' %}
+{% set t = 'data-' ~ c ~ '-target' %}
+
+<div data-controller="{{ c }}" data-{{ c }}-fluids-value="{{ (refrigerants ?? [])|map(r => r.toCalculatorArray())|json_encode }}" class="space-y-6">
+    <section class="rounded-2xl border border-primary-200 bg-primary-50 p-5 text-sm text-primary-900 dark:border-primary-800 dark:bg-primary-950/40 dark:text-primary-100">
+        <h2 class="font-bold">Règlement (UE) 2024/573 (F-Gas III)</h2>
+        <p class="mt-1">La réglementation F-Gas, entrée en vigueur en mars 2024, accélère l'élimination des gaz fluorés. Les fluides à faible PRG (GWP ≤ 150), souvent naturels, sont privilégiés.
+            <a href="https://eur-lex.europa.eu/eli/reg/2024/573/oj" target="_blank" rel="noopener noreferrer" class="font-semibold underline">Consulter le texte officiel</a>.</p>
+    </section>
+
+    {% set fields %}
+        <div class="sm:col-span-2">
+            <label for="ff-fluid" class="form-label">Fluide</label>
+            <select id="ff-fluid" class="form-input" {{ t }}="fluid" data-action="change->{{ c }}#calculate"></select>
+        </div>
+        {{ calc.field('ff-charge', 'Charge de l\'installation', 'kg', {(t): 'charge', 'data-action': 'input->' ~ c ~ '#calculate'}, '2,5') }}
+        <div>
+            <span class="form-label">Statut F-Gas</span>
+            <p class="flex min-h-[2.625rem] items-center" aria-live="polite"><span class="inline-flex rounded-md px-2 py-1 text-xs font-bold" {{ t }}="status">—</span></p>
+        </div>
+        {{ calc.result('ff-gwp', 'PRG (GWP) et rapport du GIEC', null, {(t): 'gwp'}, 'ff-fluid') }}
+        {{ calc.result('ff-teq', 'Équivalent CO2', 't éq. CO2', {(t): 'teq'}, 'ff-fluid ff-charge') }}
+        {{ calc.message({(t): 'message'}) }}
+    {% endset %}
+    {{ calc.block('Équivalent tonnes CO2', 'TéqCO2 = charge (kg) × PRG / 1000', fields) }}
+
+    <section class="card" aria-labelledby="ff-table-title">
+        <h2 id="ff-table-title" class="text-lg font-bold text-secondary-900 dark:text-white">Base de données des fluides</h2>
+        <div class="mt-4 grid gap-4 sm:grid-cols-3">
+            {{ calc.select('ff-family', 'Famille', {'': 'Toutes'}, {(t): 'filterFamily', 'data-action': 'change->' ~ c ~ '#filter'}) }}
+            {{ calc.select('ff-status', 'Statut F-Gas', {'': 'Tous'}, {(t): 'filterStatus', 'data-action': 'change->' ~ c ~ '#filter'}) }}
+            {{ calc.select('ff-safety', 'Sécurité', {'': 'Toutes'}, {(t): 'filterSafety', 'data-action': 'change->' ~ c ~ '#filter'}) }}
+        </div>
+        <p class="mt-3 text-sm text-secondary-600 dark:text-secondary-300" aria-live="polite" {{ t }}="count"></p>
+        <div class="mt-3 overflow-x-auto rounded-xl border border-secondary-200 dark:border-secondary-700">
+            <table class="min-w-full text-sm">
+                <thead class="bg-secondary-50 dark:bg-secondary-800">
+                    <tr class="text-left text-secondary-700 dark:text-secondary-200">
+                        <th scope="col" class="px-3 py-2">Fluide</th>
+                        <th scope="col" class="px-3 py-2">Famille</th>
+                        <th scope="col" class="px-3 py-2">PRG (rapport GIEC)</th>
+                        <th scope="col" class="px-3 py-2">Statut F-Gas</th>
+                        <th scope="col" class="px-3 py-2">Sécurité</th>
+                        <th scope="col" class="px-3 py-2">Applications (régime)</th>
+                        <th scope="col" class="px-3 py-2">Substituts</th>
+                        <th scope="col" class="px-3 py-2">Huile compatible</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-secondary-100 dark:divide-secondary-700/60" {{ t }}="tableBody"></tbody>
+            </table>
+        </div>
+        <p class="mt-3 text-sm text-secondary-600 dark:text-secondary-300"><strong>Sécurité</strong> (inflammabilité et toxicité) : A1 non inflammable, A2L légèrement inflammable, A2 inflammable, A3 très inflammable, B2L toxique et légèrement inflammable.<br>
+            <strong>Huiles</strong> : POE (polyolester), PAG (polyalkylène glycol), PAO (polyalphaoléfine), AB (alkylbenzène).</p>
+        {{ calc.note({}, 'PRG (avec le rapport du GIEC dont ils viennent), statuts et données indicatifs, à vérifier au regard de l\'annexe du règlement (UE) 2024/573.') }}
+    </section>
+</div>

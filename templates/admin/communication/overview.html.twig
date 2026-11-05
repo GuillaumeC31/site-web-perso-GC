@@ -1,0 +1,60 @@
+{#
+  Communication › Vue d'ensemble : état de chaque canal d'un coup d'œil (icône ET texte), avec un lien vers l'onglet.
+  Affiché par : Admin\CommunicationController::overview() (route admin_communication).
+  Variables attendues :
+    - tab              : « overview »
+    - addresses        : catégorie => {address, source, fictitious} (MailRecipients)
+    - address_problems : catégorie => missing | fictitious (Recrutement et Général seulement)
+    - failed_emails    : nombre d'e-mails non envoyés
+    - deliverability   : résultat de DeliverabilityChecker::check()
+    - discord          : {configured, app}
+    - telegram         : {configured, poll: {active, last} ou null}
+    - remote_enabled   : validation à distance activée
+#}
+{% extends 'admin/communication/_layout.html.twig' %}
+{% import 'admin/communication/_macros.html.twig' as ui %}
+
+{% block tab_content %}
+    {{ ui.info('overview') }}
+    {% set rows = [
+        {
+            id: 'email', route: 'admin_communication_emails',
+            status: address_problems is empty and failed_emails == 0 ? 'ok' : 'problem',
+            text: address_problems is not empty ? 'admin.communication.overview.email_missing'|trans : (failed_emails > 0 ? 'admin.communication.overview.email_failed'|trans({'%count%': failed_emails}) : 'admin.communication.overview.email_ok'|trans),
+        },
+        {
+            id: 'fictitious', route: 'admin_communication_emails',
+            status: (addresses|filter(a => a.fictitious)) is empty ? 'ok' : (app.environment == 'prod' ? 'problem' : 'warning'),
+            text: (addresses|filter(a => a.fictitious)) is empty ? 'admin.communication.overview.fictitious_none'|trans : 'admin.communication.overview.fictitious_some'|trans({'%count%': (addresses|filter(a => a.fictitious))|length}),
+        },
+        {
+            id: 'deliverability', route: 'admin_communication_emails',
+            status: not deliverability.applicable ? 'not_applicable' : (deliverability.ok ? 'ok' : 'problem'),
+            text: not deliverability.applicable ? 'admin.communication.deliverability.not_applicable'|trans : (deliverability.ok ? 'admin.communication.overview.deliverability_ok'|trans : 'admin.communication.overview.deliverability_problem'|trans),
+        },
+        {
+            id: 'discord', route: 'admin_communication_discord',
+            status: discord.configured ? 'ok' : 'not_applicable',
+            text: discord.configured ? (discord.app ? 'admin.communication.overview.discord_app'|trans : 'admin.communication.overview.discord_webhook'|trans) : 'admin.communication.not_configured'|trans,
+        },
+        {
+            id: 'telegram', route: 'admin_communication_telegram',
+            status: not telegram.configured ? 'not_applicable' : (telegram.poll is not null and not telegram.poll.active ? 'warning' : 'ok'),
+            text: not telegram.configured ? 'admin.communication.not_configured'|trans : (telegram.poll is null ? 'admin.communication.configured'|trans : (telegram.poll.active ? 'admin.communication.overview.telegram_poll_active'|trans : 'admin.communication.overview.telegram_poll_stopped'|trans)),
+        },
+        {
+            id: 'remote', route: 'admin_communication_remote',
+            status: remote_enabled ? 'ok' : 'not_applicable',
+            text: (remote_enabled ? 'admin.communication.overview.remote_on' : 'admin.communication.overview.remote_off')|trans,
+        },
+    ] %}
+    <ul class="grid gap-4 sm:grid-cols-2 xl:grid-cols-3" data-testid="communication-overview">
+        {% for row in rows %}
+            <li class="card flex flex-col gap-2" data-channel="{{ row.id }}">
+                <h2 class="text-base font-semibold text-secondary-900 dark:text-white">{{ ('admin.communication.overview.' ~ row.id)|trans }}</h2>
+                {{ ui.state(row.status, row.text) }}
+                <a href="{{ path(row.route) }}" class="link mt-auto text-sm">{{ 'admin.communication.overview.open'|trans }}<span class="sr-only"> : {{ ('admin.communication.overview.' ~ row.id)|trans }}</span></a>
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}

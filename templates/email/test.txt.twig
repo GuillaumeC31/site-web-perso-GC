@@ -1,0 +1,16 @@
+{#
+  E-mail (version texte) : test de l'envoi vers une adresse de réception.
+  Envoyé par : Admin\CommunicationController::sendTestEmail(). Variables : sent_at, transport, category_label, texts (EmailTexts).
+#}
+{% autoescape false %}
+{{ subject }}
+
+{{ texts.intro }}
+
+Adresse testée : {{ category_label }}
+Envoyé le {{ sent_at|format_datetime('long', 'short') }} · transport : {{ transport }}
+{% if texts.signature %}
+
+{{ texts.signature }}
+{% endif %}
+{% endautoescape %}

@@ -1,0 +1,38 @@
+{#
+  Communication › Discord : webhook et application (bot, clé publique, salon, compte admin : configuré ou non, jamais
+  la valeur), mode utilisé, notification de test, rappel de la validation en deux étapes du compte Discord.
+  Affiché par : Admin\CommunicationController::discord() (route admin_communication_discord).
+  Variables attendues :
+    - tab, webhook (DISCORD_WEBHOOK_URL renseignée ?), discord_app (variable => renseignée ?), app_configured
+    - mode : app (boutons dans Discord), webhook (boutons-liens en repli) ou none
+#}
+{% extends 'admin/communication/_layout.html.twig' %}
+{% import 'admin/communication/_macros.html.twig' as ui %}
+
+{% block tab_content %}
+    {{ ui.info('discord') }}
+    <div class="grid gap-6 lg:grid-cols-2">
+        <section class="card">
+            <h2 class="mb-3 text-lg font-semibold text-secondary-900 dark:text-white">{{ 'admin.communication.discord.state'|trans }}</h2>
+            <dl class="grid grid-cols-[1fr_auto] gap-x-4 gap-y-2 text-sm" data-testid="discord-state">
+                <dt>{{ 'admin.communication.discord.webhook'|trans }} {{ ui.help('admin.communication.discord.webhook'|trans, 'admin.communication.help.discord_webhook'|trans) }}</dt>
+                <dd>{{ ui.state(webhook ? 'ok' : 'not_applicable', (webhook ? 'admin.communication.configured' : 'admin.communication.not_configured')|trans) }}</dd>
+                {% for key, ok in discord_app %}
+                    <dt>{{ ('admin.communication.discord.' ~ key)|trans }}</dt>
+                    <dd>{{ ui.state(ok ? 'ok' : 'not_applicable', (ok ? 'admin.communication.configured' : 'admin.communication.not_configured')|trans) }}</dd>
+                {% endfor %}
+            </dl>
+            <p class="mt-4 text-sm" data-testid="discord-mode"><span class="font-semibold">{{ 'admin.communication.discord.mode'|trans }}</span> {{ ('admin.communication.discord.mode_' ~ mode)|trans }}</p>
+        </section>
+        <section class="card">
+            <h2 class="mb-3 text-lg font-semibold text-secondary-900 dark:text-white">{{ 'admin.communication.test_and_security'|trans }}</h2>
+            <form method="post" action="{{ path('admin_communication_test_channel', {channel: 'discord'}) }}">
+                <input type="hidden" name="_token" value="{{ csrf_token('notification_test_discord') }}">
+                <input type="hidden" name="back" value="discord">
+                <button type="submit" class="btn btn-secondary btn-sm">{{ 'admin.site_settings.test_button'|trans }}<span class="sr-only"> (Discord)</span></button>
+            </form>
+            <p class="form-help mt-2">{{ 'admin.communication.test_real'|trans }}</p>
+            <twig:Alert type="warning" class="mt-4">{{ 'admin.communication.discord.two_factor'|trans }}</twig:Alert>
+        </section>
+    </div>
+{% endblock %}

@@ -1,0 +1,16 @@
+twig:
+    file_name_pattern: '*.twig'
+    form_themes: ['form/tailwind_theme.html.twig']
+    # Dates affichées à l'heure française (PHP et la base restent en UTC)
+    date:
+        timezone: 'Europe/Paris'
+    globals:
+        # Nom affiché partout (en-tête, pied de page, balises meta)
+        site_owner_name: 'Guillaume Couget'
+        admin_path: '%app.admin_path%'
+        # Clé publique de Cloudflare Turnstile (formulaires publics)
+        turnstile_site_key: '%env(TURNSTILE_SITE_KEY)%'
+
+when@test:
+    twig:
+        strict_variables: true

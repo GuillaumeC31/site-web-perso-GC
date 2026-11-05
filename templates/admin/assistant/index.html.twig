@@ -1,0 +1,88 @@
+{#
+  Écran : assistant IA : état, consommation du jour et du mois, modèles, consommation du mois par usage,
+  journal des conversations (12 mois, filtre « suspects »).
+  Affiché par : Admin\AssistantController::index() (route admin_assistant_index).
+  Variables attendues :
+    - status          : AiStatus::getSummary()
+    - messages        : list<ChatMessage> (100 derniers, recruteur chargé)
+    - suspicious_only : vrai si seuls les échanges suspects sont listés
+#}
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}{{ 'admin.assistant.title'|trans }}{% endblock %}
+
+{% block body %}
+    <div class="mb-6 flex flex-wrap items-start justify-between gap-4">
+        <div>
+            <h1 class="text-2xl font-bold dark:text-white">{{ 'admin.assistant.title'|trans }}</h1>
+            <p class="form-help">{{ 'admin.assistant.intro'|trans }}</p>
+        </div>
+        <div class="flex flex-wrap gap-2">
+            <form method="post" action="{{ path('admin_assistant_refresh_models') }}">
+                <input type="hidden" name="_token" value="{{ csrf_token('admin_assistant_refresh') }}">
+                <twig:Button type="submit" variant="secondary" size="sm">{{ 'admin.assistant.refresh_models'|trans }}</twig:Button>
+            </form>
+            <twig:Button href="{{ path('admin_assistant_cv_import') }}" variant="secondary" size="sm">{{ 'admin.assistant.cv_import.title'|trans }}</twig:Button>
+            <twig:Button href="{{ path('admin_site_settings_edit') }}" variant="secondary" size="sm">{{ 'admin.assistant.settings_link'|trans }}</twig:Button>
+        </div>
+    </div>
+
+    <twig:Card title="{{ 'admin.assistant.status_title'|trans }}" class="mb-6">
+        {{ include('admin/assistant/_status.html.twig', {status: status, compact: false}, with_context = false) }}
+
+        {% if status.purposes is not empty %}
+            <h3 class="mt-6 text-sm font-semibold">{{ 'admin.assistant.purposes_title'|trans }}</h3>
+            <ul class="mt-2 space-y-1 text-sm">
+                {% for row in status.purposes %}
+                    <li>{{ row.purpose.translationKey|trans }} : {{ 'admin.assistant.purpose_line'|trans({'%calls%': row.calls, '%errors%': row.errors, '%tokens%': row.tokens|format_number}) }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </twig:Card>
+
+    <div class="mb-3 flex flex-wrap items-center justify-between gap-3">
+        <h2 class="text-xl font-bold dark:text-white">{{ 'admin.assistant.journal_title'|trans }}</h2>
+        <nav class="flex gap-2 text-sm" aria-label="{{ 'admin.assistant.filter'|trans }}">
+            <a href="{{ path('admin_assistant_index') }}" class="{{ suspicious_only ? 'link' : 'font-semibold' }}" {{ not suspicious_only ? 'aria-current="page"' }}>{{ 'admin.assistant.filter_all'|trans }}</a>
+            <span aria-hidden="true">·</span>
+            <a href="{{ path('admin_assistant_index', {suspects: 1}) }}" class="{{ suspicious_only ? 'font-semibold' : 'link' }}" {{ suspicious_only ? 'aria-current="page"' }}>{{ 'admin.assistant.filter_suspicious'|trans }}</a>
+        </nav>
+    </div>
+    <p class="form-help mb-4">{{ 'admin.assistant.journal_help'|trans }}</p>
+
+    {% if messages is empty %}
+        <twig:Card><p class="text-secondary-600 dark:text-secondary-300">{{ 'admin.crud.empty'|trans }}</p></twig:Card>
+    {% else %}
+        <div tabindex="0" role="region" aria-label="{{ 'admin.crud.table_region'|trans }}" class="overflow-x-auto rounded-2xl border border-secondary-200 bg-white dark:border-secondary-700 dark:bg-secondary-800">
+            <table class="min-w-full divide-y divide-secondary-200 text-sm dark:divide-secondary-700">
+                <thead class="bg-secondary-50 dark:bg-secondary-800/80">
+                    <tr>
+                        <th scope="col" class="px-4 py-3 text-left font-semibold">{{ 'admin.assistant.field.date'|trans }}</th>
+                        <th scope="col" class="px-4 py-3 text-left font-semibold">{{ 'admin.assistant.field.recruiter'|trans }}</th>
+                        <th scope="col" class="px-4 py-3 text-left font-semibold">{{ 'admin.assistant.field.question'|trans }}</th>
+                        <th scope="col" class="px-4 py-3 text-left font-semibold">{{ 'admin.assistant.field.outcome'|trans }}</th>
+                        <th scope="col" class="px-4 py-3 text-left font-semibold">{{ 'admin.assistant.field.model'|trans }}</th>
+                        <th scope="col" class="px-4 py-3 text-right font-semibold">{{ 'admin.assistant.field.tokens'|trans }}</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-secondary-100 dark:divide-secondary-700/60">
+                    {% for message in messages %}
+                        <tr>
+                            <td class="px-4 py-2 whitespace-nowrap"><a href="{{ path('admin_assistant_show', {id: message.id}) }}" class="link">{{ message.createdAt|format_datetime('short', 'short') }}</a></td>
+                            <td class="px-4 py-2">{% if message.recruiter %}<a href="{{ path('admin_recruiter_show', {id: message.recruiter.id}) }}" class="link">{{ message.recruiter.fullName }}</a> <span class="text-secondary-600 dark:text-secondary-400">· {{ message.recruiter.company }}</span>{% else %}<twig:Badge tone="neutral">{{ 'admin.assistant.admin_test'|trans }}</twig:Badge>{% endif %}</td>
+                            <td class="px-4 py-2">{{ message.question|length > 90 ? message.question|slice(0, 90) ~ '…' : message.question }}</td>
+                            <td class="px-4 py-2">
+                                <twig:Badge tone="{{ message.outcome.ai ? 'success' : (message.outcome.value == 'refused' ? 'danger' : 'neutral') }}">{{ message.outcome.translationKey|trans }}</twig:Badge>
+                                {% if message.suspicious %}<twig:Badge tone="danger">{{ 'admin.assistant.suspicious'|trans }}</twig:Badge>{% endif %}
+                                {% if message.blocked %}<twig:Badge tone="danger">{{ 'admin.assistant.blocked'|trans }}</twig:Badge>{% endif %}
+                                {% if message.error %}<twig:Badge tone="accent">{{ 'admin.assistant.error'|trans }}</twig:Badge>{% endif %}
+                            </td>
+                            <td class="px-4 py-2 whitespace-nowrap">{{ message.model ?? '—' }}</td>
+                            <td class="px-4 py-2 text-right whitespace-nowrap">{{ message.totalTokens > 0 ? message.totalTokens|format_number : '—' }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+{% endblock %}

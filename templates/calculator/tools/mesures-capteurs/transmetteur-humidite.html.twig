@@ -1,0 +1,5 @@
+{#
+  Outil : Transmetteur d'humidité. Inclus par : calculator/tool.html.twig.
+  Gabarit : _scaling.html.twig (contrôleur calculator--scaling). Textes, plages et valeurs repris de l'ancien site.
+#}
+{{ include('calculator/tools/mesures-capteurs/_scaling.html.twig', {signal_min: 4, signal_max: 20, signal_unit: 'mA', intro: 'Conversion signal ↔ % HR. Plage physique standard de 0 à 100 % (hygromètres industriels).', default_signal: '12', default_physical: '50', output_types: true, physical_unit: '% HR', physical_label: 'Humidité relative', fixed_range: [0, 100], presets: []}, with_context = false) }}

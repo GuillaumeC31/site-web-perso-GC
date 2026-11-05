@@ -1,0 +1,227 @@
+# Calculatrice — Pense-bête des ajouts et futurs développements
+
+> Fichier de travail : idées d'outils, état d'avancement et priorités.
+> Source de vérité de ce qui existe : `config/calculator/tools.yaml` (registre).
+> Mis à jour le 23/10/2026, d'après le registre (30 outils publics).
+
+## Légende
+
+| Repère | Signification |
+|---|---|
+| ✅ | Disponible sur le site (porté et testé) |
+| 🟡 | Prévu dans le registre (`planned` ou `legacy`), à développer |
+| 🆕 | Nouvelle idée, absente du registre : à ajouter au registre avant développement |
+| 🔁 | Doublon ou variante : fusionné dans un autre outil |
+| **P1** | Prioritaire : cœur de métier (génie climatique, génie électrique, bureau d'études) |
+| **P2** | Utile, à faire ensuite |
+| **P3** | Bonus, quand le reste est fini |
+
+## Règles pour ajouter un outil
+
+1. **Formule et source d'abord** : écrire la formule, les unités, les hypothèses et la norme ou l'ouvrage de référence, avant de coder.
+2. **Cas de test** : au moins 5 valeurs de référence vérifiées à la main ou dans un abaque (cas courant, bornes, valeurs invalides).
+3. **Champ vide = valeur par défaut, 0 = 0.** Les valeurs sans signification physique sont refusées avec un message clair.
+4. **Affichage** : formule, hypothèses, norme (une fois validée dans l'admin), avertissement « résultat indicatif ».
+5. **Validation métier par moi** avant publication. Un outil faux décrédibilise tout le site.
+6. **Mettre à jour** le registre, ce fichier et `CALCULATRICE_ANOMALIES.md` si besoin.
+
+---
+
+## Électricité
+
+### Ma liste d'origine, rapprochée du registre
+
+| Idée | État | Outil du registre / remarque |
+|---|---|---|
+| Loi d'Ohm, calculette loi d'Ohm | ✅ | Loi d'Ohm et puissance |
+| Cercle de la loi d'Ohm | 🔁 | Fusionné dans « Loi d'Ohm et puissance » |
+| Puissance, puissances diverses, puissance en alternatif, puissance réactive | ✅ 🔁 | Puissances active, réactive et apparente |
+| Puissance alternatif triphasé, puissance réactive triphasée | 🟡 P1 | Puissance triphasée (inclure P, Q, S, I en triphasé) |
+| Relèvement du facteur de puissance, relèvement (suite) | ✅ 🔁 | Relèvement du facteur de puissance (cos φ) |
+| Calcul de la chute de tension, version 2 | ✅ | Chute de tension → à améliorer (voir plus bas) |
+| Calcul de la résistance d'un conducteur, résistance | 🟡 P2 | Résistance d'un conducteur |
+| Résistivité | 🟡 P3 | Résistivité |
+| Calcul résistances en parallèle | 🟡 P3 | Résistances en parallèle (ajouter le mode série) |
+| Charge d'un condensateur | 🟡 P3 | Charge d'un condensateur |
+| Force électromotrice, f.é.m. (puissance), force contre-électromotrice, f.c.é.m. (puissance) | 🟡 🔁 P3 | Un seul outil : « Force électromotrice et force contre-électromotrice » |
+| Durée d'utilisation d'une batterie au plomb | 🟡 P3 | Autonomie d'une batterie au plomb |
+| Calcul de la résistance interne d'une batterie | 🟡 P3 | Résistance interne d'une batterie |
+| Résistance et inductance série / parallèle | 🟡 P2 | Impédance d'un circuit RL (modes série et parallèle) |
+| Résistance et capacité série / parallèle | 🟡 P2 | Impédance d'un circuit RC (modes série et parallèle) |
+| Calcul du condensateur en monophasé, contrôle du condensateur des moteurs monophasés | 🟡 🔁 P2 | Condensateur en monophasé (calcul + contrôle d'un condensateur existant) |
+| Calcul du condensateur moteur tri vers mono | ✅ 🔁 | Condensateur Steinmetz (vérifier le doublon avec « Condensateur moteur triphasé vers monophasé ») |
+| Puissance moteur en alternatif, (suite) | 🟡 P1 | Puissance d'un moteur en alternatif (puissance utile, absorbée, rendement, cos φ, couple) |
+| Comment déterminer le courant d'emploi Ib | 🟡 P1 | Courant d'emploi Ib (avec coefficients d'utilisation et de simultanéité) |
+| Contrôle protections des lignes | 🟡 P1 | Contrôle des protections des lignes |
+| Estimation prise de terre | 🟡 P2 | Estimation d'une prise de terre |
+| Nombre de tours / puissance, sortie compteur ; mesure de la puissance avec un compteur d'énergie | 🟡 🔁 P2 | Mesure de puissance avec un compteur (modes : disque tr/kWh et impulsions imp/kWh) |
+| Indices de protection | 🟡 P2 | Indices de protection (IP), à compléter avec les indices IK |
+| Cercle trigonométrique, trigonométrie | 🟡 🔁 P3 | Trigonométrie |
+| Convertisseur signal vers mesure, mesure vers signal | ✅ | Capteurs et mesures : mise à l'échelle 4-20 mA, 0-20 mA, 0-10 V |
+| Calcul durée d'une opération d'électrolyse | 🟡 P3 | Durée d'une électrolyse |
+| Temps de chauffe d'un chauffe-eau | ✅ | Thermodynamique : chauffe d'un volume d'eau |
+| Calculette pour trouver la résistance d'une LED | ✅ | Électronique : résistance pour LED |
+| Valeur d'une résistance avec les couleurs | ✅ | Électronique : code couleur des résistances |
+| Estimation puissance hydraulique d'une chute d'eau | 🆕 P3 | P = ρ · g · Q · H · η (pico-hydro) |
+| Temps de charge d'une voiture électrique | 🆕 P3 | Énergie à charger, puissance de la borne (mono/tri, A), rendement de charge |
+
+### Nouvelles idées (bureau d'études électrique)
+
+| Idée | Priorité | Contenu | Référence à vérifier |
+|---|---|---|---|
+| 🆕 Bilan de puissance d'une installation | P1 | Liste de récepteurs, coefficients ku (utilisation) et ks (simultanéité), puissance d'abonnement / transformateur | NF C 15-100, guide UTE C 15-105 |
+| 🆕 Courant de court-circuit en bout de ligne | P1 | Méthode des impédances (amont, transformateur, câbles), Icc max et Icc min | UTE C 15-105 |
+| 🆕 Longueur maximale protégée | P1 | Contacts indirects en schéma TN et IT, selon section, protection et courbe | NF C 15-100, UTE C 15-105 |
+| 🆕 Choix d'un disjoncteur | P1 | Calibre normalisé In ≥ Ib, courbe B/C/D, pouvoir de coupure ≥ Icc | NF EN 60898 / 60947-2 |
+| 🆕 Section du conducteur de protection (PE) | P2 | Méthode simplifiée (tableau) et méthode adiabatique | NF C 15-100 |
+| 🆕 Courant de démarrage d'un moteur | P2 | Démarrage direct, étoile-triangle (÷ 3), variateur ; choix de la protection | Données constructeur |
+| 🆕 Vitesse, glissement et couple d'un moteur asynchrone | P2 | n_s = 60 f / p, glissement, couple utile | — |
+| 🆕 Transformateur | P2 | Courants primaire et secondaire, Ucc, Icc au secondaire | NF EN 60076 |
+| 🆕 Autonomie d'un onduleur (UPS) | P3 | Capacité batterie, tension, rendement, profondeur de décharge | — |
+| 🔧 Amélioration : chute de tension | P1 | Mode triphasé, prise en compte de cos φ et de la réactance (λ ≈ 0,08 mΩ/m), comparaison aux limites (3 % / 5 % éclairage / autres usages) | NF C 15-100 § 525 |
+| 🔧 Amélioration : dimensionnement des câbles | P1 | Courant admissible Iz avec mode de pose et facteurs de correction (température, groupement) | NF C 15-100 § 523 |
+
+---
+
+## Thermodynamique et génie climatique
+
+**Mon cœur de métier : c'est ici que les outils doivent être irréprochables.**
+
+| Idée | État | Priorité | Contenu | Référence à vérifier |
+|---|---|---|---|---|
+| Chauffe d'un volume d'eau | ✅ | — | | |
+| Chauffe d'un fluide | ✅ | — | | |
+| Psychrométrie (point de rosée) | ✅ | — | | |
+| Loi des gaz parfaits | ✅ | — | | |
+| Fluides frigorigènes et F-Gas | ✅ | — | | Règlement (UE) 2024/573 |
+| Dimensionnement d'une chambre froide | ✅ | — | v2 (lot 5e) : modes simple et pro, poste par poste ; listes de portes (ASHRAE, protections, cordons), vitrages et produits (respiration, emballages) ; antigel, évacuation, soupape, ventilateurs ; dégivrage par type ; fluide de l'admin, règles F-Gas vérifiées, contrôles, NF EN 378-1 (voir docs/CHAMBRE_FROIDE_V2.md) | Règlement (UE) 2024/573 ; ASHRAE Refrigeration ; NF EN 378-1 |
+| Enceinte climatique (stabilité ICH) | ✅ | — | v2 prévue après validation de la chambre froide v2 | ICH Q1A(R2) |
+| Bilan thermique d'une paroi | 🟡 | P1 | Coefficient U, déperditions U·S·ΔT, risque de condensation en surface | — |
+| Aéraulique (armoire électrique) | 🟡 | P1 | Débit de ventilation ou puissance de climatisation d'une armoire | Méthodes constructeurs |
+| 🆕 Tonnage équivalent CO₂ et contrôles d'étanchéité | P1 | Charge (kg) × PRG → t éq. CO₂, fréquence des contrôles d'étanchéité, détection obligatoire | Règlement (UE) 2024/573 |
+| 🆕 Pression ↔ température de saturation | P1 | Pour les fluides courants (R134a, R404A, R407C, R410A, R32, R290, R744, R449A, R513A, R1234yf), points de bulle et de rosée pour les mélanges à glissement | Tables NIST REFPROP / CoolProp |
+| 🆕 Surchauffe et sous-refroidissement | P1 | À partir des pressions et des températures mesurées (outil de dépannage frigoriste) | Même source |
+| 🆕 Puissance transportée par l'air | P1 | Q = qv · ρ · cp · ΔT (sensible), plus le latent (lien avec la psychrométrie) | — |
+| 🆕 Puissance transportée par l'eau | P1 | Q = qm · cp · ΔT, débit nécessaire, eau glycolée (cp et masse volumique selon le %) | — |
+| 🆕 Dimensionnement d'une tuyauterie | P2 | Diamètre selon la vitesse admissible, perte de charge (Darcy-Weisbach, Colebrook) | — |
+| 🆕 Dimensionnement d'une gaine | P2 | Section selon la vitesse, diamètre équivalent d'une gaine rectangulaire, perte de charge linéique | — |
+| 🆕 Mélange de deux flux d'air | P2 | Température et humidité du mélange (psychrométrie) | — |
+| 🆕 Vase d'expansion | P2 | Volume selon le volume d'eau, la température, les pressions | NF EN 12828 |
+| 🆕 Temps de descente en température | P2 | Constante de temps d'une enceinte ou d'une chambre froide, temps pour atteindre la consigne | — |
+| 🆕 COP / EER d'une machine | P3 | Efficacité théorique (Carnot) et réelle selon les températures | — |
+| 🆕 Chocs thermiques | P2 | Vitesse de variation (K/min), puissance nécessaire selon la masse de la charge | NF EN 60068-2-14 |
+
+---
+
+## Capteurs et mesures
+
+| Idée | État | Priorité | Contenu | Référence à vérifier |
+|---|---|---|---|---|
+| Sondes PT100, PT1000 | ✅ | — | | IEC 60751 |
+| Mise à l'échelle 4-20 mA, 0-20 mA, 0-10 V | ✅ | — | | |
+| Transmetteurs d'humidité et de température | ✅ | — | | |
+| 🆕 Thermocouples (K, J, T, N, S) | P1 | Tension (mV) ↔ température, compensation de soudure froide | IEC 60584 |
+| 🆕 Caractérisation d'une enceinte climatique | P1 | Homogénéité, stabilité et écarts à partir des relevés de plusieurs sondes | FD X 15-140 |
+| 🆕 Précision d'un instrument | P2 | Conversion % pleine échelle ↔ % de la lecture, incertitude combinée | GUM (JCGM 100) |
+| 🆕 Thermistance NTC | P2 | Résistance ↔ température (Steinhart-Hart ou β) | Données constructeur |
+| 🆕 Réglage d'un PID | P3 | Méthodes Ziegler-Nichols et Broïda à partir d'une réponse indicielle | — |
+| 🆕 Enceinte climatique : simulation de la réponse (phase 2 de la régulation PID) | P2 | Courbe de mise en régime et de reprise après une ouverture de porte avec les réglages proposés (docs/ENCEINTE_CLIMATIQUE_V2.md, section 8) | FD X 15-140 |
+
+---
+
+## Électronique
+
+| Idée | État | Priorité | Contenu |
+|---|---|---|---|
+| Résistance pour LED | ✅ | — | |
+| Pont diviseur de tension | ✅ | — | |
+| Autonomie d'une batterie | ✅ | — | |
+| Code couleur des résistances | ✅ | — | |
+| Filtre RC (fréquence de coupure) | 🟡 | P2 | |
+| 🆕 Régulateur linéaire (LM317) | P3 | Résistances de réglage, puissance dissipée |
+| 🆕 Transistor en commutation | P3 | Résistance de base pour saturer un transistor (relais, LED) |
+| 🆕 Temporisateur 555 | P3 | Fréquence et rapport cyclique en astable, durée en monostable |
+| 🆕 Résolution d'un CAN | P3 | Quantum, tension par point selon le nombre de bits et la référence |
+
+---
+
+## Mécanique
+
+| Idée | État | Priorité | Contenu |
+|---|---|---|---|
+| Train d'engrenages | ✅ | — | |
+| Poussée d'un vérin | ✅ | — | |
+| Flexion d'une poutre | ✅ | — | |
+| 🆕 Couple, puissance et vitesse | P2 | P = C · ω, conversions tr/min ↔ rad/s |
+| 🆕 Poulies et courroies | P3 | Rapport de transmission, vitesse linéaire, longueur de courroie |
+
+---
+
+## Éclairage
+
+| Idée | État | Priorité |
+|---|---|---|
+| Adresse DMX (interrupteurs DIP) | 🟡 legacy | P3 |
+| Éclairage horticole | 🟡 legacy | P3 |
+| Lux et lumens par surface | 🟡 planned | P2 |
+| Vieillissement UV (ASTM, ISO) | 🟡 legacy | P2 |
+
+---
+
+## Impression 3D
+
+| Idée | État | Priorité |
+|---|---|---|
+| Calibrage des steps/mm | ✅ | — |
+| Coût d'une impression 3D | ✅ | — |
+| Débit volumétrique maximal | 🟡 planned | P3 |
+| Rétraction thermique | 🟡 planned | P3 |
+
+---
+
+## Convertisseur
+
+| Idée | État | Priorité | Contenu |
+|---|---|---|---|
+| Unités physiques | ✅ | — | |
+| 🆕 Unités du froid et du génie climatique | P1 | kW ↔ BTU/h ↔ tonne frigorifique (TR), frigorie/h, bar ↔ psi, °C ↔ °F ↔ K, m³/h ↔ L/s ↔ CFM (à intégrer au convertisseur existant si possible) |
+
+---
+
+## Réseaux / IT
+
+| Idée | État | Priorité | Contenu |
+|---|---|---|---|
+| Sous-réseaux IPv4 | 🟡 planned | P2 | |
+| Conversion binaire, hexadécimal et décimal | 🟡 planned | P2 | |
+| 🆕 Registres Modbus | P2 | Conversion de deux registres 16 bits en float32 / int32, ordre des octets (ABCD, CDAB…), adresse 4xxxx ↔ offset |
+| 🆕 Durée d'un transfert | P3 | Taille du fichier et débit → durée |
+
+---
+
+## Terrariophilie
+
+| Idée | État | Priorité |
+|---|---|---|
+| Éclairage et zones de Ferguson | 🟡 legacy | P3 |
+| Puissance de chauffage | 🟡 legacy | P3 |
+| Volume de substrat et bioactif | 🟡 legacy | P3 |
+| Système de brumisation | 🟡 legacy | P3 |
+| Volume et poids d'un bassin | 🟡 legacy | P3 |
+| Renouvellement d'air | 🟡 legacy | P3 |
+
+---
+
+## Autres (à définir)
+
+- 
+
+---
+
+## Ordre de développement conseillé
+
+1. **Finir le portage** des outils `legacy` (lot 5d : Éclairage et Terrariophilie).
+2. **P1 Thermodynamique** : tonnage CO₂ / F-Gas, pression ↔ température, surchauffe / sous-refroidissement, puissance air et eau, bilan de paroi, aéraulique d'armoire, unités du froid.
+3. **P1 Électricité** : courant d'emploi Ib, bilan de puissance, puissance triphasée, puissance moteur, améliorations chute de tension et câbles, court-circuit, longueur maximale protégée, choix du disjoncteur, contrôle des protections.
+4. **P1 Capteurs** : thermocouples, caractérisation d'enceinte FD X 15-140.
+5. **P2**, puis **P3** selon le temps disponible.

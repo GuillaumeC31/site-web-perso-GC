@@ -1,0 +1,61 @@
+{#
+  Outil : dimensionnement des câbles en courant continu (section, longueur, chute de tension, masse).
+  Inclus par : calculator/tool.html.twig. Contrôleur : calculator--calculs-cables.
+  Valeurs par défaut reprises de l'ancien site (2 conducteurs, gaine 20 %). Résistivités de la
+  NF C 15-100 / UTE C 15-105 (A1), saisies invalides refusées (A3), conducteurs entiers (A4) :
+  docs/CALCULATRICE_ANOMALIES.md.
+#}
+{% import 'calculator/_macros.html.twig' as calc %}
+{% set c = 'calculator--calculs-cables' %}
+{% set materials = {cu: 'Cuivre (ρ = 0,0225 Ω·mm²/m)', al: 'Aluminium (ρ = 0,036 Ω·mm²/m)'} %}
+{% set copper_note = 'ρ = 0,0225 Ω·mm²/m (cuivre) — NF C 15-100 / UTE C 15-105' %}
+{% macro f(c, id, label, unit, target, method, value = null, placeholder = null) %}
+    {% import 'calculator/_macros.html.twig' as calc %}
+    {{ calc.field(id, label, unit, {('data-' ~ c ~ '-target'): target, 'data-action': 'input->' ~ c ~ '#' ~ method}, value, placeholder) }}
+{% endmacro %}
+
+<div data-controller="{{ c }}" class="space-y-6">
+    {% set fields %}
+        {{ calc.select('sec-mat', 'Matériau', materials, {('data-' ~ c ~ '-target'): 'sectionMaterial', 'data-action': 'change->' ~ c ~ '#section'}, null, true) }}
+        {{ _self.f(c, 'sec-l', 'Longueur (L)', 'm', 'sectionLength', 'section', null, 'ex. 50') }}
+        {{ _self.f(c, 'sec-i', 'Courant (I)', 'A', 'sectionCurrent', 'section', null, 'ex. 10') }}
+        {{ _self.f(c, 'sec-du', 'Chute de tension (ΔU)', 'V', 'sectionDrop', 'section', null, 'ex. 0,6') }}
+        {{ calc.result('sec-result', 'Section théorique minimale', 'mm²', {('data-' ~ c ~ '-target'): 'sectionResult'}, 'sec-mat sec-l sec-i sec-du') }}
+        {{ calc.message({('data-' ~ c ~ '-target'): 'sectionMessage'}) }}
+        {{ calc.note({('data-' ~ c ~ '-target'): 'sectionNote'}, copper_note) }}
+    {% endset %}
+    {{ calc.block('1. Section minimale requise', 'S = (2 × ρ × L × I) / ΔU', fields) }}
+
+    {% set fields %}
+        {{ calc.select('len-mat', 'Matériau', materials, {('data-' ~ c ~ '-target'): 'lengthMaterial', 'data-action': 'change->' ~ c ~ '#length'}, null, true) }}
+        {{ _self.f(c, 'len-s', 'Section (S)', 'mm²', 'lengthSection', 'length', null, 'ex. 2,5') }}
+        {{ _self.f(c, 'len-i', 'Courant (I)', 'A', 'lengthCurrent', 'length', null, 'ex. 10') }}
+        {{ _self.f(c, 'len-du', 'Chute de tension maximale (ΔU)', 'V', 'lengthDrop', 'length', null, 'ex. 0,6') }}
+        {{ calc.result('len-result', 'Longueur théorique maximale', 'm', {('data-' ~ c ~ '-target'): 'lengthResult'}, 'len-mat len-s len-i len-du') }}
+        {{ calc.message({('data-' ~ c ~ '-target'): 'lengthMessage'}) }}
+        {{ calc.note({('data-' ~ c ~ '-target'): 'lengthNote'}, copper_note) }}
+    {% endset %}
+    {{ calc.block('2. Longueur maximale', 'L = (ΔU × S) / (2 × ρ × I)', fields) }}
+
+    {% set fields %}
+        {{ calc.select('drop-mat', 'Matériau', materials, {('data-' ~ c ~ '-target'): 'dropMaterial', 'data-action': 'change->' ~ c ~ '#drop'}, null, true) }}
+        {{ _self.f(c, 'drop-s', 'Section (S)', 'mm²', 'dropSection', 'drop', null, 'ex. 2,5') }}
+        {{ _self.f(c, 'drop-l', 'Longueur (L)', 'm', 'dropLength', 'drop', null, 'ex. 50') }}
+        {{ _self.f(c, 'drop-i', 'Courant (I)', 'A', 'dropCurrent', 'drop', null, 'ex. 10') }}
+        {{ calc.result('drop-result', 'Chute de tension (ΔU)', 'V', {('data-' ~ c ~ '-target'): 'dropResult'}, 'drop-mat drop-s drop-l drop-i') }}
+        {{ calc.message({('data-' ~ c ~ '-target'): 'dropMessage'}) }}
+        {{ calc.note({('data-' ~ c ~ '-target'): 'dropNote'}, copper_note) }}
+    {% endset %}
+    {{ calc.block('3. Chute de tension générée', 'ΔU = (2 × ρ × L × I) / S', fields) }}
+
+    {% set fields %}
+        {{ calc.select('w-mat', 'Matériau', {cu: 'Cuivre (8,96 g/cm³)', al: 'Aluminium (2,70 g/cm³)'}, {('data-' ~ c ~ '-target'): 'weightMaterial', 'data-action': 'change->' ~ c ~ '#weight'}) }}
+        {{ _self.f(c, 'w-s', 'Section d\'un fil', 'mm²', 'weightSection', 'weight', null, 'ex. 2,5') }}
+        {{ _self.f(c, 'w-l', 'Longueur (L)', 'm', 'weightLength', 'weight', null, 'ex. 50') }}
+        {{ _self.f(c, 'w-n', 'Nombre de conducteurs', '×', 'weightCores', 'weight', '2') }}
+        {{ _self.f(c, 'w-ins', 'Gaine isolante', '%', 'weightInsulation', 'weight', '20') }}
+        {{ calc.result('w-result', 'Masse estimée', 'kg', {('data-' ~ c ~ '-target'): 'weightResult'}, 'w-mat w-s w-l w-n w-ins') }}
+        {{ calc.message({('data-' ~ c ~ '-target'): 'weightMessage'}) }}
+    {% endset %}
+    {{ calc.block('4. Estimation de la masse', 'Masse = S × densité × L × conducteurs / 1000 × (1 + gaine %)', fields) }}
+</div>

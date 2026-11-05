@@ -1,0 +1,27 @@
+{#
+  Outil : forces de poussée et de traction d'un vérin double effet.
+  Inclus par : calculator/tool.html.twig. Contrôleur : calculator--verin.
+#}
+{% import 'calculator/_macros.html.twig' as calc %}
+{% set c = 'calculator--verin' %}
+{% set input = 'input->' ~ c ~ '#calculate' %}
+
+<div data-controller="{{ c }}" class="space-y-6">
+    {% set fields %}
+        {{ calc.field('cyl-p', 'Pression du fluide', 'bar', {('data-' ~ c ~ '-target'): 'pressure', 'data-action': input}, null, 'ex. 6') }}
+        {{ calc.field('cyl-d', 'Diamètre du piston (alésage)', 'mm', {('data-' ~ c ~ '-target'): 'bore', 'data-action': input}, null, 'ex. 32') }}
+        {{ calc.field('cyl-rod', 'Diamètre de la tige', 'mm', {('data-' ~ c ~ '-target'): 'rod', 'data-action': input}, null, 'ex. 12') }}
+        {{ calc.message({('data-' ~ c ~ '-target'): 'message'}) }}
+    {% endset %}
+    {{ calc.block('Caractéristiques du vérin', 'F = p × S (S = π × D² / 4)', fields) }}
+
+    {% set fields %}
+        {{ calc.result('cyl-push-n', 'Poussée (sortie de tige)', 'N', {('data-' ~ c ~ '-target'): 'pushNewtons'}, 'cyl-p cyl-d') }}
+        {{ calc.result('cyl-push-kg', 'Poussée', 'kgf', {('data-' ~ c ~ '-target'): 'pushKgf'}, 'cyl-p cyl-d') }}
+        {{ calc.result('cyl-pull-n', 'Traction (rentrée de tige)', 'N', {('data-' ~ c ~ '-target'): 'pullNewtons'}, 'cyl-p cyl-d cyl-rod') }}
+        {{ calc.result('cyl-pull-kg', 'Traction', 'kgf', {('data-' ~ c ~ '-target'): 'pullKgf'}, 'cyl-p cyl-d cyl-rod') }}
+        {{ calc.message({('data-' ~ c ~ '-target'): 'rodMessage'}) }}
+        {{ calc.note({}, 'En traction, la surface utile est celle du piston moins celle de la tige. 1 kgf = 9,80665 N.') }}
+    {% endset %}
+    {{ calc.block('Forces', null, fields) }}
+</div>

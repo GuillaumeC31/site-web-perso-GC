@@ -1,0 +1,639 @@
+{#
+  Outil : enceinte climatique, version 2, mode simple (moins de champs, hypothèses affichées) ou pro (tout saisi).
+  Sections numérotées (compléments A à J du cahier, mise en page du 2026-10-23) : 1 Enceinte, 2 Consignes,
+  3 Portes et apports internes, 4 Chauffage, 5 Refroidissement, 6 Humidification, 7 Séchage, 8 Autres,
+  9 Régulation (PID), 10 Résultats (été et hiver côte à côte). Textes complets des alertes : data-section-alerts,
+  rappelés en version courte dans le résumé collant. Navigation interne et résumé collant : contrôleur calculator--layout.
+  Inclus par : calculator/tool.html.twig. Contrôleurs : calculator--enceinte-climatique, calculator--layout.
+  Champs simples : data-field ; éléments des listes (portes, vitrages, apports manuels) : modèles <template>,
+  data-item-field ; résultats propres à une section : data-section-result.
+  Variables attendues (CalculatorController::toolData()) :
+    - climatic_profiles : profils de consigne (ClimaticProfile) ; refrigerants : fluides (Refrigerant) ;
+      fgas_rules : règles F-Gas vérifiées (FGasRule) ; panel_models : modèles de panneaux (PanelModel)
+  Valeurs par défaut : docs/ENCEINTE_CLIMATIQUE_V2.md (indicatives, à vérifier).
+#}
+{% import 'calculator/_macros.html.twig' as calc %}
+{% import 'calculator/_layout_macros.html.twig' as ui %}
+{% set c = 'calculator--enceinte-climatique' %}
+{% set t = 'data-' ~ c ~ '-target' %}
+{% set input = 'input->' ~ c ~ '#calculate' %}
+{% set change = 'change->' ~ c ~ '#calculate' %}
+{% set yesNo = {no: 'Non', yes: 'Oui'} %}
+{% set kinds = {
+    monobloc: {label: 'Monobloc', hint: 'Armoire ou enceinte de laboratoire, 150 à 3 000 litres. Ventilation ≈ 60 W/m³.'},
+    modular: {label: 'Modulaire', hint: 'Chambre accessible en panneaux sandwich, montée dans un bâtiment. Ventilation ≈ 35 W/m³.'},
+    modular_outdoor: {label: 'Modulaire extérieure', hint: 'Chambre en panneaux sandwich dans un module extérieur (bungalow, module préfabriqué).'},
+} %}
+{% set sizeModes = {volume: {label: 'Volume utile', hint: 'En litres ; dimensions déduites.'}, dims: {label: 'Dimensions', hint: 'Longueur, largeur, hauteur intérieures.'}} %}
+{% set stabilityT = {'0.5': '± 0,5 K', '1': '± 1 K', '2': '± 2 K', '3': '± 3 K'} %}
+{% set stabilityRh = {'1': '± 1 % HR', '2': '± 2 % HR', '3': '± 3 % HR', '5': '± 5 % HR', '10': '± 10 % HR'} %}
+{% set protections = {none: 'Aucune', strips: 'Rideau à lanières', air_curtain: 'Rideau d\'air', airlock: 'Sas'} %}
+{% set heatings = {electric: 'Électrique', hot_water: 'Eau chaude', steam: 'Vapeur', other: 'Autre (rendement saisi)'} %}
+{% set coolings = {dx: 'Détente directe', chilled_water: 'Eau glacée', other: 'Autre (COP saisi)'} %}
+{% set humidifiers = {steam_electric: 'Vapeur électrique', steam_network: 'Vapeur réseau', adiabatic: 'Pulvérisation ou ultrasons', other: 'Autre (rendement saisi)'} %}
+{% set dryings = {dx_coil: 'Batterie froide (détente directe)', chilled_water_coil: 'Batterie à eau glacée', desiccant: 'Dessiccateur (rotor)', other: 'Autre (COP saisi)'} %}
+{% set regulations = {modulating: 'Modulation (variateur, by-pass)', on_off: 'Tout ou rien', permanent_reheat: 'Froid permanent + réchauffage'} %}
+{% set installations = {self_contained: 'Groupe autonome (monobloc)', split: 'Split (groupe à distance)', centralised: 'Centrale multipostes'} %}
+{% set thicknesses = {60: '60 mm', 80: '80 mm', 100: '100 mm', 120: '120 mm', 150: '150 mm', 180: '180 mm', 200: '200 mm'} %}
+{% set generic = {PUR: 'PUR (λ 0,023)', PIR: 'PIR (λ 0,022)', XPS: 'XPS (λ 0,034)', EPS: 'EPS (λ 0,036)', rockwool: 'Laine de roche (λ 0,040)'} %}
+{% set icons = {
+    1: 'M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9',
+    2: 'M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75',
+    3: 'M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z',
+    4: 'M15.362 5.214A8.252 8.252 0 0112 21 8.25 8.25 0 016.038 7.048 8.287 8.287 0 009 9.6a8.983 8.983 0 013.361-6.867 8.21 8.21 0 003 2.48z M12 18a3.75 3.75 0 00.495-7.467 5.99 5.99 0 00-1.925 3.546 5.974 5.974 0 01-2.133-1A3.75 3.75 0 0012 18z',
+    5: 'M12 3v18m0-18l-3 3m3-3l3 3m-3 15l-3-3m3 3l3-3M3 12h18M3 12l3-3m-3 3l3 3m15-3l-3-3m3 3l-3 3',
+    6: 'M12 3.75c2.25 3 5.25 6.4 5.25 9.75a5.25 5.25 0 01-10.5 0c0-3.35 3-6.75 5.25-9.75z',
+    7: 'M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z',
+    8: 'M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5',
+    10: 'M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z',
+} %}
+{% set iconRegulation = 'M10.343 3.94c.09-.542.56-.94 1.11-.94h1.093c.55 0 1.02.398 1.11.94l.149.894c.07.424.384.764.78.93.398.164.855.142 1.205-.108l.737-.527a1.125 1.125 0 011.45.12l.773.774c.39.389.44 1.002.12 1.45l-.527.737c-.25.35-.272.806-.107 1.204.165.397.505.71.93.78l.893.15c.543.09.94.56.94 1.109v1.094c0 .55-.397 1.02-.94 1.11l-.893.149c-.425.07-.765.383-.93.78-.165.398-.143.854.107 1.204l.527.738c.32.447.269 1.06-.12 1.45l-.774.773a1.125 1.125 0 01-1.449.12l-.738-.527c-.35-.25-.806-.272-1.203-.107-.397.165-.71.505-.781.929l-.149.894c-.09.542-.56.94-1.11.94h-1.094c-.55 0-1.019-.398-1.11-.94l-.148-.894c-.071-.424-.384-.764-.781-.93-.398-.164-.854-.142-1.204.108l-.738.527c-.447.32-1.06.269-1.45-.12l-.773-.774a1.125 1.125 0 01-.12-1.45l.527-.737c.25-.35.273-.806.108-1.204-.165-.397-.505-.71-.93-.78l-.894-.15c-.542-.09-.94-.56-.94-1.109v-1.094c0-.55.398-1.02.94-1.11l.894-.149c.424-.07.765-.383.93-.78.165-.398.143-.854-.107-1.204l-.527-.738a1.125 1.125 0 01.12-1.45l.773-.773a1.125 1.125 0 011.45-.12l.737.527c.35.25.807.272 1.204.107.397-.165.71-.505.78-.929l.15-.894z M15 12a3 3 0 11-6 0 3 3 0 016 0z' %}
+{% set sections = {
+    1: {title: 'Enceinte', short: 'Enceinte'}, 2: {title: 'Consignes', short: 'Consignes'}, 3: {title: 'Portes et apports internes', short: 'Apports'},
+    4: {title: 'Chauffage', short: 'Chauffage'}, 5: {title: 'Refroidissement', short: 'Froid'}, 6: {title: 'Humidification', short: 'Humidification'},
+    7: {title: 'Séchage', short: 'Séchage'}, 8: {title: 'Autres', short: 'Autres'}, 9: {title: 'Régulation', short: 'Régulation'},
+    10: {title: 'Résultats', short: 'Résultats', id: 'ec-section-10'},
+} %}
+
+{# Champs d'un mode : préfixe des identifiants (ec-s, ec-p) #}
+{% macro dimensions(p, c, input) %}
+    <div class="space-y-4">
+        <div data-show-kind="monobloc" hidden>
+            {% import 'calculator/_layout_macros.html.twig' as ui %}
+            {{ ui.choiceCards(p ~ '-size-mode', 'Saisie', {volume: {label: 'Volume utile', hint: 'En litres ; dimensions déduites.'}, dims: {label: 'Dimensions', hint: 'Longueur, largeur, hauteur intérieures.'}}, 'volume', {'data-field': 'sizeMode', 'data-action': 'change->' ~ c ~ '#changeSize'}) }}
+        </div>
+        <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+            {% import 'calculator/_macros.html.twig' as calc %}
+            <div data-size="volume" hidden>{{ calc.field(p ~ '-volume', 'Volume utile', 'L', {'data-field': 'volumeLiters', 'data-action': input ~ ' input->' ~ c ~ '#changeSize'}, '1000') }}</div>
+            <div data-size="dims">{{ calc.field(p ~ '-length', 'Longueur', 'm', {'data-field': 'length', 'data-action': input ~ ' input->' ~ c ~ '#changeSize'}, '2') }}</div>
+            <div data-size="dims">{{ calc.field(p ~ '-width', 'Largeur', 'm', {'data-field': 'width', 'data-action': input ~ ' input->' ~ c ~ '#changeSize'}, '1,5') }}</div>
+            <div data-size="dims">{{ calc.field(p ~ '-height', 'Hauteur', 'm', {'data-field': 'height', 'data-action': input ~ ' input->' ~ c ~ '#changeSize'}, '2') }}</div>
+        </div>
+        <p class="text-sm text-secondary-600 dark:text-secondary-300" aria-live="polite" data-geometry-info></p>
+    </div>
+{% endmacro %}
+
+{# Section 2, identique dans les deux modes : profil, puis colonnes Température et Humidité #}
+{% macro setpoints(p, c, input, change, stabilityT, stabilityRh) %}
+    {% import 'calculator/_macros.html.twig' as calc %}
+    <div>
+        <label for="{{ p }}-profile" class="form-label">Profil de consigne</label>
+        <select id="{{ p }}-profile" class="form-input" data-field="profile" data-profile-select data-action="change->{{ c }}#applyProfile"></select>
+        <p class="mt-2 text-sm text-secondary-600 dark:text-secondary-300" data-profile-hint></p>
+    </div>
+    <div class="grid gap-6 md:grid-cols-2">
+        <fieldset class="space-y-4 rounded-xl border border-secondary-200 p-4 dark:border-secondary-700">
+            <legend class="px-1 text-sm font-semibold text-secondary-900 dark:text-white">Température</legend>
+            {{ calc.field(p ~ '-tset', 'Consigne', '°C', {'data-field': 'tSet', 'data-action': input ~ ' change->' ~ c ~ '#changeTemperature'}, '25') }}
+            {{ calc.select(p ~ '-stab-t', 'Stabilité', stabilityT, {'data-field': 'stabilityT', 'data-action': 'change->' ~ c ~ '#changeStability'}, '2') }}
+            {{ calc.field(p ~ '-tstart', 'Départ (vide : local)', '°C', {'data-field': 'tStart', 'data-action': input}) }}
+            {{ calc.field(p ~ '-ramp', 'Mise en régime', 'min', {'data-field': 'rampMinutes', 'data-action': input}, '60') }}
+        </fieldset>
+        <fieldset class="space-y-4 rounded-xl border border-secondary-200 p-4 dark:border-secondary-700">
+            <legend class="px-1 text-sm font-semibold text-secondary-900 dark:text-white">Humidité</legend>
+            {{ calc.field(p ~ '-rhset', 'Consigne (vide : non régulée)', '%', {'data-field': 'rhSet', 'data-action': input ~ ' change->' ~ c ~ '#markCustom'}, '60') }}
+            {{ calc.select(p ~ '-stab-rh', 'Stabilité', stabilityRh, {'data-field': 'stabilityRh', 'data-action': change}, '5') }}
+            {{ calc.field(p ~ '-rhstart', 'Départ (vide : local)', '%', {'data-field': 'rhStart', 'data-action': input}) }}
+            {{ calc.field(p ~ '-humid-minutes', 'Mise en régime', 'min', {'data-field': 'humidMinutes', 'data-action': input}, '30') }}
+        </fieldset>
+    </div>
+    <div class="space-y-2" aria-live="polite" data-section-alerts="2"></div>
+{% endmacro %}
+
+{# Résultats de la régulation (section 9, les deux modes), remplis par le contrôleur #}
+{% macro pidResults() %}
+    <div class="space-y-4" aria-live="polite" data-pid-result>
+        <p class="text-sm text-secondary-700 dark:text-secondary-300" data-pid-model></p>
+        <table class="w-full table-fixed text-sm">
+            <caption class="sr-only">Réglages de départ par fonction</caption>
+            <thead>
+                <tr class="border-b border-secondary-200 text-left text-secondary-700 dark:border-secondary-700 dark:text-secondary-200">
+                    <th scope="col" class="w-1/3 py-2 pr-2 sm:w-1/4">Fonction</th>
+                    <th scope="col" class="py-2 pr-2 text-right">Xp</th>
+                    <th scope="col" class="py-2 pr-2 text-right">Ti</th>
+                    <th scope="col" class="hidden py-2 pr-2 text-right sm:table-cell">Td</th>
+                    <th scope="col" class="py-2 text-right"><abbr title="Puissance minimale à fournir (en % de la puissance installée) / plage minimale de l'actionneur (TOR : tout ou rien)" class="no-underline">Mini / plage</abbr></th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-secondary-100 break-words dark:divide-secondary-700/60" data-pid-loops></tbody>
+        </table>
+        <div class="space-y-2" data-section-alerts="9"></div>
+        <p class="rounded-lg border border-primary-200 bg-primary-50 px-3 py-2 text-sm text-primary-900 dark:border-primary-800 dark:bg-primary-950/50 dark:text-primary-100"><strong class="font-semibold">Information :</strong> réglages de départ indicatifs, issus d'un modèle simplifié (l'air réagit plus vite que les masses). Terminer la mise au point par un autoréglage du régulateur et des essais.</p>
+        <div>
+            <h3 class="mb-2 text-sm font-semibold tracking-wide text-secondary-500 uppercase dark:text-secondary-400">Architecture conseillée selon la stabilité</h3>
+            <table class="w-full table-fixed text-sm">
+                <thead>
+                    <tr class="border-b border-secondary-200 text-left text-secondary-700 dark:border-secondary-700 dark:text-secondary-200">
+                        <th scope="col" class="w-1/3 py-2 pr-2">Classe</th>
+                        <th scope="col" class="py-2">Architecture (à vérifier)</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-secondary-100 dark:divide-secondary-700/60">
+                    {% for key, row in {
+                        '0.5': {cls: '± 0,5 K / ± 1 % HR', text: 'Sorties continues ou relais statiques à cycle court (≤ 1 s) ; PID chaud / froid en « split range » avec zone morte réglable ; sonde PT100 classe A ; actionneurs modulants.'},
+                        '1': {cls: '± 1 K / ± 2 à ± 3 % HR', text: 'PID modulant, cycle court.'},
+                        '2': {cls: '± 2 à ± 3 K / ± 5 à ± 10 % HR', text: 'PID à cycle plus long ; tout ou rien acceptable pour certains étages.'},
+                    } %}
+                        <tr data-architecture="{{ key }}" class="data-current:bg-primary-50 dark:data-current:bg-primary-500/10">
+                            <th scope="row" class="py-2 pr-2 text-left align-top font-medium text-secondary-800 dark:text-secondary-200">{{ row.cls }}</th>
+                            <td class="py-2 align-top text-secondary-700 dark:text-secondary-300">{{ row.text }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <p class="mt-2 text-sm text-secondary-600 dark:text-secondary-300">Humidité : réguler sur le point de rosée ou l'humidité absolue quand la température varie (couplage température / humidité). La stabilité (dans le temps, en un point) n'est pas l'homogénéité (dans l'espace) : la caractérisation se fait selon le FD X 15-140.</p>
+        </div>
+    </div>
+{% endmacro %}
+
+{% set pidFormulas %}
+    <p class="inline-block rounded-lg bg-secondary-100 px-3 py-1 font-mono text-xs text-secondary-800 dark:bg-secondary-900 dark:text-secondary-200">K_u = P / (100 × UA) · τ = C / UA · θ = V / débit de brassage + sonde · Kc = τ / [K_u × (τc + θ)] · Ti = min(τ, 4 × (τc + θ)) · Xp = 100 / Kc</p>
+    <p>Modèle premier ordre + temps mort, réglage SIMC (Skogestad) ; procédé quasi intégrateur quand τ ≫ θ. τc = θ par défaut (curseur de nerveux à robuste). PI par défaut ; option PID : Td = θ / 2 (limite de la méthode pour τ ≫ θ, à vérifier par essai). Humidité : M = ρ × V (+ matériaux hygroscopiques), échanges ṁ = fuites + infiltration + air neuf, τ = M / ṁ, K_u = débit maximal / (100 × ṁ) × HR / w.</p>
+    <p>Plage de modulation : puissance minimale à fournir (chauffe : besoin le plus faible des deux saisons ; froid : charge la plus faible, apports intermittents absents) comparée à la puissance installée et à la plage de l'actionneur ; au-delà de 3 fois le maintien, découpage en étages conseillé. Colonne « Mini / plage » : puissance minimale à fournir, en % de la puissance installée, puis plage minimale de l'actionneur (TOR : tout ou rien). Valeurs par défaut : brassage 60 vol/h (modulaire) ou 150 vol/h (monobloc), sondes 20 s et 30 s, étendue −50 à +100 °C.</p>
+    <p data-pid-detail></p>
+{% endset %}
+
+{% set setpointFormulas %}
+    <p>Le profil remplit les consignes, qui restent modifiables ; ses tolérances et sa source sont indiquées sous la liste (à vérifier dans l'admin).</p>
+    <p>La classe de stabilité conseille le mode de régulation (± 0,5 et ± 1 K : modulation ; ± 2 et ± 3 K : tout ou rien acceptable) et figure dans les hypothèses ; elle ne majore pas les puissances.</p>
+    <p>Mise en régime : durées souhaitées (60 min en température, 30 min en humidité) ; l'outil calcule la puissance nécessaire, ou la durée si une puissance est installée (sections 4 et 5). Énergie = Σ(m × cp) × ΔT ; P = (énergie / durée + pertes moyennes) × (1 + marge). Humidité : eau = ρ × V × (w_consigne − w_départ).</p>
+    <p>L'outil dimensionne les puissances ; la stabilité (dans le temps, en un point) et l'homogénéité (dans l'espace) se vérifient par caractérisation (FD X 15-140, IEC 60068-3-5 et 3-6).</p>
+{% endset %}
+
+<div data-controller="{{ c }} calculator--layout" class="max-lg:pb-28"
+     data-{{ c }}-profiles-value="{{ (climatic_profiles ?? [])|map(p => p.toCalculatorArray())|json_encode }}"
+     data-{{ c }}-refrigerants-value="{{ (refrigerants ?? [])|map(r => r.toCalculatorArray())|json_encode }}"
+     data-{{ c }}-rules-value="{{ (fgas_rules ?? [])|map(r => r.toCalculatorArray())|json_encode }}"
+     data-{{ c }}-panels-value="{{ (panel_models ?? [])|map(p => p.toCalculatorArray())|json_encode }}"
+     data-{{ c }}-today-value="{{ 'now'|date('Y-m-d') }}">
+    <div class="flex flex-wrap items-center gap-4">
+        <div class="inline-flex rounded-xl border border-secondary-200 p-1 dark:border-secondary-700" role="group" aria-label="Mode de calcul">
+            <button type="button" class="rounded-lg px-4 py-2 text-sm font-semibold aria-pressed:bg-primary-700 aria-pressed:text-white" aria-pressed="true" {{ t }}="modeButton" data-mode="simple" data-action="{{ c }}#setMode calculator--layout#refresh">Simple</button>
+            <button type="button" class="rounded-lg px-4 py-2 text-sm font-semibold aria-pressed:bg-primary-700 aria-pressed:text-white" aria-pressed="false" {{ t }}="modeButton" data-mode="pro" data-action="{{ c }}#setMode calculator--layout#refresh">Pro</button>
+        </div>
+        <p class="max-w-2xl text-sm text-secondary-600 dark:text-secondary-300">Simple : l'essentiel, le reste en hypothèses affichées. Pro : toutes les valeurs.</p>
+    </div>
+
+    {{ ui.navPills(sections, 'Sections de l\'outil', 'ec-s') }}
+
+    <div class="mt-6 lg:grid lg:grid-cols-[minmax(0,1fr)_17rem] lg:items-start lg:gap-8">
+        <div class="min-w-0 space-y-6">
+            {# --- Mode simple --- #}
+            <div class="space-y-6" {{ t }}="form" data-mode="simple">
+                {% set content %}
+                    {{ ui.choiceCards('ec-s-kind', 'Type d\'enceinte', kinds, 'modular', {'data-field': 'kind', 'data-action': 'change->' ~ c ~ '#changeKind'}) }}
+                    {{ _self.dimensions('ec-s', c, input) }}
+                    <div data-show-kind="modular_outdoor" hidden class="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+                        {{ calc.select('ec-s-sun', 'Ensoleillement direct du module', yesNo, {'data-field': 'sun', 'data-action': change}) }}
+                        {{ calc.select('ec-s-frost', 'Module chauffé hors gel', yesNo, {'data-field': 'frostProtected', 'data-action': 'change->' ~ c ~ '#changeFrost'}, 'yes') }}
+                        <div data-show-frost="no" hidden>{{ calc.field('ec-s-outdoor-min', 'Extérieur, minimum', '°C', {'data-field': 'outdoorMinT', 'data-action': input}, '-5') }}</div>
+                    </div>
+                    <div data-show-kind="monobloc" hidden>{{ ui.callout('info', 'La chaleur du groupe frigorifique intégré est rejetée dans le local, pas dans l\'enceinte.') }}</div>
+                {% endset %}
+                {% set formulas %}
+                    <p>Panneaux PUR 80 mm : U = 1 / (0,17 + 0,08/0,023) = 0,274 W/(m²·K), sur les 6 faces ; fuites 0,5 % du volume par heure ; peau intérieure inox 1 mm (7,9 kg/m², cp 0,5).</p>
+                    <p>Monobloc : ventilation 60 W/m³, étagères 15 kg, structure 25 kg, éclairage 20 W ; porte sur toute la face avant ; volume saisi : largeur L = V^(1/3), profondeur 0,8 L, hauteur 1,25 L.</p>
+                    <p>Modulaire : ventilation 35 W/m³, étagères 30 kg, structure et batteries 40 kg, éclairage 40 W ; porte de 0,8 × 2 m. Local : 30 °C / 60 % HR en été, 18 °C / 30 % HR en hiver.</p>
+                    <p>Modulaire extérieure : le local est l'intérieur du module, 35 °C / 45 % HR en été (40 °C au soleil) ; en hiver, module chauffé hors gel (5 °C / 70 % HR), ou non chauffé : température extérieure minimale (−5 °C par défaut, 90 % HR).</p>
+                {% endset %}
+                {{ ui.section('ec-s-section-1', 1, 'Enceinte', icons[1], content, formulas) }}
+
+                {{ ui.section('ec-s-section-2', 2, 'Consignes', icons[2], _self.setpoints('ec-s', c, input, change, stabilityT, stabilityRh), setpointFormulas) }}
+
+                <div class="grid gap-6 md:grid-cols-2">
+                    {% set formulas %}
+                        <p>Une porte (0,8 × 2 m, ou la face avant d'un monobloc ; U = 0,55, cadre compris), 5 ouvertures de 20 s par jour ; infiltrations ASHRAE (D_f = 0,8) ; cordon de cadre 40 W/m sous +5 °C (70 % réintroduits).</p>
+                        <p>Ventilation 100 % dans l'enceinte, 24 h/24 ; éclairage 2 h/j ; câbles et instrumentation 10 W, 24 h/24 ; aucun échantillon ni personne. Dimensionnement : tous les apports présents en même temps ; consommation : selon leur durée.</p>
+                    {% endset %}
+                    {{ ui.section('ec-s-section-3', 3, 'Portes et apports internes', icons[3], calc.select('ec-s-protection', 'Protection de la porte', protections, {'data-field': 'doorProtection', 'data-action': change}), formulas) }}
+                    {% set formulas %}<p>Maintien : pertes par les parois, la porte, les fuites et l'air neuf, sans déduire les apports internes. Électrique : rendement 1 ; eau chaude 70 / 50 °C ; vapeur ; hors électrique : énergie affichée à part.</p>{% endset %}
+                    {% set content %}{{ calc.select('ec-s-heating', 'Type', heatings, {'data-field': 'heatingType', 'data-action': change}) }}<div class="space-y-2" aria-live="polite" data-section-alerts="4"></div>{% endset %}
+                    {{ ui.section('ec-s-section-4', 4, 'Chauffage', icons[4], content, formulas) }}
+                    {% set formulas %}<p>R-290 en groupe autonome hermétiquement scellé (fluide par défaut de l'admin) ; évaporation à consigne − 8 K, surface de la batterie à évaporation + 2 K ; air au condenseur 35 °C ; COP = 0,45 × Carnot, plafonné à 5. Eau glacée 7 / 12 °C. Régulation selon la classe de stabilité.</p>{% endset %}
+                    {% set content %}{{ calc.select('ec-s-cooling', 'Type', coolings, {'data-field': 'coolingType', 'data-action': change}) }}<div class="space-y-2" aria-live="polite" data-section-alerts="5"></div>{% endset %}
+                    {{ ui.section('ec-s-section-5', 5, 'Refroidissement', icons[5], content, formulas) }}
+                    {% set formulas %}<p>Eau d'alimentation à 15 °C ; vapeur : débit × [4,186 × (100 − T_eau) + 2 257] kJ/kg ; adiabatique : refroidit l'air.</p>{% endset %}
+                    {{ ui.section('ec-s-section-6', 6, 'Humidification', icons[6], calc.select('ec-s-humidifier', 'Type', humidifiers, {'data-field': 'humidifierType', 'data-action': change}), formulas) }}
+                    {% set formulas %}<p>Batterie à point de rosée − 2 K, puis réchauffage ; dessiccateur : 1 kWh par kg d'eau. Point de rosée sous +2 °C : givrage de la batterie, dessiccateur proposé.</p>{% endset %}
+                    {% set content %}{{ calc.select('ec-s-drying', 'Type', dryings, {'data-field': 'dryingType', 'data-action': change}) }}<div class="space-y-2" aria-live="polite" data-section-alerts="7"></div>{% endset %}
+                    {{ ui.section('ec-s-section-7', 7, 'Séchage', icons[7], content, formulas) }}
+                    {% set formulas %}<p>Air neuf à 32 °C / 40 % HR en été, −5 °C / 90 % HR en hiver ; marge 10 % ; fonctionnement 24 h/24.</p>{% endset %}
+                    {{ ui.section('ec-s-section-8', 8, 'Autres', icons[8], calc.field('ec-s-air', 'Renouvellement d\'air', 'm³/h', {'data-field': 'airRenewal', 'data-action': input}, '0'), formulas) }}
+                </div>
+
+                {% set content %}
+                    <p class="text-sm text-secondary-700 dark:text-secondary-300">Réglages de départ avec les actionneurs par défaut (relais statique, compresseur à variateur, vapeur modulante, vanne de batterie) ; actionneurs, sondes et réglage se choisissent en mode pro.</p>
+                    {{ _self.pidResults() }}
+                {% endset %}
+                {{ ui.section('ec-s-section-9', 9, 'Régulation', iconRegulation, content, pidFormulas) }}
+            </div>
+
+            {# --- Mode pro --- #}
+            <div class="space-y-6" hidden {{ t }}="form" data-mode="pro">
+                {% set content %}
+                    {{ ui.choiceCards('ec-p-kind', 'Type d\'enceinte', kinds, 'modular', {'data-field': 'kind', 'data-action': 'change->' ~ c ~ '#changeKind'}) }}
+                    {{ _self.dimensions('ec-p', c, input) }}
+                    <div data-show-kind="monobloc" hidden>{{ ui.callout('info', 'La chaleur du groupe frigorifique intégré est rejetée dans le local, pas dans l\'enceinte.') }}</div>
+                    <div class="grid gap-6 lg:grid-cols-2">
+                        {% set fields %}
+                            <div class="sm:col-span-2">
+                                <label for="ec-p-panel" class="form-label">Panneaux</label>
+                                <select id="ec-p-panel" class="form-input" data-field="panel" data-action="change->{{ c }}#changePanel">
+                                    <optgroup label="Génériques (par λ)">
+                                        {% for value, text in generic %}<option value="generic:{{ value }}">{{ text }}</option>{% endfor %}
+                                    </optgroup>
+                                    {% if panel_models|default([]) is not empty %}
+                                        <optgroup label="Modèles des marques">
+                                            {% for model in panel_models %}<option value="model:{{ model.id }}">{{ model.toCalculatorArray().label }}</option>{% endfor %}
+                                        </optgroup>
+                                    {% endif %}
+                                    <optgroup label="Personnalisé">
+                                        <option value="custom_lambda">λ et épaisseur</option>
+                                        <option value="custom_u">Coefficient U</option>
+                                    </optgroup>
+                                </select>
+                            </div>
+                            {{ calc.select('ec-p-thickness', 'Épaisseur', thicknesses, {'data-field': 'thickness', 'data-action': 'change->' ~ c ~ '#changePanel', 'data-panel-generic': ''}, '80') }}
+                            <div data-panel-custom-lambda hidden>{{ calc.field('ec-p-lambda', 'λ', 'W/(m·K)', {'data-field': 'lambda', 'data-action': input}, '0,023') }}</div>
+                            <div data-panel-custom-lambda hidden>{{ calc.field('ec-p-custom-thickness', 'Épaisseur', 'mm', {'data-field': 'customThickness', 'data-action': input}, '80') }}</div>
+                            <div data-panel-custom-u hidden>{{ calc.field('ec-p-u', 'U', 'W/(m²·K)', {'data-field': 'customU', 'data-action': input}, '0,27') }}</div>
+                            {{ calc.field('ec-p-leak', 'Fuites', '%/h', {'data-field': 'leakPct', 'data-action': input}, '0,5') }}
+                            <p class="text-sm text-secondary-600 sm:col-span-2 dark:text-secondary-300" data-panel-info></p>
+                        {% endset %}
+                        {{ ui.group('Isolation et étanchéité', fields, 'sm:grid-cols-2') }}
+                        {% set fields %}
+                            <fieldset class="space-y-3">
+                                <legend class="text-sm font-semibold text-secondary-900 dark:text-white">Été</legend>
+                                {{ calc.field('ec-p-summer-t', 'Température', '°C', {'data-field': 'summerLocalT', 'data-action': input}, '30') }}
+                                {{ calc.field('ec-p-summer-rh', 'Humidité', '%', {'data-field': 'summerLocalRh', 'data-action': input}, '60') }}
+                            </fieldset>
+                            <fieldset class="space-y-3">
+                                <legend class="text-sm font-semibold text-secondary-900 dark:text-white">Hiver</legend>
+                                {{ calc.field('ec-p-winter-t', 'Température', '°C', {'data-field': 'winterLocalT', 'data-action': input}, '18') }}
+                                {{ calc.field('ec-p-winter-rh', 'Humidité', '%', {'data-field': 'winterLocalRh', 'data-action': input}, '30') }}
+                            </fieldset>
+                            <div class="col-span-2 grid gap-4 sm:grid-cols-2" data-show-kind="modular_outdoor" hidden>
+                                {{ calc.select('ec-p-sun', 'Ensoleillement direct', yesNo, {'data-field': 'sun', 'data-action': 'change->' ~ c ~ '#changeSun'}) }}
+                                {{ calc.select('ec-p-frost', 'Chauffé hors gel', yesNo, {'data-field': 'frostProtected', 'data-action': 'change->' ~ c ~ '#changeFrost'}, 'yes') }}
+                            </div>
+                        {% endset %}
+                        <div data-local-title>{{ ui.group('Local', fields, 'grid-cols-2') }}</div>
+                    </div>
+                    <div>
+                        <h3 class="mb-3 text-sm font-semibold tracking-wide text-secondary-500 uppercase dark:text-secondary-400">Masses thermiques</h3>
+                        <table class="w-full table-fixed text-sm">
+                            <thead>
+                                <tr class="text-left text-secondary-700 dark:text-secondary-200">
+                                    <th scope="col" class="w-2/5 pb-2 font-semibold">Élément</th>
+                                    <th scope="col" class="pb-2 pl-2 font-semibold">Masse</th>
+                                    <th scope="col" class="pb-2 pl-2 font-semibold">cp (kJ/(kg·K))</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-secondary-100 dark:divide-secondary-700/60">
+                                {% for row in [
+                                    {label: 'Peau intérieure (inox)', unit: 'kg/m²', mass: 'skinKgPerM2', cp: 'skinCp', m: '7,9', c: '0,5'},
+                                    {label: 'Étagères', unit: 'kg', mass: 'shelvesKg', cp: 'shelvesCp', m: '30', c: '0,5'},
+                                    {label: 'Structure et batteries', unit: 'kg', mass: 'structureKg', cp: 'structureCp', m: '40', c: '0,6'},
+                                ] %}
+                                    <tr>
+                                        <th scope="row" class="py-2 pr-2 text-left font-medium text-secondary-800 dark:text-secondary-200">{{ row.label }} <span class="text-xs font-normal text-secondary-500 dark:text-secondary-400">({{ row.unit }})</span></th>
+                                        <td class="py-2 pl-2"><input type="text" inputmode="decimal" autocomplete="off" class="form-input" aria-label="{{ row.label }} : masse ({{ row.unit }})" value="{{ row.m }}" data-field="{{ row.mass }}" data-action="{{ input }}"></td>
+                                        <td class="py-2 pl-2"><input type="text" inputmode="decimal" autocomplete="off" class="form-input" aria-label="{{ row.label }} : cp (kJ/(kg·K))" value="{{ row.c }}" data-field="{{ row.cp }}" data-action="{{ input }}"></td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% endset %}
+                {% set formulas %}
+                    {{ ui.formula('U = 1 / (0,17 + e/λ) · Q = U × S × (T_local − T) · fuites : ṁ × (1,006 + 1,86 × w_local) × ΔT') }}
+                    <p>Échanges par les 6 faces (enceinte posée dans un local ou un module). Peau inox 1 mm : 7,9 kg/m² de surface intérieure. Masses utilisées pour les mises en température, avec l'air et les échantillons.</p>
+                    <p>Le type d'enceinte remplit la ventilation, les masses, le local, l'éclairage et la porte ; tout reste modifiable. Monobloc saisi par son volume : largeur L = V^(1/3), profondeur 0,8 L, hauteur 1,25 L. Modulaire extérieure : module à 35 °C / 45 % HR en été (+ 5 K au soleil) ; en hiver, chauffé hors gel (5 °C / 70 % HR) ou non chauffé (extérieur, −5 °C / 90 % HR par défaut).</p>
+                {% endset %}
+                {{ ui.section('ec-p-section-1', 1, 'Enceinte', icons[1], content, formulas) }}
+
+                {{ ui.section('ec-p-section-2', 2, 'Consignes', icons[2], _self.setpoints('ec-p', c, input, change, stabilityT, stabilityRh), setpointFormulas) }}
+
+                {% set content %}
+                    <div>
+                        <h3 class="mb-3 text-sm font-semibold tracking-wide text-secondary-500 uppercase dark:text-secondary-400">Portes</h3>
+                        <div class="space-y-4" {{ t }}="doorList" data-list="doors"></div>
+                        <p class="mt-2 text-sm text-secondary-600 dark:text-secondary-300" data-empty-note="doors">Aucune porte.</p>
+                        {{ ui.addButton('Ajouter une porte', 'doors', c) }}
+                    </div>
+                    <div>
+                        <h3 class="mb-3 text-sm font-semibold tracking-wide text-secondary-500 uppercase dark:text-secondary-400">Vitrages</h3>
+                        <div class="space-y-4" {{ t }}="glazingList" data-list="glazings"></div>
+                        <p class="mt-2 text-sm text-secondary-600 dark:text-secondary-300" data-empty-note="glazings">Aucun vitrage.</p>
+                        {{ ui.addButton('Ajouter un vitrage', 'glazings', c) }}
+                    </div>
+                    <div>
+                        <h3 class="mb-3 text-sm font-semibold tracking-wide text-secondary-500 uppercase dark:text-secondary-400">Équipements</h3>
+                        {{ ui.powerTable([
+                            {label: 'Ventilation', hint: '100 % dans l\'enceinte', power: {field: 'fansWPerM3', value: '35', unit: 'W/m³', name: 'puissance volumique'}, duration: '24 h/j'},
+                            {label: 'Éclairage', power: {field: 'lightingW', value: '40', unit: 'W'}, duration: {field: 'lightHours', value: '2'}},
+                            {label: 'Câbles et instrumentation', power: {field: 'instrumentationW', value: '10', unit: 'W'}, duration: {field: 'instrumentationHours', value: '24'}},
+                            {label: 'Personnes', hint: '270 − 6 × T W chacune', power: {field: 'people', value: '0', unit: 'pers.', name: 'nombre'}, duration: {field: 'peopleHours', value: '0'}},
+                        ], input) }}
+                    </div>
+
+                    {% set fields %}
+                        {{ calc.field('ec-p-sample-kg', 'Masse', 'kg', {'data-field': 'sampleKg', 'data-action': input}, '0') }}
+                        {{ calc.field('ec-p-sample-cp', 'cp', 'kJ/(kg·K)', {'data-field': 'sampleCp', 'data-action': input}, '1,5') }}
+                        {{ calc.field('ec-p-sample-dt', 'Écart à l\'entrée', 'K', {'data-field': 'sampleDeltaT', 'data-action': input}, '0') }}
+                        {{ calc.field('ec-p-sample-w', 'Puissance dissipée', 'W', {'data-field': 'sampleW', 'data-action': input}, '0') }}
+                        {{ calc.field('ec-p-sample-hours', 'Durée', 'h/j', {'data-field': 'sampleHours', 'data-action': input}, '24') }}
+                        {{ calc.field('ec-p-sample-water', 'Humidité (+ dégagée)', 'g/h', {'data-field': 'sampleWater', 'data-action': input}, '0') }}
+                    {% endset %}
+                    {{ ui.group('Échantillons', fields) }}
+                    <div>
+                        <h3 class="mb-3 text-sm font-semibold tracking-wide text-secondary-500 uppercase dark:text-secondary-400">Apports manuels</h3>
+                        <div class="space-y-4" {{ t }}="manualList" data-list="manual"></div>
+                        <p class="mt-2 text-sm text-secondary-600 dark:text-secondary-300" data-empty-note="manual">Aucun apport manuel.</p>
+                        {{ ui.addButton('Ajouter un apport', 'manual', c) }}
+                    </div>
+                {% endset %}
+                {% set formulas %}
+                    {{ ui.formula('Infiltration ASHRAE : débit d\'air = 0,221 × A × ρ_dense × (1 − ρ_léger/ρ_dense)^0,5 × (g·H)^0,5 × F_m × D_t × D_f × (1 − E)') }}
+                    <p>Côté dense = air le plus froid ; D_f = 0,8 ; efficacité E : lanières 70 %, rideau d'air 65 %, sas 90 %. Cordon de cadre : 40 W/m sous +5 °C, 70 % réintroduits.</p>
+                    <p>Ventilation : 60 W/m³ (monobloc) ou 35 W/m³ (modulaire), 100 % dans l'enceinte. Personnes : 270 − 6 × T (W, ASHRAE). Échantillons sous tension : chaleur comptée, pas leur consommation ; écart à l'entrée : introduits une fois par jour, chaleur répartie sur 12 h. Apport manuel : chaleur = P × fraction, consommation = P × durée.</p>
+                    <p>Dimensionnement : tous les apports présents en même temps ; consommation : selon leur durée.</p>
+                {% endset %}
+                {{ ui.section('ec-p-section-3', 3, 'Portes et apports internes', icons[3], content, formulas) }}
+
+                {% set content %}
+                    {% set fields %}
+                        {{ calc.select('ec-p-heating', 'Type', heatings, {'data-field': 'heatingType', 'data-action': 'change->' ~ c ~ '#changeType'}) }}
+                        <div data-show-for="heatingType:other" hidden>{{ calc.field('ec-p-heating-eff', 'Rendement', '0 à 1', {'data-field': 'heatingEfficiency', 'data-action': input}, '1') }}</div>
+                        <div data-show-for="heatingType:hot_water" hidden>{{ calc.field('ec-p-hot-supply', 'Eau chaude : départ', '°C', {'data-field': 'hotSupplyT', 'data-action': input}, '70') }}</div>
+                        <div data-show-for="heatingType:hot_water" hidden>{{ calc.field('ec-p-hot-return', 'Eau chaude : retour', '°C', {'data-field': 'hotReturnT', 'data-action': input}, '50') }}</div>
+                        {{ calc.field('ec-p-heater-w', 'Puissance installée (vide : calculée)', 'W', {'data-field': 'heaterW', 'data-action': input}) }}
+                        {{ calc.select('ec-p-internal-heating', 'Déduire les apports internes', yesNo, {'data-field': 'internalGainsInHeating', 'data-action': change}) }}
+                    {% endset %}
+                    {{ ui.group(null, fields) }}
+                    <div aria-live="polite" data-section-result="heating"></div>
+                    <div class="space-y-2" aria-live="polite" data-section-alerts="4"></div>
+                {% endset %}
+                {% set formulas %}
+                    {{ ui.formula('Maintien = pertes (parois, portes, fuites, air neuf), apports internes non déduits (C9) × (1 + marge)') }}
+                    <p>Puissance installée saisie : durée de mise en température calculée ; vide : puissance nécessaire pour la durée souhaitée (section 2). Eau chaude, vapeur, autre : hors de la consommation électrique, énergie affichée à part.</p>
+                {% endset %}
+                {{ ui.section('ec-p-section-4', 4, 'Chauffage', icons[4], content, formulas) }}
+
+                {% set content %}
+                    {% set fields %}
+                        {{ calc.select('ec-p-cooling', 'Type', coolings, {'data-field': 'coolingType', 'data-action': 'change->' ~ c ~ '#changeType'}) }}
+                        {{ calc.select('ec-p-regulation', 'Régulation', regulations, {'data-field': 'regulation', 'data-action': 'change->' ~ c ~ '#markEdited change->' ~ c ~ '#calculate'}, 'on_off') }}
+                        {{ calc.field('ec-p-cold-w', 'Puissance installée (vide : calculée)', 'W', {'data-field': 'coldW', 'data-action': input}) }}
+                        {{ calc.field('ec-p-cop', 'COP (vide : estimé)', null, {'data-field': 'cop', 'data-action': input}) }}
+                        {{ calc.field('ec-p-cond', 'Air au condenseur', '°C', {'data-field': 'condenserAir', 'data-action': input}, '35') }}
+                        {{ calc.field('ec-p-surface', 'Surface batterie : évap. +', 'K', {'data-field': 'surfaceOffset', 'data-action': input}, '2') }}
+                        <div data-show-for="coolingType:chilled_water" hidden>{{ calc.field('ec-p-chilled-supply', 'Eau glacée : départ', '°C', {'data-field': 'chilledSupplyT', 'data-action': input}, '7') }}</div>
+                        <div data-show-for="coolingType:chilled_water" hidden>{{ calc.field('ec-p-chilled-return', 'Eau glacée : retour', '°C', {'data-field': 'chilledReturnT', 'data-action': input}, '12') }}</div>
+                    {% endset %}
+                    {{ ui.group('Production de froid', fields) }}
+                    <div data-show-for="coolingType:dx">
+                        {% set fields %}
+                            <div class="sm:col-span-2">
+                                <label for="ec-p-fluid" class="form-label">Fluide frigorigène</label>
+                                <select id="ec-p-fluid" class="form-input" data-field="fluid" data-fluid-select data-action="change->{{ c }}#changeFluid"></select>
+                            </div>
+                            {{ calc.select('ec-p-installation', 'Installation', installations, {'data-field': 'installation', 'data-action': 'change->' ~ c ~ '#changeInstallation'}, null, true) }}
+                            {{ calc.select('ec-p-hermetic', 'Hermétiquement scellé', yesNo, {'data-field': 'hermetic', 'data-action': change}, 'yes') }}
+                            {{ calc.field('ec-p-lines', 'Liaisons (split)', 'm', {'data-field': 'lineLength', 'data-action': input}, '10') }}
+                            {{ calc.select('ec-p-detection', 'Détection des fuites', yesNo, {'data-field': 'detection', 'data-action': change}) }}
+                            {{ calc.field('ec-p-charge-ratio', 'Charge (vide : estimée)', 'kg/kW', {'data-field': 'chargeRatio', 'data-action': input}) }}
+                        {% endset %}
+                        {{ ui.group('Fluide', fields, 'sm:grid-cols-2 xl:grid-cols-4') }}
+                    </div>
+                    <div class="space-y-2" aria-live="polite" data-regulation-hint></div>
+                    <div aria-live="polite" data-section-result="cooling"></div>
+                    <div class="space-y-2" aria-live="polite" data-section-alerts="5"></div>
+                {% endset %}
+                {% set formulas %}
+                    {{ ui.formula('COP = 0,45 × T_év / (T_cond − T_év), plafonné à 5 · T_év = consigne − 8 K · T_cond = air + 10 K') }}
+                    <p>Surface de la batterie à évaporation + 2 K par défaut (prudent) : à + 3 K, il n'y a plus de condensation dans le cas 40 °C / 75 % HR. Si la surface est sous le point de rosée, remontez la température d'évaporation au-dessus du point de rosée, pour que froid et humidification ne se compensent pas.</p>
+                    <p>Condensation : eau = débit d'air au contact × (w_consigne − w_saturé à la surface), avec débit au contact = froid sensible / [1,006 × (T − T_surface)] ; chaleur latente (2 501 kJ/kg) ajoutée au froid. Eau glacée : surface à départ + 2 K, groupe à départ − 5 K. Puissance installée saisie : durée de mise en froid calculée.</p>
+                {% endset %}
+                {{ ui.section('ec-p-section-5', 5, 'Refroidissement', icons[5], content, formulas) }}
+
+                {% set content %}
+                    {% set fields %}
+                        {{ calc.select('ec-p-humidifier', 'Type', humidifiers, {'data-field': 'humidifierType', 'data-action': 'change->' ~ c ~ '#changeType'}) }}
+                        {{ calc.field('ec-p-water-t', 'Eau d\'alimentation', '°C', {'data-field': 'waterT', 'data-action': input}, '15') }}
+                        <div data-show-for="humidifierType:other" hidden>{{ calc.field('ec-p-humid-eff', 'Rendement', '0 à 1', {'data-field': 'humidEfficiency', 'data-action': input}, '1') }}</div>
+                    {% endset %}
+                    {{ ui.group(null, fields) }}
+                    <div aria-live="polite" data-section-result="humidification"></div>
+                {% endset %}
+                {% set formulas %}
+                    {{ ui.formula('P = débit × [4,186 × (100 − T_eau) + 2 257] kJ/kg · sensible apporté = débit × [2 676 − (2 501 + 1,86 × T)] kJ/kg') }}
+                    <p>Adiabatique (pulvérisation, ultrasons) : refroidit l'air de débit × (2 501 + 1,86 × T − 4,186 × T_eau) kJ/kg ; pompe négligée. Vapeur réseau : hors de la consommation électrique.</p>
+                {% endset %}
+                {{ ui.section('ec-p-section-6', 6, 'Humidification', icons[6], content, formulas) }}
+
+                {% set content %}
+                    {% set fields %}
+                        {{ calc.select('ec-p-drying', 'Type', dryings, {'data-field': 'dryingType', 'data-action': 'change->' ~ c ~ '#changeType'}) }}
+                        <div data-show-for="dryingType:other" hidden>{{ calc.field('ec-p-drying-cop', 'COP', null, {'data-field': 'dryingCop', 'data-action': input}, '3') }}</div>
+                    {% endset %}
+                    {{ ui.group(null, fields) }}
+                    <div aria-live="polite" data-section-result="drying"></div>
+                    <div class="space-y-2" aria-live="polite" data-section-alerts="7"></div>
+                {% endset %}
+                {% set formulas %}
+                    {{ ui.formula('Batterie à point de rosée − 2 K : latent = eau × 2 501 kJ/kg ; sensible = débit d\'air × 1,006 × (T − T_batterie), réchauffé') }}
+                    <p>COP du séchage : évaporation 5 K sous la batterie. Dessiccateur (rotor) : 1 kWh par kg d'eau ; l'air séché sort plus chaud (chaleur d'adsorption ajoutée au froid). Point de rosée sous +2 °C : givrage, dessiccateur proposé.</p>
+                {% endset %}
+                {{ ui.section('ec-p-section-7', 7, 'Séchage', icons[7], content, formulas) }}
+
+                {% set content %}
+                    {% set fields %}
+                        {{ calc.field('ec-p-air', 'Débit', 'm³/h', {'data-field': 'airRenewal', 'data-action': input}, '0') }}
+                        <fieldset class="space-y-3">
+                            <legend class="text-sm font-semibold text-secondary-900 dark:text-white">Été</legend>
+                            {{ calc.field('ec-p-fresh-summer-t', 'Température', '°C', {'data-field': 'summerFreshT', 'data-action': input}, '32') }}
+                            {{ calc.field('ec-p-fresh-summer-rh', 'Humidité', '%', {'data-field': 'summerFreshRh', 'data-action': input}, '40') }}
+                        </fieldset>
+                        <fieldset class="space-y-3">
+                            <legend class="text-sm font-semibold text-secondary-900 dark:text-white">Hiver</legend>
+                            {{ calc.field('ec-p-fresh-winter-t', 'Température', '°C', {'data-field': 'winterFreshT', 'data-action': input}, '-5') }}
+                            {{ calc.field('ec-p-fresh-winter-rh', 'Humidité', '%', {'data-field': 'winterFreshRh', 'data-action': input}, '90') }}
+                        </fieldset>
+                    {% endset %}
+                    {{ ui.group('Renouvellement d\'air', fields, 'sm:grid-cols-3') }}
+                    {% set fields %}
+                        {{ calc.field('ec-p-run', 'Fonctionnement', 'h/j', {'data-field': 'runHours', 'data-action': input}, '24') }}
+                        {{ calc.field('ec-p-margin', 'Marge de sécurité', '%', {'data-field': 'margin', 'data-action': input}, '10') }}
+                    {% endset %}
+                    {{ ui.group('Fonctionnement', fields, 'sm:grid-cols-3') }}
+                {% endset %}
+                {% set formulas %}
+                    {{ ui.formula('Air neuf : Q = ṁ × (1,006 + 1,86 × w_ext) × ΔT ; eau = ṁ × (w_ext − w_consigne)') }}
+                    <p>Fonctionnement sous 24 h/j : froid de maintien × 24 / heures. La marge s'applique aux puissances de maintien et de mise en régime.</p>
+                {% endset %}
+                {{ ui.section('ec-p-section-8', 8, 'Autres', icons[8], content, formulas) }}
+
+                {% set content %}
+                    {% set fields %}
+                        {{ calc.select('ec-p-act-heat', 'Chauffe', {ssr: 'Relais statique', phase: 'Gradateur', contactor: 'Contacteur'}, {'data-field': 'actHeat', 'data-action': change}) }}
+                        {{ calc.select('ec-p-act-cold', 'Froid', {vsd: 'Compresseur à variateur', hot_gas: 'By-pass de gaz chaud', eev: 'Détendeur électronique', valve: 'Vanne d\'eau glacée 3 voies', on_off: 'Tout ou rien'}, {'data-field': 'actCold', 'data-action': change}) }}
+                        <div data-show-for="actCold:vsd">{{ calc.field('ec-p-vsd-min', 'Variateur : plage minimale', '%', {'data-field': 'coldMinPct', 'data-action': input}, '30') }}</div>
+                        {{ calc.select('ec-p-act-humid', 'Humidification', {modulating_steam: 'Vapeur modulante', on_off: 'Tout ou rien'}, {'data-field': 'actHumid', 'data-action': change}) }}
+                        {{ calc.select('ec-p-act-dry', 'Séchage', {valve: 'Vanne de batterie', desiccant: 'Dessiccateur modulant'}, {'data-field': 'actDry', 'data-action': change}) }}
+                        {{ calc.field('ec-p-staging', 'Étages au-delà de (× maintien)', '×', {'data-field': 'stagingRatio', 'data-action': input}, '3') }}
+                    {% endset %}
+                    {{ ui.group('Actionneurs', fields) }}
+                    {% set fields %}
+                        {{ calc.field('ec-p-air-changes', 'Brassage', 'vol/h', {'data-field': 'airChanges', 'data-action': input}, '60') }}
+                        {{ calc.field('ec-p-sensor-t', 'Sonde de température', 's', {'data-field': 'sensorT', 'data-action': input}, '20') }}
+                        {{ calc.field('ec-p-sensor-rh', 'Sonde d\'humidité', 's', {'data-field': 'sensorRh', 'data-action': input}, '30') }}
+                        {{ calc.field('ec-p-span', 'Étendue de mesure', 'K', {'data-field': 'spanT', 'data-action': input}, '150') }}
+                        {{ calc.field('ec-p-hygro-mass', 'Matériaux hygroscopiques', 'kg', {'data-field': 'hygroMassKg', 'data-action': input}, '0') }}
+                        {{ calc.field('ec-p-hygro-cap', 'Capacité d\'absorption', 'g/(kg·%HR)', {'data-field': 'hygroCapacity', 'data-action': input}, '0') }}
+                    {% endset %}
+                    {{ ui.group('Modèle', fields) }}
+                    {% set fields %}
+                        <div class="sm:col-span-2">
+                            <label for="ec-p-tau" class="form-label">Réponse de la boucle : τc = <output data-tau-output>1</output> × θ</label>
+                            <input type="range" id="ec-p-tau" min="0.5" max="3" step="0.5" value="1" class="w-full accent-primary-700 dark:accent-primary-300" data-field="tauFactor" data-action="{{ input }}" aria-describedby="ec-p-tau-hint">
+                            <p id="ec-p-tau-hint" class="mt-1 flex justify-between text-xs text-secondary-600 dark:text-secondary-300"><span>Nerveux</span><span>Robuste</span></p>
+                        </div>
+                        {{ calc.select('ec-p-derivative', 'Action dérivée', {no: 'PI (Td = 0)', yes: 'PID'}, {'data-field': 'derivative', 'data-action': change}) }}
+                    {% endset %}
+                    {{ ui.group('Réglage', fields) }}
+                    {{ _self.pidResults() }}
+                {% endset %}
+                {{ ui.section('ec-p-section-9', 9, 'Régulation', iconRegulation, content, pidFormulas) }}
+            </div>
+
+            {# --- 10. Résultats (les deux modes) --- #}
+            {% set content %}
+                <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+                    {% for item in [
+                        {id: 'ec-cold', label: 'Refroidissement', target: 'cold'}, {id: 'ec-heat', label: 'Chauffe', target: 'heat'},
+                        {id: 'ec-dry', label: 'Séchage', target: 'drying'}, {id: 'ec-humid', label: 'Humidification', target: 'humid'},
+                    ] %}
+                        <div>
+                            {{ calc.result(item.id, item.label ~ ' à installer', 'W', {(t): item.target}) }}
+                            <p class="mt-1 text-xs text-secondary-600 dark:text-secondary-300" {{ t }}="{{ item.target }}Detail"></p>
+                        </div>
+                    {% endfor %}
+                </div>
+                {{ calc.message({(t): 'message'}) }}
+                <p class="text-sm text-secondary-600 dark:text-secondary-300" aria-live="polite" {{ t }}="summary"></p>
+                <div>
+                    <h3 class="mb-3 text-sm font-semibold tracking-wide text-secondary-500 uppercase dark:text-secondary-400">Été et hiver</h3>
+                    <table class="w-full table-fixed text-sm">
+                        <caption class="sr-only">Résultats du cas été et du cas hiver</caption>
+                        <thead>
+                            <tr class="border-b border-secondary-200 text-left text-secondary-700 dark:border-secondary-700 dark:text-secondary-200">
+                                <th scope="col" class="w-2/5 py-2 pr-4">Grandeur</th>
+                                <th scope="col" class="py-2 pr-2 text-right" {{ t }}="summerHeader">Été</th>
+                                <th scope="col" class="py-2 text-right" {{ t }}="winterHeader">Hiver</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-secondary-100 break-words dark:divide-secondary-700/60" {{ t }}="seasons"></tbody>
+                    </table>
+                </div>
+                <details class="group rounded-xl border border-secondary-200 dark:border-secondary-700">
+                    <summary class="flex cursor-pointer list-none items-center justify-between gap-2 rounded-xl px-4 py-3 text-sm font-semibold text-secondary-800 hover:bg-secondary-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-700 dark:text-secondary-200 dark:hover:bg-secondary-800/60 [&::-webkit-details-marker]:hidden">
+                        Détail poste par poste (formules et calcul chiffré)
+                        <svg class="size-4 shrink-0 transition-transform group-open:rotate-180" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 011.06 0L10 11.94l3.72-3.72a.75.75 0 111.06 1.06l-4.25 4.25a.75.75 0 01-1.06 0L5.22 9.28a.75.75 0 010-1.06z" clip-rule="evenodd"/></svg>
+                    </summary>
+                    <div class="border-t border-secondary-200 px-4 py-3 dark:border-secondary-700">
+                        <table class="w-full table-fixed text-sm">
+                            <thead>
+                                <tr class="border-b border-secondary-200 text-left text-secondary-700 dark:border-secondary-700 dark:text-secondary-200">
+                                    <th scope="col" class="w-1/2 py-2 pr-4 sm:w-3/5">Poste, formule et hypothèses</th>
+                                    <th scope="col" class="py-2 pr-2 text-right">Été</th>
+                                    <th scope="col" class="py-2 text-right">Hiver</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-secondary-100 break-words dark:divide-secondary-700/60" {{ t }}="breakdown"></tbody>
+                        </table>
+                        <p class="mt-3 text-sm text-secondary-600 dark:text-secondary-300">Puissances sensibles en W (+ : apport à l'enceinte, − : perte), apports internes tous présents (dimensionnement). Valeurs par défaut indicatives, à vérifier pour un dimensionnement réel.</p>
+                    </div>
+                </details>
+                <div>
+                    <h3 class="mb-3 text-sm font-semibold tracking-wide text-secondary-500 uppercase dark:text-secondary-400">Fluide et réglementation</h3>
+                    <div class="space-y-2 text-sm text-secondary-700 dark:text-secondary-300" aria-live="polite" {{ t }}="fluidReport"></div>
+                </div>
+            {% endset %}
+            {{ ui.section('ec-section-10', 10, 'Résultats', icons[10], content) }}
+        </div>
+
+        {# --- Colonne collante (ordinateur) ou barre en bas (mobile) : navigation et puissances à installer --- #}
+        <aside class="lg:sticky lg:top-[calc(var(--header-offset,0px)+1.5rem)] lg:space-y-4" aria-label="Navigation et résumé">
+            {{ ui.navList(sections, 'Sections de l\'outil', 'ec-s') }}
+            <div role="region" aria-label="Puissances à installer" class="fixed inset-x-0 bottom-0 z-30 border-t border-secondary-200 bg-white/95 pb-[env(safe-area-inset-bottom)] shadow-lg backdrop-blur lg:static lg:rounded-2xl lg:border lg:bg-white lg:p-4 lg:pb-4 lg:shadow-none dark:border-secondary-700 dark:bg-secondary-900/95 lg:dark:bg-secondary-800/60">
+                <div class="px-4 pt-2 lg:p-0">
+                    <div class="flex items-center justify-between gap-2">
+                        <p class="text-sm font-bold text-secondary-900 dark:text-white">Puissances à installer</p>
+                        <button type="button" class="inline-flex items-center gap-1 rounded-lg px-2 py-1 text-sm font-semibold text-primary-700 hover:bg-primary-50 focus-visible:outline-2 focus-visible:outline-primary-700 lg:hidden dark:text-primary-300 dark:hover:bg-primary-500/10"
+                                aria-expanded="false" aria-controls="ec-summary-panel" data-calculator--layout-target="barToggle" data-action="calculator--layout#toggleBar">
+                            Alertes <span class="rounded-full bg-secondary-200 px-1.5 text-xs text-secondary-800 data-alerts:bg-amber-100 data-alerts:text-amber-900 dark:bg-secondary-700 dark:text-secondary-100 dark:data-alerts:bg-amber-900 dark:data-alerts:text-amber-100" {{ t }}="alertCount">0</span>
+                        </button>
+                    </div>
+                    <dl class="mt-1 grid grid-cols-4 gap-2 pb-2 lg:mt-3 lg:grid-cols-1 lg:pb-0">
+                        {{ ui.summaryItem('Refroidissement', 'Froid', t ~ '=summaryCold', t ~ '=summaryColdDetail') }}
+                        {{ ui.summaryItem('Chauffe', 'Chauffe', t ~ '=summaryHeat', t ~ '=summaryHeatDetail') }}
+                        {{ ui.summaryItem('Séchage', 'Séchage', t ~ '=summaryDrying', t ~ '=summaryDryingDetail') }}
+                        {{ ui.summaryItem('Humidification', 'Humid.', t ~ '=summaryHumid', t ~ '=summaryHumidDetail') }}
+                    </dl>
+                </div>
+                <div id="ec-summary-panel" class="max-h-[50vh] space-y-2 overflow-y-auto px-4 pb-3 max-lg:hidden max-lg:data-open:block lg:mt-3 lg:max-h-none lg:p-0" data-calculator--layout-target="barPanel" {{ t }}="summaryAlerts"></div>
+            </div>
+        </aside>
+    </div>
+
+    {# --- Modèles des éléments des listes (mode pro) ; __ID__ est remplacé par un numéro unique --- #}
+    <template {{ t }}="doorTemplate">
+        <fieldset class="rounded-xl border border-secondary-200 p-4 dark:border-secondary-700" data-item>
+            <legend class="px-1 text-sm font-bold text-secondary-900 dark:text-white" data-item-title>Porte</legend>
+            <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+                {{ calc.field('ec-door-__ID__-width', 'Largeur', 'm', {'data-item-field': 'width', 'data-action': input}, '0,8') }}
+                {{ calc.field('ec-door-__ID__-height', 'Hauteur', 'm', {'data-item-field': 'height', 'data-action': input}, '2') }}
+                {{ calc.field('ec-door-__ID__-u', 'U', 'W/(m²·K)', {'data-item-field': 'u', 'data-action': input}, '0,55') }}
+                {{ calc.select('ec-door-__ID__-leaves', 'Vantaux', {1: '1 vantail', 2: '2 vantaux'}, {'data-item-field': 'leaves', 'data-action': change}) }}
+                {{ calc.select('ec-door-__ID__-protection', 'Protection', protections, {'data-item-field': 'protection', 'data-action': 'change->' ~ c ~ '#changeProtection'}) }}
+                {{ calc.field('ec-door-__ID__-efficiency', 'Efficacité E', '%', {'data-item-field': 'efficiency', 'data-action': input}, '0') }}
+                {{ calc.field('ec-door-__ID__-openings', 'Ouvertures', '/j', {'data-item-field': 'openingsPerDay', 'data-action': input}, '5') }}
+                {{ calc.field('ec-door-__ID__-seconds', 'Durée', 's', {'data-item-field': 'openSeconds', 'data-action': input}, '20') }}
+                {{ calc.field('ec-door-__ID__-heater', 'Cordon de cadre', 'W/m', {'data-item-field': 'heaterWPerM', 'data-action': input}, '0') }}
+                <div class="flex items-end justify-end sm:col-span-1 xl:col-span-3">{{ ui.removeButton('Supprimer cette porte', 'Supprimer cette porte ?', c) }}</div>
+            </div>
+        </fieldset>
+    </template>
+
+    <template {{ t }}="glazingTemplate">
+        <fieldset class="rounded-xl border border-secondary-200 p-4 dark:border-secondary-700" data-item>
+            <legend class="px-1 text-sm font-bold text-secondary-900 dark:text-white" data-item-title>Vitrage</legend>
+            <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+                {{ calc.field('ec-glazing-__ID__-area', 'Surface', 'm²', {'data-item-field': 'area', 'data-action': input}, '0,5') }}
+                {{ calc.select('ec-glazing-__ID__-type', 'Type', {double: 'Double vitrage', triple: 'Triple vitrage'}, {'data-item-field': 'glazingType', 'data-action': 'change->' ~ c ~ '#changeGlazingType'}) }}
+                {{ calc.field('ec-glazing-__ID__-u', 'U', 'W/(m²·K)', {'data-item-field': 'u', 'data-action': input}, '2,8') }}
+                {{ calc.select('ec-glazing-__ID__-heated', 'Chauffé', yesNo, {'data-item-field': 'heated', 'data-action': change}) }}
+                {{ calc.field('ec-glazing-__ID__-heater', 'Chauffage', 'W', {'data-item-field': 'heaterW', 'data-action': input}, '0') }}
+                <div class="flex items-end justify-end sm:col-span-1 xl:col-span-3">{{ ui.removeButton('Supprimer ce vitrage', 'Supprimer ce vitrage ?', c) }}</div>
+            </div>
+        </fieldset>
+    </template>
+
+    <template {{ t }}="manualTemplate">
+        <fieldset class="rounded-xl border border-secondary-200 p-4 dark:border-secondary-700" data-item>
+            <legend class="px-1 text-sm font-bold text-secondary-900 dark:text-white" data-item-title>Apport</legend>
+            <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+                <div class="sm:col-span-2">
+                    <label for="ec-manual-__ID__-label" class="form-label">Libellé</label>
+                    <input type="text" id="ec-manual-__ID__-label" class="form-input" autocomplete="off" maxlength="80" data-item-field="label" data-item-text data-action="{{ input }}" placeholder="Pompe, agitateur…">
+                </div>
+                {{ calc.field('ec-manual-__ID__-watts', 'Puissance', 'W', {'data-item-field': 'watts', 'data-action': input}, '0') }}
+                {{ calc.field('ec-manual-__ID__-hours', 'Durée (24 : permanent)', 'h/j', {'data-item-field': 'hours', 'data-action': input}, '24') }}
+                {{ calc.field('ec-manual-__ID__-fraction', 'Fraction dans l\'enceinte', '0 à 1', {'data-item-field': 'fraction', 'data-action': input}, '1') }}
+                {{ calc.field('ec-manual-__ID__-water', 'Part latente', 'g/h', {'data-item-field': 'waterGPerH', 'data-action': input}, '0') }}
+                <div class="flex items-end justify-end sm:col-span-2">{{ ui.removeButton('Supprimer cet apport', 'Supprimer cet apport ?', c) }}</div>
+            </div>
+        </fieldset>
+    </template>
+</div>

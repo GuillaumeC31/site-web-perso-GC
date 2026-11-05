@@ -1,0 +1,7 @@
+{#
+  Widget anti-robot Cloudflare Turnstile d'un formulaire public (contact, espace recruteur).
+  Inclus par : contact/show.html.twig, recruiter_area/index.html.twig, recruiter_area/link_invalid.html.twig
+  Variables : turnstile_site_key (globale Twig, TURNSTILE_SITE_KEY).
+  Comportement : contrôleur Stimulus « turnstile » ; jeton vérifié par App\Security\TurnstileVerifier.
+#}
+<div class="mb-5 min-h-[65px]" data-controller="turnstile" data-turnstile-site-key-value="{{ turnstile_site_key }}"></div>

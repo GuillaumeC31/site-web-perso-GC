@@ -1,0 +1,85 @@
+{#
+  Layout public commun à toutes les pages du site.
+  Étendu par : toutes les pages publiques (accueil, CV, projets, calculatrice, pages légales…) et les pages d'erreur.
+  Blocs :
+    - title       : titre de la page (balise <title>), sans le nom du site
+    - description : contenu de la balise meta description
+    - robots      : contenu de la balise meta robots (par défaut « index, follow ») ; forcé à
+                    « noindex, nofollow » sur un environnement de test (SITE_NOINDEX=1)
+    - og_type     : type Open Graph (par défaut « website »)
+    - structured_data : données structurées JSON-LD (accueil : Person)
+    - body        : contenu principal (dans <main>)
+  Référencement (lot 8) : adresse canonique, Open Graph et Twitter (titre et description repris des blocs
+  title et description, déjà échappés), image de partage si elle est installée (SeoExtension).
+  Variables globales : site_owner_name (config/packages/twig.yaml).
+  Aucune donnée privée (e-mail, téléphone, adresse) ne doit apparaître ici.
+#}
+<!DOCTYPE html>
+<html lang="fr" class="motion-safe:scroll-smooth">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        {# Blocs rendus une seule fois et déjà échappés : |raw évite un double échappement #}
+        {% set page_title = block('title')|trim %}
+        {% set page_description = block('description')|trim %}
+        {% set share_image = seo_share_image() %}
+        <title>{% block title %}{{ site_owner_name }}{% endblock %}</title>
+        <meta name="description" content="{% block description %}{% endblock %}">
+        <meta name="robots" content="{% if seo_noindex() %}noindex, nofollow{% else %}{% block robots %}index, follow{% endblock %}{% endif %}">
+        <link rel="canonical" href="{{ seo_canonical() }}">
+        <meta property="og:type" content="{% block og_type %}website{% endblock %}">
+        <meta property="og:site_name" content="{{ site_owner_name }}">
+        <meta property="og:locale" content="fr_FR">
+        <meta property="og:url" content="{{ seo_canonical() }}">
+        <meta property="og:title" content="{{ page_title|raw }}">
+        {% if page_description %}<meta property="og:description" content="{{ page_description|raw }}">{% endif %}
+        {% if share_image %}
+            <meta property="og:image" content="{{ share_image.url }}">
+            <meta property="og:image:type" content="image/jpeg">
+            <meta property="og:image:width" content="{{ share_image.width }}">
+            <meta property="og:image:height" content="{{ share_image.height }}">
+            <meta property="og:image:alt" content="{{ 'seo.share_image_alt'|trans({'%name%': site_owner_name}) }}">
+            <meta name="twitter:card" content="summary_large_image">
+            <meta name="twitter:image" content="{{ share_image.url }}">
+        {% else %}
+            <meta name="twitter:card" content="summary">
+        {% endif %}
+        <meta name="twitter:title" content="{{ page_title|raw }}">
+        {% if page_description %}<meta name="twitter:description" content="{{ page_description|raw }}">{% endif %}
+        {% block structured_data %}{% endblock %}
+        <meta name="color-scheme" content="light dark">
+        {# Icônes (v2.0.2) : SVG pour les navigateurs récents, ICO 16/32/48 px pour les autres (et pour la demande
+           automatique de /favicon.ico), 180 px pour l'écran d'accueil des téléphones ; produites par
+           scripts/images/build-favicons.php à partir du monogramme « GC » #}
+        <link rel="icon" href="{{ asset('favicon.ico') }}" sizes="48x48">
+        <link rel="icon" href="{{ asset('favicon.svg') }}" type="image/svg+xml">
+        <link rel="apple-touch-icon" href="{{ asset('apple-touch-icon.png') }}">
+        {# Police Inter (alphabet latin) préchargée : le texte s'affiche d'emblée dans sa police, sans
+           décalage de mise en page au remplacement (CLS, lot 8) #}
+        <link rel="preload" href="{{ asset('node_modules/@fontsource-variable/inter/files/inter-latin-wght-normal.woff2', 'vite') }}" as="font" type="font/woff2" crossorigin>
+
+        {# Nonce CSP lu par Turbo et assets/lib/csp_nonce.js (navigations Turbo) #}
+        <meta name="csp-nonce" content="{{ csp_nonce() }}">
+        {{ include('_partials/_theme_script.html.twig') }}
+        {% block stylesheets %}
+            {{ vite_entry_link_tags('app') }}
+        {% endblock %}
+        {% block javascripts %}
+            {{ vite_entry_script_tags('app') }}
+        {% endblock %}
+    </head>
+    <body class="flex min-h-dvh flex-col">
+        <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:rounded-lg focus:bg-white focus:px-4 focus:py-2 focus:font-semibold focus:text-primary-700">
+            {{ 'common.skip_to_content'|trans }}
+        </a>
+
+        {{ include('_partials/_header.html.twig') }}
+
+        <main id="main-content" class="flex-auto" tabindex="-1">
+            {{ include('_partials/_flash_messages.html.twig') }}
+            {% block body %}{% endblock %}
+        </main>
+
+        {{ include('_partials/_footer.html.twig') }}
+    </body>
+</html>

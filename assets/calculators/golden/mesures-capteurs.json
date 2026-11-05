@@ -1,0 +1,717 @@
+{
+  "source": "ancien site guillaume_c (capture automatique)",
+  "category": "mesures-capteurs",
+  "results": [
+    {
+      "tool": "pt100",
+      "method": "calculateResistanceFromTemp",
+      "event": null,
+      "inputs": {
+        "temperature": 0
+      },
+      "outputs": {
+        "resistance": "100.00",
+        "!alertRange": "masqué"
+      }
+    },
+    {
+      "tool": "pt100",
+      "method": "calculateResistanceFromTemp",
+      "event": null,
+      "inputs": {
+        "temperature": 25
+      },
+      "outputs": {
+        "resistance": "109.73",
+        "!alertRange": "masqué"
+      }
+    },
+    {
+      "tool": "pt100",
+      "method": "calculateResistanceFromTemp",
+      "event": null,
+      "inputs": {
+        "temperature": 37.5
+      },
+      "outputs": {
+        "resistance": "114.57",
+        "!alertRange": "masqué"
+      }
+    },
+    {
+      "tool": "pt100",
+      "method": "calculateResistanceFromTemp",
+      "event": null,
+      "inputs": {
+        "temperature": 100
+      },
+      "outputs": {
+        "resistance": "138.51",
+        "!alertRange": "masqué"
+      }
+    },
+    {
+      "tool": "pt100",
+      "method": "calculateResistanceFromTemp",
+      "event": null,
+      "inputs": {
+        "temperature": -50
+      },
+      "outputs": {
+        "resistance": "80.31",
+        "!alertRange": "masqué"
+      }
+    },
+    {
+      "tool": "pt100",
+      "method": "calculateResistanceFromTemp",
+      "event": null,
+      "inputs": {
+        "temperature": -200
+      },
+      "outputs": {
+        "resistance": "18.52",
+        "!alertRange": "masqué"
+      }
+    },
+    {
+      "tool": "pt100",
+      "method": "calculateResistanceFromTemp",
+      "event": null,
+      "inputs": {
+        "temperature": 850
+      },
+      "outputs": {
+        "resistance": "390.48",
+        "!alertRange": "masqué"
+      }
+    },
+    {
+      "tool": "pt100",
+      "method": "calculateResistanceFromTemp",
+      "event": null,
+      "inputs": {
+        "temperature": 900
+      },
+      "outputs": {
+        "resistance": "404.97",
+        "!alertRange": "visible"
+      }
+    },
+    {
+      "tool": "pt100",
+      "method": "calculateResistanceFromTemp",
+      "event": null,
+      "inputs": {
+        "temperature": -210
+      },
+      "outputs": {
+        "resistance": "14.18",
+        "!alertRange": "visible"
+      }
+    },
+    {
+      "tool": "pt100",
+      "method": "calculateResistanceFromTemp",
+      "event": null,
+      "inputs": {
+        "temperature": ""
+      },
+      "outputs": {
+        "resistance": "",
+        "!alertRange": "masqué"
+      }
+    },
+    {
+      "tool": "pt100",
+      "method": "calculateTempFromResistance",
+      "event": null,
+      "inputs": {
+        "resistance": 100
+      },
+      "outputs": {
+        "temperature": "0.00",
+        "!alertRange": "masqué"
+      }
+    },
+    {
+      "tool": "pt100",
+      "method": "calculateTempFromResistance",
+      "event": null,
+      "inputs": {
+        "resistance": 109.73
+      },
+      "outputs": {
+        "temperature": "24.99",
+        "!alertRange": "masqué"
+      }
+    },
+    {
+      "tool": "pt100",
+      "method": "calculateTempFromResistance",
+      "event": null,
+      "inputs": {
+        "resistance": 138.51
+      },
+      "outputs": {
+        "temperature": "100.01",
+        "!alertRange": "masqué"
+      }
+    },
+    {
+      "tool": "pt100",
+      "method": "calculateTempFromResistance",
+      "event": null,
+      "inputs": {
+        "resistance": 80.31
+      },
+      "outputs": {
+        "temperature": "-49.99",
+        "!alertRange": "masqué"
+      }
+    },
+    {
+      "tool": "pt100",
+      "method": "calculateTempFromResistance",
+      "event": null,
+      "inputs": {
+        "resistance": 18.52
+      },
+      "outputs": {
+        "temperature": "Hors plage",
+        "!alertRange": "visible"
+      }
+    },
+    {
+      "tool": "pt100",
+      "method": "calculateTempFromResistance",
+      "event": null,
+      "inputs": {
+        "resistance": 390.48
+      },
+      "outputs": {
+        "temperature": "850.00",
+        "!alertRange": "masqué"
+      }
+    },
+    {
+      "tool": "pt100",
+      "method": "calculateTempFromResistance",
+      "event": null,
+      "inputs": {
+        "resistance": 400
+      },
+      "outputs": {
+        "temperature": "Hors plage",
+        "!alertRange": "visible"
+      }
+    },
+    {
+      "tool": "pt100",
+      "method": "calculateTempFromResistance",
+      "event": null,
+      "inputs": {
+        "resistance": 10
+      },
+      "outputs": {
+        "temperature": "Hors plage",
+        "!alertRange": "visible"
+      }
+    },
+    {
+      "tool": "pt100",
+      "method": "calculateTempFromResistance",
+      "event": null,
+      "inputs": {
+        "resistance": ""
+      },
+      "outputs": {
+        "temperature": "",
+        "!alertRange": "masqué"
+      }
+    },
+    {
+      "tool": "pt1000",
+      "method": "calculateResistanceFromTemp",
+      "event": null,
+      "inputs": {
+        "temperature": 0
+      },
+      "outputs": {
+        "resistance": "1000.00",
+        "!alertRange": "masqué"
+      }
+    },
+    {
+      "tool": "pt1000",
+      "method": "calculateResistanceFromTemp",
+      "event": null,
+      "inputs": {
+        "temperature": 25
+      },
+      "outputs": {
+        "resistance": "1097.35",
+        "!alertRange": "masqué"
+      }
+    },
+    {
+      "tool": "pt1000",
+      "method": "calculateResistanceFromTemp",
+      "event": null,
+      "inputs": {
+        "temperature": -40
+      },
+      "outputs": {
+        "resistance": "842.71",
+        "!alertRange": "masqué"
+      }
+    },
+    {
+      "tool": "pt1000",
+      "method": "calculateResistanceFromTemp",
+      "event": null,
+      "inputs": {
+        "temperature": 150
+      },
+      "outputs": {
+        "resistance": "1573.25",
+        "!alertRange": "masqué"
+      }
+    },
+    {
+      "tool": "pt1000",
+      "method": "calculateTempFromResistance",
+      "event": null,
+      "inputs": {
+        "resistance": 1000
+      },
+      "outputs": {
+        "temperature": "0.00",
+        "!alertRange": "masqué"
+      }
+    },
+    {
+      "tool": "pt1000",
+      "method": "calculateTempFromResistance",
+      "event": null,
+      "inputs": {
+        "resistance": 1097.35
+      },
+      "outputs": {
+        "temperature": "25.00",
+        "!alertRange": "masqué"
+      }
+    },
+    {
+      "tool": "pt1000",
+      "method": "calculateTempFromResistance",
+      "event": null,
+      "inputs": {
+        "resistance": 842.71
+      },
+      "outputs": {
+        "temperature": "-40.00",
+        "!alertRange": "masqué"
+      }
+    },
+    {
+      "tool": "pt1000",
+      "method": "calculateTempFromResistance",
+      "event": null,
+      "inputs": {
+        "resistance": 1573.25
+      },
+      "outputs": {
+        "temperature": "150.00",
+        "!alertRange": "masqué"
+      }
+    },
+    {
+      "tool": "signal-4-20ma",
+      "method": "calculatePhysical",
+      "event": null,
+      "inputs": {
+        "signal": 12
+      },
+      "outputs": {
+        "physical": "50.00",
+        "shuntVoltage": "3.00",
+        "alertSignal": ""
+      }
+    },
+    {
+      "tool": "signal-4-20ma",
+      "method": "calculatePhysical",
+      "event": null,
+      "inputs": {
+        "signal": 4
+      },
+      "outputs": {
+        "physical": "0.00",
+        "shuntVoltage": "1.00",
+        "alertSignal": ""
+      }
+    },
+    {
+      "tool": "signal-4-20ma",
+      "method": "calculatePhysical",
+      "event": null,
+      "inputs": {
+        "signal": 20
+      },
+      "outputs": {
+        "physical": "100.00",
+        "shuntVoltage": "5.00",
+        "alertSignal": ""
+      }
+    },
+    {
+      "tool": "signal-4-20ma",
+      "method": "calculatePhysical",
+      "event": null,
+      "inputs": {
+        "signal": 3.5
+      },
+      "outputs": {
+        "physical": "-3.13",
+        "shuntVoltage": "0.88",
+        "alertSignal": "Signal < 4 mA : défaut probable (fil coupé, capteur HS)"
+      }
+    },
+    {
+      "tool": "signal-4-20ma",
+      "method": "calculatePhysical",
+      "event": null,
+      "inputs": {
+        "signal": 20.5
+      },
+      "outputs": {
+        "physical": "103.13",
+        "shuntVoltage": "5.13",
+        "alertSignal": ""
+      }
+    },
+    {
+      "tool": "signal-4-20ma",
+      "method": "calculatePhysical",
+      "event": null,
+      "inputs": {
+        "signal": 21
+      },
+      "outputs": {
+        "physical": "106.25",
+        "shuntVoltage": "5.25",
+        "alertSignal": "Signal supérieur au maximum (dépassement de plage)"
+      }
+    },
+    {
+      "tool": "signal-4-20ma",
+      "method": "calculatePhysical",
+      "event": null,
+      "inputs": {
+        "signal": 8,
+        "minPhysical": -50,
+        "maxPhysical": 150
+      },
+      "outputs": {
+        "physical": "0.00",
+        "shuntVoltage": "2.00",
+        "alertSignal": ""
+      }
+    },
+    {
+      "tool": "signal-4-20ma",
+      "method": "calculateSignal",
+      "event": null,
+      "inputs": {
+        "physical": 75
+      },
+      "outputs": {
+        "signal": "16.00",
+        "shuntVoltage": "4.00",
+        "alertSignal": ""
+      }
+    },
+    {
+      "tool": "signal-4-20ma",
+      "method": "calculateSignal",
+      "event": null,
+      "inputs": {
+        "physical": 7.5,
+        "minPhysical": 0,
+        "maxPhysical": 10
+      },
+      "outputs": {
+        "signal": "16.00",
+        "shuntVoltage": "4.00",
+        "alertSignal": ""
+      }
+    },
+    {
+      "tool": "signal-4-20ma",
+      "method": "calculateSignal",
+      "event": null,
+      "inputs": {
+        "physical": 120
+      },
+      "outputs": {
+        "signal": "23.20",
+        "shuntVoltage": "5.80",
+        "alertSignal": "Signal supérieur au maximum (dépassement de plage)"
+      }
+    },
+    {
+      "tool": "signal-4-20ma",
+      "method": "calculatePhysical",
+      "event": null,
+      "inputs": {
+        "signal": 12,
+        "minPhysical": 50,
+        "maxPhysical": 50
+      },
+      "outputs": {
+        "physical": ""
+      }
+    },
+    {
+      "tool": "signal-4-20ma",
+      "method": "calculatePhysical",
+      "event": null,
+      "inputs": {
+        "signal": ""
+      },
+      "outputs": {
+        "physical": ""
+      }
+    },
+    {
+      "tool": "signal-0-20ma",
+      "method": "calculatePhysical",
+      "event": null,
+      "inputs": {
+        "signal": 10
+      },
+      "outputs": {
+        "physical": "50.00",
+        "shuntVoltage": "2.50",
+        "alertSignal": ""
+      }
+    },
+    {
+      "tool": "signal-0-20ma",
+      "method": "calculatePhysical",
+      "event": null,
+      "inputs": {
+        "signal": 0
+      },
+      "outputs": {
+        "physical": "0.00",
+        "shuntVoltage": "0.00",
+        "alertSignal": ""
+      }
+    },
+    {
+      "tool": "signal-0-20ma",
+      "method": "calculatePhysical",
+      "event": null,
+      "inputs": {
+        "signal": -1
+      },
+      "outputs": {
+        "physical": "-5.00",
+        "shuntVoltage": "-0.25",
+        "alertSignal": "Signal inférieur au minimum de plage"
+      }
+    },
+    {
+      "tool": "signal-0-20ma",
+      "method": "calculateSignal",
+      "event": null,
+      "inputs": {
+        "physical": 25
+      },
+      "outputs": {
+        "signal": "5.00",
+        "shuntVoltage": "1.25"
+      }
+    },
+    {
+      "tool": "signal-0-10v",
+      "method": "calculatePhysical",
+      "event": null,
+      "inputs": {
+        "signal": 5
+      },
+      "outputs": {
+        "physical": "50.00",
+        "alertSignal": ""
+      }
+    },
+    {
+      "tool": "signal-0-10v",
+      "method": "calculatePhysical",
+      "event": null,
+      "inputs": {
+        "signal": 2.5,
+        "minPhysical": -20,
+        "maxPhysical": 80
+      },
+      "outputs": {
+        "physical": "5.00",
+        "alertSignal": ""
+      }
+    },
+    {
+      "tool": "signal-0-10v",
+      "method": "calculatePhysical",
+      "event": null,
+      "inputs": {
+        "signal": 11
+      },
+      "outputs": {
+        "physical": "110.00",
+        "alertSignal": "Signal supérieur au maximum (dépassement de plage)"
+      }
+    },
+    {
+      "tool": "signal-0-10v",
+      "method": "calculateSignal",
+      "event": null,
+      "inputs": {
+        "physical": 33.3
+      },
+      "outputs": {
+        "signal": "3.33"
+      }
+    },
+    {
+      "tool": "transmetteur-humidite",
+      "method": "calculatePhysical",
+      "event": null,
+      "inputs": {
+        "signal": 12
+      },
+      "outputs": {
+        "physical": "50.00",
+        "shuntVoltage": "3.00",
+        "alertSignal": ""
+      }
+    },
+    {
+      "tool": "transmetteur-humidite",
+      "method": "calculateSignal",
+      "event": null,
+      "inputs": {
+        "physical": 65
+      },
+      "outputs": {
+        "signal": "14.40",
+        "shuntVoltage": "3.60"
+      }
+    },
+    {
+      "tool": "transmetteur-humidite",
+      "steps": [
+        {
+          "set": {
+            "outputType": "0-10"
+          }
+        },
+        {
+          "call": "changeOutputType"
+        },
+        {
+          "set": {
+            "signal": 7.5
+          }
+        },
+        {
+          "call": "calculatePhysical"
+        }
+      ],
+      "outputs": {
+        "physical": "75.00",
+        "minSignal": "0",
+        "maxSignal": "10",
+        "alertSignal": "",
+        "!shuntCard": "masqué"
+      }
+    },
+    {
+      "tool": "transmetteur-humidite",
+      "steps": [
+        {
+          "set": {
+            "outputType": "0-20"
+          }
+        },
+        {
+          "call": "changeOutputType"
+        },
+        {
+          "set": {
+            "signal": 5
+          }
+        },
+        {
+          "call": "calculatePhysical"
+        }
+      ],
+      "outputs": {
+        "physical": "25.00",
+        "shuntVoltage": "1.25",
+        "!shuntCard": "visible"
+      }
+    },
+    {
+      "tool": "transmetteur-temperature",
+      "method": "calculatePhysical",
+      "event": null,
+      "inputs": {
+        "signal": 12
+      },
+      "outputs": {
+        "physical": "30.00",
+        "shuntVoltage": "3.00",
+        "alertSignal": ""
+      }
+    },
+    {
+      "tool": "transmetteur-temperature",
+      "method": "calculateSignal",
+      "event": null,
+      "inputs": {
+        "physical": 0
+      },
+      "outputs": {
+        "signal": "7.20",
+        "shuntVoltage": "1.80"
+      }
+    },
+    {
+      "tool": "transmetteur-temperature",
+      "method": "calculatePhysical",
+      "event": null,
+      "inputs": {
+        "signal": 16,
+        "minPhysical": -40,
+        "maxPhysical": 120
+      },
+      "outputs": {
+        "physical": "80.00"
+      }
+    },
+    {
+      "tool": "transmetteur-temperature",
+      "method": "calculatePhysical",
+      "event": null,
+      "inputs": {
+        "signal": 2
+      },
+      "outputs": {
+        "physical": "-32.50",
+        "alertSignal": "Signal < 4 mA : défaut probable (fil coupé, capteur HS)"
+      }
+    }
+  ]
+}

@@ -1,0 +1,53 @@
+{#
+  Outil : adresse DMX et interrupteurs DIP (10 interrupteurs, adresse de 1 à 512), dans les deux sens.
+  Inclus par : calculator/tool.html.twig. Contrôleur : calculator--adresse-dmx.
+  Explications reprises de l'ancien site ; interrupteurs : boutons à bascule (aria-pressed).
+#}
+{% set c = 'calculator--adresse-dmx' %}
+{% set t = 'data-' ~ c ~ '-target' %}
+
+<div data-controller="{{ c }}" class="space-y-6">
+    <section class="card">
+        <h2 class="text-lg font-bold text-secondary-900 dark:text-white">Adresse DMX</h2>
+        <div class="mt-4 flex max-w-xs items-end gap-2">
+            <button type="button" class="btn btn-secondary px-3" aria-label="Diminuer l'adresse" data-action="{{ c }}#decrement">−</button>
+            <div class="grow">
+                <label for="dmx-address" class="form-label">Adresse (1 à 512)</label>
+                <input type="text" inputmode="numeric" autocomplete="off" id="dmx-address" class="form-input text-center font-mono text-lg" value="1"
+                       {{ t }}="address" data-action="input->{{ c }}#fromAddress">
+            </div>
+            <button type="button" class="btn btn-secondary px-3" aria-label="Augmenter l'adresse" data-action="{{ c }}#increment">+</button>
+        </div>
+        <p hidden aria-live="polite" class="mt-3 text-sm font-medium text-red-700 dark:text-red-400" {{ t }}="message"></p>
+    </section>
+
+    <section class="card" aria-labelledby="dmx-switches-title">
+        <h2 id="dmx-switches-title" class="text-lg font-bold text-secondary-900 dark:text-white">Interrupteurs DIP</h2>
+        <p class="mt-1 text-sm text-secondary-600 dark:text-secondary-300">Cliquez sur un interrupteur pour le basculer. Levier en haut : ON.</p>
+        <div class="mt-4 overflow-x-auto">
+            <div class="inline-flex gap-1 rounded-xl bg-red-700 p-2 sm:gap-1.5 sm:p-3 dark:bg-red-900" role="group" aria-label="Interrupteurs DIP 1 à 10">
+                {% for i in 1..10 %}
+                    <button type="button" class="group flex w-6 flex-col items-center gap-1 rounded-md sm:w-9 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                            aria-pressed="false" aria-label="Interrupteur {{ i }} (valeur {{ 2 ** (i - 1) }})" data-bit="{{ i - 1 }}"
+                            {{ t }}="switch" data-action="{{ c }}#toggle">
+                        <span class="relative block h-12 w-5 rounded-sm bg-white/90 sm:h-14 sm:w-6">
+                            <span class="absolute inset-x-0.5 bottom-0.5 h-5 rounded-sm bg-secondary-800 transition-all group-aria-pressed:bottom-6 sm:h-6 sm:group-aria-pressed:bottom-7"></span>
+                        </span>
+                        <span class="text-xs font-bold text-white">{{ i }}</span>
+                    </button>
+                {% endfor %}
+            </div>
+        </div>
+        <dl class="mt-5 grid gap-4 sm:grid-cols-2" aria-live="polite">
+            <div><dt class="form-label">Détail du calcul</dt><dd class="font-mono text-secondary-900 dark:text-white" {{ t }}="sum">—</dd></div>
+            <div><dt class="form-label">Écriture binaire</dt><dd class="font-mono text-secondary-900 dark:text-white" {{ t }}="binary">—</dd></div>
+        </dl>
+    </section>
+
+    <section class="card space-y-3 text-sm text-secondary-700 dark:text-secondary-300">
+        <h2 class="text-lg font-bold text-secondary-900 dark:text-white">Comment ça marche ?</h2>
+        <p>Chaque interrupteur représente une puissance de 2 : interrupteur 1 = 1, interrupteur 2 = 2, interrupteur 3 = 4, interrupteur 4 = 8, interrupteur 5 = 16, etc. L'adresse DMX est la somme des interrupteurs placés sur ON.</p>
+        <h3 class="font-semibold text-secondary-900 dark:text-white">L'interrupteur n° 10</h3>
+        <p>Sa valeur (512) ne sert qu'à l'adresse 512, la dernière d'un univers DMX. Beaucoup de projecteurs l'utilisent aussi pour un mode autonome (automatique, maître / esclave) ou une résistance de fin de ligne.</p>
+    </section>
+</div>

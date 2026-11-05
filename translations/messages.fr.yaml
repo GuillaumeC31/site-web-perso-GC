@@ -1,0 +1,2304 @@
+# Textes de l'interface (français).
+# Clés en anglais, hiérarchiques. Les textes métier (CV, titre de poste, chiffres)
+# ne sont pas ici : ils seront gérés dans l'admin (lots 2 et 3).
+
+common:
+  skip_to_content: Aller au contenu
+  main_navigation: Navigation principale
+  open_menu: Ouvrir le menu
+  close_menu: Fermer le menu
+  toggle_theme: Basculer entre le mode clair et le mode sombre
+  back_home: Retour à l'accueil
+  required_field: obligatoire
+
+confirmation:
+  page_title: Confirmer l'action
+  cancel: Annuler
+  default_text: Vérifiez avant de continuer.
+
+nav:
+  home: Accueil
+  cv: CV
+  projects: Projets
+  calculator: Calculatrice
+  contact: Contact
+  recruiter_area: Espace recruteur
+
+footer:
+  copyright: "© %year% %name%"
+  built_with_start: Site conçu et développé avec
+  built_with_and: et
+  built_with_end: sous Symfony
+  love: amour
+  coffee: café
+  admin_link: Administration
+  version_label: "Version du site (voir les nouveautés) :"
+  legal_notice: Mentions légales
+  privacy: Confidentialité
+  legal_navigation: Liens du pied de page
+  linkedin: LinkedIn
+  new_window: (nouvel onglet)
+
+# Page publique « Nouveautés » (lien depuis la version du pied de page, aucun lien dans le menu)
+whats_new:
+  title: Nouveautés
+  meta_description: Les principales évolutions du site de Guillaume Couget, version par version.
+  current: "Version actuelle du site : %version%."
+  missing: Le résumé des nouveautés n'est pas encore disponible.
+
+# Mode maintenance (lot 8)
+maintenance:
+  title: Site en maintenance
+  text: "Quelques améliorations sont en cours. Merci de votre patience."
+  status: Maintenance en cours
+  imminent: Retour imminent.
+  return_at: "Retour prévu le %date%."
+  soon: Retour très bientôt.
+  days: jours
+  hours: heures
+  minutes: minutes
+  seconds: secondes
+  preview: "Aperçu : le site n'est pas en maintenance"
+
+# Référencement (lot 8)
+seo:
+  share_image_alt: "%name%, titre professionnel d’exemple"
+
+home:
+  # Balises meta (TEXTES_SITE § 13). Le contenu de la page vient du profil géré dans l'admin.
+  # TEXTES_SITE § 18 (référencement)
+  meta_title: "%name% — Titre professionnel d’exemple | Ville"
+  meta_description: "Présentation d’exemple : métier, domaines et expérience."
+  cta_cv: Voir mon parcours
+  cta_contact: Me contacter
+  cta_download_cv: Télécharger le CV (PDF)
+  photo_alt: "Portrait de %name%"
+  key_figures_label: Chiffres clés
+  # Textes des sections repris de la maquette ../maquette_accueil/ et de TEXTES_SITE (§ 9, § 10)
+  # Bloc « Pourquoi me recruter » (v2.0.2) : titre seul, les arguments viennent de l'admin
+  recruitment:
+    title: Pourquoi me recruter
+  expertise:
+    kicker: Expertise
+    title_four: "Quatre domaines, une même exigence : que ça marche sur le terrain"
+    title: "Mes domaines, une même exigence : que ça marche sur le terrain"
+  career:
+    kicker: Parcours
+    title: Titre d’exemple du parcours
+    see_cv: Voir le CV complet
+  calculator:
+    kicker: Outils gratuits
+    title: Outils de calcul technique
+    text: Conçus à partir de cas pratiques, pour les techniciens, les étudiants et les passionnés.
+    button: Ouvrir la calculatrice
+  case_studies:
+    kicker: Réalisations
+    title: Études de cas
+    all_projects: Tous les projets
+  contact:
+    title: Un poste à pourvoir, une mission ?
+    text: "Écrivez-moi : je réponds sous 24 h ouvrées."
+
+cv:
+  meta_title: "CV de %name%"
+  meta_description: "CV de %name%, %title% : expériences, expertises, logiciels, formations et centres d'intérêt."
+  kicker: Curriculum vitae
+  period:
+    since: "depuis %date%"
+  header:
+    location: Localisation
+    mobility: Mobilité
+    work_modes: Modalités de travail
+    target_roles: Postes visés
+    target_companies: Structures
+    contract_types: Contrat recherché
+    availability: Disponibilité
+  download:
+    design: CV synthétique (PDF)
+    design_help: CV synthétique mis en page, une page ; le CV complet est dans l'espace recruteur
+    ats: Version ATS (PDF)
+    ats_help: CV synthétique en texte simple, adapté aux logiciels de recrutement
+  # Note au-dessus des quatre domaines (correction de recette n° 1, 2026-10-30) ; %delay% : délai de réponse (Paramètres)
+  synthetic_note:
+    title: Ceci est une version courte de mon CV.
+    details: Missions détaillées, formations, langues et coordonnées sont dans l'espace recruteur.
+    access: "Accès gratuit et sécurisé : demande en moins d'une minute, réponse %delay%."
+    link: Demander votre accès
+    connected: Vous êtes connecté.
+    connected_link: Voir le CV complet
+  hidden_count: "{1}+ 1 point détaillé dans l'espace recruteur|]1,Inf[+ %count% points détaillés dans l'espace recruteur"
+  # Rubriques, dans l'ordre du CV de référence (CareerSection, CvEntrySection)
+  career_section:
+    professional: Expériences professionnelles
+    foundation: Expérience fondatrice — Conception, production et terrain
+    field: Parcours terrain
+  section:
+    domains: Domaines
+    profile: Profil
+    search: Ce que je recherche
+    tools: Outils techniques au service des équipes
+    expertise: Expertises métiers
+    software: Logiciels et environnements techniques
+    soft_skill: Savoir-être
+    languages: Langues
+    educations: Formations et certifications
+    diplomas: Diplômes et titres
+    certifications: Certifications et habilitations
+    interest: Centres d'intérêt
+  field_career:
+    show: "Afficher le parcours terrain (%count% postes)"
+  education:
+    year: Année
+    title: Diplôme
+    location: Lieu
+    institution: Organisme
+  certification:
+    valid_until: "valable jusqu'en %date%"
+    expired: "expirée depuis %date%"
+  pdf:
+    profile: Profil
+    contact_title: Coordonnées
+    contact_notice: "Coordonnées sur demande via l'espace recruteur de guillaume-couget.fr."
+    full_cv_footer: "CV complet sur demande : guillaume-couget.fr/espace-recruteur"
+    qr_public: Scanner pour demander le CV complet
+    qr_private: Scanner pour le CV en ligne
+    phone: Téléphone
+    email: E-mail
+    website: Site
+    salary: Prétentions
+
+form:
+  honeypot: Ne pas remplir ce champ
+  privacy_title: Vos données
+  # Mention courte sous chaque formulaire (RGPD : finalité, durée, lien vers la politique)
+  notice:
+    contact: "Vos informations servent uniquement à vous répondre ; elles sont supprimées 12 mois après votre message (adresse IP : 30 jours)."
+    recruiter_request: "Vos informations servent à examiner votre demande d'accès ; elles sont supprimées 30 jours après un refus, sinon 12 mois après votre dernière visite (adresse IP : 30 jours)."
+    login_link: "Votre adresse sert uniquement à vous envoyer un lien de connexion, valable 30 minutes."
+    question: "Votre question rejoint les messages reçus par Guillaume Couget, prévenu par e-mail ; elle est supprimée 12 mois après réception."
+    more: "Détails :"
+  turnstile_failed: La vérification anti-robot a échoué. Merci de réessayer.
+  turnstile_expired: "La vérification anti-robot a expiré ou a déjà servi. Elle se relance : renvoyez le formulaire dans un instant (votre saisie est conservée)."
+  too_many_requests: Trop d'envois depuis votre connexion. Merci de réessayer dans une heure.
+
+contact:
+  title: Me contacter
+  meta_description: "Contacter Guillaume Couget : poste, mission ou question technique."
+  intro: "Un poste, une mission ou une question technique ? Écrivez-moi : je réponds %delay%."
+  submit: Envoyer le message
+  confirmation: "Merci, votre message est bien parti. Je vous réponds %delay%."
+  recruiter_title: Vous recrutez ?
+  recruiter_text: L'espace recruteur donne accès à mes coordonnées directes, à mon CV complet et au détail de mes réalisations.
+  privacy: "Vos informations servent uniquement à vous répondre. Elles ne sont ni revendues ni utilisées pour de la prospection, et sont supprimées 12 mois après votre message ; votre adresse IP, gardée contre les abus, est effacée après 30 jours."
+  field:
+    name: Nom
+    email: E-mail
+    company: Entreprise (facultatif)
+    subject: Objet
+    subject_placeholder: Choisir un objet
+    message: Message
+    consent: J'accepte que mes informations soient utilisées pour répondre à mon message.
+  subject:
+    recruitment: Recrutement
+    technical: Question technique
+    other: Autre
+
+recruiter_area:
+  title: Espace recruteur
+  meta_description: "Espace recruteur de Guillaume Couget : coordonnées directes, CV complet et détails des réalisations, après validation de votre demande."
+  intro: "Accédez à mes coordonnées directes, au CV complet et aux détails de mes réalisations. Je valide chaque demande %delay%. Vous recevez ensuite un lien de connexion sécurisé par e-mail."
+  request_title: Demander un accès
+  request_help: "Quatre champs, dont un facultatif. Réponse %delay%."
+  request_submit: Envoyer ma demande
+  request_confirmation: "Demande reçue. Vous recevrez un e-mail dès sa validation (%delay%)."
+  link_title: Déjà validé ?
+  link_help: Recevez un lien de connexion par e-mail (valable 30 minutes, à usage unique).
+  link_submit: Recevoir un lien de connexion
+  link_confirmation: Si un accès est associé à cette adresse, un lien de connexion vient de vous être envoyé. Pensez à vérifier vos courriers indésirables.
+  # Texte exact demandé (v2.0.3) : aucune promesse d'appel ni de délai plus court
+  interest_confirmation: Merci, Guillaume a été prévenu et vous répondra par e-mail sous 24 h ouvrées.
+  interest_already: "Votre intérêt a déjà été transmis le %date%. Guillaume a été prévenu et vous répondra par e-mail sous 24 h ouvrées."
+  question:
+    title: Poser une question à Guillaume
+    intro: "Une information manque à l'assistant ? Posez votre question : Guillaume vous répond par e-mail."
+    sender: "Envoyé au nom de %name% (%company%), réponse à %email%."
+    field: Votre question
+    help: Entre 10 et 5 000 caractères. Ni votre nom ni votre e-mail ne sont à ressaisir.
+    prefill: "À propos de ma question à l'assistant : « %question% »"
+    submit: Envoyer ma question
+    sent: "Votre question est bien envoyée. Guillaume vous répond %delay%."
+  data:
+    title: Mes données
+    intro: Ce que ce site garde à votre sujet, et comment le supprimer à tout moment.
+    identity: Votre demande
+    kept: Ce qui est conservé
+    kept_text: "Votre demande d'accès (nom, entreprise, e-mail, message), vos connexions et signaux d'intérêt, et vos échanges avec l'assistant. Rien n'est vendu ni utilisé pour de la prospection ; les prestataires techniques sont listés dans la politique de confidentialité."
+    reminders: Rappels d'échéance
+    reminders_on: Reçus (lien « Ne plus recevoir ces rappels » dans chaque rappel)
+    reminders_off: "Refusés depuis le %date%"
+    export_title: Télécharger mes données
+    export_text: "Un fichier JSON lisible, avec tout ce que le site garde à votre sujet : demande, accès, évènements, échanges avec l'assistant."
+    export_submit: Télécharger mes données (JSON)
+    delete_title: Supprimer mes données
+    delete_text: "La suppression est immédiate et définitive : votre demande, votre accès et vos échanges avec l'assistant sont effacés, et vous êtes déconnecté. Vous pourrez refaire une demande plus tard."
+    delete_submit: Supprimer définitivement mes données
+    confirm_title: Supprimer définitivement vos données ?
+    cancel: Annuler
+    deleted: Vos données ont été supprimées et vous êtes déconnecté. Merci de votre visite.
+  content_title: Ce que contient l'espace
+  content:
+    contact: Coordonnées directes (téléphone, e-mail)
+    cv: CV complet en PDF
+    companies: Noms réels des entreprises et détails des réalisations
+    projects: Projets réservés aux recruteurs
+    assistant: Un assistant pour vos questions sur mon parcours
+  privacy: "Vos informations servent uniquement à traiter votre demande. Demande refusée : supprimée après 30 jours ; accès validé : 90 jours, renouvelable, puis données supprimées 12 mois après votre dernière visite. Adresse IP effacée après 30 jours."
+  field:
+    email: E-mail professionnel
+    email_validated: E-mail de votre accès
+    full_name: Nom et prénom
+    company: Entreprise ou cabinet
+    job_title: Votre fonction (facultatif)
+    company_website: Site web de l'entreprise (facultatif)
+    message: Message (facultatif)
+    consent: J'accepte que ces informations soient utilisées pour traiter ma demande d'accès.
+  login_check:
+    title: Connexion à l'espace recruteur
+    text: Cliquez sur le bouton pour vous connecter. Le lien est valable 30 minutes et ne sert qu'une seule fois.
+    submit: Me connecter
+    notice: Ce bouton protège votre lien à usage unique contre les vérifications automatiques des messageries.
+  link_invalid:
+    title: Lien invalide ou expiré
+    text: Ce lien de connexion a expiré, a déjà servi ou ne correspond à aucun accès ouvert. Demandez un nouveau lien ; s'il n'arrive pas, votre accès est peut-être échu.
+  extension:
+    title: Prolonger mon accès
+    text: "Votre accès prend fin le %date%. Confirmez votre demande de prolongation : Guillaume la reçoit tout de suite."
+    submit: Demander la prolongation
+    done: "Merci, votre demande de prolongation est bien enregistrée. Je la valide %delay% ; vous recevrez un e-mail de confirmation."
+  reminders:
+    title: Rappels d'échéance
+    text: "Confirmez pour ne plus recevoir d'e-mail de rappel avant la fin de votre accès. Votre accès lui-même ne change pas."
+    submit: Ne plus recevoir ces rappels
+    done: "C'est noté : vous ne recevrez plus aucun rappel d'échéance, avec effet immédiat. Votre accès reste ouvert jusqu'à sa date de fin."
+  home:
+    title: Espace recruteur
+    welcome: "Bonjour %name%, votre accès est ouvert jusqu'au %date%."
+    welcome_preview: Aperçu de l'espace privé, tel que le voit un recruteur validé.
+    first_visit:
+      title: Bienvenue dans l'espace recruteur
+      intro: "Votre demande est validée. Vous trouverez ici :"
+      contact: mes coordonnées directes (téléphone et e-mail) ;
+      cv: le CV complet, à télécharger en PDF ;
+      career: le parcours détaillé, avec les noms des entreprises ;
+      projects: les projets réservés aux recruteurs ;
+      assistant: un assistant pour poser vos questions sur mon parcours.
+      access: "Votre accès est ouvert jusqu'au %date%. Un e-mail de rappel vous proposera de le prolonger avant cette date."
+      data: Mes données et leur suppression
+      data_text: "Ce que le site garde à votre sujet, et sa suppression à tout moment :"
+      close: Découvrir l'espace
+    preview_notice: "Aperçu en lecture seule, sans session recruteur : les boutons sont inactifs."
+    preview_back: Retour aux recruteurs
+    logout: Se déconnecter
+    back: Espace recruteur
+    contact_title: Coordonnées directes
+    phone: Téléphone
+    email: E-mail
+    salary: Prétentions
+    contact_empty: Coordonnées à compléter.
+    cv_title: CV complet
+    cv_text: Avec mes coordonnées et les noms réels des entreprises.
+    cv_design: CV complet (PDF)
+    cv_ats: Version ATS complète (PDF)
+    interest_title: Mon profil vous intéresse ?
+    interest_text: Un clic me prévient ; je vous réponds par e-mail sous 24 h ouvrées.
+    interest_submit: Je suis intéressé
+    projects_title: Projets réservés aux recruteurs
+    career_title: Parcours complet
+    career_text: Avec les noms réels des entreprises et le détail de chaque poste.
+    rubrics_title: Compétences, formations et centres d'intérêt
+    social_title: Me retrouver en ligne
+    confidential: Les informations de cet espace sont confidentielles et réservées à votre recrutement. Merci de ne pas les diffuser.
+    data_link: Mes données et leur suppression
+
+# Pages légales (lot 8). Hébergeur : l’hébergeur, d'après https://hebergeur.example.com/cgv/ et le pied de page du site
+# l’hébergeur (consultés le 24/10/2026). Éditeur non professionnel : LCEN, article 6, III, 2.
+legal:
+  contact_link: formulaire de contact
+  updated: "Dernière mise à jour : %date%"
+  notice:
+    title: Mentions légales
+    meta_description: "Mentions légales du site de Guillaume Couget : éditeur, hébergeur, propriété intellectuelle et crédits."
+    publisher:
+      title: Éditeur du site
+      text: "Le site guillaume-couget.fr est édité à titre non professionnel par Guillaume Couget, particulier. Directeur de la publication : Guillaume Couget."
+      contact: "Pour le contacter, utilisez le"
+      lcen: "Conformément à l'article 6, III, 2 de la loi n° 2004-575 du 21 juin 2004 pour la confiance dans l'économie numérique (LCEN), les coordonnées personnelles de l'éditeur, qui agit à titre non professionnel, ont été communiquées à l'hébergeur."
+    host:
+      title: Hébergeur
+      phone: "Téléphone : %phone%"
+    ip:
+      title: Propriété intellectuelle
+      text: "Les textes, photographies, illustrations, logos et le code de ce site appartiennent à Guillaume Couget, sauf mention contraire. Toute reproduction, totale ou partielle, sans son autorisation écrite est interdite. Les marques et logos cités appartiennent à leurs propriétaires respectifs."
+    calculator:
+      title: Outils de calcul
+      text: "Les outils de la calculatrice donnent des résultats indicatifs, à vérifier avant toute utilisation. Ils ne remplacent ni une étude réalisée par un professionnel, ni les normes et réglementations en vigueur ; leur utilisation se fait sous la seule responsabilité de l'utilisateur."
+    credits:
+      title: Crédits
+      items:
+        - "Conception et développement : Guillaume Couget, avec le framework Symfony."
+        - "Mise en page : Tailwind CSS et composants Tailkit UI ; icônes Heroicons (licence MIT)."
+        - "Police de caractères : Inter (licence SIL Open Font License)."
+        - "Assistant de l'espace recruteur : modèles d'IA de Mistral AI, intégrés par Guillaume Couget."
+        - "Protection des formulaires contre les robots : Cloudflare Turnstile."
+        - "Photographies et illustrations : tous droits réservés."
+    privacy:
+      title: Données personnelles
+      text: "Le traitement de vos données personnelles est décrit dans la"
+  privacy:
+    title: Politique de confidentialité
+    meta_description: "Politique de confidentialité du site de Guillaume Couget : données collectées, finalités, bases légales, durées de conservation, destinataires, cookies et droits."
+    intro: "Cette page explique quelles données personnelles le site traite, pourquoi, combien de temps et comment exercer vos droits. Le détail de chaque point se déplie sous le résumé."
+    contact_link: formulaire de contact
+    summary:
+      title: En bref
+      items:
+        - "Aucune publicité, aucune mesure d'audience, aucun cookie de suivi."
+        - "Le site ne garde que ce que vous lui envoyez (contact, demande d'accès, assistant) et l'efface automatiquement, au plus tard 12 mois après votre dernière activité."
+        - "Vos données ne sont ni vendues ni utilisées pour de la prospection ; seuls Guillaume Couget et les prestataires techniques listés ci-dessous y ont accès."
+        - "Une demande d'accès n'est jamais refusée par un automate : Guillaume Couget décide lui-même."
+        - "Vous pouvez consulter, télécharger, corriger ou supprimer vos données, et saisir la CNIL."
+      details_hint: "Ouvrez une section pour en afficher le détail."
+    controller:
+      title: Responsable du traitement
+      text: "Guillaume Couget, particulier, éditeur du site guillaume-couget.fr. Pour toute question sur vos données ou pour exercer vos droits, utilisez le"
+    contact:
+      title: Formulaire de contact
+      text: "Données : nom, adresse e-mail, entreprise (facultative), objet, message, date à laquelle vous avez coché la case d'accord, et adresse IP. Finalité : vous répondre ; l'adresse IP sert à limiter les abus. Conservation : 12 mois après la réception du message ; adresse IP effacée après 30 jours."
+    recruiter:
+      title: Espace recruteur
+      access: "Données : adresse e-mail professionnelle, nom, entreprise, fonction et site web de l'entreprise (facultatifs), message (facultatif), date à laquelle vous avez coché la case d'accord, adresse IP, résultat des contrôles anti-abus, dates de connexion et signaux d'intérêt (« Je suis intéressé », téléchargement du CV complet). Finalité : examiner votre demande d'accès et vous donner accès aux informations réservées aux recruteurs."
+      retention: "Conservation : demande refusée supprimée 30 jours après la décision ; accès validé : données supprimées 12 mois après votre dernière activité ; adresse IP effacée après 30 jours. Depuis votre espace (lien « Mes données et leur suppression »), vous pouvez télécharger vos données dans un fichier lisible (JSON) ou les supprimer à tout moment."
+      reminders: "Sept jours avant la fin de votre accès, un e-mail de rappel vous propose de le prolonger. Chaque rappel contient un lien « Ne plus recevoir ces rappels », avec effet immédiat."
+    decision:
+      title: Score et synthèse de l'entreprise (aide à la décision)
+      score: "À l'arrivée d'une demande d'accès, le site calcule un score indicatif sur 100 : serveurs de messagerie du domaine trouvés (+ 30), domaine professionnel, ni jetable ni messagerie grand public (+ 40), entreprise renseignée (+ 20), message joint (+ 10) ; une adresse jetable ou une adresse IP inscrite sur une liste de blocage (Spamhaus) ramène le score à 0."
+      synthesis: "Guillaume Couget peut aussi demander, depuis l'administration, une synthèse de l'entreprise en quatre lignes (type, secteur, activité, crédibilité), générée par Mistral AI à partir du nom de l'entreprise, du domaine de l'adresse e-mail (sauf messagerie grand public) et du message, dont les coordonnées sont retirées. Jamais votre nom ni votre adresse e-mail."
+      human: "Le score et la synthèse ne sont qu'une aide : aucune demande n'est refusée par un traitement automatisé. Chaque refus est décidé par Guillaume Couget lui-même (article 22 du RGPD)."
+      human_manual: "Chaque demande est acceptée ou refusée par Guillaume Couget lui-même."
+      human_auto: "Seule exception, favorable : une demande dont le score atteint %threshold% sur 100 est acceptée automatiquement ; en dessous, Guillaume Couget décide."
+      rights: "Vous pouvez demander le détail du score et de la synthèse de votre demande (ils figurent aussi dans le téléchargement de vos données), faire valoir votre point de vue et obtenir un nouvel examen par Guillaume Couget, en écrivant par le"
+    notifications:
+      title: Notifications reçues par Guillaume Couget
+      text: "Quand une demande d'accès à l'espace recruteur arrive, Guillaume Couget en est prévenu, pour sa seule information et pour décider de la demande, par un e-mail reçu dans sa boîte de recrutement (webmail) et, s'il les a activées, par des messageries : Telegram et Discord, services situés hors de l'Union européenne (voir « Destinataires et transferts »). Ces notifications indiquent votre nom, votre entreprise, votre fonction et le site web de l'entreprise s'ils sont renseignés, le domaine de votre adresse e-mail (par exemple « @entreprise.fr »), le début de votre message (200 caractères) et, le cas échéant, la synthèse de l'entreprise ; jamais votre adresse e-mail complète ni votre adresse IP. Pour un message de contact ou un signal d'intérêt, l'e-mail indique le nom et l'entreprise ; les messageries ne reçoivent alors que le type d'évènement et un lien vers l'administration du site, sans aucune donnée personnelle."
+    emails:
+      title: E-mails du site
+      text: "Les e-mails du site partent toujours d'une adresse d'envoi du domaine guillaume-couget.fr (« noreply »), par les serveurs de l’hébergeur. Ceux que reçoit Guillaume Couget sont classés en deux catégories : « Recrutement » (demandes d'accès, messages du formulaire de contact, questions posées depuis l'assistant, suppressions de données) et « Général » (fonctionnement technique du site, sans donnée personnelle). Ils arrivent dans des boîtes webmail (voir « Destinataires et transferts »). Seuls les recruteurs dont l'accès est validé reçoivent une adresse de réponse ; avant validation, ou après un refus, on écrit à Guillaume Couget par le formulaire de contact du site. Le site garde un historique des envois (date, type d'e-mail, catégorie, adresse du destinataire masquée : seuls la première lettre et le domaine restent, envoyé ou non), jamais leur contenu ; il est supprimé après 90 jours."
+    turnstile:
+      title: Protection contre les robots
+      text: "Les formulaires publics utilisent Cloudflare Turnstile, qui analyse des informations techniques de votre navigateur (adresse IP, empreinte de la connexion chiffrée, navigateur utilisé) pour distinguer un humain d'un robot, sans cookie publicitaire ni pistage d'un site à l'autre. Le site lui-même ne conserve pas ces informations."
+    cookies:
+      title: Cookies et stockage dans le navigateur
+      intro: "Voici la liste complète de ce que le site dépose ou lit dans votre navigateur. Tout est strictement nécessaire au service que vous demandez ou reste dans votre navigateur : aucun consentement n'est requis (article 82 de la loi Informatique et Libertés)."
+      name: Nom
+      kind: Type
+      purpose: Rôle
+      duration: Durée
+      no_tracking: "Ce site n'utilise aucun cookie de mesure d'audience ni de publicité : aucun bandeau de consentement n'est donc nécessaire."
+      rows:
+        session:
+          name: GC_SESSID
+          kind: Cookie (site)
+          purpose: "Session : garde votre connexion à l'espace recruteur et les jetons de sécurité des formulaires. Créé seulement quand vous utilisez un formulaire ou l'espace recruteur."
+          duration: Jusqu'à la fermeture du navigateur
+        csrf:
+          name: __Host-csrf-token_…
+          kind: Cookie (site)
+          purpose: "Jeton anti-falsification d'un formulaire (protection contre les envois frauduleux depuis un autre site)."
+          duration: Effacé dès l'envoi du formulaire
+        turnstile:
+          name: Cloudflare Turnstile
+          kind: Service tiers (formulaires)
+          purpose: "Vérification anti-robot des formulaires publics : Cloudflare peut lire ou déposer les éléments techniques nécessaires à ce seul contrôle."
+          duration: Le temps de la vérification
+        theme:
+          name: theme
+          kind: Stockage local du navigateur
+          purpose: "Votre choix de thème (clair ou sombre). Jamais envoyé au site."
+          duration: Jusqu'à ce que vous l'effaciez
+        calculator:
+          name: calculator.favorites
+          kind: Stockage local du navigateur
+          purpose: "Vos calculatrices favorites. Jamais envoyé au site."
+          duration: Jusqu'à ce que vous l'effaciez
+    hosting:
+      title: Hébergement et journaux techniques
+      text: "Le site est hébergé en France par l’hébergeur (Paris), qui conserve des journaux techniques (adresse IP, pages demandées) pour la sécurité et le bon fonctionnement de ses serveurs. Le site tient aussi son propre journal de sécurité (tentatives de connexion à l'administration, limites d'envoi atteintes : date, adresse IP, navigateur), supprimé après 90 jours."
+      backups: "La base de données est sauvegardée chaque jour chez l’hébergeur, et Guillaume Couget en garde chaque mois une copie chiffrée hors du serveur (seules les trois dernières sont conservées). Ces sauvegardes ne servent qu'à restaurer le site après un incident : une donnée supprimée peut y subsister jusqu'à leur remplacement, au plus trois mois pour les copies mensuelles."
+    recipients:
+      title: Destinataires et transferts hors de l'Union européenne
+      intro: "Vos données ne sont lues que par Guillaume Couget. Elles ne sont ni vendues, ni louées, ni utilisées pour de la prospection. Les prestataires techniques ci-dessous les reçoivent pour leur seul rôle ; les liens mènent à leurs documents officiels (consultés le 29 octobre 2026)."
+      name: Destinataire
+      role: Rôle et données
+      country: Pays
+      framework: Encadrement du transfert
+      source: Source officielle
+      rows:
+        l’hébergeur:
+          name: l’hébergeur SAS
+          role: "Hébergement du site et de sa base de données, envoi des e-mails : toutes les données du site."
+          country: France
+          framework: Aucun transfert hors de l'Union européenne.
+          source: https://hebergeur.example.com/du-rgpd.pdf
+          source_label: Engagements RGPD de l’hébergeur
+        mistral:
+          name: Mistral AI SAS
+          role: "Assistant (questions libres, coordonnées retirées) et synthèse de l'entreprise demandée par Guillaume Couget."
+          country: France, hébergement dans l'Union européenne
+          framework: "Si un sous-traitant ultérieur intervient hors de l'Union : décision d'adéquation ou clauses contractuelles types (accord de traitement des données, § 8)."
+          source: https://legal.mistral.ai/terms/data-processing-addendum
+          source_label: Accord de traitement des données de Mistral AI
+        cloudflare:
+          name: Cloudflare, Inc. (Turnstile)
+          role: "Protection des formulaires : adresse IP et informations techniques du navigateur."
+          country: États-Unis
+          framework: "Cadre de protection des données UE–États-Unis (Data Privacy Framework) ; à défaut, clauses contractuelles types."
+          source: https://www.cloudflare.com/turnstile-privacy-policy/
+          source_label: Politique de confidentialité de Turnstile
+        google:
+          name: Google Ireland Limited (webmail)
+          role: "Boîtes de réception de Guillaume Couget : notifications (nom, entreprise, début du message), messages de contact."
+          country: Irlande ; serveurs possibles hors de l'Union, dont les États-Unis
+          framework: "Data Privacy Framework et clauses contractuelles types."
+          source: https://policies.google.com/privacy/frameworks
+          source_label: Cadres juridiques de Google pour les transferts
+        telegram:
+          name: Telegram Messenger Inc.
+          role: "Notifications de Guillaume Couget, s'il les a activées (voir « Notifications »)."
+          country: "Hors de l'Union européenne ; données des utilisateurs européens stockées aux Pays-Bas selon Telegram"
+          framework: "Clauses contractuelles types entre les sociétés du groupe Telegram ; représentant dans l'Union : EDPO (Bruxelles)."
+          source: https://telegram.org/privacy
+          source_label: Politique de confidentialité de Telegram
+        discord:
+          name: Discord Netherlands BV (Discord Inc.)
+          role: "Notifications de Guillaume Couget, s'il les a activées (voir « Notifications »)."
+          country: États-Unis
+          framework: "Clauses contractuelles types et Data Privacy Framework."
+          source: https://discord.com/privacy
+          source_label: Politique de confidentialité de Discord
+    legal_basis:
+      title: Bases légales et durées de conservation
+      processing: Traitement
+      basis: Base légale
+      duration: Conservation
+      rows:
+        access:
+          processing: Demande d'accès et espace recruteur (dont les rappels d'échéance)
+          basis: "Mesures précontractuelles prises à votre demande : examiner votre demande et vous ouvrir l'accès (art. 6.1.b du RGPD)."
+          duration: "Refus : 30 jours après la décision. Accès validé : 12 mois après votre dernière activité. Adresse IP : 30 jours."
+        contact:
+          processing: Formulaire de contact
+          basis: "Intérêt légitime : répondre aux messages reçus (art. 6.1.f)."
+          duration: "12 mois après la réception. Adresse IP : 30 jours."
+        assistant:
+          processing: Assistant IA (questions libres envoyées à Mistral AI)
+          basis: "Votre consentement, retirable à tout moment (art. 6.1.a). Les questions guidées, sans IA, n'en ont pas besoin."
+          duration: "Journal des échanges : 12 mois. Chez Mistral AI : 30 jours (prévention des abus)."
+        notifications:
+          processing: Notifications à Guillaume Couget (e-mail, Telegram, Discord) et historique des envois
+          basis: "Intérêt légitime : être prévenu à temps pour traiter les demandes (art. 6.1.f)."
+          duration: "Historique des envois (adresse masquée) : 90 jours. E-mails et messages reçus : 12 mois au plus."
+        security:
+          processing: Journal de sécurité et protection contre les robots
+          basis: "Obligation de sécurité (art. 32 du RGPD) et intérêt légitime à protéger le site contre les abus (art. 6.1.f)."
+          duration: "Journal de sécurité : 90 jours. Turnstile : rien n'est gardé par le site."
+    rights:
+      title: Vos droits
+      text: "Vous disposez d'un droit d'accès, de rectification, d'effacement, d'opposition, de limitation et de portabilité de vos données, et vous pouvez retirer votre consentement à tout moment. Pour les exercer, écrivez par le"
+      email: "Si le formulaire est indisponible, écrivez à l'adresse dédiée"
+      delay: "Une réponse vous est apportée dans un délai d'un mois."
+      cnil: "Si vous estimez que vos droits ne sont pas respectés, vous pouvez adresser une réclamation à la Commission nationale de l'informatique et des libertés (CNIL) :"
+      cnil_link: plainte en ligne sur cnil.fr
+    security:
+      title: Sécurité
+      text: "Le site est servi uniquement en HTTPS ; l'administration est protégée par un mot de passe et une clé de sécurité physique ; les données sont supprimées automatiquement à la fin de leur durée de conservation."
+    recruiter_area:
+      title: Espace recruteur
+    assistant:
+      title: Assistant IA de l'espace recruteur (Mistral AI)
+      what: "L'espace recruteur propose un assistant. Les questions guidées sont traitées par le site lui-même, sans IA. Les questions libres, posées après consentement, sont envoyées à Mistral AI (modèles %models%), entreprise française, pour générer la réponse."
+      data: "Seuls sont envoyés : votre question, dont les adresses e-mail et numéros de téléphone sont retirés automatiquement, et le CV de Guillaume Couget tel qu'il figure dans l'espace recruteur (détail des postes, compétences, centres d'intérêt). Jamais ses coordonnées, ses prétentions ni ses notes privées, ni votre nom ou votre adresse e-mail."
+      journal: "Le site conserve le journal de vos échanges avec l'assistant (questions, réponses, modèle utilisé, nombre de jetons) pendant 12 mois, pour le suivi et la sécurité de l'assistant ; il est ensuite supprimé automatiquement. Seul Guillaume Couget le consulte."
+      guided: "Le consentement n'est demandé que pour les questions libres ; les questions guidées restent toujours disponibles sans lui."
+      rights: "Pour consulter ou faire supprimer vos échanges, ou retirer votre consentement, écrivez par le"
+
+# Assistant de l'espace recruteur (lot 7) : questions guidées et chatbot IA (Mistral AI)
+assistant:
+  title: Assistant
+  intro: "Posez vos questions sur le parcours de Guillaume : choisissez une question guidée (réponse immédiate, sans IA), ou posez votre propre question à l'assistant IA. Les réponses s'appuient uniquement sur son CV."
+  history: Vos échanges avec l'assistant
+  you: Vous
+  bot: Assistant
+  question_link: Poser la question à Guillaume
+  guided_title: Questions guidées (sans IA)
+  guided:
+    profile: Qui est Guillaume Couget, en quelques mots ?
+    experience: Quelle est son expérience récente ?
+    skills: Quels sont ses domaines de compétence ?
+    search: Que recherche-t-il, et où ?
+    education: Quelles sont ses formations et ses langues ?
+    contact: Comment le contacter ?
+  free_title: Votre question à l'assistant IA
+  free_disabled: "Les questions libres sont désactivées pour le moment : utilisez les questions guidées ci-dessus ou"
+  question_label: Votre question
+  question_help: "%max% caractères au plus, réponse en 3 phrases. Ne saisissez aucune donnée personnelle (téléphone, e-mail, adresse) : elles seraient retirées avant l'envoi."
+  remaining: "{0} Plus de question libre possible aujourd'hui.|{1} Encore 1 question libre aujourd'hui.|]1,Inf[ Encore %count% questions libres aujourd'hui."
+  submit: Poser ma question
+  contact_link: Écrire à Guillaume par le formulaire de contact
+  source:
+    ai: "Réponse générée par l'IA (%model%, Mistral AI) : à vérifier avec Guillaume."
+    guided: Réponse tirée du CV, sans IA.
+    site: Message de l'assistant.
+  rgpd:
+    title: Avant votre première question
+    text: "Vos questions libres sont envoyées à Mistral AI (modèle Ministral), avec le CV de Guillaume (le détail visible dans cet espace, sans ses coordonnées), pour générer la réponse. Aucune donnée personnelle ne doit y figurer : les e-mails et numéros de téléphone sont retirés automatiquement avant l'envoi."
+    mistral: "Mistral AI s'engage à ne pas utiliser ces échanges pour entraîner ses modèles (option désactivée) ; ils sont conservés 30 jours par Mistral AI pour la prévention des abus, hébergés dans l'Union européenne."
+    journal: "Le site garde le journal de vos échanges (questions, réponses, modèle utilisé) 12 mois, pour le suivi et la sécurité de l'assistant."
+    privacy_link: Politique de confidentialité
+    consent: "J'accepte que mes questions libres soient envoyées à Mistral AI dans ces conditions."
+    reminder: "Questions libres traitées par Mistral AI (Union européenne, conservées 30 jours par Mistral AI ; 12 mois dans le journal du site)."
+  error:
+    consent: Cochez la case de consentement pour poser une question libre ; les questions guidées restent disponibles sans consentement.
+    length: "Votre question doit compter entre 1 et %max% caractères."
+    too_fast: "Vous posez vos questions un peu vite : patientez une minute, ou utilisez les questions guidées."
+  notice:
+    removed: "Pour votre sécurité, des données personnelles ont été retirées de votre question avant l'envoi (%types%)."
+  fallback:
+    disabled: "Les questions libres sont désactivées pour le moment. Les questions guidées restent disponibles, et vous pouvez écrire à Guillaume par le formulaire de contact."
+    busy: "L'assistant IA est très sollicité en ce moment. Essayez une question guidée, réessayez dans quelques instants, ou écrivez à Guillaume par le formulaire de contact."
+    unavailable: "L'assistant IA ne répond pas pour le moment. Les questions guidées restent disponibles, et vous pouvez écrire à Guillaume par le formulaire de contact."
+    recruiter_daily: "Vous avez atteint le nombre de questions libres pour aujourd'hui. Les questions guidées restent disponibles, et vous pouvez écrire à Guillaume par le formulaire de contact."
+    site_daily: "L'assistant IA a atteint sa limite pour aujourd'hui. Les questions guidées restent disponibles, et vous pouvez écrire à Guillaume par le formulaire de contact."
+    monthly_tokens: "L'assistant IA a atteint sa limite pour ce mois-ci. Les questions guidées restent disponibles, et vous pouvez écrire à Guillaume par le formulaire de contact."
+  outcome:
+    guided: Question guidée
+    ai_primary: Modèle principal
+    ai_fallback: Modèle de secours
+    guided_fallback: IA indisponible (assistant guidé)
+    limit_reached: Plafond atteint (assistant guidé)
+    disabled: Questions libres désactivées
+    refused: Refusée (détournement)
+  purpose:
+    chatbot: Chatbot
+    cv_import: Import de CV
+    company_synthesis: Synthèse d'entreprise
+    check: Vérification (app:ai:check)
+    admin_test: Essai admin (Cerveau de l'IA)
+
+recruiter_event:
+  first_login: Première connexion
+  interested: « Je suis intéressé »
+  cv_download: CV complet téléchargé
+
+notification:
+  event:
+    access_request: Demande d'accès recruteur
+    contact: Message de contact ou question d'un recruteur
+    interest: Signal d'intérêt (bouton « Je suis intéressé »)
+    recruiter_activity: Activité d'un recruteur (première connexion, CV téléchargé ; une fois par jour au plus)
+    extension: Demande de prolongation
+    data_deletion: Suppression de données par un recruteur
+    security_alert: Alerte de sécurité
+    failed_email: E-mails en échec
+    task_late: Sauvegarde ou tâche planifiée en retard
+    ai_alert: Assistant IA (plafond atteint, modèle retiré)
+    maintenance: Mode maintenance activé ou désactivé
+    email_cap: Plafond d'e-mails aux personnes non validées atteint
+    turnstile_alert: Anti-robot Turnstile mal configuré (formulaires bloqués)
+  channel:
+    email: E-mail
+    discord: Discord
+    telegram: Telegram
+
+error:
+  title: Une erreur est survenue
+  text: La page n'a pas pu être affichée. Réessayez dans quelques instants.
+  not_found_title: Page introuvable
+  not_found_text: Cette page n'existe pas ou a été déplacée.
+  forbidden_title: Accès refusé
+  forbidden_text: Vous n'avez pas les droits nécessaires pour afficher cette page.
+  code: "Erreur %code%"
+
+admin:
+  meta_title: Administration
+  brand: Administration
+  sidebar_navigation: Navigation de l'administration
+  open_sidebar: Ouvrir la navigation
+  close_sidebar: Fermer la navigation
+  view_site: Voir le site
+  logout: Se déconnecter
+  section:
+    content: Contenu du CV
+    projects: Projets
+    recruiters: Recruteurs et contact
+    calculator: Calculatrice
+    security: Sécurité
+    recruitment: Recrutement
+    settings: Réglages
+  nav:
+    dashboard: Tableau de bord
+    recruiters: Recruteurs
+    contact_messages: Messages
+    assistant: Assistant IA
+    ai_knowledge: Cerveau de l'IA
+    communication: Communication
+    site_settings: Paramètres
+    projects: Projets
+    project_categories: Catégories de projets
+    calculator_tools: Outils
+    fluids: Fluides
+    printers3d: Imprimantes 3D
+    energy_providers: Offres d'électricité
+    refrigerants: Fluides frigorigènes
+    fgas_rules: Règles F-Gas
+    panel_models: Panneaux isolants
+    climatic_profiles: Profils climatiques
+    profile: Profil
+    key_figures: Chiffres clés
+    experiences: Expériences
+    skill_pillars: Piliers de compétences
+    skills: Compétences
+    educations: Formations
+    certifications: Certifications et habilitations
+    languages: Langues
+    cv_entries: Rubriques du CV
+    recruitment_arguments: Pourquoi me recruter
+    security_keys: Clés de sécurité
+    security_events: Journal des connexions
+  communication:
+    intro: "Comment le site communique avec vous et avec les recruteurs : adresses, e-mails, notifications, Discord, Telegram, validation à distance et réseaux sociaux."
+    tabs_label: Onglets de la page Communication
+    help_label: "Aide : %label%"
+    configured: Configuré
+    not_configured: Non configuré
+    coming_soon: À venir
+    back_to_emails: "← Retour à l'onglet E-mails"
+    test_and_security: Test et sécurité
+    test_real: "Envoie un vrai message de test (rien n'est décidé : boutons et liens d'essai)."
+    tab:
+      overview: Vue d'ensemble
+      emails: E-mails
+      notifications: Notifications
+      discord: Discord
+      telegram: Telegram
+      remote: Validation à distance
+      social: Réseaux sociaux
+    category:
+      recruitment: Recrutement
+      general: Général du site
+      calculator: Calculatrice
+    category_events:
+      recruitment: "Reçoit : demandes d'accès, signaux d'intérêt, questions posées depuis l'assistant, suppressions de données par un recruteur, messages du formulaire de contact. Adresse de réponse donnée aux recruteurs validés seulement."
+      general: "Reçoit : résumé hebdomadaire, e-mails en échec, alertes de sécurité, sauvegardes et tâches planifiées, IA (plafond, modèle retiré), maintenance, tout événement technique."
+      calculator: "Recevra les suggestions du futur formulaire rapide de la calculatrice. Vide : repli sur « Général du site »."
+    info:
+      label: Explications
+      purpose: À quoi ça sert
+      audience: Qui le voit
+      todo: Ce qu'il faut régler
+      overview:
+        purpose: "Voir d'un coup d'œil si chaque canal fonctionne : e-mail, Discord, Telegram, validation à distance, délivrabilité."
+        audience: Vous seul (administration).
+        todo: "Tout doit être vert avant la mise en ligne ; un point en rouge renvoie à l'onglet qui le corrige."
+      emails:
+        purpose: "Choisir où arrivent les e-mails du site (trois adresses), vérifier que l'envoi fonctionne et que le domaine est bien authentifié (SPF, DKIM, DMARC)."
+        audience: "Les adresses de réception ne sont visibles que par vous. Seuls les recruteurs validés voient l'adresse « Recrutement », comme adresse de réponse."
+        todo: "Renseigner vos deux webmail (Recrutement, Général), envoyer un e-mail de test à chacune. Le mot de passe SMTP reste dans .env.local sur le serveur : il n'est ni affiché ni modifiable ici."
+      email_text:
+        purpose: "Adapter l'objet, la phrase d'introduction et la signature de cet e-mail, sans toucher à sa structure ni aux liens."
+        audience: Le destinataire de l'e-mail (recruteur, ou vous pour les notifications).
+        todo: "Texte simple seulement. Variables permises : {nom}, {entreprise}, {delai}. Vérifiez l'aperçu avant d'enregistrer."
+      notifications:
+        purpose: "Choisir, pour chaque événement, les canaux qui vous préviennent : e-mail, Discord, Telegram."
+        audience: "Vous seul. L'e-mail part à l'adresse de la catégorie de l'événement."
+        todo: "Cocher au moins un canal pour les événements importants ; un canal non configuré est ignoré."
+      discord:
+        purpose: "Recevoir les notifications dans un salon Discord, avec des boutons pour décider d'une demande."
+        audience: "Vous seul (salon privé). Discord est un service hors de l'Union européenne."
+        todo: "Les clés (webhook, jeton du bot, clé publique, salon, compte) restent dans .env.local : cette page dit seulement si elles sont renseignées."
+      telegram:
+        purpose: "Recevoir les notifications sur Telegram, avec des boutons pour décider d'une demande."
+        audience: "Vous seul (conversation privée avec le bot). Telegram est un service hors de l'Union européenne."
+        todo: "Le jeton du bot, la conversation et le secret du webhook restent dans .env.local : cette page dit seulement s'ils sont renseignés."
+      social:
+        purpose: "Afficher vos liens vers les réseaux sociaux (simples liens, icône locale, aucun traceur) là où vous le choisissez."
+        audience: "Les visiteurs (pied de page, page de maintenance), les recruteurs validés (espace recruteur) et les moteurs de recherche (données structurées)."
+        todo: "Un nouveau lien est masqué jusqu'à son activation ; cochez ensuite où l'afficher. Adresse https du domaine du réseau."
+      remote:
+        purpose: "Accepter ou refuser une demande d'accès depuis Telegram ou Discord, avec un code PIN."
+        audience: Vous seul ; chaque action est notée dans le journal de sécurité.
+        todo: "Choisir un code PIN propre au site, puis activer l'interrupteur."
+    overview:
+      email: E-mail
+      fictitious: Adresses fictives
+      deliverability: Délivrabilité
+      discord: Discord
+      telegram: Telegram (et relève en local)
+      remote: Validation à distance
+      open: Ouvrir l'onglet
+      email_ok: Adresses renseignées, aucun e-mail en échec.
+      email_missing: Adresse « Recrutement » ou « Général du site » manquante ou fictive.
+      email_failed: "{1}1 e-mail en échec.|]1,Inf[%count% e-mails en échec."
+      fictitious_none: Aucune adresse fictive.
+      fictitious_some: "{1}1 adresse fictive (refusée en production).|]1,Inf[%count% adresses fictives (refusées en production)."
+      deliverability_ok: SPF, DKIM et DMARC valides.
+      deliverability_problem: Un enregistrement DNS est à corriger.
+      discord_app: Application Discord (boutons dans Discord).
+      discord_webhook: Webhook (boutons-liens).
+      telegram_poll_active: Configuré, relève active (local).
+      telegram_poll_stopped: Configuré, relève arrêtée (local).
+      remote_on: Activée.
+      remote_off: Désactivée.
+    field:
+      recruitment_email: Adresse « Recrutement »
+      general_email: Adresse « Général du site »
+      calculator_email: Adresse « Calculatrice »
+      from_name: Nom d'expéditeur affiché
+      dkim_selector: Sélecteur DKIM
+      unvalidated_cap: E-mails par jour aux personnes non validées
+      subject: Objet
+      intro: Phrase d'introduction
+      signature: Signature
+      remote_pin_repeat: Confirmer le code PIN
+    help:
+      recruitment_email: "Votre webmail recrutement. Vide : adresse de notification du compte admin."
+      general_email: "Votre webmail général. Vide : adresse de notification du compte admin."
+      calculator_email: "Fonction à venir. Vide : repli sur « Général du site »."
+      from_name: "Défaut : « Guillaume Couget – Espace recruteur »."
+      from_name_more: "Le nom affiché à côté de l'expéditeur noreply@. L'adresse d'envoi, elle, ne change pas : le site n'envoie jamais « de la part de » un webmail."
+      dkim_selector: "l’hébergeur : « default »."
+      unvalidated_cap: "Accusés de réception, « demande déjà en cours » et refus. Défaut : 30."
+      unvalidated_cap_more: "Au-delà, ces e-mails ne partent plus jusqu'au lendemain ; les demandes restent enregistrées et vous êtes prévenu (« Général du site »). Protège la réputation du domaine si quelqu'un remplit le formulaire avec les adresses d'autres personnes. Les e-mails aux recruteurs validés et vos notifications ne sont jamais bloqués."
+      dkim_selector_more: "Nom de la clé DKIM publiée dans le DNS (default._domainkey.<domaine> chez l’hébergeur). Ne le changez que si vous publiez une autre clé."
+      subject: "Pour les notifications : préfixe placé devant le titre de l'événement. Pour le résumé hebdomadaire : suivi de la date."
+      intro: "Placée après « Bonjour <nom>, » pour les recruteurs. Les sauts de ligne sont gardés."
+      signature: Sur une ou plusieurs lignes.
+      category: "L'e-mail de cet événement part à l'adresse de sa catégorie (onglet E-mails)."
+      discord_webhook: "Adresse du webhook du salon (DISCORD_WEBHOOK_URL, .env.local) : repli si l'application n'est pas configurée."
+      telegram_token: "Jeton du bot donné par BotFather (TELEGRAM_BOT_TOKEN, .env.local)."
+      telegram_chat_id: "Identifiant de votre conversation avec le bot (TELEGRAM_CHAT_ID, .env.local)."
+      telegram_secret: "Secret vérifié à chaque appel du webhook (TELEGRAM_WEBHOOK_SECRET, .env.local)."
+      telegram_poll: "En local seulement : app:telegram:poll relève les appuis sur les boutons, faute de webhook."
+    address_none: Aucune adresse
+    address_fictitious: "Adresse fictive (example.test, example.com, localhost…) : refusée en production."
+    address_fictitious_badge: "Adresse fictive : %address%"
+    address_source:
+      saved: "Utilisée : %address%"
+      account: "Utilisée : %address% (compte admin)"
+      general: "Utilisée : %address% (repli sur Général du site)"
+      none: Aucune adresse
+    from_name_invalid: "Le nom d'expéditeur ne doit contenir ni <, ni >, ni guillemets, ni saut de ligne."
+    dkim_selector_invalid: "Sélecteur DKIM invalide (lettres, chiffres et tirets)."
+    pin_mismatch: Les deux codes PIN ne correspondent pas.
+    variables: "Variables permises : %variables%. Toute autre accolade est refusée."
+    text_modified: Modifié
+    text_original: Texte d'origine
+    text_no_reply: "Sans adresse de réponse : l'e-mail renvoie vers le formulaire de contact du site."
+    text_reply: "Adresse de réponse : « Recrutement » (recruteur validé)."
+    text_form: Textes
+    preview_button: Aperçu
+    preview: Aperçu
+    preview_subject: "Objet :"
+    preview_help: "Données d'exemple (Camille Exemple, Entreprise Exemple) ; rien n'est envoyé."
+    preview_html: Version HTML
+    preview_html_frame: Aperçu de la version HTML de l'e-mail
+    preview_text: Version texte
+    preview_none: "Corrigez les erreurs, puis cliquez sur « Aperçu »."
+    reset: Rétablir le texte d'origine
+    confirm_reset_title: Rétablir le texte d'origine ?
+    confirm_reset_text: "L'objet, l'introduction et la signature reprennent leur texte d'origine. L'historique garde la trace de ce retour."
+    history: Historique des modifications
+    history_empty: Aucune modification.
+    history_saved: Textes enregistrés
+    history_reset: Texte d'origine rétabli
+    text_error:
+      subject_required: L'objet est obligatoire.
+      too_long: Texte trop long.
+      html: "Texte simple seulement : aucune balise (< >)."
+      placeholder: "Accolade non permise. Variables permises : %variables%."
+      subject_line: L'objet tient sur une seule ligne.
+    email_type:
+      request_received: Accusé de réception
+      request_pending: Demande déjà en cours
+      login_link: Lien de connexion
+      approval: Bienvenue (accès validé)
+      renewal: Accès prolongé
+      refusal: Refus
+      expiry_reminder: Accès bientôt expiré
+      notification: Notifications admin
+      dashboard_summary: Résumé hebdomadaire
+      test: E-mail de test
+    kind:
+      recruiter_request_received: Accusé de réception
+      recruiter_request_pending: Demande déjà en cours
+      recruiter_login_link: Lien de connexion
+      recruiter_approval: Bienvenue (accès validé)
+      recruiter_renewal: Accès prolongé
+      recruiter_refusal: Refus
+      recruiter_expiry_reminder: Accès bientôt expiré
+      notification: Notification admin
+      dashboard_summary: Résumé hebdomadaire
+      test: E-mail de test
+      direct: Renvoi
+    emails:
+      addresses: Adresses de réception
+      addresses_help: "Chaque événement part à l'adresse de sa catégorie. Les adresses fictives sont refusées en production."
+      sender: Expéditeur (lecture seule)
+      sender_address: Adresse d'envoi
+      sender_name: Nom affiché
+      smtp_host: Serveur SMTP
+      smtp_port: Port
+      smtp_password: Mot de passe SMTP
+      sender_help: "Le site envoie toujours depuis noreply@, jamais « de la part de » un webmail. Serveur, port et mot de passe restent dans .env.local (MAILER_DSN) : le mot de passe n'est jamais affiché."
+      panneau: Adresses gérées dans le panneau de l’hébergeur (lecture seule)
+      panneau_help: "Boîtes et redirections à créer dans le panneau de l’hébergeur (E-mail › Redirecteurs) ; le site ne peut pas les modifier."
+      panneau_noreply: "Boîte d'envoi du site. Redirection à créer dans le panneau de l’hébergeur vers votre webmail général, pour voir les retours d'erreur (adresse inconnue, boîte pleine)."
+      panneau_rgpd: "Adresse des demandes RGPD (déjà créée), citée dans la politique de confidentialité."
+      panneau_dmarc: "Reçoit les rapports DMARC. Redirection à créer dans le panneau de l’hébergeur vers votre webmail général."
+      health: Santé de l'envoi
+      last_success: "Dernier envoi réussi : %date%"
+      no_success: Aucun envoi réussi noté pour l'instant.
+      test_title: E-mail de test
+      test_help: "Envoie un e-mail de test à l'adresse de chaque catégorie. En local, il arrive dans Mailpit (http://localhost:8025)."
+      test_button: "Tester « %category% »"
+      contents: Contenu des e-mails
+      contents_help: "Objet, introduction et signature de chaque e-mail, avec aperçu avant d'enregistrer."
+      log: Historique des envois
+      log_help: "Les 50 derniers envois, conservés 90 jours. Destinataire masqué ; jamais le contenu ni les liens de connexion."
+      log_empty: Aucun envoi noté.
+      log_date: Date
+      log_type: Type
+      log_category: Catégorie
+      log_recipient: Destinataire
+      log_status: Statut
+      log_sent: Envoyé
+      log_failed: Échec
+    deliverability:
+      title: Délivrabilité
+      help: "Vérifie dans le DNS que le domaine %domain% autorise l'envoi par l’hébergeur (SPF), signe les e-mails (DKIM) et publie une politique (DMARC). Résultat gardé 1 heure."
+      not_applicable: "Non applicable en local : vérification faite sur le site en ligne."
+      valid: Valide
+      invalid: À corriger
+      host: "Nom interrogé :"
+      found: "Trouvé :"
+      nothing: rien
+      checked_at: "Vérifié le %date%."
+      check_now: Vérifier maintenant
+      source: "Règles de l’hébergeur (SPF, sélecteur DKIM « default », DMARC) :"
+      spf: SPF
+      dkim: DKIM
+      dmarc: DMARC
+      spf_explain: "Liste des serveurs autorisés à envoyer pour le domaine. Un seul enregistrement, avec include:spf.hebergeur.example.com pour l’hébergeur."
+      dkim_explain: "Signature des e-mails par une clé publiée dans le DNS : prouve que l'e-mail vient bien du domaine."
+      dmarc_explain: "Dit aux messageries quoi faire d'un e-mail mal authentifié et où envoyer les rapports."
+      spf_fix: "panneau de l’hébergeur › E-mail › Email Deliverability : réparer le SPF de %domain% (un seul enregistrement « v=spf1 … include:spf.hebergeur.example.com … »)."
+      dkim_fix: "panneau de l’hébergeur › E-mail › Email Deliverability : activer DKIM (enregistrement %host%)."
+      dmarc_fix: "Éditeur de zone DNS : ajouter un TXT %host% = « v=DMARC1; p=none; rua=mailto:dmarc@%domain% »."
+    notifications:
+      channels: Canaux
+      table: Événements et canaux
+      event: Événement
+      category: Catégorie (adresse)
+    discord:
+      state: État de Discord
+      webhook: Webhook du salon
+      application_id: Identifiant de l'application
+      public_key: Clé publique
+      bot_token: Jeton du bot
+      channel_id: Salon des notifications
+      admin_user_id: Votre compte Discord
+      mode: "Mode utilisé :"
+      mode_app: Boutons dans Discord (application).
+      mode_webhook: "Boutons-liens (repli : webhook seul)."
+      mode_none: Aucun (Discord non configuré).
+      two_factor: "Activez la validation en deux étapes sur votre compte Discord : quiconque y accède peut décider d'une demande (avec votre code PIN)."
+    telegram:
+      state: État de Telegram
+      token: Jeton du bot
+      chat_id: Conversation
+      secret: Secret du webhook
+      poll: Relève (développement)
+      check_webhook: Vérifier le webhook déclaré
+      check_webhook_help: "Demande à Telegram si un webhook est déclaré (lecture seule, aucun message envoyé)."
+      two_factor: "Activez la validation en deux étapes sur votre compte Telegram (Réglages › Confidentialité › Validation en deux étapes)."
+    remote:
+      settings: Réglages
+      discord_ready: Discord prêt (application ou liens).
+      discord_missing: Discord non prêt (application ou code PIN manquant).
+      confirm_title: Enregistrer la validation à distance ?
+      confirm_text: "Si vous avez saisi un nouveau code PIN, il remplace l'ancien tout de suite."
+      security: Rappel de sécurité
+      security_text: "Choisissez un code PIN propre au site : jamais celui d'une carte bancaire ni d'un téléphone. Activez la validation en deux étapes sur webmail, Telegram et Discord : ces comptes reçoivent les boutons de décision."
+      journal: Dernières actions à distance
+      journal_empty: Aucune action à distance.
+      action: Action ou motif
+      channel: Canal
+      result: Résultat
+      done: Effectuée
+      rejected: Refusée
+      action_approve: Accepter
+      action_refuse: Refuser
+      action_pin_invalid: Code PIN faux
+      action_pin_blocked: Code PIN faux, jeton bloqué
+      action_foreign_chat: Autre conversation
+      action_foreign_user: Autre compte
+      action_unknown: Jeton inconnu
+      action_csrf: Formulaire expiré
+      action_signature_invalid: Signature invalide
+      action_app_not_configured: Application non configurée
+    flash:
+      addresses_saved: Adresses enregistrées.
+      text_saved: Textes de l'e-mail enregistrés.
+      text_reset: Texte d'origine rétabli.
+      notifications_saved: Canaux des notifications enregistrés.
+      remote_saved: Validation à distance enregistrée.
+      pin_changed: "Validation à distance enregistrée ; nouveau code PIN en place."
+      test_sent: "E-mail de test « %category% » envoyé à %address%. En local, il est dans Mailpit (http://localhost:8025)."
+      test_failed: "Échec de l'e-mail de test « %category% » : %error%"
+      test_no_address: "Aucune adresse pour « %category% » : renseignez-la ci-dessous."
+      deliverability_ok: "Délivrabilité vérifiée : SPF, DKIM et DMARC valides."
+      deliverability_problem: "Délivrabilité vérifiée : un enregistrement est à corriger (voir ci-dessous)."
+      deliverability_na: Délivrabilité non applicable en local.
+      telegram_no_token: Jeton du bot Telegram absent de .env.local.
+      telegram_no_webhook: "Aucun webhook déclaré chez Telegram (normal en local : relève app:telegram:poll)."
+      telegram_webhook: "Webhook déclaré chez Telegram vers %host%."
+      telegram_error: "Telegram n'a pas répondu : %error%"
+  social_link:
+    title: Réseaux sociaux
+    singular: lien
+    intro: Liens vers vos réseaux sociaux.
+    add: Ajouter un lien
+    empty: Aucun lien pour l'instant.
+    new_title: Nouveau lien
+    edit_title: Modifier le lien
+    visible: Visible
+    hidden: Masqué
+    show: Afficher
+    hide: Masquer
+    where: "Où : "
+    where_legend: Où l'afficher (si le lien est visible)
+    nowhere: nulle part
+    reminder_title: À savoir
+    reminder_chat: "Discord et Telegram : mettez un lien d'invitation public (serveur, canal), jamais votre compte personnel ni les bots de notification du site."
+    reminder_personal: "Vos réseaux personnels peuvent rester hors de l'espace recruteur : décochez « Espace recruteur »."
+    reminder_widgets: "Simples liens seulement : jamais de badge, de widget ni de bouton officiel des réseaux (ils déposent des traceurs)."
+    field:
+      network: Réseau
+      label: Nom affiché
+      url: Adresse
+      visible: Visible sur le site
+    help:
+      label: "Obligatoire pour « Autre » ; sinon facultatif (nom du réseau par défaut)."
+      url: "https seulement, sur le domaine du réseau (ex. https://www.linkedin.com/in/…)."
+      visible: "Décoché : le lien n'apparaît nulle part."
+      structured_data: "Lien « sameAs » lu par les moteurs de recherche (profil officiel de la personne)."
+    place:
+      footer: Pied de page
+      maintenance: Page de maintenance
+      recruiter: Espace recruteur
+      structured_data: Données structurées (sameAs)
+    flash:
+      shown: Lien affiché.
+      hidden: Lien masqué.
+  login:
+    title: Connexion à l'administration
+    username: Identifiant
+    password: Mot de passe
+    submit: Se connecter
+    second_step_notice: Après le mot de passe, votre clé de sécurité YubiKey vous sera demandée.
+  session:
+    expired: Votre session a expiré (1 heure d'inactivité ou 8 heures de connexion). Reconnectez-vous.
+  mail:
+    title: E-mails du site
+    address: "Notifications et e-mail de test envoyés à : %address%."
+    no_address: "Aucune adresse de notification : les notifications par e-mail sont désactivées."
+    change_address: Modifier l'adresse
+    send_test: Envoyer un e-mail de test
+    resend: Renvoyer
+    confirm_resend_title: "{0}Renvoyer les e-mails non envoyés ?|{1}Renvoyer l'e-mail non envoyé ?|]1,Inf[Renvoyer les %count% e-mails non envoyés ?"
+    confirm_resend_text: Chaque e-mail part vers son destinataire d'origine. Ceux d'un recruteur supprimé ou dont l'accès est fermé sont abandonnés.
+    failed_alert: "{1}1 e-mail n'a pas pu être envoyé (serveur d'envoi injoignable) : il est gardé pour un renvoi.|]1,Inf[%count% e-mails n'ont pas pu être envoyés (serveur d'envoi injoignable) : ils sont gardés pour un renvoi."
+    flash:
+      resent: "Renvoi : %sent% parti(s), %failed% encore en échec, %dropped% abandonné(s) (recruteur supprimé ou accès fermé)."
+      no_address: "Aucune adresse de notification : renseignez-la dans Paramètres › Notifications."
+      test_sent: "E-mail de test envoyé à %address%. En local, il est dans Mailpit (http://localhost:8025)."
+      test_failed: "Échec de l'envoi de l'e-mail de test : %error%"
+  email_cap:
+    notification:
+      cap: Plafond quotidien
+      effect: Effet
+      effect_text: "Accusés de réception, « demande déjà en cours » et refus suspendus jusqu'à demain ; les demandes restent enregistrées dans l'admin."
+  dashboard:
+    backup_reminder:
+      never: "Aucune copie de la sauvegarde n'a encore été téléchargée hors de l’hébergeur."
+      late: "Dernière copie de la sauvegarde téléchargée hors de l’hébergeur : %date% (plus de 30 jours)."
+      how: "Téléchargez la dernière sauvegarde (panneau de l’hébergeur › Gestionnaire de fichiers, dossier backups, ou JetBackup) et rangez-la hors du serveur."
+      submit: J'ai téléchargé une copie
+      done: "Copie notée : prochain rappel dans 30 jours."
+    title: Tableau de bord
+    welcome: Gérez ici le contenu du CV, les demandes recruteurs et les messages.
+    pending_recruiters: Demandes d'accès recruteur en attente
+    new_messages: Messages de contact non lus
+    content: Contenu du CV
+    version: "Version %version%"
+    computed_at: "Indicateurs du %date% (actualisés toutes les minutes au plus)."
+    refresh: Actualiser
+    refreshed: Indicateurs actualisés.
+    attention: "{1}(1 point à traiter)|]1,Inf[(%count% points à traiter)"
+    show_all: "{1}Voir 1 autre point|]1,Inf[Voir les %count% autres points"
+    blocking: Bloque le TOP
+    status:
+      ok: OK
+      warning: À surveiller
+      problem: Problème
+      not_applicable: Non applicable en local
+    tile:
+      recruiters: Recruteurs
+      messages: Messages
+      content: Contenu à compléter
+      ai: Assistant IA
+      ai_knowledge: Cerveau de l'IA
+      communication: Communication
+      security: Sécurité
+      turnstile: Anti-robot (Turnstile)
+      tasks: Sauvegardes et tâches planifiées
+      site: Site
+      calculator: Calculatrice
+    value:
+      pending: demande(s) en attente
+      unread: message(s) non lu(s)
+      to_complete: point(s) à compléter
+      ai_state: état de l'assistant
+      unanswered: question(s) sans réponse à traiter
+      blocking: point(s) bloquant(s) pour le TOP
+      not_applicable: aucune tâche planifiée en local
+      failed_emails: e-mail(s) non envoyé(s)
+      login_failures: échec(s) de connexion à l'admin sur 7 jours
+      turnstile_config_errors: erreur(s) de configuration sur 24 h
+      last_backup: dernière sauvegarde
+      version: version en ligne
+      public_tools: outil(s) publié(s)
+    line:
+      recruiters_total: "Recruteurs enregistrés : %count%"
+      recruiters_active: "Accès ouverts : %count%"
+      recruiters_expiring: "Accès qui se ferment dans les 7 jours : %count%"
+      recruiters_refused: "Demandes refusées : %count%"
+      pending_oldest: "Plus ancienne demande : %hours% h ouvrées d'attente (délai promis : %max% h ouvrées)"
+      pending_late: "Délai dépassé : la plus ancienne demande attend depuis %hours% h ouvrées (délai promis : %max% h ouvrées)"
+      content_blocking: "Bloquant pour le TOP : %count%"
+      content_optional: "Facultatif : %count% (à compléter après la mise en ligne, sans alerte)"
+      tasks_local: "Environnement %env% : les tâches cron ne tournent que sur le serveur. Surveillance active en production (alerte si la sauvegarde a plus de 48 h)."
+      ai_models: "Modèles : %primary% (principal), %fallback% (secours)"
+      ai_models_checked: "Modèles vérifiés chez Mistral AI le %date%"
+      ai_models_never: Modèles jamais vérifiés par la tâche quotidienne (app:ai:refresh-models)
+      ai_today: "Aujourd'hui : %percent% % du plafond du site (%count% / %limit% questions libres)"
+      ai_month: "Ce mois-ci : %percent% % du plafond mensuel de jetons"
+      ai_suspicious: "Échanges suspects sur 7 jours : %count%"
+      ai_model_alert:
+        missing: "Modèle %role% %model% absent de la liste de Mistral AI (retiré ?)"
+        archived: "Modèle %role% %model% archivé chez Mistral AI"
+        unchecked: "Modèle %role% %model% non vérifié (liste illisible ou clé absente)"
+        not_configured: "Modèle %role% non configuré"
+      mail_last_sent: "Dernier e-mail parti le %date%"
+      blocked_answers: "Réponses bloquées sur 7 jours (élément absent du site) : %count%"
+      knowledge_size: "Fiches actives : ≈ %total% jetons sur %limit%"
+      mail_never: Aucun e-mail parti depuis la mise en place du suivi
+      messages_awaiting_reply: "Lus, en attente de réponse : %count%"
+      addresses_ok: Adresses « Recrutement » et « Général du site » renseignées
+      addresses_problem: "{1}1 adresse de réception manquante ou fictive|]1,Inf[%count% adresses de réception manquantes ou fictives"
+      deliverability_ok: Délivrabilité (SPF, DKIM, DMARC) valide
+      deliverability_problem: Délivrabilité à corriger (SPF, DKIM ou DMARC)
+      deliverability_unknown: Délivrabilité non vérifiée depuis 1 h (ou non applicable en local)
+      channels_missing: "Non configuré : %channels%"
+      email_cap_reached: "Plafond atteint aujourd'hui (%cap% e-mails aux personnes non validées) : %count% e-mail(s) suspendu(s) jusqu'à demain"
+      email_cap_today: "E-mails aux personnes non validées aujourd'hui : %count% / %cap%"
+      rate_limited: "Limites de débit atteintes sur 7 jours : %count%"
+      turnstile_week: "Erreurs de configuration sur 7 jours : %count%"
+      turnstile_last: "Dernière : %date% (%code%)"
+      turnstile_last_none: Aucune erreur de configuration relevée
+      turnstile_help: "Clé secrète refusée, clé de site invalide ou nom d'hôte non autorisé : vérifier le widget chez Cloudflare (Turnstile) et .env.local, sans jamais supprimer le widget"
+      remote_validation: "Validation à distance sur 7 jours : %done% décision(s), %rejected% refus de sécurité"
+      remote_validation_off: "Validation à distance désactivée (refus de sécurité sur 7 jours : %rejected%)"
+      last_login: "Dernière connexion à l'admin : %date%"
+      last_login_none: Aucune connexion complète gardée au journal
+      security_keys: "{0}Aucune clé YubiKey enregistrée|{1}1 clé YubiKey enregistrée (2 conseillées)|]1,Inf[%count% clés YubiKey enregistrées"
+      backup: "Sauvegarde du %date% (%size%)"
+      backup_failed: "Échec de la sauvegarde du %date%"
+      backup_never: Aucune sauvegarde notée (app:db:backup)
+      task: "%command% : %date%"
+      task_never: "%command% : jamais lancée"
+      environment: "Environnement : %env%"
+      maintenance_on: Mode maintenance activé (site public en 503)
+      maintenance_off: Mode maintenance désactivé
+      noindex_on: Exclu des moteurs de recherche (SITE_NOINDEX)
+      noindex_off: Ouvert aux moteurs de recherche
+      php: "PHP %version%"
+      unverified_references: "Normes à vérifier : %count%"
+    link:
+      recruiters: Voir les demandes
+      messages: Voir les messages
+      content: Compléter le profil
+      ai: Détail de l'assistant
+      ai_knowledge: Questions sans réponse
+      communication: Ouvrir Communication
+      security: Journal des connexions
+      tasks: Vérifier à nouveau
+      site: Journal des versions
+      calculator: Outils de la calculatrice
+    recap:
+      title: Depuis votre dernière visite
+      intro: "Ces indicateurs ont changé :"
+      close: Voir le tableau de bord
+    weekly:
+      subject: "Résumé hebdomadaire du site — %date%"
+      intro: "Résumé de la semaine (chiffres seulement, aucune donnée personnelle)."
+      outro: "Détail et actions : tableau de bord de l'administration."
+      computed_at: "Indicateurs calculés le %date%."
+
+  second_factor:
+    back: Retour à l'étape de vérification
+    enrollment_required: L'enregistrement d'une clé exige un lien d'enrôlement valide (créé par SSH) ou une clé déjà vérifiée.
+    verify:
+      title: Clé de sécurité
+      text: Branchez ou approchez votre YubiKey, puis touchez-la quand le navigateur le demande.
+      button: Vérifier ma clé
+    no_key:
+      title: Aucune clé enregistrée
+      text: "Ce compte n'a pas encore de clé YubiKey. Pour des raisons de sécurité, le mot de passe seul ne donne accès à rien. Créez un lien d'enrôlement par SSH avec la commande ci-dessous, puis ouvrez-le dans ce navigateur :"
+    enroll:
+      title_first: Enregistrer votre clé de sécurité
+      title_backup: Ajouter une clé de secours
+      text: Choisissez un nom pour reconnaître cette clé, puis touchez la YubiKey quand le navigateur le demande.
+      label: Nom de la clé
+      default_label_first: YubiKey principale
+      default_label_backup: YubiKey de secours
+      button: Enregistrer la clé
+    enrollment_invalid:
+      title: Lien d'enrôlement refusé
+      text: "Ce lien n'est pas valable : il a expiré (30 minutes), il a déjà servi, ou il concerne un autre compte. Créez-en un nouveau par SSH :"
+    error:
+      csrf: La page a expiré. Rechargez-la puis réessayez.
+      too_many_attempts: Trop de tentatives. Patientez quelques minutes avant de réessayer.
+      verification_failed: La vérification de la clé a échoué. Réessayez avec une clé enregistrée sur ce compte.
+      no_key: Aucune clé n'est enregistrée pour ce compte.
+    js:
+      preparing: Préparation…
+      touch_key: Touchez votre YubiKey…
+      success: Clé vérifiée. Redirection…
+      cancelled: Opération annulée ou délai dépassé. Vous pouvez réessayer.
+      error: Une erreur est survenue. Réessayez.
+      ip_host: "WebAuthn refuse les adresses IP : ouvrez le site sur https://localhost:8000."
+
+  security_key:
+    title: Clés de sécurité
+    intro: Clés YubiKey qui permettent de se connecter à l'administration.
+    add: Ajouter une clé de secours
+    back: Retour aux clés de sécurité
+    added: La clé a été enregistrée.
+    removed: La clé a été retirée.
+    cannot_remove_last: La dernière clé ne peut pas être retirée. Pour repartir de zéro, utilisez app:admin:reset-webauthn par SSH.
+    backup_advice: "Conseil : enregistrez une deuxième clé et gardez-la dans un autre lieu. En cas de perte de la première, elle vous évitera la procédure de secours par SSH."
+    created_at: Ajoutée le
+    last_used_at: Dernière utilisation
+    never_used: jamais
+    delete_confirm: "Retirer la clé « %name% » ? Elle ne pourra plus servir à se connecter."
+    trusted_devices:
+      title: Appareils de confiance
+      intro: "Après chaque connexion complète (mot de passe et YubiKey), l'appareil reçoit un cookie de 180 jours : sur cet appareil seulement, le cœur du pied de page du site devient un lien vers l'administration. Ce cookie ne donne aucun accès ; la déconnexion ne le supprime pas."
+      revoke: Révoquer tous les appareils de confiance
+      revoke_confirm: "Révoquer tous les appareils de confiance ? Le cœur du pied de page redeviendra un simple caractère sur tous les appareils, y compris celui-ci, jusqu'à la prochaine connexion."
+      revoked: "Tous les appareils de confiance ont été révoqués."
+
+  security_event:
+    title: Journal des connexions
+    intro: "%count% évènement(s) enregistré(s). Les lignes de plus de 90 jours sont supprimées automatiquement."
+    pagination: Pages du journal
+    column:
+      date: Date
+      type: Évènement
+      username: Identifiant
+      ip: Adresse IP
+      user_agent: Navigateur
+
+  form:
+    one_per_line: Un élément par ligne.
+
+  crud:
+    table_region: Tableau (défilement horizontal possible)
+    add: Ajouter
+    edit: Modifier
+    delete: Supprimer
+    save: Enregistrer
+    cancel: Annuler
+    actions: Actions
+    yes: Oui
+    no: Non
+    empty: Aucun élément pour l'instant.
+    move_up: Monter
+    move_down: Descendre
+    previous: Précédent
+    next: Suivant
+    page_of: "Page %page% sur %count%"
+    new_title: "Ajouter : %name%"
+    edit_title: "Modifier : %name%"
+    delete_confirm: "Supprimer « %name% » ? Cette action est définitive."
+    created: L'élément a été ajouté.
+    updated: Les modifications ont été enregistrées.
+    deleted: L'élément a été supprimé.
+    invalid_csrf: La page a expiré. Rechargez-la puis réessayez.
+    to_complete: à compléter
+
+  completeness:
+    title: À compléter
+    intro: "%count% point(s) à compléter. Ils ne sont pas affichés sur le site public tant qu'ils manquent."
+    all_done: Tout le contenu attendu est renseigné.
+    profile_field: "Profil : renseigner « %field% »"
+    private_contact: "Espace recruteur : renseigner « %field% » (privé, affiché seulement aux recruteurs)"
+    career_gap: "Parcours : période %from% – %to% sans expérience, à expliquer en une ligne (poste, formation…)"
+    key_figure_incomplete: "Chiffre clé « %label% » : valeur à compléter"
+    key_figures_missing: "Ajouter %count% chiffre(s) clé(s) vrai(s) et vérifiable(s) (3 attendus sur l'accueil)"
+    achievements: "« %name% » : ajouter des réalisations chiffrées"
+    missions_placeholder: "« %name% » : une mission contient encore un texte à compléter"
+    pillar_summary: "Pilier « %name% » : écrire le résumé de sa carte (accueil)"
+    certifications: Renseigner les habilitations et certifications (avec leurs dates de validité)
+    project: "Projet « %name% » : %count% section(s) à compléter (résumé ou plan de l'étude de cas)"
+    calculator_references: "Calculatrice : vérifier la norme ou la source citée de %count% outil(s) (non affichée en public avant validation)"
+
+  profile:
+    title: Profil
+    intro: Informations affichées sur l'accueil et le CV. Les coordonnées privées ne sont jamais publiées.
+    photo_alt: Photo de profil actuelle
+    photo_default: Photo par défaut du site. Une photo envoyée ici la remplace.
+    private_notice: Ces informations ne sont visibles que par les recruteurs validés (espace recruteur). Elles n'apparaissent jamais sur le site public.
+    section:
+      public: Présentation publique
+      search: Recherche d'emploi
+      private: Coordonnées privées
+      photo: Photo
+    field:
+      full_name: Nom complet
+      job_title: Titre de poste
+      tagline: Sous-titre
+      pitch: Accroche
+      summary: Résumé du CV
+      search_status: Statut de recherche
+      location: Localisation
+      mobility: Mobilité
+      work_modes: Modalités de travail
+      target_roles: Postes visés
+      target_companies: Structures visées
+      contract_types: Types de contrat recherchés
+      availability: Disponibilité
+      private_phone: Téléphone
+      private_email: E-mail de contact
+      private_postal_address: Adresse postale
+      private_salary_expectation: Prétentions salariales
+      show_salary_in_recruiter_area: Afficher les prétentions dans l'espace recruteur
+      languages_public: Afficher la rubrique « Langues » sur le CV public
+      educations_public: Afficher la rubrique « Formations et certifications » sur le CV public
+      photo: Nouvelle photo
+      remove_photo: Retirer la photo actuelle
+    help:
+      public_rubric: "Décochée : rubrique visible seulement dans l'espace recruteur et les PDF complets. Repère 🔒 (ou 🌍) du titre de la section dans TEXTES_SITE.md."
+      job_title: Un seul titre, utilisé partout sur le site.
+      pitch: Deux phrases au maximum.
+      summary: 4 à 5 lignes, orientées valeur.
+      private_salary_expectation: Texte libre, par ex. « XX à YY k€ bruts annuels, selon le poste ». Jamais sur le site public.
+      photo: JPEG, PNG ou WebP, 10 Mo au maximum, au moins 800 × 1000 pixels. La photo est recadrée sur le haut et convertie en WebP (800 × 1000 et miniature 400 × 400).
+
+  recruitment_argument:
+    title: Pourquoi me recruter
+    singular: argument
+    intro: "Arguments du bloc « Pourquoi me recruter » de l'accueil : un titre et un texte d'une à deux phrases. Un argument masqué est un brouillon : il n'apparaît ni sur l'accueil ni dans les réponses de l'assistant IA."
+    field:
+      title: Titre
+      text: Texte
+      visible: Afficher cet argument
+    column:
+      visible: Affiché
+    help:
+      text: Une à deux phrases, 400 caractères au plus.
+      visible: "Décoché : brouillon (ni sur l'accueil ni pour l'assistant IA)."
+    toggle: Afficher / masquer
+    shown: L'argument est affiché.
+    hidden: L'argument est masqué.
+    draft: Masqué
+    preview: Aperçu
+    preview_title: Aperçu du bloc « Pourquoi me recruter »
+    preview_intro_on: "Rendu de l'accueil : seuls les arguments marqués « Afficher » apparaissent. Le bloc est activé."
+    preview_intro_off: "Rendu de l'accueil si le bloc était activé : seuls les arguments marqués « Afficher » apparaîtraient. Le bloc est actuellement coupé : rien n'est visible sur le site."
+    preview_with_drafts: Aperçu avec les brouillons
+    preview_visible_only: Aperçu des arguments affichés seulement
+    preview_empty: "Aucun argument n'est marqué « Afficher » : le bloc n'apparaîtrait pas sur l'accueil."
+    back: Retour aux arguments
+    block_label: Bloc sur l'accueil
+    block_state_on: activé
+    block_state_off: coupé
+    block_shown: "{1}Visible sur l'accueil : 1 argument affiché.|]1,Inf[Visible sur l'accueil : %count% arguments affichés."
+    block_hidden: "{0}Absent de l'accueil (aucun argument affiché ; le bloc doit aussi être activé).|{1}Absent de l'accueil : activez le bloc pour montrer l'argument affiché.|]1,Inf[Absent de l'accueil : activez le bloc pour montrer les %count% arguments affichés."
+    block_enable: Activer le bloc
+    block_disable: Couper le bloc
+    block_on: Le bloc « Pourquoi me recruter » est activé.
+    block_off: Le bloc « Pourquoi me recruter » est coupé.
+
+  key_figure:
+    title: Chiffres clés
+    singular: chiffre clé
+    intro: Les trois premiers s'affichent sur l'accueil. Uniquement des chiffres vrais et vérifiables.
+    delete_in_use: Ce chiffre clé ne peut pas être supprimé.
+    field:
+      value: Valeur
+      label: Libellé
+    help:
+      value: Ex. « Près de 20 ans » ou « 3 collaborateurs ».
+
+  experience:
+    title: Expériences
+    singular: expérience
+    intro: Parcours affiché sur le CV. Le nom d'une entreprise peut être remplacé par un libellé public.
+    delete_in_use: Cette expérience ne peut pas être supprimée.
+    field:
+      job_title: Poste
+      company_name: Entreprise (vrai nom)
+      is_company_anonymized: Masquer le nom de l'entreprise sur le site public
+      public_company_label: Libellé public de remplacement
+      company_details: Précision sur l'entreprise
+      sector: Secteur
+      company_size: Taille de l'entreprise
+      location: Lieu
+      start_date: Début
+      end_date: Fin
+      summary: Résumé court
+      missions: Missions
+      achievements: Réalisations chiffrées
+      tools: Outils utilisés
+      skills: Compétences mobilisées
+      career_section: Rubrique du parcours
+      private_note: Note privée (espace recruteur)
+      is_published: Visible sur le site public
+      dates_in_years: Afficher seulement les années
+      public_items: Visible en public
+    column:
+      achievements: Réalisations
+    help:
+      public_items: "Cochez 2 ou 3 puces parlantes : elles seules s'affichent sur le CV public et les PDF synthétiques ; les autres restent dans l'espace recruteur (« + n points détaillés »). Une puce ajoutée ou modifiée apparaît ici après l'enregistrement. Repère 🌐 dans TEXTES_SITE.md."
+      public_items_empty: "Enregistrez d'abord les missions ou réalisations : une case « Visible en public » apparaîtra ensuite pour chaque puce."
+      dates_in_years: "À cocher si le mois n'est pas connu (ex. « 2017 – 2019 ») : le mois saisi ne sera jamais affiché."
+      company_name: Toujours visible par les recruteurs validés.
+      career_section: "Ordre du CV : Expériences professionnelles, Expérience fondatrice (postes d'une même entreprise regroupés sous un seul en-tête), Parcours terrain (bloc dépliable, une ligne par poste)."
+      private_note: "Jamais affichée en public : seulement dans l'espace recruteur et le CV PDF complet. Ex. « Fin de mission en décembre 2025 »."
+      public_company_label: "Obligatoire si le nom est masqué. Ex. « PME industrielle, 80 salariés »."
+      dates: Seuls le mois et l'année sont affichés.
+      end_date: Laisser vide pour le poste actuel.
+      achievements: "Verbe + quoi + résultat chiffré. Ex. « Réduit les délais d'études de 20 % »."
+
+  skill_pillar:
+    title: Piliers de compétences
+    singular: pilier
+    intro: Grandes familles qui regroupent les compétences sur le CV.
+    delete_in_use: Ce pilier contient encore des compétences. Déplacez-les ou supprimez-les d'abord.
+    column:
+      skills: Compétences
+    field:
+      name: Nom du pilier
+      summary: Résumé de la carte (accueil)
+      badge: Étiquette
+      icon: Icône
+    help:
+      summary: "Une phrase. Laisser vide : les premières compétences du pilier s'affichent à la place."
+      badge: Facultatif, ex. « mon plus ».
+    icon:
+      climate: Flocon (génie climatique)
+      electric: Éclair (électrotechnique)
+      design: Crayon (bureau d'études)
+      digital: Écran (numérique)
+      project: Presse-papiers (projets)
+      generic: Horloge (générique)
+
+  skill:
+    title: Compétences
+    singular: compétence
+    intro: "Sans niveau : chaque compétence est prouvée par les expériences liées."
+    delete_in_use: Cette compétence ne peut pas être supprimée.
+    column:
+      experiences: Expériences liées
+    field:
+      name: Compétence
+      pillar: Pilier
+      pillar_placeholder: Choisir un pilier
+
+  education:
+    title: Formations
+    singular: formation
+    intro: Diplômes et formations, du plus récent au plus ancien.
+    delete_in_use: Cette formation ne peut pas être supprimée.
+    field:
+      year: Année
+      title: Diplôme ou formation
+      institution: Organisme
+      location: Lieu
+
+  certification:
+    title: Certifications et habilitations
+    singular: certification
+    intro: Attestations et habilitations, avec leurs dates de validité.
+    delete_in_use: Cette certification ne peut pas être supprimée.
+    field:
+      name: Intitulé
+      type: Nature
+      issuer: Organisme
+      obtained_on: Obtenue le
+      expires_on: Valable jusqu'au
+    help:
+      expires_on: Laisser vide si elle n'expire pas.
+
+  language:
+    title: Langues
+    singular: langue
+    intro: Langues parlées et niveau de maîtrise, en texte libre.
+    delete_in_use: Cette langue ne peut pas être supprimée.
+    field:
+      name: Langue
+      proficiency: Maîtrise
+    help:
+      proficiency: Ex. « langue maternelle » ou « technique, lecture de documentation ».
+
+  cv_entry:
+    title: Rubriques du CV
+    singular: élément
+    intro: "Outils techniques, expertises métiers, logiciels, savoir-être et centres d'intérêt, dans l'ordre du CV. Les flèches changent l'ordre à l'intérieur d'une rubrique."
+    delete_in_use: Cet élément ne peut pas être supprimé.
+    field:
+      section: Rubrique
+      title: Titre
+      content: Texte
+      public_summary: Résumé public
+    help:
+      title: "En gras avant le texte (ex. « Conception »). Laisser vide pour une simple puce (outils techniques)."
+      public_summary: "Outils techniques, expertises et logiciels : seul ce résumé (une ligne) s'affiche sur le CV public et les PDF synthétiques ; vide, l'élément n'y figure pas. Le texte complet reste dans l'espace recruteur. Repère « 🌐 Résumé public » dans TEXTES_SITE.md."
+
+  project:
+    title: Projets
+    singular: projet
+    intro: Études de cas professionnelles (affichées en premier) et projets du Labo. Un projet n'apparaît sur le site que s'il est publié, public et complet.
+    new_title: Nouveau projet
+    delete_in_use: Ce projet ne peut pas être supprimé.
+    preview: Aperçu
+    export: Exporter
+    manage_categories: Gérer les catégories
+    column:
+      sections: Sections
+    section:
+      information: Informations
+      case_study: Plan de l'étude de cas
+      content: Contenu détaillé (Markdown)
+      publication: Publication
+      cover: Image de couverture
+      gallery: Galerie
+      links: Liens (Labo)
+    status:
+      visible: Ce projet est visible sur le site.
+      hidden: "Ce projet n'est pas visible sur le site :"
+      draft: il est en brouillon (case « Publié » décochée) ;
+      recruiter_only: il est réservé aux recruteurs ;
+      missing: "section à compléter : %section%."
+    field:
+      type: Type
+      title: Titre
+      slug: Adresse (slug)
+      summary: Résumé
+      client_label: Client (désignation publique)
+      project_date: Date
+      categories: Catégories
+      technologies: Technologies
+      content: Contenu
+      repository_url: Code source (lien https)
+      demo_url: Démonstration (lien https)
+      cover: Nouvelle image de couverture
+      cover_alt: Texte alternatif de la couverture
+      remove_cover: Retirer l'image de couverture
+      image_alt: Texte alternatif
+      image_remove: Retirer cette image
+      new_images: Ajouter des images
+      is_published: Publié
+      visibility: Visibilité
+      is_featured: Mis en avant
+    help:
+      slug: Laissez vide pour le calculer à partir du titre. Minuscules, chiffres et tirets.
+      summary: Deux ou trois phrases, affichées sur les cartes et en tête de page.
+      client_label: "Jamais le nom d'un client confidentiel : par ex. « Un laboratoire pharmaceutique »."
+      case_study: "Plan imposé des études de cas : contexte, problème, solution, résultat chiffré, compétences mobilisées. Toutes les sections sont nécessaires pour publier une étude de cas. Pour un projet du Labo, elles sont facultatives."
+      result: Un résultat mesurable (délai, performance, gain).
+      content: "Facultatif. Titres (##), listes, liens, images de la galerie. Le HTML dangereux (scripts, styles, iframes) est retiré à l'affichage."
+      cover: JPEG, PNG ou WebP, au moins 1200 × 675 pixels, 10 Mo au maximum. Recadrée en 16:9 et convertie en WebP.
+      new_images: JPEG, PNG ou WebP, 10 Mo au maximum chacune, 5 images au plus par envoi (pour en ajouter davantage, enregistrez puis recommencez). Converties en WebP de moins de 200 Ko.
+      insert_image: "Pour l'insérer dans le contenu, copiez ce code :"
+      is_published: Décoché, le projet reste en brouillon.
+      is_featured: Affiché en premier, et sur l'accueil pour une étude de cas.
+    editor:
+      toolbar: Mise en forme
+      heading2: Titre de section
+      heading3: Sous-titre
+      bold: Gras
+      italic: Italique
+      list: Liste à puces
+      ordered_list: Liste numérotée
+      link: Lien
+      quote: Citation
+      preview: Aperçu
+    import:
+      title: Importer une archive
+      archive: Archive ZIP
+      help: Archive exportée depuis cette administration, ou depuis l'ancien site. 50 Mo au maximum.
+      notice: Le projet importé est créé en brouillon, avec ses images converties en WebP. Relisez-le avant de le publier.
+      submit: Importer
+      missing: Choisissez une archive ZIP.
+      done: Projet importé en brouillon. Relisez-le avant de le publier.
+
+  project_category:
+    title: Catégories de projets
+    singular: catégorie
+    intro: Catégories proposées dans le filtre de la page Projets (seules celles qui ont des projets visibles s'affichent).
+    delete_in_use: Cette catégorie ne peut pas être supprimée.
+    field:
+      name: Nom
+
+  calculator_tool:
+    title: Outils de la calculatrice
+    intro: "%count% outil(s) visible(s) sur le site. Les outils sont définis dans config/calculator/tools.yaml ; ici, vous réglez leur affichage."
+    view: Voir
+    to_verify: à vérifier
+    column:
+      tool: Outil
+      status: État
+      visible: Visible
+      reference: Norme ou source
+    status:
+      available: Porté
+      legacy: À porter
+      planned: À créer
+      merged: Fusionné
+    status_help:
+      legacy: Cet outil existe sur l'ancien site ; il sera porté avec sa catégorie. Il ne peut pas encore être activé.
+      planned: Cet outil n'existait pas sur l'ancien site (page « en construction » ou vide). Il sera créé au lot 5-bis.
+    field:
+      enabled: Visible sur le site
+      reference: Norme ou source citée
+      reference_verified: Norme vérifiée
+      help_text: Texte d'aide
+      position: Ordre d'affichage
+    help:
+      enabled: Décoché, l'outil disparaît du site (son adresse répond « page introuvable »).
+      reference: Laissez vide pour garder la proposition affichée en gris.
+      reference_verified: La norme n'est affichée en public qu'une fois cochée.
+      help_text: Affiché sous l'outil. Paragraphes séparés par une ligne vide.
+      position: Plus petit en premier. Laissez vide pour l'ordre par défaut (10, 20, 30…).
+
+  fluid:
+    title: Fluides de référence
+    singular: fluide
+    intro: Masses volumiques et capacités thermiques utilisées par l'outil « Chauffe d'un fluide ».
+    delete_in_use: Ce fluide ne peut pas être supprimé.
+    field:
+      name: Nom
+      state: État
+      density: Masse volumique (kg/m³)
+      specific_heat_capacity: Capacité thermique massique (J/(kg·K))
+    help:
+      density: Par ex. 1000 pour l'eau liquide, 1,204 pour l'air sec.
+      specific_heat_capacity: Par ex. 4185 pour l'eau liquide.
+
+  printer3d:
+    title: Imprimantes 3D de référence
+    singular: imprimante
+    intro: Puissances consommées utilisées par l'outil « Coût d'une impression 3D » (valeurs indicatives).
+    delete_in_use: Cette imprimante ne peut pas être supprimée.
+    field:
+      brand: Marque
+      model: Modèle
+      power_consumption: Puissance consommée (W)
+    help:
+      power_consumption: Puissance moyenne pendant l'impression.
+
+  energy_provider:
+    title: Offres d'électricité
+    singular: offre
+    intro: Prix du kWh utilisés par l'outil « Coût d'une impression 3D ». À tenir à jour (les tarifs changent).
+    delete_in_use: Cette offre ne peut pas être supprimée.
+    field:
+      name: Fournisseur
+      plan_name: Offre
+      price_kwh: Prix du kWh (€)
+    help:
+      price_kwh: Par ex. 0,1940.
+
+  refrigerant:
+    title: Fluides frigorigènes
+    singular: fluide frigorigène
+    intro: PRG, statut F-Gas, classe de sécurité et glissement utilisés par les outils « Fluides frigorigènes » et « Chambre froide ». Valeurs initiales à vérifier.
+    delete_in_use: Ce fluide ne peut pas être supprimé.
+    field:
+      code: Code
+      name: Nom affiché
+      family: Famille
+      gwp: PRG
+      gwp_report: Rapport du GIEC
+      status: Statut F-Gas
+      safety_class: Classe de sécurité
+      lfl: LFL (kg/m³)
+      glide: Glissement (K)
+      oil: Huile
+      replacement: Substituts
+      application: Applications
+      default_choice: Fluide par défaut
+      verified: Valeurs vérifiées
+    help:
+      code: Sans tiret, par ex. R410A ou R1234ze. Sert d'identifiant.
+      family: CFC, HCFC, HFC, HFO, HFO Blend ou Naturel.
+      gwp_report: Rapport d'où vient le PRG (le règlement (UE) 2024/573 utilise l'AR4 pour l'annexe I).
+      status: Par ex. « Interdit », « Interdit (Neuf) », « En transition », « Avenir ».
+      safety_class: Selon l'ISO 817 (A1, A2L, A2, A3, B2L…).
+      lfl: "Limite inférieure d'inflammabilité (ISO 817, NF EN 378-1 annexe E), pour les fluides inflammables. Sert aux limites de charge de la chambre froide."
+      verified: Décoché, l'outil affiche « à vérifier » à côté des valeurs.
+      default_choice: Fluide présélectionné dans la chambre froide (cochez-en un seul ; R-290 au départ).
+
+  fgas_rule:
+    title: Règles F-Gas
+    singular: règle
+    intro: Interdictions de mise sur le marché (annexe IV) et d'entretien (article 13) du règlement (UE) 2024/573, appliquées par la chambre froide. Une règle n'est affichée sur le site qu'une fois cochée « Vérifiée ».
+    delete_in_use: Cette règle ne peut pas être supprimée.
+    field:
+      code: Code
+      kind: Type de règle
+      equipment: Équipement concerné
+      installation_types: Types d'installation
+      min_capacity_kw: Puissance minimale (kW)
+      min_charge_tonnes: Charge minimale (t éq. CO₂)
+      gwp_threshold: Interdit à partir du PRG
+      since: En vigueur depuis
+      exception: Exception
+      article: Article
+      annex_point: Point de l'annexe
+      source: Source
+      verified: Vérifiée sur le texte officiel
+    help:
+      min_capacity_kw: Laissez vide si la règle ne dépend pas de la puissance.
+      min_charge_tonnes: Règles d'entretien. Laissez vide si la règle ne dépend pas de la charge.
+      gwp_threshold: Fluides de PRG supérieur ou égal à cette valeur.
+      verified: Décochée, la règle n'apparaît pas dans la chambre froide.
+    kind:
+      placing: Mise sur le marché (annexe IV)
+      servicing: Entretien et maintenance (article 13)
+    type:
+      self_contained: Groupe autonome
+      split: Groupe de condensation à distance
+      centralised: Centrale multipostes
+
+  panel_model:
+    title: Panneaux isolants
+    singular: modèle de panneau
+    intro: Modèles de panneaux des marques proposés dans la chambre froide, saisis depuis leur fiche technique. Les panneaux génériques (par λ) restent toujours disponibles.
+    delete_in_use: Ce modèle ne peut pas être supprimé.
+    field:
+      brand: Marque
+      product_range: Gamme
+      insulation: Isolant
+      thickness: Épaisseur (mm)
+      u_value: Coefficient U (W/(m²·K))
+      lambda: Conductivité λ (W/(m·K))
+      effective_u: U retenu (W/(m²·K))
+      source_document: Fiche technique
+      source_date: Date de la fiche
+    help:
+      insulation: PUR, PIR, laine de roche…
+      u_value: Valeur de la fiche. Laissez vide pour la calculer depuis λ.
+      lambda: "Utilisée seulement si U est vide : U = 1 / (0,17 + e/λ)."
+      source_document: Titre ou adresse du document consulté.
+
+  climatic_profile:
+    title: Profils climatiques
+    singular: profil climatique
+    intro: Profils de consigne proposés dans l'enceinte climatique (pharmaceutique, électronique, conservation, cosmétique…), avec leur source. Le profil remplit les consignes, qui restent modifiables. Valeurs initiales à vérifier.
+    delete_in_use: Ce profil ne peut pas être supprimé.
+    field:
+      code: Code
+      sector: Secteur
+      name: Nom
+      temperature: Consigne (°C)
+      temperature_tolerance: Tolérance en température (± K)
+      humidity: Humidité (% HR)
+      humidity_tolerance: Tolérance en humidité (± % HR)
+      source: Source
+      default_choice: Profil par défaut
+      verified: Valeurs vérifiées
+    help:
+      code: Minuscules, chiffres et soulignés, par ex. ich_long_term. Sert d'identifiant.
+      sector: Regroupe les profils dans la liste (Pharmaceutique, Électronique…). Aucun profil alimentaire.
+      humidity: Laissez vide si l'humidité n'est pas régulée.
+      source: Texte de référence, par ex. « ICH Q1A(R2) » ou « IEC 60068-2-78 ».
+      default_choice: Profil présélectionné dans l'enceinte climatique (cochez-en un seul ; ICH long terme au départ).
+      verified: Décoché, l'outil affiche « à vérifier » à côté du profil.
+
+  recruiter:
+    title: Recruteurs
+    intro: Demandes d'accès à l'espace recruteur et accès ouverts. Le score aide à décider ; la validation reste manuelle (sauf si la validation automatique est activée dans Paramètres).
+    new: Créer un accès
+    new_help: L'accès est validé tout de suite pour 90 jours ; le recruteur reçoit un e-mail avec un lien de connexion.
+    new_submit: Créer et envoyer le lien
+    preview: Aperçu « vu par un recruteur »
+    filter: Filtrer par statut
+    all: Tous
+    request: Demande
+    created_manually: créé à la main
+    extension_requested: Prolongation demandée
+    score_title: "Score : %score% / 100"
+    score_help: Aide à la décision, jamais une validation à lui seul (MX + 30, domaine professionnel + 40, entreprise + 20, message + 10 ; adresse jetable ou IP sur liste de blocage → 0).
+    score_none: Aucun contrôle (accès créé à la main).
+    events_title: Signaux d'intérêt
+    events_none: Aucun signal pour l'instant.
+    event_pending: dans le prochain récapitulatif
+    decision_help: "Valider : accès de 90 jours et e-mail avec un lien de connexion. Renouveler : 90 jours de plus. Révoquer : les liens en circulation ne marchent plus. Refuser : aucun e-mail."
+    synthesis_title: Synthèse de l'entreprise (IA)
+    synthesis_empty: Pas encore de synthèse.
+    synthesis_generate: Générer la synthèse
+    synthesis_regenerate: Régénérer la synthèse
+    synthesis_meta: "Générée le %date% par Mistral AI : à vérifier."
+    synthesis_help: "Envoyés à Mistral AI : le nom de l'entreprise, le domaine de l'adresse e-mail et le message, données personnelles retirées. Jamais le nom ni l'adresse e-mail du recruteur."
+    chat_count: "{1} 1 échange avec l'assistant|]1,Inf[ %count% échanges avec l'assistant"
+    privacy_title: Données personnelles
+    privacy_text: "Suppression automatique : demande refusée après 30 jours, autres comptes 12 mois après la dernière activité ; adresse IP effacée après 30 jours. Vous pouvez tout supprimer maintenant (droit à l'effacement)."
+    status:
+      pending: En attente
+      approved: Validé
+      refused: Refusé
+      revoked: Révoqué
+      expired: Échu
+    field:
+      email: E-mail
+      full_name: Nom
+      company: Entreprise
+      job_title: Fonction
+      company_website: Site web
+      status: Statut
+      score: Score
+      message: Message
+      requested_at: Demande
+      access_expires_at: Fin de l'accès
+      last_login_at: Dernière connexion
+    action:
+      approve: Valider (90 jours)
+      refuse: Refuser
+      revoke: Révoquer l'accès
+      renew: Renouveler (90 jours)
+      delete: Supprimer définitivement
+    confirm_title:
+      approve: "Valider la demande de %name% ?"
+      refuse: "Refuser la demande de %name% ?"
+      revoke: "Révoquer l'accès de %name% ?"
+    confirm:
+      approve: Accès ouvert pour 90 jours ; le recruteur reçoit aussitôt un e-mail avec son lien de connexion.
+      refuse: Aucun e-mail n'est envoyé au recruteur.
+      revoke: L'espace se ferme tout de suite ; les liens de connexion en circulation ne fonctionneront plus.
+      delete: "Supprimer définitivement %name% et ses signaux ?"
+      delete_text: Sa demande, son accès et ses signaux d'intérêt sont effacés. Action définitive.
+    flash:
+      created: Accès créé ; l'e-mail avec le lien de connexion est parti.
+      approve: Accès validé pour 90 jours ; l'e-mail avec le lien de connexion est parti.
+      refuse: Demande refusée.
+      revoke: Accès révoqué.
+      renew: Accès prolongé de 90 jours ; le recruteur est prévenu par e-mail.
+      deleted: Recruteur supprimé.
+      synthesized: Synthèse de l'entreprise générée.
+      synthesis_failed: "Synthèse impossible pour le moment : %reason%"
+
+  changelog:
+    title: Journal des versions
+    intro: "Version en cours : %version%. Contenu du fichier CHANGELOG.md, en lecture seule : il est tenu dans le dépôt, à chaque version."
+    missing: Fichier CHANGELOG.md introuvable.
+
+  ai_knowledge:
+    title: Cerveau de l'IA
+    intro: "Ce que sait l'assistant de l'espace recruteur, en trois niveaux envoyés dans cet ordre à Mistral AI : le socle de sécurité (fixe), le résumé du site (automatique) et vos fiches. Le socle l'emporte toujours sur les fiches."
+    reminder: "Tout ce qui est écrit ici est envoyé à Mistral AI à chaque question. N'y mettez rien de confidentiel."
+    floor_unavailable: "Contrôle du plancher de prétentions indisponible : ni TEXTES_SITE.md ni la variable SALARY_FLOOR (.env.local du serveur) ne sont présents. Les coordonnées, l'adresse et la santé restent contrôlées."
+    new: Nouvelle fiche
+    new_title: Nouvelle fiche
+    edit_title: Modifier la fiche
+    export: Exporter en Markdown
+    unanswered_link: "{0}Questions sans réponse|{1}Questions sans réponse (1)|]1,Inf[Questions sans réponse (%count%)"
+    show_text: Afficher le texte envoyé
+    none: Aucune fiche dans cette catégorie.
+    active: Active
+    draft: Brouillon
+    tokens: "≈ %count% jetons"
+    updated_at: "Modifiée le %date% · ordre %position%"
+    activate: Activer
+    deactivate: Désactiver
+    history: Historique
+    history_title: "Historique : %title%"
+    history_current: "Version actuelle (%date%)"
+    history_before: "Avant la modification du %date% :"
+    history_empty: Aucune modification depuis la création.
+    confirm_delete: "Supprimer la fiche « %title% » ?"
+    confirm_delete_text: Elle n'est plus envoyée à l'assistant ; son historique est supprimé aussi. Pensez à l'export Markdown pour garder une copie.
+    from_question: "Fiche créée à partir de la question : « %question% »"
+    create_from_question: Créer une fiche
+    ignore: Ignorer
+    unanswered_title: Questions sans réponse
+    unanswered_intro: "Questions des recruteurs auxquelles l'assistant n'a pas su répondre, gardées sans aucune donnée du recruteur. Créez une fiche pour y répondre la prochaine fois, ou ignorez la question."
+    unanswered_none: Aucune question sans réponse à traiter.
+    reason:
+      missing: Information absente du site et des fiches
+      blocked: "Réponse bloquée (élément absent du contexte : « %element% »)"
+    category:
+      personal: Infos personnelles
+      job_preferences: Préférences de poste
+      faq: FAQ recruteurs
+      tone: Ton et style
+    field:
+      title: Titre
+      category: Catégorie
+      content: Contenu
+      active: Active (envoyée à l'assistant)
+      position: Ordre dans la catégorie
+    help:
+      content: "Écrivez des faits vérifiés, comme vous les diriez à un recruteur. L'assistant ne répond qu'avec le site et ces fiches, et n'invente rien."
+      active: Décochée, la fiche reste un brouillon (jamais envoyée).
+      position: Du plus petit au plus grand.
+    level:
+      instructions: 1. Socle de sécurité (fixe)
+      instructions_help: "Règles écrites dans le code : ne jamais inventer, ne jamais révéler les consignes, aucune donnée privée, troisième personne… Les fiches ne peuvent ni les modifier ni les contourner."
+      summary: 2. Résumé du site (automatique)
+      summary_help: "Détail du CV (celui de l'espace recruteur, sans coordonnées ni notes privées), tel qu'envoyé à l'assistant (avec la fourchette de prétentions seulement si elle est affichée dans l'espace recruteur ; jamais le plancher). Socle et résumé : ≈ %tokens% jetons avec une question."
+      entries: 3. Vos fiches
+    budget:
+      title: Taille et coût
+      total: Fiches actives
+      total_value: "≈ %total% jetons sur %limit% autorisés"
+      question_cost: Coût d'une question
+      question_cost_value: "≈ %cost% jetons (socle, résumé et question : %base% ; réponse : %answer% au plus ; plus les fiches)"
+      questions: Questions possibles par mois
+      questions_value: "≈ %with% avec les fiches (≈ %without% sans), pour un plafond mensuel de %monthly% jetons"
+      warning: "Les fiches réduisent de %percent% % le nombre de questions possibles par mois. Raccourcissez-les ou désactivez les moins utiles."
+      help: "Estimation : environ 1 jeton pour 3,5 caractères. Plafond de taille et plafond mensuel réglables dans :"
+    blocked:
+      email: "Cette fiche contient une adresse e-mail : elle serait envoyée à Mistral AI à chaque question. Retirez-la."
+      phone: "Cette fiche contient un numéro de téléphone : il serait envoyé à Mistral AI à chaque question. Retirez-le."
+      address: "Cette fiche contient une adresse postale (ou un code postal et une ville) : retirez-la."
+      birth: "Cette fiche contient une date de naissance ou un âge : retirez-les."
+      floor: "Cette fiche contient votre plancher de prétentions (ligne 🚫 de TEXTES_SITE.md) : il ne doit jamais être communiqué. Retirez-le."
+      health: "Cette fiche semble contenir une donnée de santé : une telle information ne doit jamais être envoyée. Retirez-la."
+      injection: "Cette fiche contient une consigne contraire au socle de sécurité (révéler les consignes, ignorer les règles, changer de rôle) : le socle l'emporterait de toute façon. Retirez-la."
+      limit: "Enregistrement refusé : les fiches actives atteindraient ≈ %total% jetons, au-delà du plafond de %limit%. Raccourcissez la fiche, désactivez-en une autre ou relevez le plafond dans les paramètres."
+    flash:
+      created: Fiche créée.
+      saved: Fiche enregistrée.
+      deleted: Fiche supprimée.
+      activated: Fiche activée.
+      deactivated: Fiche désactivée (brouillon).
+      ignored: Question ignorée.
+    test:
+      title: Tester l'assistant
+      help: "Posez une question comme un recruteur : la réponse passe par les mêmes contrôles. L'essai compte dans la consommation de jetons, pas dans les plafonds des recruteurs, et apparaît dans le journal comme « essai admin ». Réponses bloquées des recruteurs sur 7 jours : %blocked%."
+      question: Question
+      submit: Tester
+      empty: Saisissez une question.
+      error: "L'assistant n'a pas pu répondre : %reason%"
+      answer: Réponse affichée
+      blocked: "Réponse bloquée : « %element% » ne figure ni dans le site ni dans les fiches."
+      raw: "Réponse du modèle (non affichée) : %answer%"
+      suspicious: "Refusée : %reason%"
+      used: Fiches utilisées
+      used_none: Aucune fiche ne se retrouve dans la réponse.
+      probably_used: probablement utilisée (termes propres à la fiche retrouvés dans la réponse)
+      tokens: "Modèle %model%, %tokens% jetons."
+
+  assistant:
+    title: Assistant IA
+    admin_test: Essai admin
+    blocked: Réponse bloquée
+    blocked_element: "Élément absent du contexte : « %element% » (réponse remplacée par « Ce point n'est pas précisé »)."
+    intro: "Chatbot de l'espace recruteur (Mistral AI, offre gratuite) : état, consommation, modèles et journal des conversations (conservé 12 mois)."
+    status_title: État et consommation
+    state_label: "État :"
+    state:
+      active: Actif (modèle principal)
+      fallback: Modèle de secours
+      guided: Assistant guidé seulement
+      limit_reached: Plafond atteint
+    not_configured: Clé MISTRAL_API_KEY absente de .env.local.
+    disabled: Questions libres désactivées dans les paramètres.
+    role:
+      primary: principal
+      fallback: de secours
+    alert:
+      monthly: "Consommation du mois : %percent% % du plafond mensuel de jetons (alerte à %threshold% %)."
+      model_missing: "Le modèle %role% %model% n'existe plus chez Mistral AI (modèle retiré) : choisissez-en un autre dans .env.local (MISTRAL_MODEL_*), après php bin/console app:ai:check."
+      model_archived: "Le modèle %role% %model% est archivé chez Mistral AI : il va être retiré, prévoyez son remplacement."
+      model_unchecked: "Modèle %role% %model% non vérifié : liste des modèles de Mistral AI illisible pour le moment."
+      model_not_configured: "Aucun modèle %role% configuré (MISTRAL_MODEL_* dans .env)."
+    today_questions: Questions libres aujourd'hui (plafond du site)
+    today_tokens: Jetons aujourd'hui
+    month_tokens: Jetons ce mois-ci (plafond)
+    models: "Fournisseur : %provider%. Modèle principal : %primary%. Modèle de secours : %fallback%."
+    purposes_title: Ce mois-ci, par usage
+    purpose_line: "%calls% appel(s), %errors% erreur(s), %tokens% jetons"
+    refresh_models: Vérifier les modèles
+    settings_link: Plafonds et réglages
+    dashboard_link: Voir le détail et le journal des conversations
+    journal_title: Journal des conversations
+    journal_help: "Recruteur, question (e-mails et téléphones retirés), réponse, modèle, jetons et erreurs. Les échanges suspects (tentatives de détournement, fuite bloquée) sont signalés. Suppression automatique après 12 mois (app:data:purge)."
+    filter: Filtrer le journal
+    filter_all: Tous les échanges
+    filter_suspicious: Échanges suspects
+    suspicious: Suspect
+    error: Erreur
+    show_title: Échange avec l'assistant
+    exchange: Échange
+    details: Détails
+    tokens_detail: "%prompt% envoyés + %completion% en réponse"
+    field:
+      date: Date
+      recruiter: Recruteur
+      question: Question
+      answer: Réponse
+      outcome: Issue
+      model: Modèle
+      tokens: Jetons
+      duration: Durée
+    flash:
+      models_ok: "Modèles vérifiés chez Mistral AI : tout est en ordre."
+      models_alert: "Modèles vérifiés chez Mistral AI : voir les alertes."
+    cv_import:
+      title: Import de CV par l'IA
+      intro: "Envoyez un CV (PDF ou texte) : l'IA en extrait les expériences, formations, compétences et langues pour un aperçu. Rien n'est enregistré ; le contenu du site se gère par la synchronisation des textes et les pages de l'admin."
+      file: CV en PDF (5 Mo au plus)
+      text: Ou texte du CV
+      help: "Téléphone, e-mail, adresse, date de naissance et âge sont retirés avant l'envoi à Mistral AI ; 12 000 caractères au plus."
+      submit: Analyser
+      invalid_file: Fichier refusé (PDF de 5 Mo au plus).
+      empty: Aucun texte à analyser.
+      ai_error: "Analyse impossible pour le moment : %reason%"
+      read_only: "Aperçu seulement, rien n'a été enregistré (modèle %model%, %tokens% jetons)."
+      removed: "Données retirées avant l'envoi : %types%."
+      experiences: Expériences
+      educations: Formations
+      skills: Compétences
+      languages: Langues
+      ongoing: en cours
+
+  contact_message:
+    title: Messages
+    intro: "Messages du formulaire de contact et questions des recruteurs posées depuis l'assistant. Suppression automatique 12 mois après leur réception."
+    reply: Répondre par e-mail
+    delete: Supprimer
+    confirm_delete: Supprimer ce message ?
+    confirm_bulk_delete: "{1}Supprimer le message sélectionné ?|]1,Inf[Supprimer les %count% messages sélectionnés ?"
+    confirm_bulk_delete_js: Supprimer les messages sélectionnés ?
+    confirm_bulk_delete_text: Action définitive.
+    unread_badge: "{1}1 message non lu|]1,Inf[%count% messages non lus"
+    filters_label: Filtres des messages
+    all_help: "« Tous » : la boîte de réception ; les messages archivés n'apparaissent que dans « Archivés »."
+    filter:
+      tous: Tous
+      non-lus: Non lus
+      lus: Lus
+      repondus: Répondus
+      archives: Archivés
+    search: Rechercher
+    search_placeholder: Nom, entreprise ou mot du message
+    type: Type
+    type_option:
+      tous: Tous les types
+      contact: Formulaire de contact
+      question: Question d'un recruteur
+    sort: Tri
+    sort_option:
+      recents: Plus récents d'abord
+      anciens: Plus anciens d'abord
+    apply: Appliquer
+    empty_search: Aucun message ne correspond à cette recherche.
+    bulk_legend: "Avec la sélection :"
+    bulk:
+      read: Marquer lus
+      replied: Marquer répondus
+      archive: Archiver
+      delete: Supprimer
+    select: Sélection
+    select_all: Tout sélectionner
+    select_one: "Sélectionner le message de %name%"
+    table_caption: "{0}Aucun message|{1}1 message|]1,Inf[%count% messages"
+    pagination: Pages des messages
+    previous: "← Page précédente"
+    next: "Page suivante →"
+    page: "Page %page% sur %pages%"
+    replied_on: "Répondu le %date%"
+    archived: Archivé
+    archived_on: "archivé le %date%"
+    not_replied: Pas encore répondu
+    replied_help: "Vous répondez depuis votre boîte e-mail : le site ne peut pas le savoir seul. Indiquez-le avec « Marquer comme répondu »."
+    source:
+      contact_form: Formulaire de contact
+      recruiter_question: Question d'un recruteur
+    action:
+      read: Marquer comme lu
+      unread: Marquer comme non lu
+      replied: Marquer comme répondu
+      unreplied: Marquer comme non répondu
+      archive: Archiver
+      unarchive: Désarchiver
+    status:
+      new: Non lu
+      read: Lu
+    field:
+      date: Reçu le
+      name: Nom
+      email: E-mail
+      company: Entreprise
+      subject: Objet
+      status: Statut
+      replied: Répondu le
+    flash:
+      read: Message marqué comme lu.
+      unread: Message marqué comme non lu.
+      replied: Message marqué comme répondu.
+      unreplied: Message marqué comme non répondu.
+      archive: Message archivé.
+      unarchive: Message remis dans la boîte.
+      deleted: Message supprimé.
+      none_selected: Aucun message sélectionné.
+      bulk_read: "{1}1 message marqué comme lu.|]1,Inf[%count% messages marqués comme lus."
+      bulk_replied: "{1}1 message marqué comme répondu.|]1,Inf[%count% messages marqués comme répondus."
+      bulk_archive: "{1}1 message archivé.|]1,Inf[%count% messages archivés."
+      bulk_delete: "{1}1 message supprimé.|]1,Inf[%count% messages supprimés."
+
+  site_settings:
+    title: Paramètres
+    display: Affichage
+    moved_title: Notifications et validation à distance
+    moved_text: "Les adresses e-mail, les canaux des notifications, Discord, Telegram et la validation à distance sont réunis dans la page Communication."
+    recruiters: Demandes recruteurs
+    notifications: Notifications
+    ai: Assistant IA (Mistral AI)
+    seo: Référencement et réseaux
+    share_image: Image de partage (1200 × 630)
+    share_image_ok: "Installée : public/partage/guillaume-couget-partage.jpg, affichée lors d'un partage (LinkedIn, messageries)."
+    share_image_missing: "Pas encore installée (public/partage/guillaume-couget-partage.jpg) : les partages n'affichent pas d'image."
+    maintenance: Mode maintenance
+    confirm_maintenance_title: Mettre le site en maintenance ?
+    confirm_maintenance_text: "Le site public répondra « en maintenance » (code 503) jusqu'à ce que vous décochiez la case ; l'admin reste accessible."
+    confirm_maintenance_submit: Activer la maintenance
+    maintenance_preview: Aperçu de la page de maintenance
+    new_tab: (nouvel onglet)
+    host: Hébergeur (mentions légales)
+    host_help: "Affiché dans les mentions légales (obligatoire, LCEN). Valeurs d'origine : celles de l’hébergeur, vérifiées le 24/10/2026 sur l’hébergeur.fr."
+    linkedin_invalid: L'adresse doit être un profil LinkedIn (https://www.linkedin.com/…).
+    ai_help: "Plafonds réglables. Débit (1 requête par seconde) et plafond mensuel (5 000 000 de jetons) : hypothèses à confirmer, la console Mistral n'affichant pas ces limites pour l'offre gratuite. Les questions guidées ne sont jamais limitées."
+    configured: configuré
+    not_configured: non configuré (.env.local)
+    channels_help: "Cochez les canaux de chaque événement. Un canal non configuré est ignoré : e-mail sans adresse ci-dessus, Discord ou Telegram sans webhook ni jeton dans .env.local. Nouvelle demande d'accès : nom, entreprise, fonction, site web, domaine de l'e-mail, début du message et synthèse sur tous les canaux (jamais l'adresse IP ni l'e-mail complet). Autres événements : e-mail avec nom et entreprise ; Discord et Telegram sans aucune donnée personnelle."
+    test_button: Envoyer une notification de test
+    test_sent: "Notification de test envoyée sur %channel%."
+    test_failed: "%channel% : notification de test non envoyée, %error%"
+    remote: Validation à distance des demandes
+    remote_help: "Accepter ou refuser une nouvelle demande sans ouvrir l'admin : boutons dans Telegram (code PIN demandé par le bot), boutons dans Discord (fenêtre « Code PIN » avec l'application Discord ; sinon page de confirmation et code PIN). Boutons et liens à usage unique, valables 72 h. Telegram en ligne : TELEGRAM_WEBHOOK_SECRET et webhook déclaré (app:telegram:webhook set) ; en local : app:telegram:poll. Activez la validation en deux étapes de vos comptes Telegram et Discord."
+    remote_telegram_ready: "Telegram : conversation et compte autorisés connus"
+    remote_telegram_missing: "Telegram : TELEGRAM_USER_ID manquant (conversation de groupe, .env.local)"
+    poll_active: "Relève Telegram : active (dernier passage à %date%)"
+    poll_stopped: "Relève Telegram : arrêtée (dernier passage : %date%) : lancez php bin/console app:telegram:poll"
+    poll_never: jamais
+    discord_app_ready: "Discord : application configurée (boutons et code PIN dans Discord)"
+    discord_app_missing: "Discord : application non configurée (repli : webhook et page de confirmation)"
+    remote_telegram_webhook: "Webhook (en ligne) : TELEGRAM_WEBHOOK_SECRET renseigné"
+    remote_telegram_no_webhook: "Webhook (en ligne) : TELEGRAM_WEBHOOK_SECRET manquant ; en local, app:telegram:poll"
+    remote_pin_set: "Code PIN défini (Telegram et Discord)"
+    remote_pin_missing: "Aucun code PIN : aucune décision à distance possible"
+    field:
+      notification_email: Adresse de réception des notifications
+      response_delay: Délai de réponse affiché
+      auto_approval: Validation automatique des demandes
+      auto_approval_threshold: Score minimal de la validation automatique
+      ai_enabled: Questions libres à l'assistant IA
+      ai_recruiter_daily: Questions libres par recruteur et par jour
+      ai_site_daily: Questions libres par jour pour le site
+      ai_monthly_tokens: Plafond mensuel de jetons
+      ai_requests_per_second: Requêtes par seconde (tout le site)
+      ai_alert_percent: Alerte du tableau de bord (% du plafond mensuel)
+      ai_knowledge_token_limit: Plafond de taille des fiches du Cerveau de l'IA (jetons)
+      seo_title: Title de l'accueil
+      seo_description: Meta description de l'accueil
+      linkedin_url: Profil LinkedIn
+      maintenance_enabled: Site en maintenance
+      maintenance_message: Message de maintenance
+      maintenance_until: Date et heure de réactivation (facultatif)
+      maintenance_allowed_ips: Adresses IP autorisées pendant la maintenance (facultatif)
+      remote_validation: Validation à distance (Telegram, Discord)
+      remote_pin: Nouveau code PIN (Telegram et Discord)
+      host_name: Raison sociale et identification
+      host_address: Adresse
+      host_phone: Téléphone
+      host_website: Site web
+    help:
+      notification_email: "Votre adresse (compte admin) : demandes d'accès, messages, signaux d'intérêt et e-mail de test y sont envoyés. En local, tout arrive dans Mailpit (http://localhost:8025)."
+      response_delay: Affiché sur les pages Contact et Espace recruteur, par ex. « sous 24 h ouvrées ».
+      auto_approval: Désactivée par défaut. Activée, une demande dont le score atteint le seuil est validée sans intervention.
+      ai_enabled: Décochée, les recruteurs n'ont que les questions guidées (sans IA).
+      ai_monthly_tokens: "Jetons réels renvoyés par l'API (envoyés + réponse), tous usages : chatbot, import de CV, synthèse. Hypothèse à confirmer. Une question coûte environ 3 000 jetons."
+      ai_requests_per_second: "Au-delà, la question attend 2 s au plus, puis l'assistant guidé prend le relais. Hypothèse à confirmer."
+      ai_alert_percent: Une alerte s'affiche dans le tableau de bord à partir de ce pourcentage du plafond mensuel.
+      ai_knowledge_token_limit: "Total des fiches actives, envoyées à chaque question (estimation). Au-delà, une fiche ne peut plus être activée. Par défaut : 6 000."
+      seo_title: "70 caractères au plus. Vide : « Guillaume Couget — Titre professionnel… | Ville » (TEXTES_SITE § 18)."
+      seo_description: "170 caractères au plus. Vide : texte de TEXTES_SITE § 18."
+      linkedin_url: "Affiché dans le pied de page et dans les données structurées. Vide : aucun lien."
+      host_name: "Nom, forme, capital, immatriculation (ex. « Hébergeur Exemple SAS, RCS Exemple, SIREN 000 000 000 »)."
+      maintenance_enabled: "Coché, le site public répond « en maintenance » (code 503) ; l'admin reste accessible."
+      maintenance_message: "Texte simple. Vide : « Quelques améliorations sont en cours. Merci de votre patience. »"
+      maintenance_until: "Heure de Paris. Affichée en clair avec un compte à rebours, et annoncée aux navigateurs et aux robots (Retry-After). Vide ou passée : « Retour très bientôt »."
+      maintenance_allowed_ips: "Une par ligne (IPv4, IPv6 ou plage CIDR, ex. 203.0.113.0/24) : ces adresses voient le site normal. L'admin reste toujours accessible."
+      remote_validation: "Désactivée par défaut. Activée, les notifications de nouvelle demande portent des boutons (Telegram) et des liens (Discord) pour accepter ou refuser ; le traitement et l'e-mail au recruteur sont ceux de l'admin."
+      remote_pin: "6 à 12 chiffres, personnel, gardé haché (jamais réaffiché). Vide : code inchangé. 5 codes faux bloquent le bouton ou le lien."
+    flash:
+      saved: Paramètres enregistrés.
+
+calculator:
+  # Textes publics : TEXTES_SITE § 9
+  meta_title: "Outils de calcul technique gratuits · %name%"
+  meta_description: "Outils de calcul gratuits pour l'électricité, le froid, la thermique, l'instrumentation et l'électronique."
+  category_meta_description: "%category% : %description% Outils de calcul gratuits, avec formules et hypothèses affichées."
+  tool_meta_description: "%tool% : outil de calcul gratuit, avec la formule et les hypothèses affichées."
+  kicker: Outils gratuits
+  title: Outils de calcul technique
+  intro: "{0} Les outils de calcul arrivent bientôt.|{1} Un outil gratuit pour l'électricité, le froid, la thermique, l'instrumentation et l'électronique. Je l'ai conçu à partir de cas pratiques, pour les techniciens, les étudiants et les passionnés.|]1,Inf[ %count% outils gratuits pour l'électricité, le froid, la thermique, l'instrumentation et l'électronique. Je les ai conçus à partir de cas pratiques, pour les techniciens, les étudiants et les passionnés."
+  search_label: Rechercher un outil
+  search_placeholder: "Par ex. chute de tension, cos φ, câble…"
+  search_results: "%count% outil(s) trouvé(s)"
+  no_result: Aucun outil ne correspond à cette recherche.
+  favorites: Mes favoris
+  nav_label: Catégories d'outils
+  nav_count_suffix: outil(s)
+  favorite_add: Ajouter aux favoris
+  favorite_remove: Retirer des favoris
+  breadcrumb: Fil d'Ariane
+  help: Aide
+  reference: Norme ou source
+  disclaimer_title: Avertissement.
+  disclaimer: "Résultats fournis à titre indicatif, selon les hypothèses saisies. Ils ne remplacent pas une étude réalisée par un professionnel ni la vérification des normes en vigueur. L'utilisateur reste seul responsable de leur usage."
+  author_before: Outil conçu par
+  author_after: ", auteur du site."
+  author_link: Voir mon parcours
+
+fluid:
+  state:
+    liquide: Liquide
+    gaz: Gaz
+
+project:
+  meta_title: "Projets et études de cas · %name%"
+  meta_description: "Études de cas en génie climatique, froid et électrotechnique, et projets personnels du Labo : électronique, objets connectés, impression 3D."
+  kicker: Réalisations
+  title: Projets
+  intro: Des études de cas professionnelles, présentées sans nom de client confidentiel, et les projets personnels de mon Labo.
+  tabs_label: Types de projets
+  tab_all: Tous
+  categories_label: Catégories
+  all_categories: Toutes
+  empty: Aucun projet ne correspond à ce choix pour le moment.
+  reset_filters: Voir tous les projets
+  # Texte d'introduction du Labo : TEXTES_SITE § 8
+  case_studies_intro: "Chaque étude suit le même plan : contexte, problème, solution, résultat et compétences mobilisées."
+  lab_intro: "En dehors du travail, je garde la main sur l'électronique et le développement : prototypes connectés, régulation climatique, impression 3D. Ces projets nourrissent ma façon de concevoir au quotidien."
+  read_more: Lire le projet
+  breadcrumb: Fil d'Ariane
+  technologies: Technologies
+  gallery: Galerie
+  demo: Voir la démonstration
+  repository: Voir le code source
+  back: Tous les projets
+  type:
+    case_study: Études de cas
+    lab: Labo
+  visibility:
+    public: Public
+    recruiter: Recruteurs seulement
+  section:
+    summary: Résumé
+    context: Contexte
+    problem: Problème
+    solution: Solution
+    result: Résultat
+    competences: Compétences mobilisées
+  preview:
+    banner: Aperçu de l'administration
+    not_visible: ce projet n'est pas encore visible sur le site.
+    back: Retour au formulaire
+
+certification:
+  type:
+    certification: Certification ou attestation
+    clearance: Habilitation
+
+security_event:
+  type:
+    password_success: Mot de passe correct
+    password_failure: Échec de connexion
+    key_success: Clé vérifiée
+    key_failure: Échec de la clé
+    key_enrolled: Clé enregistrée
+    key_removed: Clé retirée
+    turnstile_config_error: Turnstile mal configuré
+    trusted_devices_revoked: Appareils de confiance révoqués
+    enrollment_link_used: Lien d'enrôlement utilisé
+    enrollment_link_rejected: Lien d'enrôlement refusé
+    session_expired: Session expirée
+    logout: Déconnexion
+    rate_limited: Limite de débit atteinte
+    remote_decision: Décision à distance
+    remote_decision_rejected: Validation à distance refusée
+
+# Validation à distance des demandes recruteurs : liens Discord (page de confirmation, code PIN)
+remote_decision:
+  pin_label: Votre code PIN
+  pin_help: "Code personnel défini dans les Paramètres de l'admin. Lien à usage unique, valable jusqu'au %date%."
+  use_admin: Vous pouvez toujours décider depuis l'admin (fiche du recruteur).
+  trial:
+    approve_title: "Essai : accepter la demande fictive ?"
+    refuse_title: "Essai : refuser la demande fictive ?"
+    confirm_text: "Notification de test : confirmer cet essai ne décide rien, il vérifie le parcours (lien, code PIN, résultat)."
+    done_title: Essai réussi
+    done_text: "Le parcours fonctionne : rien n'a été décidé (notification de test)."
+  approve:
+    confirm_title: "Accepter la demande de %name% ?"
+    confirm_text: "L'accès à l'espace recruteur sera ouvert pour 90 jours et un e-mail de validation partira, comme depuis l'admin."
+    submit: Confirmer l'acceptation
+    done_title: "Demande de %name% acceptée"
+    done_text: Accès ouvert pour 90 jours ; l'e-mail de validation est parti.
+  refuse:
+    confirm_title: "Refuser la demande de %name% ?"
+    confirm_text: La demande sera refusée, comme depuis l'admin (aucun e-mail au demandeur).
+    submit: Confirmer le refus
+    done_title: "Demande de %name% refusée"
+    done_text: La demande est refusée ; aucun e-mail n'a été envoyé.
+  error:
+    csrf: "Formulaire expiré : rouvrez le lien et recommencez."
+    pin: "{1}Code PIN incorrect : encore 1 essai avant le blocage du lien.|]1,Inf[Code PIN incorrect : encore %count% essais avant le blocage du lien."
+    disabled_title: Validation à distance désactivée
+    disabled_text: "La validation à distance est désactivée dans les Paramètres de l'admin : ce lien ne fait rien."
+    unknown_title: Lien inconnu
+    unknown_text: Ce lien ne correspond à aucune demande.
+    expired_title: Lien expiré
+    expired_text: "Ce lien n'est valable que 72 h."
+    used_title: Lien déjà utilisé
+    used_text: Ce lien a déjà servi ; il est à usage unique.
+    blocked_title: Lien bloqué
+    blocked_text: Trop de codes PIN incorrects ont été saisis avec ce lien ; il ne peut plus servir.
+    processed_title: Demande déjà traitée
+    processed_text: "La demande de %name% a déjà été acceptée ou refusée."

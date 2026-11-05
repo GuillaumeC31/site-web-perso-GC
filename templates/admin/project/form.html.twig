@@ -1,0 +1,160 @@
+{#
+  Écran : ajout ou modification d'un projet (pleine page).
+  Affiché par : Admin\ProjectController::new() et ::edit() (via AbstractCrudController).
+  Variables attendues :
+    - crud   : configuration { route_prefix, translation_prefix, … }
+    - form   : formulaire ProjectType
+    - entity : Project (sans identifiant pour un ajout)
+  Éditeur Markdown : contrôleur Stimulus « markdown-editor » (barre d'outils et aperçu,
+  rendu par la route admin_project_markdown_preview, nettoyé comme sur le site).
+  Les sections manquantes (résumé, plan de l'étude de cas) sont listées en haut :
+  le projet ne s'affiche sur le site qu'une fois complet, publié et public.
+#}
+{% extends 'admin/base.html.twig' %}
+
+{% set is_new = entity.id is null %}
+{% set heading = is_new ? 'admin.project.new_title'|trans : entity.title %}
+
+{% block title %}{{ heading }}{% endblock %}
+
+{% block body %}
+    <div class="mb-6 flex flex-wrap items-start justify-between gap-4">
+        <div>
+            <p class="text-sm"><a href="{{ path('admin_project_index') }}" class="font-medium text-primary-700 hover:text-primary-800 dark:text-primary-300">← {{ 'admin.project.title'|trans }}</a></p>
+            <h1 class="mt-1 text-2xl font-bold dark:text-white">{{ heading }}</h1>
+        </div>
+        {% if not is_new %}
+            <div class="flex flex-wrap gap-2">
+                <twig:Button href="{{ path('admin_project_preview', {id: entity.id}) }}" variant="secondary" size="sm" target="_blank" rel="noopener">{{ 'admin.project.preview'|trans }}</twig:Button>
+                <twig:Button href="{{ path('admin_project_export', {id: entity.id}) }}" variant="secondary" size="sm" data-turbo="false">{{ 'admin.project.export'|trans }}</twig:Button>
+            </div>
+        {% endif %}
+    </div>
+
+    {% if not is_new %}
+        {% if entity.publiclyVisible %}
+            <twig:Alert type="success" class="mb-6">{{ 'admin.project.status.visible'|trans }}</twig:Alert>
+        {% else %}
+            <twig:Alert type="warning" class="mb-6">
+                {{ 'admin.project.status.hidden'|trans }}
+                <ul class="mt-2 list-disc pl-5">
+                    {% if not entity.published %}<li>{{ 'admin.project.status.draft'|trans }}</li>{% endif %}
+                    {% if entity.visibility.value != 'public' %}<li>{{ 'admin.project.status.recruiter_only'|trans }}</li>{% endif %}
+                    {% for section in entity.missingSections %}
+                        <li>{{ 'admin.project.status.missing'|trans({'%section%': section|trans}) }}</li>
+                    {% endfor %}
+                </ul>
+            </twig:Alert>
+        {% endif %}
+    {% endif %}
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
+        {{ form_errors(form) }}
+        <div class="grid gap-6 xl:grid-cols-3">
+            <div class="space-y-6 xl:col-span-2">
+                <twig:Card title="{{ 'admin.project.section.information'|trans }}">
+                    {{ form_row(form.type) }}
+                    {{ form_row(form.title) }}
+                    {{ form_row(form.slug) }}
+                    {{ form_row(form.summary) }}
+                    <div class="grid gap-x-6 sm:grid-cols-2">
+                        {{ form_row(form.clientLabel) }}
+                        {{ form_row(form.projectDate) }}
+                    </div>
+                    {{ form_row(form.categories) }}
+                    <p class="form-help -mt-2 mb-4"><a href="{{ path('admin_project_category_index') }}" class="font-medium text-primary-700 hover:text-primary-800 dark:text-primary-300">{{ 'admin.project.manage_categories'|trans }}</a></p>
+                    {{ form_row(form.technologies) }}
+                </twig:Card>
+
+                <twig:Card title="{{ 'admin.project.section.case_study'|trans }}">
+                    <p class="form-help mb-4">{{ 'admin.project.help.case_study'|trans }}</p>
+                    {{ form_row(form.context) }}
+                    {{ form_row(form.problem) }}
+                    {{ form_row(form.solution) }}
+                    {{ form_row(form.result) }}
+                    {{ form_row(form.competences) }}
+                </twig:Card>
+
+                <twig:Card title="{{ 'admin.project.section.content'|trans }}">
+                    <div data-controller="markdown-editor"
+                         data-markdown-editor-url-value="{{ path('admin_project_markdown_preview') }}"
+                         data-markdown-editor-token-value="{{ csrf_token(constant('App\\Controller\\Admin\\ProjectController::MARKDOWN_PREVIEW_TOKEN')) }}">
+                        <div class="mb-2 flex flex-wrap gap-1" role="toolbar" aria-label="{{ 'admin.project.editor.toolbar'|trans }}">
+                            {% for tool in [
+                                {action: 'heading2', label: 'admin.project.editor.heading2', text: 'H2'},
+                                {action: 'heading3', label: 'admin.project.editor.heading3', text: 'H3'},
+                                {action: 'bold', label: 'admin.project.editor.bold', text: 'G'},
+                                {action: 'italic', label: 'admin.project.editor.italic', text: 'I'},
+                                {action: 'list', label: 'admin.project.editor.list', text: '•'},
+                                {action: 'orderedList', label: 'admin.project.editor.ordered_list', text: '1.'},
+                                {action: 'link', label: 'admin.project.editor.link', text: '🔗'},
+                                {action: 'quote', label: 'admin.project.editor.quote', text: '❝'},
+                            ] %}
+                                <button type="button" class="btn btn-secondary btn-sm min-w-9" title="{{ tool.label|trans }}"
+                                        data-action="markdown-editor#format" data-markdown-editor-format-param="{{ tool.action }}">
+                                    <span aria-hidden="true">{{ tool.text }}</span><span class="sr-only">{{ tool.label|trans }}</span>
+                                </button>
+                            {% endfor %}
+                            <button type="button" class="btn btn-secondary btn-sm ml-auto" data-action="markdown-editor#togglePreview" data-markdown-editor-target="toggle" aria-pressed="false">
+                                {{ 'admin.project.editor.preview'|trans }}
+                            </button>
+                        </div>
+                        {{ form_row(form.content, {attr: {'data-markdown-editor-target': 'input', class: 'font-mono text-sm'}}) }}
+                        <div data-markdown-editor-target="preview" hidden
+                             class="prose prose-slate mb-4 max-w-none rounded-xl border border-secondary-200 p-4 dark:prose-invert dark:border-secondary-700"
+                             aria-live="polite"></div>
+                    </div>
+                </twig:Card>
+            </div>
+
+            <div class="space-y-6">
+                <twig:Card title="{{ 'admin.project.section.publication'|trans }}">
+                    {{ form_row(form.isPublished) }}
+                    {{ form_row(form.visibility) }}
+                    {{ form_row(form.isFeatured) }}
+                </twig:Card>
+
+                <twig:Card title="{{ 'admin.project.section.cover'|trans }}">
+                    {% if entity.coverImage %}
+                        <img src="{{ project_image(entity.coverImage, true) }}" alt="" width="600" height="338" class="mb-3 aspect-[16/9] w-full rounded-xl object-cover">
+                        {{ form_row(form.removeCover) }}
+                    {% else %}
+                        {% do form.removeCover.setRendered %}
+                    {% endif %}
+                    {{ form_row(form.coverFile) }}
+                    {{ form_row(form.coverAlt) }}
+                </twig:Card>
+
+                <twig:Card title="{{ 'admin.project.section.gallery'|trans }}">
+                    {% if form.images is not empty %}
+                        <ul class="mb-4 space-y-4">
+                            {% for imageForm in form.images %}
+                                {% set image = imageForm.vars.data %}
+                                <li class="rounded-xl border border-secondary-200 p-3 dark:border-secondary-700">
+                                    <img src="{{ project_image(image.filename, image.width > 600) }}" alt="" width="{{ image.width }}" height="{{ image.height }}" loading="lazy" class="mb-2 max-h-40 w-full rounded-lg object-cover">
+                                    {{ form_row(imageForm.alt) }}
+                                    <p class="form-help mb-2">{{ 'admin.project.help.insert_image'|trans }}</p>
+                                    <code tabindex="0" class="mb-2 block overflow-x-auto rounded bg-secondary-100 px-2 py-1 text-xs dark:bg-secondary-900">![{{ image.alt ?? 'Description' }}](/{{ constant('App\\Service\\Admin\\ProjectImageStorage::PUBLIC_DIRECTORY') }}/{{ image.filename }})</code>
+                                    {{ form_row(imageForm.remove) }}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        {% do form.images.setRendered %}
+                    {% endif %}
+                    {{ form_row(form.newImages) }}
+                </twig:Card>
+
+                <twig:Card title="{{ 'admin.project.section.links'|trans }}">
+                    {{ form_row(form.repositoryUrl) }}
+                    {{ form_row(form.demoUrl) }}
+                </twig:Card>
+            </div>
+        </div>
+
+        <div class="mt-6 flex flex-wrap gap-3">
+            <twig:Button type="submit">{{ 'admin.crud.save'|trans }}</twig:Button>
+            <twig:Button href="{{ path('admin_project_index') }}" variant="secondary">{{ 'admin.crud.cancel'|trans }}</twig:Button>
+        </div>
+    {{ form_end(form) }}
+{% endblock %}

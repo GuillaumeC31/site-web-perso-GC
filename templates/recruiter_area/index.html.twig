@@ -1,0 +1,71 @@
+{#
+  Page : espace recruteur, partie publique (TEXTES_SITE § 11) : demande d'accès et demande d'un lien
+  de connexion. Même réponse, que l'adresse soit connue ou non.
+  Affichée par : RecruiterAreaController::index() (route recruiter_access, /espace-recruteur).
+  Variables attendues :
+    - request_form   : formulaire RecruiterRequestType (demande d'accès)
+    - link_form      : formulaire LoginLinkRequestType (nom « login_link »)
+    - response_delay : délai de réponse affiché (paramètres de l'admin)
+#}
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'recruiter_area.title'|trans }} · {{ site_owner_name }}{% endblock %}
+{% block description %}{{ 'recruiter_area.meta_description'|trans }}{% endblock %}
+
+{% block body %}
+    <div class="container mx-auto px-4 py-12 lg:px-8 lg:py-16 xl:max-w-6xl">
+        <twig:SectionHeading title="{{ 'recruiter_area.title'|trans }}" :level="1">
+            {{ 'recruiter_area.intro'|trans({'%delay%': response_delay}) }}
+        </twig:SectionHeading>
+
+        <div class="mt-10 grid gap-8 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
+            <section class="card" aria-labelledby="request-title">
+                <h2 id="request-title" class="text-lg font-bold text-secondary-900 dark:text-white">{{ 'recruiter_area.request_title'|trans }}</h2>
+                <p class="mt-1 mb-6 text-sm text-secondary-600 dark:text-secondary-300">{{ 'recruiter_area.request_help'|trans({'%delay%': response_delay}) }}</p>
+                {{ form_start(request_form, {attr: {novalidate: 'novalidate'}}) }}
+                    {{ form_errors(request_form) }}
+                    {{ form_row(request_form.email) }}
+                    <div class="grid gap-x-4 sm:grid-cols-2">
+                        {{ form_row(request_form.fullName) }}
+                        {{ form_row(request_form.company) }}
+                        {{ form_row(request_form.jobTitle) }}
+                        {{ form_row(request_form.companyWebsite) }}
+                    </div>
+                    {{ form_row(request_form.message) }}
+                    {{ form_row(request_form.consent) }}
+                    {{ form_row(request_form.website) }}
+                    {{ include('_partials/_turnstile.html.twig') }}
+                    <twig:Button type="submit">{{ 'recruiter_area.request_submit'|trans }}</twig:Button>
+                    {{ include('_partials/_form_privacy_notice.html.twig', {notice: 'recruiter_request', section: 'espace-recruteur'}, with_context = false) }}
+                {{ form_end(request_form) }}
+            </section>
+
+            <div class="space-y-6">
+                <section id="lien" class="card scroll-mt-24" aria-labelledby="link-title">
+                    <h2 id="link-title" class="text-lg font-bold text-secondary-900 dark:text-white">{{ 'recruiter_area.link_title'|trans }}</h2>
+                    <p class="mt-1 mb-6 text-sm text-secondary-600 dark:text-secondary-300">{{ 'recruiter_area.link_help'|trans }}</p>
+                    {{ form_start(link_form, {attr: {novalidate: 'novalidate'}}) }}
+                        {{ form_errors(link_form) }}
+                        {{ form_row(link_form.email) }}
+                        {{ form_row(link_form.website) }}
+                        {{ include('_partials/_turnstile.html.twig') }}
+                        <twig:Button type="submit" variant="secondary">{{ 'recruiter_area.link_submit'|trans }}</twig:Button>
+                        {{ include('_partials/_form_privacy_notice.html.twig', {notice: 'login_link', section: 'espace-recruteur'}, with_context = false) }}
+                    {{ form_end(link_form) }}
+                </section>
+                <twig:Card title="{{ 'recruiter_area.content_title'|trans }}">
+                    <ul class="list-disc space-y-1 pl-5 text-sm text-secondary-700 dark:text-secondary-300">
+                        <li>{{ 'recruiter_area.content.contact'|trans }}</li>
+                        <li>{{ 'recruiter_area.content.cv'|trans }}</li>
+                        <li>{{ 'recruiter_area.content.companies'|trans }}</li>
+                        <li>{{ 'recruiter_area.content.projects'|trans }}</li>
+                        <li>{{ 'recruiter_area.content.assistant'|trans }}</li>
+                    </ul>
+                </twig:Card>
+                <twig:Card title="{{ 'form.privacy_title'|trans }}">
+                    <p class="text-sm text-secondary-700 dark:text-secondary-300">{{ 'recruiter_area.privacy'|trans }}</p>
+                </twig:Card>
+            </div>
+        </div>
+    </div>
+{% endblock %}

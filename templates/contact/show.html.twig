@@ -1,0 +1,51 @@
+{#
+  Page : formulaire de contact (TEXTES_SITE § 10). Aucun e-mail ni téléphone affiché.
+  Affichée par : ContactController::show() (route contact_show, /contact).
+  Variables attendues :
+    - form           : formulaire ContactType
+    - response_delay : délai de réponse affiché (paramètres de l'admin)
+#}
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'contact.title'|trans }} · {{ site_owner_name }}{% endblock %}
+{% block description %}{{ 'contact.meta_description'|trans }}{% endblock %}
+
+{% block body %}
+    <div class="container mx-auto px-4 py-12 lg:px-8 lg:py-16 xl:max-w-6xl">
+        <div class="grid gap-10 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
+            <div>
+                <twig:SectionHeading title="{{ 'contact.title'|trans }}" :level="1">
+                    {{ 'contact.intro'|trans({'%delay%': response_delay}) }}
+                </twig:SectionHeading>
+
+                <div class="card mt-8">
+                    {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
+                        {{ form_errors(form) }}
+                        <div class="grid gap-x-4 sm:grid-cols-2">
+                            {{ form_row(form.name) }}
+                            {{ form_row(form.email) }}
+                            {{ form_row(form.company) }}
+                            {{ form_row(form.subject) }}
+                        </div>
+                        {{ form_row(form.message) }}
+                        {{ form_row(form.consent) }}
+                        {{ form_row(form.website) }}
+                        {{ include('_partials/_turnstile.html.twig') }}
+                        <twig:Button type="submit">{{ 'contact.submit'|trans }}</twig:Button>
+                        {{ include('_partials/_form_privacy_notice.html.twig', {notice: 'contact', section: 'contact'}, with_context = false) }}
+                    {{ form_end(form) }}
+                </div>
+            </div>
+
+            <aside class="space-y-4 text-sm text-secondary-700 dark:text-secondary-300">
+                <twig:Card title="{{ 'contact.recruiter_title'|trans }}">
+                    <p>{{ 'contact.recruiter_text'|trans }}</p>
+                    <twig:Button href="{{ path('recruiter_access') }}" variant="secondary" size="sm" class="mt-4">{{ 'nav.recruiter_area'|trans }}</twig:Button>
+                </twig:Card>
+                <twig:Card title="{{ 'form.privacy_title'|trans }}">
+                    <p>{{ 'contact.privacy'|trans }}</p>
+                </twig:Card>
+            </aside>
+        </div>
+    </div>
+{% endblock %}

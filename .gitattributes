@@ -1,0 +1,9 @@
+# Fins de ligne LF partout (scripts exécutés sur le serveur Linux l’hébergeur)
+* text=auto eol=lf
+
+# Fichiers binaires
+*.png binary
+*.jpg binary
+*.webp binary
+*.woff2 binary
+*.pdf binary

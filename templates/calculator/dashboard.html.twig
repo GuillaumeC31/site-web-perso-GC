@@ -1,0 +1,126 @@
+{#
+  Page : tableau de bord de la calculatrice (CDC § 8, TEXTES_SITE § 9).
+  Affichée par : CalculatorController::dashboard() (route calculator_dashboard, /calculatrice).
+  Variables attendues :
+    - categories : catégories ayant au moins un outil public (CalculatorCategory)
+    - tool_count : nombre d'outils publics (texte d'introduction)
+  Navigation par catégorie : colonne collante sur grand écran (lg), rangée de pastilles collante et
+  défilante en dessous ; ancres #<categorie> sur chaque section. Recherche, favoris, défilement et
+  surbrillance : contrôleur Stimulus « calculator--dashboard ».
+  Sans JavaScript, la page reste une liste complète de liens et les ancres fonctionnent.
+#}
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'calculator.meta_title'|trans({'%name%': site_owner_name}) }}{% endblock %}
+{% block description %}{{ 'calculator.meta_description'|trans }}{% endblock %}
+
+{% set catalog = {} %}
+{% for category in categories %}
+    {% for tool in category.publicTools %}
+        {% set catalog = catalog|merge({(tool.key): {title: tool.title, url: path('calculator_tool', {category: category.slug, tool: tool.slug}), category: category.name}}) %}
+    {% endfor %}
+{% endfor %}
+
+{% set d = 'data-calculator--dashboard-target' %}
+
+{#
+  Lien vers une catégorie (colonne ou pastille) : icône, nom, nombre d'outils (mis à jour pendant une recherche).
+  Paramètres : category, classes (styles du lien).
+#}
+{% macro navLink(category, classes) %}
+    <a href="#{{ category.slug }}" class="{{ classes }}" data-calculator--dashboard-target="navLink" data-category="{{ category.slug }}" data-action="calculator--dashboard#navigate">
+        <svg class="size-4 shrink-0" aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="{{ category.icon }}"/></svg>
+        <span class="min-w-0 leading-snug">{{ category.name }}</span>
+        <span class="ml-auto rounded-full bg-secondary-100 px-2 py-0.5 text-xs font-semibold tabular-nums text-secondary-700 dark:bg-secondary-800 dark:text-secondary-200" data-count data-total="{{ category.publicTools|length }}">{{ category.publicTools|length }}</span>
+        <span class="sr-only">{{ 'calculator.nav_count_suffix'|trans }}</span>
+    </a>
+{% endmacro %}
+
+{% block body %}
+    <div class="container mx-auto px-4 py-12 lg:px-8 lg:py-16 xl:max-w-7xl"
+         data-controller="calculator--dashboard"
+         data-calculator--dashboard-catalog-value="{{ catalog|json_encode }}"
+         data-calculator--dashboard-messages-value="{{ {results: 'calculator.search_results'|trans}|json_encode }}">
+
+        <twig:SectionHeading kicker="{{ 'calculator.kicker'|trans }}" title="{{ 'calculator.title'|trans }}" :level="1">
+            {{ 'calculator.intro'|trans({'%count%': tool_count}) }}
+        </twig:SectionHeading>
+
+        {# Recherche instantanée #}
+        <div class="mt-8 max-w-xl" role="search">
+            <label for="calculator-search" class="form-label">{{ 'calculator.search_label'|trans }}</label>
+            <input type="search" id="calculator-search" class="form-input" autocomplete="off"
+                   placeholder="{{ 'calculator.search_placeholder'|trans }}"
+                   {{ d }}="search" data-action="input->calculator--dashboard#search">
+            <p class="form-help" role="status" aria-live="polite" {{ d }}="status"></p>
+        </div>
+
+        {# Favoris (affichés par le contrôleur s'il y en a) #}
+        <template {{ d }}="cardTemplate">
+            <li>
+                <a href="#" class="block rounded-xl border border-secondary-200 bg-white px-4 py-3 hover:border-primary-700 dark:border-secondary-700 dark:bg-secondary-800/60 dark:hover:border-primary-300">
+                    <span data-title class="block font-semibold text-secondary-900 dark:text-white"></span>
+                    <span data-category class="block text-sm text-secondary-600 dark:text-secondary-300"></span>
+                </a>
+            </li>
+        </template>
+        <section hidden class="mt-10" {{ d }}="favorites" aria-labelledby="favorites-title">
+            <h2 id="favorites-title" class="text-lg font-bold text-secondary-900 dark:text-white">{{ 'calculator.favorites'|trans }}</h2>
+            <ul class="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-3" {{ d }}="favoritesList"></ul>
+        </section>
+
+        <div class="mt-12 lg:grid lg:grid-cols-[15rem_minmax(0,1fr)] lg:gap-10">
+            {# Grand écran : colonne collante #}
+            <nav aria-label="{{ 'calculator.nav_label'|trans }}" class="hidden lg:block">
+                <ul class="sticky top-[calc(var(--header-offset,0px)+1.5rem)] space-y-1">
+                    {% for category in categories %}
+                        <li>{{ _self.navLink(category, 'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-secondary-700 hover:bg-secondary-100 hover:text-secondary-900 dark:text-secondary-300 dark:hover:bg-secondary-800 dark:hover:text-white aria-[current=true]:bg-primary-50 aria-[current=true]:text-primary-800 dark:aria-[current=true]:bg-primary-500/15 dark:aria-[current=true]:text-primary-200') }}</li>
+                    {% endfor %}
+                </ul>
+            </nav>
+
+            <div class="min-w-0">
+                {# Mobile et tablette : rangée de pastilles collante, seule cette rangée défile horizontalement #}
+                <nav aria-label="{{ 'calculator.nav_label'|trans }}" class="sticky top-(--header-offset,0px) z-10 -mx-4 border-b motion-safe:transition-[top] motion-safe:duration-200 border-secondary-100 bg-white/95 px-4 py-3 backdrop-blur lg:hidden dark:border-secondary-800 dark:bg-secondary-900/95">
+                    <ul class="relative flex gap-2 overflow-x-auto pb-1" {{ d }}="pills">
+                        {% for category in categories %}
+                            <li class="shrink-0">{{ _self.navLink(category, 'inline-flex items-center gap-2 rounded-full border border-secondary-200 bg-white px-3 py-1.5 text-sm font-medium text-secondary-700 hover:border-primary-700 dark:border-secondary-700 dark:bg-secondary-900 dark:text-secondary-200 aria-[current=true]:border-primary-700 aria-[current=true]:bg-primary-700 aria-[current=true]:text-white dark:aria-[current=true]:border-primary-300 dark:aria-[current=true]:bg-primary-300 dark:aria-[current=true]:text-secondary-950') }}</li>
+                        {% endfor %}
+                    </ul>
+                </nav>
+
+                {# Catégories et outils #}
+                <div class="mt-6 space-y-12 lg:mt-0">
+                    {% for category in categories %}
+                        <section id="{{ category.slug }}" class="scroll-mt-24 lg:scroll-mt-6" {{ d }}="category" data-category="{{ category.slug }}" aria-labelledby="category-{{ category.slug }}">
+                            <div class="flex items-center gap-3">
+                                <span class="flex size-10 items-center justify-center rounded-xl bg-primary-50 text-primary-700 dark:bg-primary-500/10 dark:text-primary-300" aria-hidden="true">
+                                    <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="{{ category.icon }}"/></svg>
+                                </span>
+                                <h2 id="category-{{ category.slug }}" tabindex="-1" class="text-xl font-bold text-secondary-900 focus:outline-none dark:text-white">
+                                    <a href="{{ path('calculator_category', {category: category.slug}) }}" class="hover:text-primary-700 dark:hover:text-primary-300">{{ category.name }}</a>
+                                </h2>
+                            </div>
+                            <ul class="mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+                                {% for tool in category.publicTools %}
+                                    <li {{ d }}="tool" data-key="{{ tool.key }}" data-search="{{ tool.title }} {{ tool.summary }} {{ category.name }} {{ tool.group }}">
+                                        <a href="{{ path('calculator_tool', {category: category.slug, tool: tool.slug}) }}" class="card block h-full p-5 transition hover:border-primary-700 dark:hover:border-primary-300">
+                                            <span class="block font-semibold text-secondary-900 dark:text-white">{{ tool.title }}</span>
+                                            {% if tool.summary %}<span class="mt-1 block text-sm/relaxed text-secondary-600 dark:text-secondary-300">{{ tool.summary }}</span>{% endif %}
+                                        </a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </section>
+                    {% endfor %}
+                </div>
+
+                <p hidden class="mt-10 rounded-2xl border border-dashed border-secondary-300 p-8 text-center text-secondary-700 dark:border-secondary-700 dark:text-secondary-300" {{ d }}="empty">
+                    {{ 'calculator.no_result'|trans }}
+                </p>
+            </div>
+        </div>
+
+        {{ include('calculator/_author.html.twig') }}
+    </div>
+{% endblock %}

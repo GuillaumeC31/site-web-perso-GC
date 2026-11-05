@@ -1,0 +1,38 @@
+{#-
+  Réponse d'une question guidée de l'assistant (sans IA), tirée du contenu public du CV.
+  Rendu par : GuidedAssistant::answer() (texte brut, espaces regroupés ensuite ; échappé à l'affichage).
+  Variables attendues :
+    - topic : profile, experience, skills, search, education ou contact (GuidedAssistant::TOPICS)
+    - profile, key_figures, career, pillars, entries, educations, certifications, languages :
+      CvContentProvider::getContent() (jamais le contenu privé)
+-#}
+{%- if topic == 'profile' -%}
+    {# Toujours à la 3e personne : l'accroche et le profil du CV (1re personne) ne sont pas repris #}
+    {{ profile.full_name }} est {{ profile.job_title|lower_first }}{% if profile.location %}, basé à {{ profile.location|trim('.') }}{% endif %}.
+    {% if profile.tagline %}{% set domains = profile.tagline|trim('.')|split(' · ')|map(d => d|trim|lower_first) %} Ses domaines : {{ domains|length > 1 ? domains|slice(0, -1)|join(', ') ~ ' et ' ~ domains|last : domains|first }}.{% endif %}
+    {% if key_figures is not empty %} En chiffres : {% for figure in key_figures %}{{ (figure.value ~ ' ' ~ figure.label)|lower_first|trim('.') }}{{ loop.last ? '.' : ' ; ' }}{% endfor %}{% endif %}
+{%- elseif topic == 'experience' -%}
+    {% set latest = career.professional|slice(0, 2) %}
+    {% if latest is empty %}Le détail du parcours figure sur cette page.{% endif %}
+    {% for xp in latest %}
+        {{ loop.first ? 'Poste le plus récent' : 'Auparavant' }} : {{ xp.job_title }}{% if xp.company %} chez {{ xp.company }}{% endif %} ({{ cv_period_numeric(xp) }}{% if xp.location %}, {{ xp.location }}{% endif %}).{% if xp.summary %} {{ xp.summary|cv_plain|trim('.') }}.{% endif %}
+    {% endfor %}
+    Le parcours complet est détaillé plus haut sur cette page.
+{%- elseif topic == 'skills' -%}
+    {% if pillars is empty and entries.soft_skill is not defined %}Le détail de ses compétences figure sur cette page.{% endif %}
+    {% if pillars is not empty %}Ses domaines de compétence : {% for pillar in pillars %}{{ pillar.name|lower_first }}{{ loop.last ? '.' : (loop.revindex == 2 ? ' et ' : ', ') }}{% endfor %}{% endif %}
+    {% if entries.soft_skill is defined %} Savoir-être : {% for entry in entries.soft_skill|slice(0, 4) %}{{ (entry.title ?: entry.content|cv_plain)|lower_first }}{{ loop.last ? '.' : ', ' }}{% endfor %}{% endif %}
+{%- elseif topic == 'search' -%}
+    {% if profile.search_status or profile.availability %}{{ profile.search_status ?: profile.availability }}{% else %}Guillaume Couget est à l'écoute d'opportunités{% endif %}.
+    {% if profile.target_roles %} Postes visés : {{ profile.target_roles|trim('.') }}.{% endif %}
+    {% if profile.contract_types %} Contrat recherché : {{ profile.contract_types|trim('.') }}.{% endif %}
+    {% if profile.location %} Localisation : {{ profile.location|trim('.') }}{% if profile.mobility %}, mobilité : {{ profile.mobility|lower_first|trim('.') }}{% endif %}.{% endif %}
+    {% if profile.work_modes %} Modalités de travail : {{ profile.work_modes|lower_first|trim('.') }}.{% endif %}
+{%- elseif topic == 'education' -%}
+    {% if educations is empty and certifications is empty and languages is empty %}Le détail de ses formations figure sur cette page.{% endif %}
+    {% if educations is not empty %}Formations : {% for education in educations %}{{ education.title }} ({{ education.year }}){{ loop.last ? '.' : ' ; ' }}{% endfor %}{% endif %}
+    {% if certifications is not empty %} Certifications : {% for certification in certifications %}{{ certification.name }}{{ loop.last ? '.' : ', ' }}{% endfor %}{% endif %}
+    {% if languages is not empty %} Langues : {% for language in languages %}{{ language.name|lower_first }}, {{ language.proficiency|lower_first }}{{ loop.last ? '.' : ' ; ' }}{% endfor %}{% endif %}
+{%- elseif topic == 'contact' -%}
+    Les coordonnées directes de Guillaume Couget figurent en haut de cette page. Vous pouvez aussi lui signaler votre intérêt avec le bouton « Je suis intéressé » : il est alors prévenu et vous répondra par e-mail sous 24 h ouvrées. Vous pouvez aussi lui écrire par le formulaire de contact du site.
+{%- endif -%}

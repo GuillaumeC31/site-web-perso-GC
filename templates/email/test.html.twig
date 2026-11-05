@@ -1,0 +1,14 @@
+{#
+  E-mail : test de l'envoi vers une adresse de réception (bouton « Envoyer un e-mail de test » de Communication › E-mails).
+  Envoyé par : Admin\CommunicationController::sendTestEmail(). Variables : sent_at, transport (schéma du transport),
+  category_label (catégorie testée), texts (EmailTexts : intro, signature), subject.
+#}
+{% extends 'email/_layout.html.twig' %}
+
+{% block content %}
+    <p style="margin:0 0 12px;font-weight:bold;">{{ subject }}</p>
+    <p style="margin:0 0 12px;">{{ texts.intro|nl2br }}</p>
+    <p style="margin:0 0 12px;">Adresse testée : <strong>{{ category_label }}</strong></p>
+    <p style="margin:0 0 12px;color:#64748b;">Envoyé le {{ sent_at|format_datetime('long', 'short') }} · transport : {{ transport }}</p>
+    {% if texts.signature %}<p style="margin:0;">{{ texts.signature|nl2br }}</p>{% endif %}
+{% endblock %}

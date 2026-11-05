@@ -1,0 +1,17 @@
+# Analyse statique (PHPStan). Niveau minimal imposé par le CDC : 6.
+# Lancement : vendor/bin/phpstan analyse
+includes:
+    - vendor/phpstan/phpstan-symfony/extension.neon
+    - vendor/phpstan/phpstan-symfony/rules.neon
+    - vendor/phpstan/phpstan-doctrine/extension.neon
+
+parameters:
+    level: 6
+    paths:
+        - bin/
+        - config/
+        - public/
+        - src/
+        - tests/
+    symfony:
+        containerXmlPath: var/cache/dev/App_KernelDevDebugContainer.xml

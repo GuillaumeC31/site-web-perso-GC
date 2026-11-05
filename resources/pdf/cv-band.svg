@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Fond de page du CV PDF « mis en page » : colonne de gauche (62 mm sur 210 mm), couleur primary-50 adoucie. Utilisé par templates/cv/pdf/design.html.twig. -->
+<svg xmlns="http://www.w3.org/2000/svg" width="210mm" height="297mm" viewBox="0 0 210 297">
+  <rect x="0" y="0" width="62" height="297" fill="#e6f4f1"/>
+</svg>

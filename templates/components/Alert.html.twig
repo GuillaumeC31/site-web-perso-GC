@@ -1,0 +1,19 @@
+{#
+  Composant <twig:Alert> : message d'information, de succès, d'avertissement ou d'erreur.
+  Utilisé par : _partials/_flash_messages.html.twig, admin/security/login.html.twig.
+  Propriétés :
+    - type : info (défaut), success, warning, danger ou error (alias de danger)
+  Les erreurs sont annoncées immédiatement aux lecteurs d'écran (role="alert").
+  Exemple : <twig:Alert type="success">Enregistré.</twig:Alert>
+#}
+{% props type = 'info' %}
+{% set styles = {
+    info: 'border-primary-200 bg-primary-50 text-primary-900 dark:border-primary-800 dark:bg-primary-950/50 dark:text-primary-100',
+    success: 'border-emerald-200 bg-emerald-50 text-emerald-900 dark:border-emerald-800 dark:bg-emerald-950/50 dark:text-emerald-100',
+    warning: 'border-amber-200 bg-amber-50 text-amber-900 dark:border-amber-800 dark:bg-amber-950/50 dark:text-amber-100',
+    danger: 'border-red-200 bg-red-50 text-red-900 dark:border-red-800 dark:bg-red-950/50 dark:text-red-100',
+} %}
+{% set key = type == 'error' ? 'danger' : (styles[type] is defined ? type : 'info') %}
+<div {{ attributes.defaults({class: 'rounded-xl border px-4 py-3 text-sm font-medium ' ~ styles[key], role: key in ['danger', 'warning'] ? 'alert' : 'status'}) }}>
+    {% block content %}{% endblock %}
+</div>

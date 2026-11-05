@@ -1,0 +1,54 @@
+{#
+  Outil : éclairage des reptiles (zones de Ferguson, UVI, distances des tubes T5) et DLI des plantes.
+  Inclus par : calculator/tool.html.twig. Contrôleur : calculator--eclairage-reptiles (zones lues dans
+  assets/calculators/terrariophilie.js). Textes, zones et distances repris de l'ancien site (anomalie D6).
+#}
+{% import 'calculator/_macros.html.twig' as calc %}
+{% set c = 'calculator--eclairage-reptiles' %}
+{% set t = 'data-' ~ c ~ '-target' %}
+{% set zones = {
+    1: 'Zone 1 (crépusculaire) — ex. gecko à crête, gecko léopard, python royal',
+    2: 'Zone 2 (exposition occasionnelle) — ex. boa constrictor, anolis vert',
+    3: 'Zone 3 (exposition mi-ombre) — ex. caméléon casqué, tortue d\'Hermann',
+    4: 'Zone 4 (plein soleil) — ex. pogona (dragon barbu), uromastyx',
+} %}
+
+<div data-controller="{{ c }}" class="space-y-6">
+    <section class="card">
+        <h2 class="text-lg font-bold text-secondary-900 dark:text-white">1. Espèce ou zone de Ferguson</h2>
+        <div class="mt-4">{{ calc.select('tl-zone', 'Espèce ou zone générique', zones, {(t): 'zone', 'data-action': 'change->' ~ c ~ '#updateZone'}, '3', true) }}</div>
+    </section>
+
+    <section class="card" aria-live="polite">
+        <h2 class="text-lg font-bold text-secondary-900 dark:text-white">2. Cible d'indice UV (UVI)</h2>
+        <dl class="mt-4 grid gap-4 sm:grid-cols-3">
+            <div><dt class="form-label">Zone de Ferguson</dt><dd class="font-mono text-lg font-bold text-primary-800 dark:text-primary-200" {{ t }}="zoneName">—</dd></div>
+            <div><dt class="form-label">Gradient moyen (ambiant)</dt><dd class="font-mono text-lg font-bold text-primary-800 dark:text-primary-200"><span {{ t }}="uviAvg">—</span> UVI</dd></div>
+            <div><dt class="form-label">Maximum au point chaud</dt><dd class="font-mono text-lg font-bold text-primary-800 dark:text-primary-200"><span {{ t }}="uviMax">—</span> UVI</dd></div>
+        </dl>
+        <p class="mt-4 text-sm text-secondary-600 dark:text-secondary-300"><strong>Rappel :</strong> l'autre extrémité du terrarium doit toujours redescendre à un UVI de 0 (zone d'ombre totale).</p>
+    </section>
+
+    <section class="card" aria-live="polite">
+        <h2 class="text-lg font-bold text-secondary-900 dark:text-white">3. Distance d'installation recommandée</h2>
+        <p class="mt-1 text-sm text-secondary-600 dark:text-secondary-300">Distance estimée entre le dos de l'animal au point chaud et la lampe (sans grillage) pour atteindre l'UVI maximal.</p>
+        <dl class="mt-4 grid gap-4 sm:grid-cols-3">
+            <div><dt class="form-label">Tube T5 6 % (forêt), avec réflecteur</dt><dd class="font-mono text-lg font-bold text-primary-800 dark:text-primary-200" {{ t }}="t56">—</dd></div>
+            <div><dt class="form-label">Tube T5 12 % (désert), avec réflecteur</dt><dd class="font-mono text-lg font-bold text-primary-800 dark:text-primary-200" {{ t }}="t512">—</dd></div>
+            <div><dt class="form-label">Tube T5 14 % (dragon), avec réflecteur</dt><dd class="font-mono text-lg font-bold text-primary-800 dark:text-primary-200" {{ t }}="t514">—</dd></div>
+        </dl>
+        <p class="mt-4 rounded-lg border-l-4 border-amber-500 bg-amber-50 p-3 text-sm text-amber-900 dark:bg-amber-950/50 dark:text-amber-100">Si la lampe est posée sur un grillage fin, l'UVI baisse d'environ 30 à 40 %. Rapprochez la lampe ou vérifiez avec un radiomètre UV (type Solarmeter).</p>
+    </section>
+
+    {% set fields %}
+        <div class="space-y-1 text-sm text-secondary-700 sm:col-span-2 lg:col-span-4 dark:text-secondary-300">
+            <p>Les tubes UVB ne suffisent pas pour faire pousser des plantes vivantes : il faut une source LED blanche pour apporter le rayonnement <strong>PAR</strong>.</p>
+            <p>• Plantes de sous-bois (fougères, pothos) : DLI 2 à 4 · plantes tropicales classiques : DLI 4 à 8 · plantes succulentes, arides : DLI 10 et plus.</p>
+        </div>
+        {{ calc.field('tl-ppfd', 'PPFD au sol', 'µmol/m²/s', {(t): 'ppfd', 'data-action': 'input->' ~ c ~ '#calcDli'}, '100') }}
+        {{ calc.field('tl-hours', 'Heures par jour', 'h', {(t): 'hours', 'data-action': 'input->' ~ c ~ '#calcDli'}, '12') }}
+        {{ calc.result('tl-dli', 'DLI atteint', 'mol/m²/j', {(t): 'dli'}, 'tl-ppfd tl-hours') }}
+        {{ calc.message({(t): 'message'}) }}
+    {% endset %}
+    {{ calc.block('4. Éclairage des plantes (terrarium bioactif)', 'DLI = PPFD × heures × 3600 / 1 000 000', fields) }}
+</div>

@@ -1,0 +1,48 @@
+{#
+  Bloc : état et consommation de l'assistant IA (tableau de bord et page Assistant IA).
+  Inclus par : admin/assistant/index.html.twig, admin/dashboard/index.html.twig.
+  Variables attendues :
+    - status  : AiStatus::getSummary() (state, enabled, configured, provider, primary_model, fallback_model,
+                model_alerts, today, month)
+    - compact : vrai dans le tableau de bord (sans le détail des modèles)
+#}
+{% set state_tone = {active: 'success', fallback: 'accent', guided: 'neutral', limit_reached: 'danger'} %}
+<div class="space-y-4" data-testid="ai-status">
+    <div class="flex flex-wrap items-center gap-3">
+        <span class="text-sm font-semibold">{{ 'admin.assistant.state_label'|trans }}</span>
+        <twig:Badge tone="{{ state_tone[status.state] }}">{{ ('admin.assistant.state.' ~ status.state)|trans }}</twig:Badge>
+        {% if not status.configured %}<span class="text-sm text-secondary-600 dark:text-secondary-300">{{ 'admin.assistant.not_configured'|trans }}</span>{% endif %}
+        {% if not status.enabled %}<span class="text-sm text-secondary-600 dark:text-secondary-300">{{ 'admin.assistant.disabled'|trans }}</span>{% endif %}
+    </div>
+
+    {% if status.month.alert %}
+        <twig:Alert type="warning">{{ 'admin.assistant.alert.monthly'|trans({'%percent%': status.month.percent|format_number({fraction_digit: 1}), '%threshold%': status.month.alert_percent}) }}</twig:Alert>
+    {% endif %}
+    {% for alert in status.model_alerts %}
+        <twig:Alert type="{{ alert.problem == 'unchecked' ? 'info' : 'warning' }}">{{ ('admin.assistant.alert.model_' ~ alert.problem)|trans({'%model%': alert.model, '%role%': ('admin.assistant.role.' ~ alert.role)|trans}) }}</twig:Alert>
+    {% endfor %}
+
+    <dl class="grid gap-4 sm:grid-cols-3">
+        <div class="rounded-xl border border-secondary-200 p-4 dark:border-secondary-700">
+            <dt class="text-sm text-secondary-600 dark:text-secondary-300">{{ 'admin.assistant.today_questions'|trans }}</dt>
+            <dd class="mt-1 text-2xl font-bold">{{ status.today.questions }} <span class="text-sm font-normal text-secondary-600 dark:text-secondary-300">/ {{ status.today.site_limit }}</span></dd>
+        </div>
+        <div class="rounded-xl border border-secondary-200 p-4 dark:border-secondary-700">
+            <dt class="text-sm text-secondary-600 dark:text-secondary-300">{{ 'admin.assistant.today_tokens'|trans }}</dt>
+            <dd class="mt-1 text-2xl font-bold">{{ status.today.tokens|format_number }}</dd>
+        </div>
+        <div class="rounded-xl border border-secondary-200 p-4 dark:border-secondary-700">
+            <dt class="text-sm text-secondary-600 dark:text-secondary-300">{{ 'admin.assistant.month_tokens'|trans }}</dt>
+            <dd class="mt-1 text-2xl font-bold">{{ status.month.tokens|format_number }} <span class="text-sm font-normal text-secondary-600 dark:text-secondary-300">/ {{ status.month.limit|format_number }} ({{ status.month.percent|format_number({fraction_digit: 1}) }} %)</span></dd>
+            <dd class="mt-2 h-2 overflow-hidden rounded-full bg-secondary-200 dark:bg-secondary-700" aria-hidden="true">
+                <div class="h-full {{ status.month.alert ? 'bg-amber-500' : 'bg-primary-600' }}" style="width: {{ min(100, status.month.percent) }}%"></div>
+            </dd>
+        </div>
+    </dl>
+
+    {% if not compact|default(false) %}
+        <p class="text-sm text-secondary-700 dark:text-secondary-300">
+            {{ 'admin.assistant.models'|trans({'%provider%': status.provider, '%primary%': status.primary_model ?: '—', '%fallback%': status.fallback_model ?: '—'}) }}
+        </p>
+    {% endif %}
+</div>

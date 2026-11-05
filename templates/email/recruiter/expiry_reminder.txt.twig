@@ -1,0 +1,21 @@
+{#
+  E-mail (version texte) : rappel d'échéance, avec le lien de demande de prolongation (recruteur validé : adresse de réponse).
+  Envoyé par : RecruiterMailer::sendExpiryReminder(). Variables : recruiter, extension_url, stop_reminders_url, texts (EmailTexts), can_reply.
+#}
+{% autoescape false %}
+Bonjour {{ recruiter.fullName }},
+
+{{ texts.intro }}
+
+Fin de l'accès : {{ recruiter.accessExpiresAt|format_date('long') }}.
+
+{{ extension_url }}
+
+Sans prolongation, l'accès se fermera simplement à cette date.
+
+{{ texts.signature }}
+guillaume-couget.fr
+
+Ne plus recevoir ces rappels (effet immédiat) : {{ stop_reminders_url }}
+{{ include('email/_text_footer.txt.twig') }}
+{% endautoescape %}

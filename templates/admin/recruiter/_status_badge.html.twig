@@ -1,0 +1,7 @@
+{#
+  Pastille du statut d'un recruteur.
+  Inclus par : admin/recruiter/index.html.twig, admin/recruiter/show.html.twig
+  Variables : status (RecruiterStatus).
+#}
+{% set tones = {pending: 'accent', approved: 'success', refused: 'neutral', revoked: 'neutral', expired: 'neutral'} %}
+<twig:Badge tone="{{ tones[status.value] }}">{{ status.translationKey|trans }}</twig:Badge>

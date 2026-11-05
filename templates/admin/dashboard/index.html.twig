@@ -1,0 +1,117 @@
+{#
+  Écran : tableau de bord de l'administration (grille de tuiles, actualisation, récapitulatif).
+  Affiché par : Admin\DashboardController::index() (route admin_dashboard, /{ADMIN_PATH}).
+  Variables attendues :
+    - tiles              : tuiles de DashboardMetrics::getTiles(), indexées par identifiant
+    - computed_at        : date du calcul des tuiles (cache de 60 s)
+    - changed_tiles      : tuiles changées depuis la dernière visite (récapitulatif ; vide : rien à montrer)
+    - app_version        : version lue dans le fichier VERSION (chaîne vide si absent)
+    - security_key_count : nombre de clés YubiKey du compte (rappel si moins de 2)
+    - failed_emails      : nombre d'e-mails non envoyés (serveur SMTP injoignable), à renvoyer
+    - backup_reminder    : vrai si aucune copie de sauvegarde n'a été téléchargée depuis 30 jours
+    - backup_downloaded_at : date de la dernière copie téléchargée (ou null)
+  Récapitulatif : panneau en haut de page, ouvert en fenêtre par le contrôleur « notify » (mode fenêtre
+  d'information) ; sans JavaScript, il reste dans la page.
+#}
+{% extends 'admin/base.html.twig' %}
+
+{% set shortcuts = [
+    {route: 'admin_profile_edit', label: 'admin.nav.profile'},
+    {route: 'admin_experience_index', label: 'admin.nav.experiences'},
+    {route: 'admin_skill_index', label: 'admin.nav.skills'},
+    {route: 'admin_pillar_index', label: 'admin.nav.skill_pillars'},
+    {route: 'admin_education_index', label: 'admin.nav.educations'},
+    {route: 'admin_certification_index', label: 'admin.nav.certifications'},
+    {route: 'admin_language_index', label: 'admin.nav.languages'},
+    {route: 'admin_key_figure_index', label: 'admin.nav.key_figures'},
+] %}
+
+{% block title %}{{ 'admin.dashboard.title'|trans }}{% endblock %}
+
+{% block body %}
+    <div class="mb-6 flex flex-wrap items-center justify-between gap-3">
+        <div>
+            <h1 class="text-2xl font-bold dark:text-white">{{ 'admin.dashboard.title'|trans }}</h1>
+            <p class="text-sm text-secondary-600 dark:text-secondary-300" data-testid="dashboard-computed-at">{{ 'admin.dashboard.computed_at'|trans({'%date%': computed_at|format_datetime('short', 'medium', timezone: 'Europe/Paris')}) }}</p>
+        </div>
+        <twig:Button href="{{ path('admin_dashboard', {actualiser: 1}) }}" variant="secondary" size="sm">{{ 'admin.dashboard.refresh'|trans }}</twig:Button>
+    </div>
+
+    {% if changed_tiles is not empty %}
+        <section class="mb-6 rounded-2xl border border-primary-200 bg-primary-50 p-5 text-secondary-800 dark:border-primary-800 dark:bg-primary-950/40 dark:text-secondary-100"
+                 aria-labelledby="recap-title" data-testid="dashboard-recap"
+                 data-controller="notify" data-notify-dialog-value="true"
+                 data-notify-title-value="{{ 'admin.dashboard.recap.title'|trans }}"
+                 data-notify-confirm-label-value="{{ 'admin.dashboard.recap.close'|trans }}">
+            <h2 id="recap-title" class="text-lg font-bold text-secondary-900 dark:text-white" data-notify-skip>{{ 'admin.dashboard.recap.title'|trans }}</h2>
+            <p class="mt-1 text-sm">{{ 'admin.dashboard.recap.intro'|trans }}</p>
+            <ul class="mt-3 space-y-2 text-left text-sm">
+                {% for tile in changed_tiles %}
+                    <li class="flex flex-wrap items-center gap-2">
+                        {{ include('admin/dashboard/_status.html.twig', {status: tile.status}, with_context = false) }}
+                        <span><strong>{{ ('admin.dashboard.tile.' ~ tile.id)|trans }}</strong> : {{ tile.id == 'ai' ? ('admin.assistant.state.' ~ tile.value)|trans : tile.value }} {{ tile.value_key|trans }}</span>
+                    </li>
+                {% endfor %}
+            </ul>
+        </section>
+    {% endif %}
+
+    {% if security_key_count < 2 %}
+        <twig:Alert type="warning" class="mb-6">
+            {{ 'admin.security_key.backup_advice'|trans }}
+            <a href="{{ path('admin_security_key_index') }}" class="link">{{ 'admin.nav.security_keys'|trans }}</a>
+        </twig:Alert>
+    {% endif %}
+
+    {% if failed_emails > 0 %}
+        <twig:Alert type="danger" class="mb-6" data-testid="failed-emails-alert">
+            {% import '_partials/_confirm.html.twig' as confirmation %}
+            <div class="flex flex-wrap items-center justify-between gap-3">
+                <span>{{ 'admin.mail.failed_alert'|trans({'%count%': failed_emails}) }}</span>
+                <form method="post" action="{{ path('admin_mail_resend') }}" {{ confirmation.attributes('admin.mail.confirm_resend_title'|trans({'%count%': failed_emails}), 'admin.mail.confirm_resend_text'|trans, 'admin.mail.resend'|trans) }}>
+                    <input type="hidden" name="_token" value="{{ csrf_token('mail_resend') }}">
+                    {{ confirmation.field() }}
+                    <twig:Button type="submit" size="sm">{{ 'admin.mail.resend'|trans }}</twig:Button>
+                </form>
+            </div>
+        </twig:Alert>
+    {% endif %}
+
+    {% if backup_reminder %}
+        <twig:Alert type="warning" class="mb-6" data-testid="backup-reminder">
+            <div class="flex flex-wrap items-center justify-between gap-3">
+                <span>
+                    {{ backup_downloaded_at ? 'admin.dashboard.backup_reminder.late'|trans({'%date%': backup_downloaded_at|format_date('long')}) : 'admin.dashboard.backup_reminder.never'|trans }}
+                    {{ 'admin.dashboard.backup_reminder.how'|trans }}
+                </span>
+                <form method="post" action="{{ path('admin_backup_downloaded') }}">
+                    <input type="hidden" name="_token" value="{{ csrf_token('backup_downloaded') }}">
+                    <twig:Button type="submit" size="sm" variant="secondary">{{ 'admin.dashboard.backup_reminder.submit'|trans }}</twig:Button>
+                </form>
+            </div>
+        </twig:Alert>
+    {% endif %}
+
+    <div class="mb-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-3" data-testid="dashboard-tiles">
+        {% for tile in tiles %}
+            {# Tuile « Communication » : adresses, e-mails de test et délivrabilité dans la page Communication #}
+            {{ include('admin/dashboard/_tile.html.twig', {tile: tile}, with_context = false) }}
+        {% endfor %}
+    </div>
+
+    <div class="grid gap-4 md:grid-cols-2">
+        <twig:Card title="{{ 'admin.dashboard.content'|trans }}">
+            <ul class="grid gap-2 sm:grid-cols-2">
+                {% for shortcut in shortcuts %}
+                    <li><a href="{{ path(shortcut.route) }}" class="link">{{ shortcut.label|trans }}</a></li>
+                {% endfor %}
+            </ul>
+        </twig:Card>
+        <twig:Card title="{{ site_owner_name }}">
+            <p class="text-secondary-700 dark:text-secondary-300">{{ 'admin.dashboard.welcome'|trans }}</p>
+            {% if app_version %}
+                <twig:Badge tone="neutral" class="mt-3">{{ 'admin.dashboard.version'|trans({'%version%': app_version}) }}</twig:Badge>
+            {% endif %}
+        </twig:Card>
+    </div>
+{% endblock %}

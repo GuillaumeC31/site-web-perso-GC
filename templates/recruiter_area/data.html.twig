@@ -1,0 +1,45 @@
+{#
+  Page : « Mes données » de l'espace recruteur : ce que le site garde, et la suppression définitive (confirmation).
+  Affichée par : RecruiterAreaController::data() (route recruiter_data). Formulaire : recruiter_data_delete
+  (POST, jeton CSRF « recruiter_data_delete »). Téléchargement : recruiter_data_export (JSON).
+  Variables attendues :
+    - recruiter : Recruiter connecté
+#}
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'recruiter_area.data.title'|trans }} · {{ site_owner_name }}{% endblock %}
+{% block robots %}noindex, nofollow{% endblock %}
+
+{% block body %}
+    <div class="container mx-auto px-4 py-12 lg:px-8 lg:py-16 xl:max-w-3xl">
+        <twig:SectionHeading title="{{ 'recruiter_area.data.title'|trans }}" :level="1">
+            {{ 'recruiter_area.data.intro'|trans }}
+        </twig:SectionHeading>
+
+        <twig:Card class="mt-8">
+            <dl class="space-y-3 text-sm">
+                <div><dt class="font-semibold text-secondary-900 dark:text-white">{{ 'recruiter_area.data.identity'|trans }}</dt><dd class="break-words">{{ recruiter.fullName }} · {{ recruiter.company }} · {{ recruiter.email }}</dd></div>
+                <div><dt class="font-semibold text-secondary-900 dark:text-white">{{ 'recruiter_area.data.kept'|trans }}</dt><dd>{{ 'recruiter_area.data.kept_text'|trans }}</dd></div>
+                <div><dt class="font-semibold text-secondary-900 dark:text-white">{{ 'recruiter_area.data.reminders'|trans }}</dt><dd data-testid="reminders-state">{{ recruiter.acceptsReminders ? 'recruiter_area.data.reminders_on'|trans : 'recruiter_area.data.reminders_off'|trans({'%date%': recruiter.remindersStoppedAt|format_date('long')}) }}</dd></div>
+            </dl>
+        </twig:Card>
+
+        <section class="card mt-8" aria-labelledby="data-export-title">
+            <h2 id="data-export-title" class="text-lg font-bold text-secondary-900 dark:text-white">{{ 'recruiter_area.data.export_title'|trans }}</h2>
+            <p class="mt-2 text-sm text-secondary-700 dark:text-secondary-300">{{ 'recruiter_area.data.export_text'|trans }}</p>
+            <a href="{{ path('recruiter_data_export') }}" class="btn btn-secondary mt-4" data-turbo="false" download data-testid="data-export">{{ 'recruiter_area.data.export_submit'|trans }}</a>
+        </section>
+
+        <section class="mt-8 rounded-2xl border border-red-300 p-6 dark:border-red-800" aria-labelledby="data-delete-title">
+            <h2 id="data-delete-title" class="text-lg font-bold text-secondary-900 dark:text-white">{{ 'recruiter_area.data.delete_title'|trans }}</h2>
+            <p class="mt-2 text-sm text-secondary-700 dark:text-secondary-300">{{ 'recruiter_area.data.delete_text'|trans }}</p>
+            {% import '_partials/_confirm.html.twig' as confirmation %}
+            <form method="post" action="{{ path('recruiter_data_delete') }}" class="mt-4 flex flex-wrap items-center gap-3" data-turbo="false" {{ confirmation.attributes('recruiter_area.data.confirm_title'|trans, 'recruiter_area.data.delete_text'|trans, 'recruiter_area.data.delete_submit'|trans, true) }}>
+                <input type="hidden" name="_token" value="{{ csrf_token('recruiter_data_delete') }}">
+                {{ confirmation.field() }}
+                <button type="submit" class="btn btn-danger">{{ 'recruiter_area.data.delete_submit'|trans }}</button>
+                <a href="{{ path('recruiter_home') }}" class="btn btn-secondary">{{ 'recruiter_area.data.cancel'|trans }}</a>
+            </form>
+        </section>
+    </div>
+{% endblock %}

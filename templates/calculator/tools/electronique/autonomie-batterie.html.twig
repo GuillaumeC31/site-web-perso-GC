@@ -1,0 +1,19 @@
+{#
+  Outil : autonomie d'une batterie (capacité / consommation, rendement de 70 %).
+  Inclus par : calculator/tool.html.twig. Contrôleur : calculator--autonomie-batterie.
+  Note sur la marge de 30 % reprise de l'ancien site.
+#}
+{% import 'calculator/_macros.html.twig' as calc %}
+{% set c = 'calculator--autonomie-batterie' %}
+{% set input = 'input->' ~ c ~ '#calculate' %}
+
+<div data-controller="{{ c }}" class="space-y-6">
+    {% set fields %}
+        {{ calc.field('bat-cap', 'Capacité de la batterie', 'mAh', {('data-' ~ c ~ '-target'): 'capacity', 'data-action': input}, null, 'ex. 2000') }}
+        {{ calc.field('bat-i', 'Consommation du circuit', 'mA', {('data-' ~ c ~ '-target'): 'current', 'data-action': input}, null, 'ex. 50') }}
+        {{ calc.result('bat-t', 'Autonomie estimée', 'h', {('data-' ~ c ~ '-target'): 'hours'}, 'bat-cap bat-i') }}
+        {{ calc.message({('data-' ~ c ~ '-target'): 'message'}) }}
+        {{ calc.note({}, 'Le calcul applique une marge de sécurité de 30 % (rendement de 0,7), car une batterie ne se décharge jamais complètement.') }}
+    {% endset %}
+    {{ calc.block('Temps de décharge', 'T = Capacité / Consommation × 0,7', fields) }}
+</div>

@@ -1,0 +1,27 @@
+{#
+  Mise en page commune des onglets de la page « Communication » : titre, onglets (liens : chaque onglet a son
+  adresse, lisible sans JavaScript ; onglet actif marqué par aria-current), contenu.
+  Étendu par : templates/admin/communication/*.html.twig (Admin\CommunicationController).
+  Variables attendues : tab (overview, emails, notifications, discord, telegram, remote, social).
+  Bloc à remplir : tab_content.
+#}
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}{{ ('admin.communication.tab.' ~ tab)|trans }} · {{ 'admin.nav.communication'|trans }}{% endblock %}
+
+{% block body %}
+    <h1 class="text-2xl font-bold dark:text-white">{{ 'admin.nav.communication'|trans }}</h1>
+    <p class="form-help mb-4">{{ 'admin.communication.intro'|trans }}</p>
+    <nav aria-label="{{ 'admin.communication.tabs_label'|trans }}" class="mb-6 overflow-x-auto border-b border-secondary-200 dark:border-secondary-700" data-testid="communication-tabs">
+        <ul class="flex min-w-max gap-1">
+            {% for name, route in {overview: 'admin_communication', emails: 'admin_communication_emails', notifications: 'admin_communication_notifications', discord: 'admin_communication_discord', telegram: 'admin_communication_telegram', remote: 'admin_communication_remote', social: 'admin_social_link_index'} %}
+                <li>
+                    <a href="{{ path(route) }}"
+                       class="inline-block border-b-2 px-3 py-2 text-sm font-semibold {{ tab == name ? 'border-primary-700 text-primary-800 dark:border-primary-400 dark:text-primary-200' : 'border-transparent text-secondary-700 hover:border-secondary-300 hover:text-secondary-950 dark:text-secondary-300 dark:hover:text-white' }}"
+                       {% if tab == name %}aria-current="page"{% endif %}>{{ ('admin.communication.tab.' ~ name)|trans }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    </nav>
+    {% block tab_content %}{% endblock %}
+{% endblock %}

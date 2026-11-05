@@ -1,0 +1,14 @@
+{#
+  E-mail (version texte) : notification à Guillaume.
+  Envoyé par : NotificationDispatcher::notify(). Variables : notification (Notification), texts (EmailTexts : intro, signature).
+#}
+{% autoescape false %}
+{% if texts.intro %}{{ texts.intro }}
+
+{% endif %}
+{{ notification.toText() }}
+{% if texts.signature %}
+
+{{ texts.signature }}
+{% endif %}
+{% endautoescape %}

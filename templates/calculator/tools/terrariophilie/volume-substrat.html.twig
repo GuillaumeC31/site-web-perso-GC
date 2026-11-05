@@ -1,0 +1,29 @@
+{#
+  Outil : volume de substrat et recette (tropical bioactif ou aride).
+  Inclus par : calculator/tool.html.twig. Contrôleur : calculator--volume-substrat (recette construite
+  depuis assets/calculators/terrariophilie.js). Valeurs par défaut et recettes reprises de l'ancien site.
+#}
+{% import 'calculator/_macros.html.twig' as calc %}
+{% set c = 'calculator--volume-substrat' %}
+{% set t = 'data-' ~ c ~ '-target' %}
+{% set input = 'input->' ~ c ~ '#calculate' %}
+
+<div data-controller="{{ c }}" class="space-y-6">
+    {% set fields %}
+        {{ calc.field('ts-length', 'Longueur du fond', 'cm', {(t): 'length', 'data-action': input}, '120') }}
+        {{ calc.field('ts-width', 'Profondeur du fond', 'cm', {(t): 'width', 'data-action': input}, '60') }}
+        {{ calc.field('ts-depth', 'Épaisseur de substrat voulue', 'cm', {(t): 'depth', 'data-action': input}, '10') }}
+        {{ calc.result('ts-litres', 'Volume à acheter', 'L', {(t): 'litres'}, 'ts-length ts-width ts-depth') }}
+        {{ calc.message({(t): 'message'}) }}
+    {% endset %}
+    {{ calc.block('1. Volume nécessaire', 'V (L) = longueur × profondeur × épaisseur (cm) / 1000', fields) }}
+
+    <section class="card">
+        <h2 class="text-lg font-bold text-secondary-900 dark:text-white">2. Recette du substrat</h2>
+        <div class="mt-4 max-w-sm">
+            {{ calc.select('ts-mix', 'Type d\'environnement', {tropical: 'Tropical / forestier (bioactif)', arid: 'Désertique / aride (excavation)'}, {(t): 'mix', 'data-action': 'change->' ~ c ~ '#calculate'}) }}
+        </div>
+        <ul class="mt-4 space-y-2 text-secondary-800 dark:text-secondary-200" aria-live="polite" {{ t }}="recipe"></ul>
+        <p class="mt-3 text-sm text-secondary-600 dark:text-secondary-300" {{ t }}="recipeNote"></p>
+    </section>
+</div>

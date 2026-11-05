@@ -1,0 +1,38 @@
+{#
+  Écran : détail d'un échange du journal de l'assistant (question, réponse, issue, modèle, jetons, durée,
+  erreur du fournisseur sans la clé, motif de suspicion, élément qui a fait bloquer la réponse ; essai de
+  l'admin : pas de recruteur).
+  Affiché par : Admin\AssistantController::show() (route admin_assistant_show).
+  Variables attendues :
+    - message : ChatMessage
+#}
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}{{ 'admin.assistant.show_title'|trans }}{% endblock %}
+
+{% block body %}
+    <p class="mb-4"><a href="{{ path('admin_assistant_index') }}" class="link">← {{ 'admin.assistant.title'|trans }}</a></p>
+    <h1 class="mb-6 text-2xl font-bold dark:text-white">{{ 'admin.assistant.show_title'|trans }}</h1>
+
+    <div class="grid gap-6 lg:grid-cols-3">
+        <twig:Card title="{{ 'admin.assistant.exchange'|trans }}" class="lg:col-span-2">
+            <h2 class="text-sm font-semibold">{{ 'admin.assistant.field.question'|trans }}</h2>
+            <p class="mt-1 whitespace-pre-line">{{ message.question }}</p>
+            <h2 class="mt-4 text-sm font-semibold">{{ 'admin.assistant.field.answer'|trans }}</h2>
+            <p class="mt-1 whitespace-pre-line">{{ message.answer }}</p>
+        </twig:Card>
+        <twig:Card title="{{ 'admin.assistant.details'|trans }}">
+            <dl class="space-y-2 text-sm">
+                <div><dt class="font-semibold">{{ 'admin.assistant.field.date'|trans }}</dt><dd>{{ message.createdAt|format_datetime('medium', 'medium') }}</dd></div>
+                <div><dt class="font-semibold">{{ 'admin.assistant.field.recruiter'|trans }}</dt><dd>{% if message.recruiter %}<a href="{{ path('admin_recruiter_show', {id: message.recruiter.id}) }}" class="link">{{ message.recruiter.fullName }}</a> · {{ message.recruiter.company }}{% else %}{{ 'admin.assistant.admin_test'|trans }}{% endif %}</dd></div>
+                <div><dt class="font-semibold">{{ 'admin.assistant.field.outcome'|trans }}</dt><dd>{{ message.outcome.translationKey|trans }}</dd></div>
+                <div><dt class="font-semibold">{{ 'admin.assistant.field.model'|trans }}</dt><dd>{{ message.model ?? '—' }}</dd></div>
+                <div><dt class="font-semibold">{{ 'admin.assistant.field.tokens'|trans }}</dt><dd>{{ 'admin.assistant.tokens_detail'|trans({'%prompt%': message.promptTokens, '%completion%': message.completionTokens}) }}</dd></div>
+                {% if message.durationMs is not null %}<div><dt class="font-semibold">{{ 'admin.assistant.field.duration'|trans }}</dt><dd>{{ (message.durationMs / 1000)|format_number({fraction_digit: 1}) }} s</dd></div>{% endif %}
+                {% if message.error %}<div><dt class="font-semibold">{{ 'admin.assistant.error'|trans }}</dt><dd class="break-words">{{ message.error }}</dd></div>{% endif %}
+                {% if message.blocked %}<div><dt class="font-semibold text-red-700 dark:text-red-300">{{ 'admin.assistant.blocked'|trans }}</dt><dd class="break-words">{{ 'admin.assistant.blocked_element'|trans({'%element%': message.blockedElement}) }}</dd></div>{% endif %}
+                {% if message.suspicious %}<div><dt class="font-semibold text-red-700 dark:text-red-300">{{ 'admin.assistant.suspicious'|trans }}</dt><dd>{{ message.suspiciousReason }}</dd></div>{% endif %}
+            </dl>
+        </twig:Card>
+    </div>
+{% endblock %}

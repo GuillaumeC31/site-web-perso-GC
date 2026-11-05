@@ -1,0 +1,171 @@
+{#
+  Outil : éclairage horticole (PPFD, DLI, PPF) : besoins d'une culture, architecte de spectre,
+  simulateur de panneau, DLI et photopériode.
+  Inclus par : calculator/tool.html.twig. Contrôleur : calculator--eclairage-phyto (spectres dessinés
+  par assets/lib/spectrum_chart.js). Textes, profils, tableau et références repris de l'ancien site.
+  D4 (2026-10-23) : PPF et PPFD sur 400–700 nm seulement ; UV et far-red (700–750 nm) saisis et affichés
+  à part ; ePPF (400–750 nm) en option ; DLI calculé sur le PPFD.
+#}
+{% import 'calculator/_macros.html.twig' as calc %}
+{% set c = 'calculator--eclairage-phyto' %}
+{% set t = 'data-' ~ c ~ '-target' %}
+{% set bands = [
+    {key: 'uv', label: 'UV'},
+    {key: 'blue', label: 'Bleu'},
+    {key: 'cold', label: 'Blanc froid'},
+    {key: 'green', label: 'Vert'},
+    {key: 'warm', label: 'Blanc chaud'},
+    {key: 'red', label: 'Rouge'},
+    {key: 'ir', label: 'Far-red'},
+] %}
+{# Parts PAR par défaut : celles de l'ancien site ramenées à 100 % (D4) #}
+{% set parBands = [
+    {key: 'blue', label: 'Bleu', share: 17},
+    {key: 'cold', label: 'Blanc froid', share: 17},
+    {key: 'green', label: 'Vert', share: 11},
+    {key: 'warm', label: 'Blanc chaud', share: 16},
+    {key: 'red', label: 'Rouge', share: 39},
+] %}
+
+<div data-controller="{{ c }}" class="space-y-6">
+    <section class="card space-y-4 text-sm text-secondary-700 dark:text-secondary-300">
+        <h2 class="text-lg font-bold text-secondary-900 dark:text-white">Lexique (terminologie ASABE)</h2>
+        <dl class="grid gap-4 sm:grid-cols-2">
+            <div><dt class="font-semibold text-secondary-900 dark:text-white">PPF <span class="font-normal text-secondary-600 dark:text-secondary-400">µmol/s</span></dt><dd>Flux total de photons PAR émis par la source. Comparable au flux lumineux, mais en photons utiles aux plantes.</dd></div>
+            <div><dt class="font-semibold text-secondary-900 dark:text-white">PPFD <span class="font-normal text-secondary-600 dark:text-secondary-400">µmol/m²/s</span></dt><dd>Densité de flux photosynthétique (PAR 400–700 nm) reçue par m² de canopée. Indicateur clé pour dimensionner l'éclairage.</dd></div>
+            <div><dt class="font-semibold text-secondary-900 dark:text-white">DLI <span class="font-normal text-secondary-600 dark:text-secondary-400">mol/m²/jour</span></dt><dd>Intégrale de lumière sur la photopériode (heures × PPFD). Chaque culture a un besoin quotidien propre.</dd></div>
+            <div><dt class="font-semibold text-secondary-900 dark:text-white">PPE <span class="font-normal text-secondary-600 dark:text-secondary-400">µmol/J</span></dt><dd>Efficacité photosynthétique du luminaire. Ex. : LED Samsung LM301H ≈ 3,0 µmol/J ; HPS ≈ 1,7 µmol/J.</dd></div>
+            <div><dt class="font-semibold text-secondary-900 dark:text-white">Far-red et ePPF <span class="font-normal text-secondary-600 dark:text-secondary-400">µmol/s</span></dt><dd>Le far-red (700–750 nm) n'entre pas dans le PPF ; il est compté à part. L'ePPF (400–750 nm) additionne PPF et far-red.</dd></div>
+            <div><dt class="font-semibold text-secondary-900 dark:text-white">UV <span class="font-normal text-secondary-600 dark:text-secondary-400">µmol/s</span></dt><dd>Les UV (moins de 400 nm) sont comptés à part, jamais dans le PPF.</dd></div>
+        </dl>
+        <label class="flex items-center gap-3 text-secondary-800 dark:text-secondary-200">
+            <input type="checkbox" class="size-4 rounded border-secondary-300 text-primary-700 focus:ring-primary-500 dark:border-secondary-600 dark:bg-secondary-900" {{ t }}="showEppf" data-action="change->{{ c }}#toggleEppf">
+            Afficher l'ePPF (400–750 nm)
+        </label>
+        <p class="rounded-lg bg-secondary-50 p-3 dark:bg-secondary-800/60"><strong>Hypothèses de calcul :</strong> canopée uniformément éclairée, mesure au niveau du feuillage, PAR 400–700 nm. Les paliers PPFD et DLI par culture sont des <strong>recommandations agronomiques indicatives</strong>, pas des obligations réglementaires. DLI = PPFD × h × 3,6 / 1000 (mol/m²/j).</p>
+    </section>
+
+    {# --- Bloc 1 --- #}
+    {% set fields %}
+        {{ calc.select('ph-plant', 'Type de culture', {low: 'Basse lumière — semis, boutures, laitues (100–250)', medium: 'Moyenne lumière — plantes vertes, poivrons végétatif (250–500)', high: 'Haute lumière — tomates, fleurs coupées (500–900)', ultra: 'Très haute lumière — culture intensive CO₂ (900–1500)'}, {(t): 'plant', 'data-action': 'change->' ~ c ~ '#calcReq'}, 'high', true) }}
+        {{ calc.select('ph-stage', 'Stade de culture', {seedling: 'Semis, boutures (PPFD bas)', vegetative: 'Végétatif', production: 'Production, floraison'}, {(t): 'stage', 'data-action': 'change->' ~ c ~ '#calcReq'}, 'production', true) }}
+        {{ calc.field('ph-area', 'Surface', 'm²', {(t): 'area', 'data-action': 'input->' ~ c ~ '#calcReq'}, '1') }}
+        {{ calc.field('ph-hours', 'Photopériode', 'h/j', {(t): 'hours', 'data-action': 'input->' ~ c ~ '#calcReq'}, '12') }}
+        {{ calc.select('ph-loss', 'Marge de pertes', {0: '0 % — canopée idéale', 10: '+10 % — légères pertes', 20: '+20 % — uniformité moyenne', 30: '+30 % — pertes importantes'}, {(t): 'loss', 'data-action': 'change->' ~ c ~ '#calcReq'}, '20') }}
+        {{ calc.field('ph-ppe', 'PPE du luminaire', 'µmol/J', {(t): 'ppe', 'data-action': 'input->' ~ c ~ '#calcReq'}, '2,5') }}
+        {{ calc.result('ph-ppfd', 'PPFD cible', 'µmol/m²/s', {(t): 'reqPpfd'}, 'ph-plant ph-stage') }}
+        {{ calc.result('ph-dli', 'DLI résultant', 'mol/m²/j', {(t): 'reqDli'}, 'ph-plant ph-stage ph-hours') }}
+        {{ calc.result('ph-ppf', 'PPF cible (panneau, avec marge)', 'µmol/s', {(t): 'reqPpf'}, 'ph-plant ph-stage ph-area ph-loss') }}
+        {{ calc.result('ph-watts', 'Puissance estimée', 'W', {(t): 'reqWatts'}, 'ph-ppf ph-ppe') }}
+        {{ calc.message({(t): 'reqMessage'}) }}
+        <p class="text-sm text-secondary-600 sm:col-span-2 lg:col-span-4 dark:text-secondary-300" {{ t }}="reqRange"></p>
+        <div class="sm:col-span-2 lg:col-span-4">
+            <button type="button" class="btn btn-secondary btn-sm" data-action="{{ c }}#transfer">Reporter ce PPF dans l'architecte de spectre (bloc 2)</button>
+        </div>
+    {% endset %}
+    {{ calc.block('1. Besoins de la culture', 'PPF = PPFD × surface × (1 + pertes) · P = PPF / PPE', fields) }}
+
+    {# --- Bloc 2 --- #}
+    <section class="card" id="ph-architect" tabindex="-1">
+        <h2 class="text-lg font-bold text-secondary-900 dark:text-white">2. Architecte de spectre</h2>
+        <p class="mt-1 text-sm text-secondary-600 dark:text-secondary-300">Répartissez le PPF cible (400–700 nm) entre les bandes PAR : le total reste à 100 %. UV et far-red s'ajoutent à part, en % du PPF. Graphique relatif, non mesuré.</p>
+        <div class="mt-4 grid gap-4 sm:grid-cols-2">
+            {{ calc.field('ph-arch-ppf', 'PPF cible (400–700 nm)', 'µmol/s', {(t): 'archPpf', 'data-action': 'input->' ~ c ~ '#calcArch'}, '800') }}
+            {{ calc.field('ph-arch-led', 'Puissance réelle par LED', 'W', {(t): 'archLedWatts', 'data-action': 'input->' ~ c ~ '#calcArch'}, '2,2') }}
+        </div>
+        <p class="mt-2 text-sm text-secondary-600 dark:text-secondary-300">Une LED « 3 W » fonctionne souvent à 2 à 2,5 W réels.</p>
+        <fieldset class="mt-5">
+            <legend class="form-label">Parts du PPF par bande PAR</legend>
+            <div class="mt-2 grid gap-x-6 gap-y-3 sm:grid-cols-2">
+                {% for band in parBands %}
+                    <div>
+                        <div class="flex justify-between text-sm"><label for="ph-share-{{ band.key }}" class="font-medium text-secondary-800 dark:text-secondary-200">{{ band.label }}</label><output for="ph-share-{{ band.key }}" class="font-mono text-secondary-700 dark:text-secondary-300" data-share-label="{{ loop.index0 }}">{{ band.share }} %</output></div>
+                        <input type="range" min="0" max="100" step="1" value="{{ band.share }}" id="ph-share-{{ band.key }}" class="w-full accent-primary-700 dark:accent-primary-300"
+                               {{ t }}="share" data-index="{{ loop.index0 }}" data-action="input->{{ c }}#balance">
+                    </div>
+                {% endfor %}
+            </div>
+        </fieldset>
+        <div class="mt-4 grid gap-4 sm:grid-cols-2">
+            {{ calc.field('ph-arch-uv', 'UV en plus du PPF', '%', {(t): 'archUv', 'data-action': 'input->' ~ c ~ '#calcArch'}, '0') }}
+            {{ calc.field('ph-arch-fr', 'Far-red en plus du PPF', '%', {(t): 'archFarRed', 'data-action': 'input->' ~ c ~ '#calcArch'}, '11') }}
+        </div>
+        <p hidden aria-live="polite" class="mt-3 text-sm font-medium text-red-700 dark:text-red-400" {{ t }}="archMessage"></p>
+        <div class="mt-5 overflow-x-auto">
+            <table class="min-w-full text-sm">
+                <thead><tr class="border-b border-secondary-200 text-left text-secondary-700 dark:border-secondary-700 dark:text-secondary-200">{% for band in bands %}<th scope="col" class="py-2 pr-3">{{ band.label }}</th>{% endfor %}</tr></thead>
+                <tbody><tr class="font-mono text-secondary-900 dark:text-white">{% for band in bands %}<td class="py-2 pr-3" {{ t }}="archLeds">—</td>{% endfor %}</tr></tbody>
+            </table>
+        </div>
+        <p class="mt-3 text-secondary-800 dark:text-secondary-200" aria-live="polite">LED au total : <strong class="font-mono" {{ t }}="archTotal">—</strong> · puissance : <strong class="font-mono" {{ t }}="archWatts">—</strong></p>
+        <p class="mt-1 text-secondary-800 dark:text-secondary-200" aria-live="polite">PPF (400–700 nm) : <strong class="font-mono" {{ t }}="archPpfOut">—</strong> µmol/s · far-red : <strong class="font-mono" {{ t }}="archFarRedOut">—</strong> µmol/s · UV : <strong class="font-mono" {{ t }}="archUvOut">—</strong> µmol/s<span hidden {{ t }}="eppfLine"> · ePPF (400–750 nm) : <strong class="font-mono" {{ t }}="archEppf">—</strong> µmol/s</span></p>
+        <div class="mt-4" {{ t }}="archChart"></div>
+    </section>
+
+    {# --- Bloc 3 --- #}
+    {% set fields %}
+        <p class="text-sm text-secondary-600 sm:col-span-2 lg:col-span-4 dark:text-secondary-300">Nombre de LED par bande, même modèle spectral que l'architecte (bloc 2).</p>
+        {% for band in bands %}
+            {{ calc.field('ph-sim-' ~ band.key, band.label, 'LED', {(t): 'simCount', 'data-action': 'input->' ~ c ~ '#calcSim'}, '0') }}
+        {% endfor %}
+        {{ calc.field('ph-sim-ppe', 'PPE moyen', 'µmol/J', {(t): 'simPpe', 'data-action': 'input->' ~ c ~ '#calcSim'}, '2,5') }}
+        {{ calc.field('ph-sim-led', 'Puissance réelle par LED', 'W', {(t): 'simLedWatts', 'data-action': 'input->' ~ c ~ '#calcSim'}, '2,2') }}
+        {{ calc.result('ph-sim-ppf', 'PPF estimé (400–700 nm)', 'µmol/s', {(t): 'simPpf'}) }}
+        {{ calc.result('ph-sim-watts', 'Puissance électrique', 'W', {(t): 'simWatts'}) }}
+        {{ calc.result('ph-sim-fr', 'Far-red (700–750 nm)', 'µmol/s', {(t): 'simFarRed'}) }}
+        {{ calc.result('ph-sim-uv', 'UV', 'µmol/s', {(t): 'simUv'}) }}
+        <div hidden {{ t }}="eppfLine">{{ calc.result('ph-sim-eppf', 'ePPF (400–750 nm)', 'µmol/s', {(t): 'simEppf'}) }}</div>
+        {{ calc.message({(t): 'simMessage'}) }}
+        <p hidden class="rounded-lg border-l-4 border-amber-500 bg-amber-50 p-3 text-sm text-amber-900 sm:col-span-2 lg:col-span-4 dark:bg-amber-950/50 dark:text-amber-100" {{ t }}="simWarning">L'UV et l'infrarouge proche peuvent présenter des risques photobiologiques : se référer à l'IEC 62471 et à l'IEC TR 62471-5.</p>
+        <div class="sm:col-span-2 lg:col-span-4" {{ t }}="simChart"></div>
+    {% endset %}
+    {{ calc.block('3. Simulateur de panneau', 'P = LED × puissance réelle · PPF = P des LED PAR × PPE · UV et far-red à part (PPE indicatif par bande)', fields) }}
+
+    {# --- Bloc 4 --- #}
+    {% set fields %}
+        {{ calc.field('ph-dli-ppfd', 'PPFD mesuré', 'µmol/m²/s', {(t): 'dliPpfd', 'data-action': 'input->' ~ c ~ '#calcDli'}, '600') }}
+        {{ calc.field('ph-dli-hours', 'Heures par jour', 'h', {(t): 'dliHours', 'data-action': 'input->' ~ c ~ '#calcDli'}, '12') }}
+        {{ calc.result('ph-dli-result', 'DLI atteint', 'mol/m²/j', {(t): 'dliResult'}, 'ph-dli-ppfd ph-dli-hours') }}
+        {{ calc.message({(t): 'dliMessage'}) }}
+    {% endset %}
+    {{ calc.block('4a. Je connais mon PPFD : quel DLI ?', 'DLI = PPFD × h × 3,6 / 1000', fields) }}
+
+    {% set fields %}
+        {{ calc.field('ph-dli-target', 'DLI visé', 'mol/m²/j', {(t): 'targetDli', 'data-action': 'input->' ~ c ~ '#calcHours'}, '30') }}
+        {{ calc.field('ph-dli-ppfd-2', 'PPFD mesuré', 'µmol/m²/s', {(t): 'targetPpfd', 'data-action': 'input->' ~ c ~ '#calcHours'}, '600') }}
+        {{ calc.result('ph-dli-hours-result', 'Durée d\'éclairage', 'h/j', {(t): 'targetHours'}, 'ph-dli-target ph-dli-ppfd-2') }}
+        {{ calc.message({(t): 'hoursMessage'}) }}
+    {% endset %}
+    {{ calc.block('4b. Je vise un DLI : combien d\'heures ?', 'h = DLI × 1000 / (PPFD × 3,6)', fields) }}
+
+    <section class="card">
+        <h2 class="text-lg font-bold text-secondary-900 dark:text-white">DLI indicatif par culture</h2>
+        <p class="mt-1 text-sm text-secondary-600 dark:text-secondary-300">Valeurs courantes en serre et en culture d'intérieur : le stade et la variété changent fortement le besoin réel.</p>
+        <div class="mt-4 overflow-x-auto">
+            <table class="min-w-full text-sm">
+                <thead><tr class="border-b border-secondary-200 text-left text-secondary-700 dark:border-secondary-700 dark:text-secondary-200"><th scope="col" class="py-2 pr-4">Culture</th><th scope="col" class="py-2 pr-4">DLI typique (mol/m²/j)</th><th scope="col" class="py-2">PPFD indicatif*</th></tr></thead>
+                <tbody class="divide-y divide-secondary-100 text-secondary-800 dark:divide-secondary-700/60 dark:text-secondary-200">
+                    <tr><td class="py-2 pr-4">Semis, boutures</td><td class="py-2 pr-4">6–12</td><td class="py-2">100–150 (16 h)</td></tr>
+                    <tr><td class="py-2 pr-4">Laitue, salades</td><td class="py-2 pr-4">12–17</td><td class="py-2">200–250 (14–16 h)</td></tr>
+                    <tr><td class="py-2 pr-4">Tomate (production)</td><td class="py-2 pr-4">20–30</td><td class="py-2">600–800 (12–16 h)</td></tr>
+                    <tr><td class="py-2 pr-4">Fleurs coupées</td><td class="py-2 pr-4">10–20</td><td class="py-2">400–600 (12 h)</td></tr>
+                    <tr><td class="py-2 pr-4">Ornementales</td><td class="py-2 pr-4">10–15</td><td class="py-2">250–400 (12–14 h)</td></tr>
+                    <tr><td class="py-2 pr-4">Culture intensive CO₂</td><td class="py-2 pr-4">30–45</td><td class="py-2">900–1200 (12–16 h)</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <p class="mt-2 text-sm text-secondary-600 dark:text-secondary-300">* PPFD indicatif pour la photopériode entre parenthèses, à ajuster selon votre minuterie.</p>
+    </section>
+
+    <section class="card space-y-2 text-sm text-secondary-700 dark:text-secondary-300">
+        <h2 class="text-lg font-bold text-secondary-900 dark:text-white">Références et terminologie</h2>
+        <ul class="list-disc space-y-1 pl-5">
+            <li><strong>ANSI/ASABE S640</strong> — Quantités et unités de rayonnement électromagnétique pour les plantes (PPF, PPFD, PAR).</li>
+            <li><strong>IES LM-85-22</strong> — Mesure du flux photosynthétique et de l'efficacité des luminaires horticoles à LED.</li>
+            <li><strong>IEC TR 62471-5</strong> — Sécurité photobiologique des éclairages horticoles (UV, infrarouge proche).</li>
+            <li><strong>IEC/EN 62471</strong> — Évaluation du risque photobiologique des lampes et luminaires.</li>
+            <li><strong>DLC Horticultural QPL</strong> (DesignLights Consortium) — Référence du marché nord-américain pour les PPF et PPE mesurés.</li>
+        </ul>
+        <p>Les paliers PPFD et DLI proposés ici sont des recommandations agronomiques courantes, pas des obligations réglementaires.</p>
+    </section>
+</div>

@@ -1,0 +1,27 @@
+{#
+  Affiche les messages flash de la session (succès, erreur, info, avertissement).
+  Inclus par : base.html.twig, admin/base.html.twig.
+  Utilise : composant <twig:Alert>, contrôleur Stimulus « notify » (assets/controllers/lazy/notify_controller.js).
+  Succès et information : toasts (en haut à droite, 4 s) quand JavaScript est actif ; sans JavaScript, ils
+  restent affichés ici. Avertissements et erreurs : toujours dans la page (jamais en fenêtre).
+  Ne démarre pas la session si elle n'existe pas (pages publiques sans cookie).
+  Les messages de l'assistant (assistant_error, assistant_notice) sont affichés dans l'assistant
+  (recruiter_area/_assistant.html.twig), pas ici.
+#}
+{% if app.request.hasPreviousSession %}
+    {% set flashes = app.flashes(['success', 'info', 'warning', 'danger', 'error']) %}
+    {% if flashes is not empty %}
+        {% set has_inline = flashes|filter((messages, type) => type not in ['success', 'info'])|length > 0 %}
+        <div class="container mx-auto space-y-3 px-4 lg:px-8 xl:max-w-7xl {{ has_inline ? 'pt-6' : 'notify-toasts-only' }}" data-controller="notify" data-testid="flash-messages">
+            {% for type, messages in flashes %}
+                {% for message in messages %}
+                    {% if type in ['success', 'info'] %}
+                        <twig:Alert type="{{ type }}" data-notify-target="toast" data-notify-type="{{ type }}">{{ message|trans }}</twig:Alert>
+                    {% else %}
+                        <twig:Alert type="{{ type }}">{{ message|trans }}</twig:Alert>
+                    {% endif %}
+                {% endfor %}
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endif %}

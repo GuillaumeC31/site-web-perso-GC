@@ -1,0 +1,31 @@
+{#
+  E-mail : notification à Guillaume (demande d'accès, message, signal d'intérêt, prolongation, alerte du site).
+  Envoyé par : NotificationDispatcher::notify(). Variables : notification (Notification), texts (EmailTexts : intro,
+  signature ; objet = préfixe + titre), subject.
+  Rien de sensible au-delà du nécessaire : nom, entreprise, type d'événement, lien vers l'admin ; pour un recruteur,
+  son adresse complète, cliquable (Notification::emailLines(), v2.0.3 : e-mail seulement, jamais Discord ni Telegram).
+#}
+{% extends 'email/_layout.html.twig' %}
+
+{% block content %}
+    {% if texts.intro %}<p style="margin:0 0 12px;">{{ texts.intro|nl2br }}</p>{% endif %}
+    <p style="margin:0 0 12px;font-weight:bold;">{{ notification.title }}</p>
+    <table role="presentation" cellpadding="0" cellspacing="0" style="font-size:14px;line-height:1.6;">
+        {% for label, value in notification.emailLines() %}
+            <tr><td style="padding-right:12px;color:#64748b;">{{ label }}</td><td>
+                {%- if label == 'E-mail' and notification.emailContact -%}
+                    <a href="mailto:{{ notification.emailContact|url_encode|replace({'%40': '@'}) }}" style="color:#00786f;">{{ notification.emailContact }}</a>
+                {%- else -%}
+                    {{ value }}
+                {%- endif -%}
+            </td></tr>
+        {% endfor %}
+    </table>
+{% endblock %}
+
+{% block button %}
+    {{ include('email/_button.html.twig', {url: notification.adminUrl, label: 'Ouvrir dans l\'admin'}) }}
+    {% if texts.signature %}<tr><td style="font-size:14px;line-height:1.6;padding-top:12px;">{{ texts.signature|nl2br }}</td></tr>{% endif %}
+{% endblock %}
+
+{% block footer %}Notification automatique de guillaume-couget.fr (canaux réglables dans l'admin, Communication).{% endblock %}

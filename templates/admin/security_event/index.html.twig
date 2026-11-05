@@ -1,0 +1,53 @@
+{#
+  Écran : journal des connexions à l'administration.
+  Affiché par : Admin\SecurityEventController::index() (route admin_security_event_index).
+  Variables attendues :
+    - events     : liste de SecurityEvent (page courante)
+    - page       : numéro de la page courante
+    - page_count : nombre de pages
+    - total      : nombre total de lignes
+#}
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}{{ 'admin.security_event.title'|trans }}{% endblock %}
+
+{% block body %}
+    <h1 class="text-2xl font-bold dark:text-white">{{ 'admin.security_event.title'|trans }}</h1>
+    <p class="form-help mb-6">{{ 'admin.security_event.intro'|trans({'%count%': total}) }}</p>
+
+    {% if events is empty %}
+        <twig:Card><p class="text-secondary-600 dark:text-secondary-300">{{ 'admin.crud.empty'|trans }}</p></twig:Card>
+    {% else %}
+        <div tabindex="0" role="region" aria-label="{{ 'admin.crud.table_region'|trans }}" class="overflow-x-auto rounded-2xl border border-secondary-200 bg-white dark:border-secondary-700 dark:bg-secondary-800">
+            <table class="min-w-full divide-y divide-secondary-200 text-sm dark:divide-secondary-700">
+                <thead class="bg-secondary-50 dark:bg-secondary-800/80">
+                    <tr>
+                        <th scope="col" class="px-4 py-3 text-left font-semibold">{{ 'admin.security_event.column.date'|trans }}</th>
+                        <th scope="col" class="px-4 py-3 text-left font-semibold">{{ 'admin.security_event.column.type'|trans }}</th>
+                        <th scope="col" class="px-4 py-3 text-left font-semibold">{{ 'admin.security_event.column.username'|trans }}</th>
+                        <th scope="col" class="px-4 py-3 text-left font-semibold">{{ 'admin.security_event.column.ip'|trans }}</th>
+                        <th scope="col" class="px-4 py-3 text-left font-semibold">{{ 'admin.security_event.column.user_agent'|trans }}</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-secondary-100 dark:divide-secondary-700/60">
+                    {% for event in events %}
+                        <tr>
+                            <td class="px-4 py-2 whitespace-nowrap">{{ event.occurredAt|format_datetime('short', 'medium') }}</td>
+                            <td class="px-4 py-2"><twig:Badge tone="{{ event.type.isFailure ? 'accent' : 'neutral' }}">{{ event.type.translationKey|trans }}</twig:Badge></td>
+                            <td class="px-4 py-2">{{ event.username ?? '—' }}</td>
+                            <td class="px-4 py-2 font-mono text-xs">{{ event.ipAddress ?? '—' }}</td>
+                            <td class="max-w-xs truncate px-4 py-2 text-xs text-secondary-600 dark:text-secondary-400" title="{{ event.userAgent }}">{{ event.userAgent ?? '—' }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% if page_count > 1 %}
+            <nav class="mt-4 flex items-center gap-3" aria-label="{{ 'admin.security_event.pagination'|trans }}">
+                {% if page > 1 %}<twig:Button href="{{ path('admin_security_event_index', {page: page - 1}) }}" variant="secondary" size="sm">{{ 'admin.crud.previous'|trans }}</twig:Button>{% endif %}
+                <span class="text-sm">{{ 'admin.crud.page_of'|trans({'%page%': page, '%count%': page_count}) }}</span>
+                {% if page < page_count %}<twig:Button href="{{ path('admin_security_event_index', {page: page + 1}) }}" variant="secondary" size="sm">{{ 'admin.crud.next'|trans }}</twig:Button>{% endif %}
+            </nav>
+        {% endif %}
+    {% endif %}
+{% endblock %}

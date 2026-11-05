@@ -1,0 +1,13 @@
+{#
+  Rubrique « liste » du CV (outils techniques, expertises, logiciels, centres d'intérêt) : puces, titre en gras.
+  Inclus par : cv/show.html.twig, recruiter_area/home.html.twig.
+  Variables attendues :
+    - entries : liste de CvEntry d'une rubrique (title facultatif, content)
+    - justify : vrai pour une rubrique en phrases (texte justifié, .text-prose-justify, césure française du
+                filtre hyphenate) ; faux pour une liste de noms ou de mots-clés (logiciels). Faux par défaut.
+#}
+<ul class="cv-list{{ justify|default(false) ? ' text-prose-justify' }}">
+    {% for entry in entries %}
+        <li>{% if entry.title %}<strong class="font-semibold text-secondary-900 dark:text-white">{{ entry.title }} :</strong> {% endif %}{{ (justify|default(false) ? entry.content|hyphenate : entry.content)|cv_bold }}</li>
+    {% endfor %}
+</ul>

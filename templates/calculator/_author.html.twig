@@ -1,0 +1,10 @@
+{#
+  Encart « outil conçu par » (CDC § 8, TEXTES_SITE § 14), avec lien vers le CV.
+  Inclus par : calculator/dashboard.html.twig, calculator/category.html.twig, calculator/tool.html.twig.
+#}
+<aside class="mt-12 flex flex-col gap-4 rounded-2xl border border-primary-200 bg-primary-50/60 p-6 sm:flex-row sm:items-center sm:justify-between dark:border-primary-800 dark:bg-primary-950/40">
+    <p class="text-secondary-800 dark:text-secondary-200">
+        {{ 'calculator.author_before'|trans }} <strong>{{ site_owner_name }}</strong>{{ 'calculator.author_after'|trans }}
+    </p>
+    <twig:Button href="{{ path('cv_show') }}" variant="secondary" size="sm">{{ 'calculator.author_link'|trans }} →</twig:Button>
+</aside>

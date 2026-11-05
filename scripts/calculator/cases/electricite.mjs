@@ -1,0 +1,120 @@
+/*
+ * Jeux d'entrées de la catégorie Électricité, pour le banc capture-golden.mjs.
+ * Chaque cas : méthode de l'ancien contrôleur, champ « déclencheur » (event), entrées, sorties lues.
+ * Couvre les valeurs courantes, les décimales, les champs vides, les zéros et les valeurs hors plage.
+ */
+const calculator = "assets/controllers/calculator_controller.js";
+// Le contrôleur « calculator » prépare le convertisseur au démarrage s'il trouve son champ.
+const omit = ["convType"];
+
+export const cases = [
+    {
+        tool: "puissances-ac",
+        controller: calculator,
+        identifier: "calculator",
+        omit,
+        cases: [
+            { method: "calculateP", inputs: { u1: 230, i1: 10, cos1: 0.8 }, outputs: ["resultP"] },
+            { method: "calculateP", inputs: { u1: 400, i1: 16, cos1: 1 }, outputs: ["resultP"] },
+            { method: "calculateP", inputs: { u1: 230.5, i1: 7.3, cos1: 0.92 }, outputs: ["resultP"] },
+            { method: "calculateP", inputs: { u1: -230, i1: 10, cos1: 0.8 }, outputs: ["resultP"] },
+            { method: "calculateP", inputs: { u1: 230, i1: 10, cos1: "" }, outputs: ["resultP"] },
+            { method: "calculateI", inputs: { p2: 2000, u2: 230, cos2: 0.8 }, outputs: ["resultI"] },
+            { method: "calculateI", inputs: { p2: 1500, u2: 400, cos2: 0.95 }, outputs: ["resultI"] },
+            { method: "calculateI", inputs: { p2: 2000, u2: 0, cos2: 0.8 }, outputs: ["resultI"] },
+            { method: "calculateI", inputs: { p2: 2000, u2: 230, cos2: 0 }, outputs: ["resultI"] },
+            { method: "calculateU", inputs: { p3: 2000, i3: 10, cos3: 0.8 }, outputs: ["resultU"] },
+            { method: "calculateU", inputs: { p3: 2000, i3: 0, cos3: 0.8 }, outputs: ["resultU"] },
+            { method: "calculateS", inputs: { u4: 230, i4: 10 }, outputs: ["resultS"] },
+            { method: "calculateS", inputs: { u4: 400, i4: 32.5 }, outputs: ["resultS"] },
+            { method: "calculateS", inputs: { u4: "", i4: 10 }, outputs: ["resultS"] },
+            { method: "calculateIApp", inputs: { s5: 2300, u5: 230 }, outputs: ["resultIApp"] },
+            { method: "calculateIApp", inputs: { s5: 2300, u5: 0 }, outputs: ["resultIApp"] },
+            { method: "calculateUApp", inputs: { s6: 2300, i6: 10 }, outputs: ["resultUApp"] },
+            { method: "calculateUApp", inputs: { s6: 2300, i6: 0 }, outputs: ["resultUApp"] },
+            { method: "calculateQ", inputs: { uReact: 230, iReact: 10, cosReact: 0.8 }, outputs: ["resultQ"] },
+            { method: "calculateQ", inputs: { uReact: 230, iReact: 10, cosReact: 1 }, outputs: ["resultQ"] },
+            { method: "calculateQ", inputs: { uReact: 230, iReact: 10, cosReact: 1.2 }, outputs: ["resultQ"] },
+            { method: "calculateQ", inputs: { uReact: 230, iReact: 10, cosReact: -0.5 }, outputs: ["resultQ"] },
+        ],
+    },
+    {
+        tool: "chute-tension",
+        controller: calculator,
+        identifier: "calculator",
+        omit,
+        cases: [
+            { method: "calculateDrop", inputs: { lDrop: 50, iDrop: 32, sDrop: 2.5 }, outputs: ["resultDrop"] },
+            { method: "calculateDrop", inputs: { lDrop: 100, iDrop: 16, sDrop: 1.5 }, outputs: ["resultDrop"] },
+            { method: "calculateDrop", inputs: { lDrop: 25, iDrop: 10, sDrop: 35 }, outputs: ["resultDrop"] },
+            { method: "calculateDrop", inputs: { lDrop: 50, iDrop: "", sDrop: 2.5 }, outputs: ["resultDrop"] },
+        ],
+    },
+    {
+        tool: "loi-ohm",
+        controller: calculator,
+        identifier: "calculator",
+        omit,
+        cases: [
+            { method: "calculateUnifiedOhm", event: "ohmI", inputs: { ohmU: 12, ohmI: 2, ohmR: "", ohmP: "" }, outputs: ["ohmU", "ohmI", "ohmR", "ohmP"] },
+            { method: "calculateUnifiedOhm", event: "ohmR", inputs: { ohmU: 12, ohmI: "", ohmR: 6, ohmP: "" }, outputs: ["ohmU", "ohmI", "ohmR", "ohmP"] },
+            { method: "calculateUnifiedOhm", event: "ohmP", inputs: { ohmU: 12, ohmI: "", ohmR: "", ohmP: 24 }, outputs: ["ohmU", "ohmI", "ohmR", "ohmP"] },
+            { method: "calculateUnifiedOhm", event: "ohmR", inputs: { ohmU: "", ohmI: 2, ohmR: 6, ohmP: "" }, outputs: ["ohmU", "ohmI", "ohmR", "ohmP"] },
+            { method: "calculateUnifiedOhm", event: "ohmP", inputs: { ohmU: "", ohmI: 2, ohmR: "", ohmP: 24 }, outputs: ["ohmU", "ohmI", "ohmR", "ohmP"] },
+            { method: "calculateUnifiedOhm", event: "ohmP", inputs: { ohmU: "", ohmI: "", ohmR: 6, ohmP: 24 }, outputs: ["ohmU", "ohmI", "ohmR", "ohmP"] },
+            { method: "calculateUnifiedOhm", event: "ohmI", inputs: { ohmU: 230, ohmI: 0.437, ohmR: "", ohmP: "" }, outputs: ["ohmU", "ohmI", "ohmR", "ohmP"] },
+            { method: "calculateUnifiedOhm", event: "ohmR", inputs: { ohmU: 12, ohmI: 2, ohmR: 100, ohmP: "" }, outputs: ["ohmU", "ohmI", "ohmR", "ohmP"] },
+            { method: "calculateUnifiedOhm", event: "ohmI", inputs: { ohmU: 12, ohmI: 0, ohmR: "", ohmP: "" }, outputs: ["ohmU", "ohmI", "ohmR", "ohmP"] },
+            { method: "calculateUnifiedOhm", event: "ohmU", inputs: { ohmU: 5, ohmI: "", ohmR: "", ohmP: "" }, outputs: ["ohmU", "ohmI", "ohmR", "ohmP"] },
+        ],
+    },
+    {
+        tool: "steinmetz",
+        controller: calculator,
+        identifier: "calculator",
+        omit,
+        cases: [
+            { method: "calculateSteinmetz", event: "steinP", inputs: { steinP: 1.5, steinHp: "", steinI: "" }, outputs: ["steinP", "steinHp", "steinI", "steinC"] },
+            { method: "calculateSteinmetz", event: "steinP", inputs: { steinP: 0.37, steinHp: "", steinI: "" }, outputs: ["steinP", "steinHp", "steinI", "steinC"] },
+            { method: "calculateSteinmetz", event: "steinHp", inputs: { steinP: "", steinHp: 2, steinI: "" }, outputs: ["steinP", "steinHp", "steinI", "steinC"] },
+            { method: "calculateSteinmetz", event: "steinI", inputs: { steinP: "", steinHp: "", steinI: 6.5 }, outputs: ["steinP", "steinHp", "steinI", "steinC"] },
+            { method: "calculateSteinmetz", event: "steinI", inputs: { steinP: "", steinHp: "", steinI: "" }, outputs: ["steinP", "steinHp", "steinI", "steinC"] },
+        ],
+    },
+    {
+        tool: "relevement-cos-phi",
+        controller: calculator,
+        identifier: "calculator",
+        omit,
+        cases: [
+            { method: "calculateCosPhi", inputs: { cosPFp: 150, cosPFu: 400, cosPFhz: 50, cosPFini: 0.75, cosPFcib: 0.93 }, outputs: ["cosPFqc", "cosPFcap"] },
+            { method: "calculateCosPhi", inputs: { cosPFp: 100, cosPFu: 230, cosPFhz: 50, cosPFini: 0.8, cosPFcib: 0.95 }, outputs: ["cosPFqc", "cosPFcap"] },
+            { method: "calculateCosPhi", inputs: { cosPFp: 50, cosPFu: 400, cosPFhz: 60, cosPFini: 0.95, cosPFcib: 0.9 }, outputs: ["cosPFqc", "cosPFcap"] },
+            { method: "calculateCosPhi", inputs: { cosPFp: 50, cosPFu: 400, cosPFhz: 50, cosPFini: 0.8, cosPFcib: 1.2 }, outputs: ["cosPFqc", "cosPFcap"] },
+            { method: "calculateCosPhi", inputs: { cosPFp: 75.5, cosPFu: 400, cosPFhz: 50, cosPFini: 0.68, cosPFcib: 1 }, outputs: ["cosPFqc", "cosPFcap"] },
+        ],
+    },
+    {
+        tool: "calculs-cables",
+        controller: "assets/controllers/cables_controller.js",
+        identifier: "cables",
+        selects: ["sectionMat", "lengthMat", "dropMat", "weightMat"],
+        spans: ["sectionResult", "lengthResult", "dropResult", "weightResult"],
+        selectOptions: { sectionMat: ["cu", "al"], lengthMat: ["cu", "al"], dropMat: ["cu", "al"], weightMat: ["cu", "al"] },
+        cases: [
+            { method: "calculateSection", inputs: { sectionMat: "cu", sectionLength: 50, sectionCurrent: 10, sectionVoltageDrop: 0.6 }, outputs: ["sectionResult"] },
+            { method: "calculateSection", inputs: { sectionMat: "al", sectionLength: 50, sectionCurrent: 10, sectionVoltageDrop: 0.6 }, outputs: ["sectionResult"] },
+            { method: "calculateSection", inputs: { sectionMat: "cu", sectionLength: 0, sectionCurrent: 10, sectionVoltageDrop: 0.6 }, outputs: ["sectionResult"] },
+            { method: "calculateLength", inputs: { lengthMat: "cu", lengthSection: 2.5, lengthCurrent: 10, lengthVoltageDrop: 0.6 }, outputs: ["lengthResult"] },
+            { method: "calculateLength", inputs: { lengthMat: "al", lengthSection: 16, lengthCurrent: 63, lengthVoltageDrop: 6.9 }, outputs: ["lengthResult"] },
+            { method: "calculateLength", inputs: { lengthMat: "cu", lengthSection: 2.5, lengthCurrent: "", lengthVoltageDrop: 0.6 }, outputs: ["lengthResult"] },
+            { method: "calculateDrop", inputs: { dropMat: "cu", dropSection: 2.5, dropLength: 50, dropCurrent: 10 }, outputs: ["dropResult"] },
+            { method: "calculateDrop", inputs: { dropMat: "al", dropSection: 16, dropLength: 100, dropCurrent: 63 }, outputs: ["dropResult"] },
+            { method: "calculateDrop", inputs: { dropMat: "cu", dropSection: -2.5, dropLength: 50, dropCurrent: 10 }, outputs: ["dropResult"] },
+            { method: "calculateWeight", inputs: { weightMat: "cu", weightLength: 50, weightSection: 2.5, weightCores: 2, weightInsulation: 20 }, outputs: ["weightResult"] },
+            { method: "calculateWeight", inputs: { weightMat: "al", weightLength: 100, weightSection: 16, weightCores: 3, weightInsulation: 15 }, outputs: ["weightResult"] },
+            { method: "calculateWeight", inputs: { weightMat: "cu", weightLength: 10, weightSection: 1.5, weightCores: "", weightInsulation: "" }, outputs: ["weightResult"] },
+            { method: "calculateWeight", inputs: { weightMat: "cu", weightLength: 10, weightSection: 1.5, weightCores: 2.7, weightInsulation: 10 }, outputs: ["weightResult"] },
+        ],
+    },
+];

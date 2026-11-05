@@ -1,0 +1,14 @@
+{#
+  Point de contenu à compléter (tuile « Contenu à compléter »), mis en avant s'il bloque la mise en ligne.
+  Inclus par : admin/dashboard/_tile.html.twig.
+  Variables attendues :
+    - item : point de ContentCompletenessChecker::findMissingItems() (message, parameters, route, route_parameters, blocking)
+#}
+<li class="flex items-start gap-2">
+    {% if item.blocking %}
+        <twig:Badge tone="danger" class="shrink-0">{{ 'admin.dashboard.blocking'|trans }}</twig:Badge>
+    {% endif %}
+    <a href="{{ path(item.route, item.route_parameters) }}" class="link {{ item.blocking ? 'font-semibold' : '' }}">
+        {{ item.message|trans(item.parameters|map(value => value matches '/^admin\\./' ? value|trans : value)) }}
+    </a>
+</li>

@@ -1,0 +1,193 @@
+{#
+  Page : politique de confidentialité complète. En tête, un résumé de cinq lignes ; tout le détail dans des sections
+  repliables (details natif, sans JavaScript) : responsable, contact, espace recruteur, score et synthèse (article 22),
+  assistant IA, notifications, e-mails, anti-robot, cookies et stockage, hébergement, destinataires et transferts
+  (tableau avec sources officielles), bases légales et durées (tableau), droits (CNIL), sécurité.
+  Affichée par : LegalController::privacy() (route legal_privacy, /confidentialite).
+  Variables attendues :
+    - ai_models      : modèles Mistral AI utilisés (principal, secours)
+    - updated_at     : date de dernière mise à jour des textes
+    - rgpd_email     : adresse dédiée aux droits, protégée (user et domain inversés, fallback lisible sans arobase)
+    - auto_approval  : seuil de validation automatique des demandes (null : désactivée, toutes décidées à la main)
+#}
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'legal.privacy.title'|trans }} · {{ site_owner_name }}{% endblock %}
+{% block description %}{{ 'legal.privacy.meta_description'|trans }}{% endblock %}
+
+{% block body %}
+    {% set contact_link %}<a href="{{ path('contact_show') }}" class="link">{{ 'legal.contact_link'|trans }}</a>{% endset %}
+    {# Tableaux : lignes empilées sur mobile (intitulé de colonne rappelé), vrai tableau à partir de 640 px #}
+    {% set table_class = 'w-full border-collapse text-left text-sm' %}
+    {% set th_class = 'border-b border-secondary-300 px-3 py-2 font-semibold text-secondary-900 dark:border-secondary-600 dark:text-white' %}
+    {% set tr_class = 'border-b border-secondary-200 align-top last:border-0 max-sm:block max-sm:py-3 dark:border-secondary-700' %}
+    {% set td_class = 'px-3 py-2 max-sm:block max-sm:px-0 max-sm:py-1' %}
+    {% set cell_label_class = 'font-semibold text-secondary-900 sm:hidden dark:text-white' %}
+    <div class="container mx-auto px-4 py-16 lg:px-8 lg:py-24 xl:max-w-4xl">
+        <twig:SectionHeading title="{{ 'legal.privacy.title'|trans }}" :level="1">
+            {{ 'legal.privacy.intro'|trans }}
+        </twig:SectionHeading>
+
+        <section class="mt-10 rounded-2xl border border-primary-200 bg-primary-50 p-5 dark:border-primary-800 dark:bg-primary-950/40" aria-labelledby="en-bref-title" id="en-bref" data-testid="privacy-summary">
+            <h2 id="en-bref-title" class="text-lg font-bold text-secondary-900 dark:text-white">{{ 'legal.privacy.summary.title'|trans }}</h2>
+            <ul class="mt-3 list-disc space-y-1 pl-5 text-secondary-800 dark:text-secondary-200">
+                {% for index in 0..4 %}
+                    <li>{{ ('legal.privacy.summary.items.' ~ index)|trans }}</li>
+                {% endfor %}
+            </ul>
+        </section>
+        <p class="mt-6 text-sm text-secondary-600 dark:text-secondary-400">{{ 'legal.privacy.summary.details_hint'|trans }}</p>
+
+        <div class="mt-4 space-y-3 text-secondary-800 dark:text-secondary-200">
+            {% embed 'legal/_details.html.twig' with {id: 'responsable', title: 'legal.privacy.controller.title'|trans, contact_link: contact_link} %}
+                {% block content %}<p>{{ 'legal.privacy.controller.text'|trans }} {{ contact_link }}.</p>{% endblock %}
+            {% endembed %}
+
+            {% embed 'legal/_details.html.twig' with {id: 'contact', title: 'legal.privacy.contact.title'|trans} %}
+                {% block content %}<p>{{ 'legal.privacy.contact.text'|trans }}</p>{% endblock %}
+            {% endembed %}
+
+            {% embed 'legal/_details.html.twig' with {id: 'espace-recruteur', title: 'legal.privacy.recruiter.title'|trans} %}
+                {% block content %}
+                    <p>{{ 'legal.privacy.recruiter.access'|trans }}</p>
+                    <p>{{ 'legal.privacy.recruiter.retention'|trans }}</p>
+                    <p>{{ 'legal.privacy.recruiter.reminders'|trans }}</p>
+                {% endblock %}
+            {% endembed %}
+
+            {% embed 'legal/_details.html.twig' with {id: 'decision', title: 'legal.privacy.decision.title'|trans, contact_link: contact_link, auto_approval: auto_approval} %}
+                {% block content %}
+                    <p>{{ 'legal.privacy.decision.score'|trans }}</p>
+                    <p>{{ 'legal.privacy.decision.synthesis'|trans }}</p>
+                    <p class="font-medium">
+                        {{ 'legal.privacy.decision.human'|trans }}
+                        {{ auto_approval is null ? 'legal.privacy.decision.human_manual'|trans : 'legal.privacy.decision.human_auto'|trans({'%threshold%': auto_approval}) }}
+                    </p>
+                    <p>{{ 'legal.privacy.decision.rights'|trans }} {{ contact_link }}.</p>
+                {% endblock %}
+            {% endembed %}
+
+            {% embed 'legal/_details.html.twig' with {id: 'assistant-ia', title: 'legal.privacy.assistant.title'|trans, ai_models: ai_models, contact_link: contact_link} %}
+                {% block content %}
+                    <p>{{ 'legal.privacy.assistant.what'|trans({'%models%': ai_models|join(', ')}) }}</p>
+                    <p>{{ 'legal.privacy.assistant.data'|trans }}</p>
+                    <p class="font-medium">{{ 'assistant.rgpd.mistral'|trans }}</p>
+                    <p>{{ 'legal.privacy.assistant.journal'|trans }}</p>
+                    <p>{{ 'legal.privacy.assistant.guided'|trans }}</p>
+                    <p>{{ 'legal.privacy.assistant.rights'|trans }} {{ contact_link }}.</p>
+                {% endblock %}
+            {% endembed %}
+
+            {% for key, id in {notifications: 'notifications', emails: 'e-mails', turnstile: 'anti-robot'} %}
+                {% embed 'legal/_details.html.twig' with {id: id, title: ('legal.privacy.' ~ key ~ '.title')|trans, key: key} %}
+                    {% block content %}<p>{{ ('legal.privacy.' ~ key ~ '.text')|trans }}</p>{% endblock %}
+                {% endembed %}
+            {% endfor %}
+
+            {% embed 'legal/_details.html.twig' with {id: 'cookies', title: 'legal.privacy.cookies.title'|trans} %}
+                {% block content %}
+                    <p>{{ 'legal.privacy.cookies.intro'|trans }}</p>
+                    <table class="{{ table_class }}" data-testid="cookies-table">
+                        <thead class="max-sm:sr-only">
+                            <tr>
+                                {% for column in ['name', 'kind', 'purpose', 'duration'] %}
+                                    <th scope="col" class="{{ th_class }}">{{ ('legal.privacy.cookies.' ~ column)|trans }}</th>
+                                {% endfor %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in ['session', 'csrf', 'turnstile', 'theme', 'calculator'] %}
+                                <tr class="{{ tr_class }}">
+                                    {% for column in ['name', 'kind', 'purpose', 'duration'] %}
+                                        <td class="{{ td_class }}{{ column == 'name' ? ' font-mono text-xs break-all' }}">
+                                            <span class="{{ cell_label_class }} font-sans">{{ ('legal.privacy.cookies.' ~ column)|trans }} : </span>{{ ('legal.privacy.cookies.rows.' ~ row ~ '.' ~ column)|trans }}
+                                        </td>
+                                    {% endfor %}
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <p class="font-medium" data-testid="no-tracking">{{ 'legal.privacy.cookies.no_tracking'|trans }}</p>
+                {% endblock %}
+            {% endembed %}
+
+            {% embed 'legal/_details.html.twig' with {id: 'hebergement', title: 'legal.privacy.hosting.title'|trans} %}
+                {% block content %}<p>{{ 'legal.privacy.hosting.text'|trans }}</p><p class="mt-3">{{ 'legal.privacy.hosting.backups'|trans }}</p>{% endblock %}
+            {% endembed %}
+
+            {% embed 'legal/_details.html.twig' with {id: 'destinataires', title: 'legal.privacy.recipients.title'|trans} %}
+                {% block content %}
+                    <p>{{ 'legal.privacy.recipients.intro'|trans }}</p>
+                    <table class="{{ table_class }}" data-testid="recipients-table">
+                        <thead class="max-sm:sr-only">
+                            <tr>
+                                {% for column in ['name', 'role', 'country', 'framework', 'source'] %}
+                                    <th scope="col" class="{{ th_class }}">{{ ('legal.privacy.recipients.' ~ column)|trans }}</th>
+                                {% endfor %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in ['l’hébergeur', 'mistral', 'cloudflare', 'google', 'telegram', 'discord'] %}
+                                {% set prefix = 'legal.privacy.recipients.rows.' ~ row ~ '.' %}
+                                <tr class="{{ tr_class }}" data-recipient="{{ row }}">
+                                    <th scope="row" class="{{ td_class }} font-semibold text-secondary-900 dark:text-white">{{ (prefix ~ 'name')|trans }}</th>
+                                    {% for column in ['role', 'country', 'framework'] %}
+                                        <td class="{{ td_class }}"><span class="{{ cell_label_class }}">{{ ('legal.privacy.recipients.' ~ column)|trans }} : </span>{{ (prefix ~ column)|trans }}</td>
+                                    {% endfor %}
+                                    <td class="{{ td_class }}"><a href="{{ (prefix ~ 'source')|trans }}" class="link" rel="noopener noreferrer" target="_blank">{{ (prefix ~ 'source_label')|trans }}<span class="sr-only"> {{ 'footer.new_window'|trans }}</span></a></td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% endblock %}
+            {% endembed %}
+
+            {% embed 'legal/_details.html.twig' with {id: 'bases-legales', title: 'legal.privacy.legal_basis.title'|trans} %}
+                {% block content %}
+                    <table class="{{ table_class }}" data-testid="legal-basis-table">
+                        <thead class="max-sm:sr-only">
+                            <tr>
+                                {% for column in ['processing', 'basis', 'duration'] %}
+                                    <th scope="col" class="{{ th_class }}">{{ ('legal.privacy.legal_basis.' ~ column)|trans }}</th>
+                                {% endfor %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in ['access', 'contact', 'assistant', 'notifications', 'security'] %}
+                                {% set prefix = 'legal.privacy.legal_basis.rows.' ~ row ~ '.' %}
+                                <tr class="{{ tr_class }}" data-processing="{{ row }}">
+                                    <th scope="row" class="{{ td_class }} font-semibold text-secondary-900 dark:text-white">{{ (prefix ~ 'processing')|trans }}</th>
+                                    {% for column in ['basis', 'duration'] %}
+                                        <td class="{{ td_class }}"><span class="{{ cell_label_class }}">{{ ('legal.privacy.legal_basis.' ~ column)|trans }} : </span>{{ (prefix ~ column)|trans }}</td>
+                                    {% endfor %}
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% endblock %}
+            {% endembed %}
+
+            {% embed 'legal/_details.html.twig' with {id: 'droits', title: 'legal.privacy.rights.title'|trans, contact_link: contact_link} %}
+                {% block content %}
+                    <p>{{ 'legal.privacy.rights.text'|trans }} {{ contact_link }}.</p>
+                    <p>
+                        {{ 'legal.privacy.rights.email'|trans }}
+                        {# Adresse jamais en clair : reconstituée par le navigateur, texte lisible sans JavaScript #}
+                        <span data-controller="protected-email" data-protected-email-user-value="{{ rgpd_email.user }}" data-protected-email-domain-value="{{ rgpd_email.domain }}" data-testid="rgpd-email">{{ rgpd_email.fallback }}</span>.
+                    </p>
+                    <p>{{ 'legal.privacy.rights.delay'|trans }}</p>
+                    <p>{{ 'legal.privacy.rights.cnil'|trans }} <a href="https://www.cnil.fr/fr/plaintes" class="link" rel="noopener noreferrer" target="_blank" data-testid="cnil-link">{{ 'legal.privacy.rights.cnil_link'|trans }}<span class="sr-only"> {{ 'footer.new_window'|trans }}</span></a>.</p>
+                {% endblock %}
+            {% endembed %}
+
+            {% embed 'legal/_details.html.twig' with {id: 'securite', title: 'legal.privacy.security.title'|trans} %}
+                {% block content %}<p>{{ 'legal.privacy.security.text'|trans }}</p>{% endblock %}
+            {% endembed %}
+        </div>
+
+        <p class="mt-12 text-sm text-secondary-600 dark:text-secondary-400">{{ 'legal.updated'|trans({'%date%': updated_at|format_date('long')}) }}</p>
+        <div class="mt-6">
+            <twig:Button href="{{ path('home') }}" variant="secondary">{{ 'common.back_home'|trans }}</twig:Button>
+        </div>
+    </div>
+{% endblock %}

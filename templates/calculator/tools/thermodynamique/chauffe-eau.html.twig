@@ -1,0 +1,34 @@
+{#
+  Outil : chauffe d'un volume d'eau (durée selon la puissance, puissance selon la durée).
+  Inclus par : calculator/tool.html.twig. Contrôleur : calculator--chauffe-eau.
+  Hypothèses de l'ancien site : 4185 J/(kg·K), 1 L = 1 kg, rendement 100 %, sans pertes.
+#}
+{% import 'calculator/_macros.html.twig' as calc %}
+{% set c = 'calculator--chauffe-eau' %}
+{% set t = 'data-' ~ c ~ '-target' %}
+
+<div data-controller="{{ c }}" class="space-y-6">
+    {% set fields %}
+        {{ calc.field('wt-volume', 'Volume d\'eau', 'L', {(t): 'timeVolume', 'data-action': 'input->' ~ c ~ '#calculateTime'}, null, 'ex. 200') }}
+        {{ calc.field('wt-start', 'Température de départ', '°C', {(t): 'timeStart', 'data-action': 'input->' ~ c ~ '#calculateTime'}, null, 'ex. 20') }}
+        {{ calc.field('wt-end', 'Température finale', '°C', {(t): 'timeEnd', 'data-action': 'input->' ~ c ~ '#calculateTime'}, null, 'ex. 60') }}
+        {{ calc.field('wt-power', 'Puissance de la résistance', 'W', {(t): 'timePower', 'data-action': 'input->' ~ c ~ '#calculateTime'}, null, 'ex. 3000') }}
+        {{ calc.result('wt-energy', 'Énergie', 'kWh', {(t): 'timeEnergy'}, 'wt-volume wt-start wt-end') }}
+        {{ calc.result('wt-hours', 'Temps de chauffe', 'h', {(t): 'timeHours'}, 'wt-volume wt-start wt-end wt-power') }}
+        {{ calc.message({(t): 'timeMessage'}) }}
+    {% endset %}
+    {{ calc.block('Temps de chauffe selon la puissance', 'E = V × 4185 × |ΔT| / 3 600 000 · t = E / P', fields) }}
+
+    {% set fields %}
+        {{ calc.field('wp-volume', 'Volume d\'eau', 'L', {(t): 'powerVolume', 'data-action': 'input->' ~ c ~ '#calculatePower'}, null, 'ex. 200') }}
+        {{ calc.field('wp-start', 'Température de départ', '°C', {(t): 'powerStart', 'data-action': 'input->' ~ c ~ '#calculatePower'}, null, 'ex. 20') }}
+        {{ calc.field('wp-end', 'Température finale', '°C', {(t): 'powerEnd', 'data-action': 'input->' ~ c ~ '#calculatePower'}, null, 'ex. 60') }}
+        {{ calc.field('wp-hours', 'Temps de chauffe souhaité', 'h', {(t): 'powerHours', 'data-action': 'input->' ~ c ~ '#calculatePower'}, null, 'ex. 2,5') }}
+        {{ calc.result('wp-energy', 'Énergie', 'kWh', {(t): 'powerEnergy'}, 'wp-volume wp-start wp-end') }}
+        {{ calc.result('wp-watts', 'Puissance nécessaire', 'W', {(t): 'powerWatts'}, 'wp-volume wp-start wp-end wp-hours') }}
+        {{ calc.message({(t): 'powerMessage'}) }}
+    {% endset %}
+    {{ calc.block('Puissance selon le temps de chauffe', 'P = E / t', fields) }}
+
+    <p class="text-sm text-secondary-600 dark:text-secondary-300">Capacité thermique massique de l'eau : 4185 J/(kg·K), 1 L d'eau = 1 kg. Rendement de 100 %, sans pertes de chaleur.</p>
+</div>

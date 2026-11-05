@@ -1,0 +1,74 @@
+{#
+  Communication › Réseaux sociaux : liens vers les réseaux (icône locale, nom, adresse), visibles ou masqués, endroits
+  d'affichage ; ajouter, modifier, supprimer (confirmation), réordonner, afficher / masquer d'un clic.
+  Affiché par : Admin\SocialLinkController::index() (route admin_social_link_index).
+  Variables attendues :
+    - tab      : « social »
+    - crud     : configuration du module générique (route_prefix « admin_social_link »)
+    - entities : liens dans l'ordre d'affichage (SocialLink)
+#}
+{% extends 'admin/communication/_layout.html.twig' %}
+{% import 'admin/communication/_macros.html.twig' as ui %}
+{% import '_partials/_confirm.html.twig' as confirmation %}
+{% set prefix = crud.route_prefix %}
+
+{% block tab_content %}
+    {{ ui.info('social') }}
+    <div class="mb-6 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-950 dark:border-amber-800 dark:bg-amber-950/50 dark:text-amber-100" role="note" data-testid="social-reminder">
+        <p class="font-semibold">{{ 'admin.social_link.reminder_title'|trans }}</p>
+        <ul class="mt-1 list-disc space-y-1 pl-5">
+            <li>{{ 'admin.social_link.reminder_chat'|trans }}</li>
+            <li>{{ 'admin.social_link.reminder_personal'|trans }}</li>
+            <li>{{ 'admin.social_link.reminder_widgets'|trans }}</li>
+        </ul>
+    </div>
+    <p class="mb-4"><twig:Button href="{{ path(prefix ~ '_new') }}">{{ 'admin.social_link.add'|trans }}</twig:Button></p>
+
+    {% if entities is empty %}
+        <section class="card"><p class="text-sm">{{ 'admin.social_link.empty'|trans }}</p></section>
+    {% else %}
+        <ul class="space-y-3" data-testid="social-links">
+            {% for link in entities %}
+                <li class="card flex flex-col gap-3 md:flex-row md:items-center md:justify-between" data-network="{{ link.network.value }}">
+                    <div class="min-w-0">
+                        <p class="flex items-center gap-2 font-semibold text-secondary-900 dark:text-white">
+                            {{ include('_partials/_social_icon.html.twig', {network: link.network.value, class: 'size-5'}, with_context = false) }}
+                            {{ link.displayName }}
+                            {{ ui.state(link.visible ? 'ok' : 'not_applicable', (link.visible ? 'admin.social_link.visible' : 'admin.social_link.hidden')|trans) }}
+                        </p>
+                        <p class="mt-1 text-sm break-all text-secondary-700 dark:text-secondary-300">{{ link.url }}</p>
+                        <p class="mt-1 text-xs text-secondary-700 dark:text-secondary-300">
+                            {{ 'admin.social_link.where'|trans }}
+                            {% set places = [] %}
+                            {% if link.showInFooter %}{% set places = places|merge(['admin.social_link.place.footer'|trans]) %}{% endif %}
+                            {% if link.showOnMaintenance %}{% set places = places|merge(['admin.social_link.place.maintenance'|trans]) %}{% endif %}
+                            {% if link.showInRecruiterArea %}{% set places = places|merge(['admin.social_link.place.recruiter'|trans]) %}{% endif %}
+                            {% if link.showInStructuredData %}{% set places = places|merge(['admin.social_link.place.structured_data'|trans]) %}{% endif %}
+                            {{ places is empty ? 'admin.social_link.nowhere'|trans : places|join(', ') }}
+                        </p>
+                    </div>
+                    <div class="flex flex-wrap items-center gap-2">
+                        <form method="post" action="{{ path(prefix ~ '_move', {id: link.id, direction: 'haut'}) }}">
+                            <input type="hidden" name="_token" value="{{ csrf_token(prefix ~ '_move_' ~ link.id) }}">
+                            <button type="submit" class="btn btn-secondary btn-sm" {% if loop.first %}disabled{% endif %}><span class="sr-only">{{ 'admin.crud.move_up'|trans }} : {{ link.displayName }}</span><span aria-hidden="true">↑</span></button>
+                        </form>
+                        <form method="post" action="{{ path(prefix ~ '_move', {id: link.id, direction: 'bas'}) }}">
+                            <input type="hidden" name="_token" value="{{ csrf_token(prefix ~ '_move_' ~ link.id) }}">
+                            <button type="submit" class="btn btn-secondary btn-sm" {% if loop.last %}disabled{% endif %}><span class="sr-only">{{ 'admin.crud.move_down'|trans }} : {{ link.displayName }}</span><span aria-hidden="true">↓</span></button>
+                        </form>
+                        <form method="post" action="{{ path(prefix ~ '_toggle', {id: link.id}) }}">
+                            <input type="hidden" name="_token" value="{{ csrf_token(prefix ~ '_toggle_' ~ link.id) }}">
+                            <button type="submit" class="btn btn-secondary btn-sm">{{ (link.visible ? 'admin.social_link.hide' : 'admin.social_link.show')|trans }}<span class="sr-only"> : {{ link.displayName }}</span></button>
+                        </form>
+                        <twig:Button href="{{ path(prefix ~ '_edit', {id: link.id}) }}" variant="secondary" size="sm">{{ 'admin.crud.edit'|trans }}<span class="sr-only"> : {{ link.displayName }}</span></twig:Button>
+                        <form method="post" action="{{ path(prefix ~ '_delete', {id: link.id}) }}" {{ confirmation.attributes('admin.crud.delete_confirm'|trans({'%name%': link}), '', 'admin.crud.delete'|trans, true) }}>
+                            <input type="hidden" name="_token" value="{{ csrf_token(prefix ~ '_delete_' ~ link.id) }}">
+                            {{ confirmation.field() }}
+                            <twig:Button type="submit" variant="danger" size="sm">{{ 'admin.crud.delete'|trans }}<span class="sr-only"> : {{ link.displayName }}</span></twig:Button>
+                        </form>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock %}

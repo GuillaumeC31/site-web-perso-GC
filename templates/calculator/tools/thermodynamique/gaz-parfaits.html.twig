@@ -1,0 +1,21 @@
+{#
+  Outil : loi des gaz parfaits (pression).
+  Inclus par : calculator/tool.html.twig. Contrôleur : calculator--gaz-parfaits.
+  R = 8,314 J/(mol·K), conversions en kelvins et en m³ (ancien site).
+#}
+{% import 'calculator/_macros.html.twig' as calc %}
+{% set c = 'calculator--gaz-parfaits' %}
+{% set t = 'data-' ~ c ~ '-target' %}
+{% set input = 'input->' ~ c ~ '#calculate' %}
+
+<div data-controller="{{ c }}" class="space-y-6">
+    {% set fields %}
+        {{ calc.field('gas-n', 'Quantité de matière n', 'mol', {(t): 'moles', 'data-action': input}, null, 'ex. 1') }}
+        {{ calc.field('gas-t', 'Température T', '°C', {(t): 'temperature', 'data-action': input}, null, 'ex. 20') }}
+        {{ calc.field('gas-v', 'Volume V', 'L', {(t): 'volume', 'data-action': input}, null, 'ex. 22,4') }}
+        {{ calc.result('gas-p', 'Pression', 'bar', {(t): 'pressure'}, 'gas-n gas-t gas-v') }}
+        {{ calc.message({(t): 'message'}) }}
+        {{ calc.note({}, 'R = 8,314 J/(mol·K). La température est convertie en kelvins (T + 273,15) et le volume en m³.') }}
+    {% endset %}
+    {{ calc.block('Pression d\'un gaz parfait', 'P = n × R × T / V', fields) }}
+</div>

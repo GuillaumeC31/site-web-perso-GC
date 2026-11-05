@@ -1,0 +1,197 @@
+{#
+  Page : accueil public.
+  Affichée par : HomeController::index() (route home, /).
+  Maquette : ../maquette_accueil/ (sections, photo, chiffres clés, parcours en bref).
+  Composants Tailkit UI d'origine : m-s-hero-09 (structure du héros), adaptés à la maquette.
+  Variables attendues :
+    - profile                 : champs publics du profil (CvContentProvider), jamais les coordonnées
+    - key_figures             : chiffres clés complets (3 au plus) ; section masquée si vide
+    - pillars                 : piliers de compétences (avec compétences)
+    - highlighted_experiences : expériences du « Parcours en bref » (3 au plus)
+    - case_studies            : études de cas visibles (3 au plus, mises en avant d'abord) ; section masquée si vide
+  Règle : rien de « à compléter » n'est affiché ; un bloc sans contenu est masqué.
+#}
+{% extends 'base.html.twig' %}
+
+{# Title et description : réglables dans l'admin (Paramètres › Référencement), sinon TEXTES_SITE § 18 #}
+{% block title %}{{ seo_settings().seoTitle ?? 'home.meta_title'|trans({'%name%': profile.full_name}) }}{% endblock %}
+{% block description %}{{ seo_settings().seoDescription ?? 'home.meta_description'|trans }}{% endblock %}
+{% block og_type %}profile{% endblock %}
+{% block structured_data %}
+    {# Person + ProfilePage (schema.org), sans téléphone ni e-mail ; nonce CSP de la page #}
+    <script type="application/ld+json" nonce="{{ csp_nonce() }}">{{ seo_profile_page_json_ld(block('title')) }}</script>
+{% endblock %}
+
+{% block body %}
+    {% set badge_parts = [profile.availability, profile.location, profile.work_modes]|filter(part => part) %}
+    {% set lead_figure = key_figures|first %}
+    {# Classes écrites en entier : Tailwind ne détecte pas les noms construits dynamiquement #}
+    {% set sm_cols = {1: 'sm:grid-cols-1', 2: 'sm:grid-cols-2', 3: 'sm:grid-cols-3'} %}
+    {% set lg_cols = {1: 'lg:grid-cols-1', 2: 'lg:grid-cols-2', 3: 'lg:grid-cols-3', 4: 'lg:grid-cols-4'} %}
+
+    {# 1. Présentation #}
+    <section class="relative overflow-hidden bg-gradient-to-b from-primary-50/70 to-white dark:from-secondary-950 dark:to-secondary-900">
+        <div class="bg-dots pointer-events-none absolute inset-0 opacity-35 dark:opacity-20" aria-hidden="true"></div>
+        <div class="relative container mx-auto grid items-center gap-12 px-4 py-14 lg:grid-cols-12 lg:px-8 lg:py-24 xl:max-w-7xl">
+            <div class="lg:col-span-7">
+                {% if badge_parts is not empty %}
+                    <p class="mb-6 inline-flex flex-wrap items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-sm font-semibold text-emerald-800 dark:border-emerald-500/30 dark:bg-emerald-500/10 dark:text-emerald-300">
+                        <span class="relative flex size-2" aria-hidden="true">
+                            <span class="absolute inline-flex size-full animate-ping rounded-full bg-emerald-400 opacity-75 motion-reduce:animate-none"></span>
+                            <span class="relative inline-flex size-2 rounded-full bg-emerald-500"></span>
+                        </span>
+                        {{ badge_parts|join(' · ') }}
+                    </p>
+                {% endif %}
+                <h1 class="text-4xl font-black tracking-tight text-secondary-900 lg:text-6xl dark:text-white">{{ profile.full_name }}</h1>
+                <p class="mt-3 text-xl font-bold text-secondary-900 lg:text-2xl dark:text-white">{{ profile.job_title }}</p>
+                {% if profile.tagline %}
+                    <p class="mt-2 text-base font-semibold tracking-wide text-primary-700 lg:text-lg dark:text-primary-300">{{ profile.tagline }}</p>
+                {% endif %}
+                {% if profile.pitch %}
+                    <p class="text-prose-justify mt-6 max-w-2xl text-lg/relaxed font-medium text-secondary-700 dark:text-secondary-300">{{ profile.pitch|hyphenate|cv_bold }}</p>
+                {% endif %}
+                <div class="mt-8 flex flex-wrap gap-3">
+                    <twig:Button href="{{ path('cv_show') }}">
+                        {{ 'home.cta_cv'|trans }}
+                        <svg class="size-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M3 10a.75.75 0 01.75-.75h10.64l-3.97-3.97a.75.75 0 111.06-1.06l5.25 5.25a.75.75 0 010 1.06l-5.25 5.25a.75.75 0 11-1.06-1.06l3.97-3.97H3.75A.75.75 0 013 10z" clip-rule="evenodd"/></svg>
+                    </twig:Button>
+                    <twig:Button href="{{ path('contact_show') }}" variant="secondary">{{ 'home.cta_contact'|trans }}</twig:Button>
+                    <twig:Button href="{{ path('cv_pdf', {variant: 'design'}) }}" variant="secondary" data-turbo="false">
+                        <svg class="size-5 opacity-75" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M10.75 2.75a.75.75 0 00-1.5 0v8.614L6.295 8.235a.75.75 0 10-1.09 1.03l4.25 4.5a.75.75 0 001.09 0l4.25-4.5a.75.75 0 00-1.09-1.03l-2.955 3.129V2.75z"/><path d="M3.5 12.75a.75.75 0 00-1.5 0v2.5A2.75 2.75 0 004.75 18h10.5A2.75 2.75 0 0018 15.25v-2.5a.75.75 0 00-1.5 0v2.5c0 .69-.56 1.25-1.25 1.25H4.75c-.69 0-1.25-.56-1.25-1.25v-2.5z"/></svg>
+                        {{ 'home.cta_download_cv'|trans }}
+                    </twig:Button>
+                </div>
+            </div>
+            {# Photo de l'admin, ou photo par défaut (ProfilePhotoProvider) : toujours présente #}
+            <div class="lg:col-span-5">
+                <div class="relative mx-auto max-w-sm">
+                    <div class="absolute -inset-3 -rotate-3 rounded-3xl bg-primary-700/10 dark:bg-primary-400/10" aria-hidden="true"></div>
+                    <img src="{{ asset(profile.photo) }}" alt="{{ 'home.photo_alt'|trans({'%name%': site_owner_name}) }}"
+                         class="relative aspect-[4/5] w-full rounded-3xl object-cover object-top shadow-xl ring-1 ring-secondary-900/10" width="800" height="1000" loading="eager" fetchpriority="high">
+                    {% if lead_figure %}
+                        <div class="absolute -bottom-5 -left-5 max-w-[16rem] rounded-2xl border border-secondary-200 bg-white px-4 py-3 shadow-lg dark:border-secondary-700 dark:bg-secondary-800">
+                            <div class="text-2xl font-black text-primary-700 dark:text-primary-300">{{ lead_figure.value }}</div>
+                            <div class="text-xs font-medium text-secondary-600 dark:text-secondary-300">{{ lead_figure.label }}</div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {# 2. Chiffres clés : uniquement les chiffres complets #}
+    {% if key_figures is not empty %}
+        <section class="border-y border-secondary-100 bg-white dark:border-secondary-800 dark:bg-secondary-900" aria-label="{{ 'home.key_figures_label'|trans }}">
+            <div class="container mx-auto grid gap-4 px-4 py-10 {{ sm_cols[key_figures|length] }} lg:px-8 xl:max-w-7xl">
+                {% for figure in key_figures %}
+                    <twig:KeyFigure value="{{ figure.value }}" label="{{ figure.label }}" />
+                {% endfor %}
+            </div>
+        </section>
+    {% endif %}
+
+    {# 3. Domaines d'expertise #}
+    {% if pillars is not empty %}
+        <section class="container mx-auto px-4 py-16 lg:px-8 lg:py-20 xl:max-w-7xl">
+            <twig:SectionHeading kicker="{{ 'home.expertise.kicker'|trans }}"
+                                 title="{{ (pillars|length == 4 ? 'home.expertise.title_four' : 'home.expertise.title')|trans }}" />
+            <div class="mt-10 grid gap-5 sm:grid-cols-2 {{ lg_cols[min(pillars|length, 4)] }}">
+                {% for pillar in pillars %}
+                    {% set is_highlight = pillar.badge is not null %}
+                    <div class="card">
+                        <div class="mb-4 inline-flex size-11 items-center justify-center rounded-xl {{ is_highlight ? 'bg-accent-100 text-accent-700 dark:bg-amber-500/10 dark:text-amber-300' : 'bg-primary-50 text-primary-700 dark:bg-primary-500/10 dark:text-primary-300' }}">
+                            {{ include('_partials/_pillar_icon.html.twig', {icon: pillar.icon}, with_context = false) }}
+                        </div>
+                        <h3 class="font-bold dark:text-white">
+                            {{ pillar.name }}
+                            {% if pillar.badge %}
+                                <br><span class="mt-1 inline-block rounded-full bg-accent-100 px-2 py-0.5 text-xs font-semibold whitespace-nowrap text-accent-700 dark:bg-amber-500/10 dark:text-amber-300">{{ pillar.badge }}</span>
+                            {% endif %}
+                        </h3>
+                        <p class="mt-2 text-sm/relaxed text-secondary-600 dark:text-secondary-300">
+                            {%- if pillar.summary -%}
+                                {{ pillar.summary }}
+                            {%- else -%}
+                                {{ pillar.skills|slice(0, 4)|map(skill => skill.name)|join(' · ') }}
+                            {%- endif -%}
+                        </p>
+                    </div>
+                {% endfor %}
+            </div>
+        </section>
+    {% endif %}
+
+    {# 3 bis. Pourquoi me recruter (v2.0.2) : seulement si le bloc est activé ET qu'un argument au moins est affiché
+       (RecruitmentArguments::getDisplayed()) ; juste après les domaines, avant le parcours #}
+    {% if recruitment_arguments is not empty %}
+        {{ include('_partials/_recruitment_arguments.html.twig', {arguments: recruitment_arguments}, with_context = false) }}
+    {% endif %}
+
+    {# 4. Parcours en bref #}
+    {% if highlighted_experiences is not empty %}
+        <section class="bg-secondary-50 dark:bg-secondary-950/60">
+            <div class="container mx-auto px-4 py-16 lg:px-8 lg:py-20 xl:max-w-7xl">
+                <div class="flex flex-wrap items-end justify-between gap-4">
+                    <twig:SectionHeading kicker="{{ 'home.career.kicker'|trans }}" title="{{ 'home.career.title'|trans }}" />
+                    <a href="{{ path('cv_show') }}" class="text-sm font-semibold text-primary-700 hover:text-primary-800 dark:text-primary-300">{{ 'home.career.see_cv'|trans }} →</a>
+                </div>
+                <ol class="mt-10 grid gap-5 {{ lg_cols[highlighted_experiences|length] }}">
+                    {% for experience in highlighted_experiences %}
+                        {# Résumé de l'expérience, sinon première réalisation, sinon première mission #}
+                        {% set teaser = experience.summary ?: experience.achievements|merge(experience.missions)|first %}
+                        <li class="card">
+                            <p class="text-sm font-semibold text-primary-700 dark:text-primary-300">{{ cv_period(experience, true) }}</p>
+                            <h3 class="mt-1 text-lg font-bold dark:text-white">{{ experience.job_title }}</h3>
+                            <p class="text-sm font-medium text-secondary-500 dark:text-secondary-400">
+                                {{ experience.company }}{% if experience.company_details %} · {{ experience.company_details|split(' · ')|last }}{% endif %}
+                            </p>
+                            {% if teaser %}
+                                <p class="mt-3 text-sm/relaxed text-secondary-600 dark:text-secondary-300">{{ teaser|cv_bold }}</p>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ol>
+            </div>
+        </section>
+    {% endif %}
+
+    {# 5. Études de cas : seulement celles qui sont publiées, publiques et complètes #}
+    {% if case_studies is not empty %}
+        <section class="container mx-auto px-4 py-16 lg:px-8 lg:py-20 xl:max-w-7xl">
+            <div class="flex flex-wrap items-end justify-between gap-4">
+                <twig:SectionHeading kicker="{{ 'home.case_studies.kicker'|trans }}" title="{{ 'home.case_studies.title'|trans }}" />
+                <a href="{{ path('project_list') }}" class="text-sm font-semibold text-primary-700 hover:text-primary-800 dark:text-primary-300">{{ 'home.case_studies.all_projects'|trans }} →</a>
+            </div>
+            <div class="mt-10 grid gap-6 md:grid-cols-3">
+                {% for project in case_studies %}
+                    {{ include('project/_card.html.twig', {project: project}) }}
+                {% endfor %}
+            </div>
+        </section>
+    {% endif %}
+
+    {# 6. Calculatrice #}
+    <section class="container mx-auto px-4 py-16 lg:px-8 lg:py-20 xl:max-w-7xl">
+        <div class="rounded-3xl border border-secondary-200 bg-secondary-50 p-8 lg:p-12 dark:border-secondary-700 dark:bg-secondary-800/50">
+            <p class="mb-2 text-sm font-semibold tracking-wider text-primary-700 uppercase dark:text-primary-300">{{ 'home.calculator.kicker'|trans }}</p>
+            <h2 class="text-2xl font-bold tracking-tight sm:text-3xl dark:text-white">{{ 'home.calculator.title'|trans }}</h2>
+            <p class="mt-3 max-w-2xl text-secondary-700 dark:text-secondary-300">{{ 'home.calculator.text'|trans }}</p>
+            <twig:Button href="{{ path('calculator_dashboard') }}" class="mt-6">{{ 'home.calculator.button'|trans }}</twig:Button>
+        </div>
+    </section>
+
+    {# 7. Appel au contact #}
+    <section class="bg-primary-700 dark:bg-primary-900">
+        <div class="container mx-auto flex flex-col items-start justify-between gap-6 px-4 py-12 lg:flex-row lg:items-center lg:px-8 xl:max-w-7xl">
+            <div>
+                <h2 class="text-2xl font-bold text-white">{{ 'home.contact.title'|trans }}</h2>
+                <p class="mt-1 text-primary-100">{{ 'home.contact.text'|trans }}</p>
+            </div>
+            <div class="flex flex-wrap gap-3">
+                <a href="{{ path('contact_show') }}" class="btn border-white bg-white text-primary-800 hover:bg-primary-50">{{ 'home.cta_contact'|trans }}</a>
+                <a href="{{ path('recruiter_access') }}" class="btn border-primary-300/50 text-white hover:bg-primary-800">{{ 'nav.recruiter_area'|trans }}</a>
+            </div>
+        </div>
+    </section>
+{% endblock %}

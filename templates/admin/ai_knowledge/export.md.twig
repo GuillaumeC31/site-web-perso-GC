@@ -1,0 +1,31 @@
+{#-
+  Export Markdown de toutes les fiches du « Cerveau de l'IA » (sauvegarde personnelle de l'admin).
+  Rendu par : Admin\AiKnowledgeController::export() (route admin_ai_knowledge_export).
+  Variables attendues :
+    - entries     : list<AiKnowledgeEntry> (toutes, par catégorie)
+    - exported_at : date de l'export
+-#}
+{% autoescape false %}
+# Cerveau de l'IA — fiches de connaissances
+
+Export du {{ exported_at|format_datetime('long', 'short') }}. Ces fiches sont envoyées à Mistral AI à chaque question (fiches actives seulement).
+{% set current = null %}
+{% for entry in entries %}
+{% if entry.category != current %}
+
+## {{ entry.category.translationKey|trans }}
+{% set current = entry.category %}
+{% endif %}
+
+### {{ entry.title }}
+
+- État : {{ (entry.active ? 'admin.ai_knowledge.active' : 'admin.ai_knowledge.draft')|trans }}
+- Ordre : {{ entry.position }}
+- Modifiée le : {{ entry.updatedAt|format_datetime('short', 'short') }}
+
+{{ entry.content }}
+{% else %}
+
+Aucune fiche.
+{% endfor %}
+{% endautoescape %}

@@ -1,0 +1,48 @@
+# Limites de débit.
+framework:
+    rate_limiter:
+        # Formulaires publics : 3 envois par heure et par IP (CDC §10), un limiteur par formulaire,
+        # compteurs dans le pool cache.public_form_limiter (fichiers, config/packages/cache.yaml).
+        # Formulaire de contact. Utilisé par ContactController.
+        contact_form:
+            policy: 'sliding_window'
+            limit: 3
+            interval: '1 hour'
+            cache_pool: 'cache.public_form_limiter'
+
+        # Demande d'accès recruteur : 3 par heure et par IP. Utilisé par RecruiterAreaController.
+        recruiter_request:
+            policy: 'sliding_window'
+            limit: 3
+            interval: '1 hour'
+            cache_pool: 'cache.public_form_limiter'
+
+        # Lien de connexion : 3 demandes par heure, par IP et par adresse e-mail (deux clés).
+        recruiter_login_link:
+            policy: 'sliding_window'
+            limit: 3
+            interval: '1 hour'
+            cache_pool: 'cache.public_form_limiter'
+
+        # Assistant IA : 5 questions libres par minute et par recruteur (CDC « Chatbot IA »).
+        # Utilisé par RecruiterAreaController::assistantAsk().
+        ai_chat_recruiter:
+            policy: 'sliding_window'
+            limit: 5
+            interval: '1 minute'
+
+        # Étape YubiKey et enrôlement : 10 tentatives par 15 minutes (par compte et par IP).
+        # Utilisé par App\Controller\Admin\SecondFactorController.
+        admin_second_factor:
+            policy: 'sliding_window'
+            limit: 10
+            interval: '15 minutes'
+
+# En développement : limites relevées pour les essais manuels et les tests de bout en bout
+# (Playwright) ; la production et les tests PHPUnit gardent 3 par heure.
+when@dev:
+    framework:
+        rate_limiter:
+            contact_form: { policy: 'sliding_window', limit: 200, interval: '1 hour', cache_pool: 'cache.public_form_limiter' }
+            recruiter_request: { policy: 'sliding_window', limit: 200, interval: '1 hour', cache_pool: 'cache.public_form_limiter' }
+            recruiter_login_link: { policy: 'sliding_window', limit: 200, interval: '1 hour', cache_pool: 'cache.public_form_limiter' }

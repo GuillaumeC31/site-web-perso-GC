@@ -1,0 +1,29 @@
+{#
+  Page publique : nouveautés du site (résumé en langage courant, NOUVEAUTES.md), sans aucun détail technique.
+  Affichée par : WhatsNewController::index() (route whats_new, /nouveautes) ; lien depuis la version du pied de page.
+  Variables attendues :
+    - content        : HTML nettoyé (ChangelogRenderer::renderWhatsNew() : HTML brut échappé), ou null si le fichier manque
+    - public_version : numéro du site sans préversion (« 2.0.0 »)
+#}
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'whats_new.title'|trans }} · {{ site_owner_name }}{% endblock %}
+{% block description %}{{ 'whats_new.meta_description'|trans }}{% endblock %}
+
+{% block body %}
+    <div class="container mx-auto px-4 py-16 lg:px-8 lg:py-24 xl:max-w-4xl">
+        <twig:SectionHeading title="{{ 'whats_new.title'|trans }}" :level="1" />
+        {% if public_version %}
+            <p class="mt-4 text-secondary-700 dark:text-secondary-300">{{ 'whats_new.current'|trans({'%version%': public_version}) }}</p>
+        {% endif %}
+
+        <div class="mt-10">
+            {% if content is null %}
+                <p class="text-secondary-700 dark:text-secondary-300">{{ 'whats_new.missing'|trans }}</p>
+            {% else %}
+                {# HTML produit par ChangelogRenderer : HTML brut échappé, puis nettoyé par le sanitizer #}
+                <div class="prose max-w-none dark:prose-invert" data-testid="whats-new">{{ content|raw }}</div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

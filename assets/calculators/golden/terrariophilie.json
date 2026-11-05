@@ -1,0 +1,788 @@
+{
+  "source": "ancien site guillaume_c (capture automatique)",
+  "category": "terrariophilie",
+  "results": [
+    {
+      "tool": "chauffage-terrarium",
+      "steps": [
+        {
+          "set": {}
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resultPower": "175 W"
+      }
+    },
+    {
+      "tool": "chauffage-terrarium",
+      "steps": [
+        {
+          "set": {
+            "material": "wood"
+          }
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resultPower": "100 W"
+      }
+    },
+    {
+      "tool": "chauffage-terrarium",
+      "steps": [
+        {
+          "set": {
+            "length": 60,
+            "width": 45,
+            "height": 45,
+            "tempTarget": 30
+          }
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resultPower": "75 W"
+      }
+    },
+    {
+      "tool": "chauffage-terrarium",
+      "steps": [
+        {
+          "set": {
+            "length": 30,
+            "width": 30,
+            "height": 30,
+            "tempTarget": 25,
+            "material": "wood"
+          }
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resultPower": "25 W"
+      }
+    },
+    {
+      "tool": "chauffage-terrarium",
+      "steps": [
+        {
+          "set": {
+            "length": 200,
+            "width": 60,
+            "height": 60,
+            "tempTarget": 40
+          }
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resultPower": "650 W"
+      }
+    },
+    {
+      "tool": "chauffage-terrarium",
+      "steps": [
+        {
+          "set": {
+            "tempTarget": 18
+          }
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resultPower": "0 W"
+      }
+    },
+    {
+      "tool": "chauffage-terrarium",
+      "steps": [
+        {
+          "set": {
+            "tempTarget": 20
+          }
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resultPower": "0 W"
+      }
+    },
+    {
+      "tool": "chauffage-terrarium",
+      "steps": [
+        {
+          "set": {
+            "length": -90
+          }
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resultPower": "0 W"
+      }
+    },
+    {
+      "tool": "chauffage-terrarium",
+      "steps": [
+        {
+          "set": {
+            "length": ""
+          }
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resultPower": "0 W"
+      }
+    },
+    {
+      "tool": "brumisation",
+      "steps": [
+        {
+          "set": {}
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resDay": "0.07",
+        "resWeek": "0.5",
+        "resTank": "1"
+      }
+    },
+    {
+      "tool": "brumisation",
+      "steps": [
+        {
+          "set": {
+            "nozzles": 6,
+            "flow": 3.5,
+            "duration": 20,
+            "frequency": 6
+          }
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resDay": "0.70",
+        "resWeek": "4.9",
+        "resTank": "6"
+      }
+    },
+    {
+      "tool": "brumisation",
+      "steps": [
+        {
+          "set": {
+            "nozzles": 1,
+            "flow": 1.2,
+            "duration": 5,
+            "frequency": 2
+          }
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resDay": "0.00",
+        "resWeek": "0.0",
+        "resTank": "1"
+      }
+    },
+    {
+      "tool": "brumisation",
+      "steps": [
+        {
+          "set": {
+            "nozzles": 10,
+            "flow": 4,
+            "duration": 60,
+            "frequency": 8
+          }
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resDay": "5.33",
+        "resWeek": "37.3",
+        "resTank": "45"
+      }
+    },
+    {
+      "tool": "brumisation",
+      "steps": [
+        {
+          "set": {
+            "frequency": 0
+          }
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resDay": "0.00",
+        "resWeek": "0.0",
+        "resTank": "0"
+      }
+    },
+    {
+      "tool": "brumisation",
+      "steps": [
+        {
+          "set": {
+            "nozzles": -2
+          }
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resDay": "-0.07",
+        "resWeek": "-0.5",
+        "resTank": "0"
+      }
+    },
+    {
+      "tool": "brumisation",
+      "steps": [
+        {
+          "set": {
+            "nozzles": 2.5
+          }
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resDay": "0.08",
+        "resWeek": "0.6",
+        "resTank": "1"
+      }
+    },
+    {
+      "tool": "brumisation",
+      "steps": [
+        {
+          "set": {
+            "flow": ""
+          }
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resDay": "0.00",
+        "resWeek": "0.0",
+        "resTank": "0"
+      }
+    },
+    {
+      "tool": "volume-substrat",
+      "steps": [
+        {
+          "set": {}
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resultLiters": "72.0",
+        "mixResult": "🌱 50% Terreau sans engrais : 36.0 L🥥 20% Fibre de coco : 14.4 L🪵 20% Éclats d'écorce (Orchidée) : 14.4 L🏜️ 10% Sable de jeu : 7.2 LMélange idéal type \"ABG mix\" pour les environnements humides et la microfaune (collemboles, cloportes)."
+      }
+    },
+    {
+      "tool": "volume-substrat",
+      "steps": [
+        {
+          "set": {
+            "mixType": "arid"
+          }
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resultLiters": "72.0",
+        "mixResult": "🏜️ 60% Sable (Lavé) : 43.2 L🌱 40% Terre argileuse / Terre de bruyère : 28.8 LCe mélange permet de creuser des galeries solides qui ne s'effondrent pas."
+      }
+    },
+    {
+      "tool": "volume-substrat",
+      "steps": [
+        {
+          "set": {
+            "length": 90,
+            "width": 45,
+            "depth": 7.5
+          }
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resultLiters": "30.4",
+        "mixResult": "🌱 50% Terreau sans engrais : 15.2 L🥥 20% Fibre de coco : 6.1 L🪵 20% Éclats d'écorce (Orchidée) : 6.1 L🏜️ 10% Sable de jeu : 3.0 LMélange idéal type \"ABG mix\" pour les environnements humides et la microfaune (collemboles, cloportes)."
+      }
+    },
+    {
+      "tool": "volume-substrat",
+      "steps": [
+        {
+          "set": {
+            "length": 60,
+            "width": 30,
+            "depth": 5,
+            "mixType": "arid"
+          }
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resultLiters": "9.0",
+        "mixResult": "🏜️ 60% Sable (Lavé) : 5.4 L🌱 40% Terre argileuse / Terre de bruyère : 3.6 LCe mélange permet de creuser des galeries solides qui ne s'effondrent pas."
+      }
+    },
+    {
+      "tool": "volume-substrat",
+      "steps": [
+        {
+          "set": {
+            "depth": 0
+          }
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resultLiters": "0.0",
+        "mixResult": "Entrez des dimensions valides pour voir la recette."
+      }
+    },
+    {
+      "tool": "volume-substrat",
+      "steps": [
+        {
+          "set": {
+            "width": -60
+          }
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resultLiters": "-72.0",
+        "mixResult": "Entrez des dimensions valides pour voir la recette."
+      }
+    },
+    {
+      "tool": "ventilation-air",
+      "steps": [
+        {
+          "set": {}
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resM3h": "1.0",
+        "resCfm": "0.6"
+      }
+    },
+    {
+      "tool": "ventilation-air",
+      "steps": [
+        {
+          "set": {
+            "turnover": "1"
+          }
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resM3h": "0.3",
+        "resCfm": "0.1"
+      }
+    },
+    {
+      "tool": "ventilation-air",
+      "steps": [
+        {
+          "set": {
+            "volume": 600,
+            "turnover": "2"
+          }
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resM3h": "1.2",
+        "resCfm": "0.7"
+      }
+    },
+    {
+      "tool": "ventilation-air",
+      "steps": [
+        {
+          "set": {
+            "volume": 1250
+          }
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resM3h": "5.0",
+        "resCfm": "2.9"
+      }
+    },
+    {
+      "tool": "ventilation-air",
+      "steps": [
+        {
+          "set": {
+            "volume": 0
+          }
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resM3h": "0.0",
+        "resCfm": "0.0"
+      }
+    },
+    {
+      "tool": "ventilation-air",
+      "steps": [
+        {
+          "set": {
+            "volume": -250
+          }
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resM3h": "-1.0",
+        "resCfm": "-0.6"
+      }
+    },
+    {
+      "tool": "bassin-paludarium",
+      "steps": [
+        {
+          "set": {}
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resLiters": "180.0",
+        "resWeight": "180.0",
+        "resFilter": "720"
+      }
+    },
+    {
+      "tool": "bassin-paludarium",
+      "steps": [
+        {
+          "set": {
+            "length": 80,
+            "width": 40,
+            "depth": 15
+          }
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resLiters": "48.0",
+        "resWeight": "48.0",
+        "resFilter": "192"
+      }
+    },
+    {
+      "tool": "bassin-paludarium",
+      "steps": [
+        {
+          "set": {
+            "length": 150,
+            "width": 70,
+            "depth": 32.5
+          }
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resLiters": "341.3",
+        "resWeight": "341.3",
+        "resFilter": "1365"
+      }
+    },
+    {
+      "tool": "bassin-paludarium",
+      "steps": [
+        {
+          "set": {
+            "depth": 0
+          }
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resLiters": "0.0",
+        "resWeight": "0.0",
+        "resFilter": "0"
+      }
+    },
+    {
+      "tool": "bassin-paludarium",
+      "steps": [
+        {
+          "set": {
+            "length": -120
+          }
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resLiters": "-180.0",
+        "resWeight": "-180.0",
+        "resFilter": "-720"
+      }
+    },
+    {
+      "tool": "eclairage-reptiles",
+      "steps": [
+        {
+          "set": {
+            "animalSelect": "1"
+          }
+        },
+        {
+          "call": "updateZone"
+        }
+      ],
+      "outputs": {
+        "zoneDisplay": "Zone 1",
+        "uviAvgDisplay": "0.0 - 0.7",
+        "uviMaxDisplay": "0.6 - 1.4",
+        "distT56": "25 - 35 cm",
+        "distT512": "45 - 55 cm",
+        "distT514": "55 - 65 cm"
+      }
+    },
+    {
+      "tool": "eclairage-reptiles",
+      "steps": [
+        {
+          "set": {
+            "animalSelect": "2"
+          }
+        },
+        {
+          "call": "updateZone"
+        }
+      ],
+      "outputs": {
+        "zoneDisplay": "Zone 2",
+        "uviAvgDisplay": "0.7 - 1.0",
+        "uviMaxDisplay": "1.1 - 3.0",
+        "distT56": "20 - 25 cm",
+        "distT512": "35 - 45 cm",
+        "distT514": "45 - 55 cm"
+      }
+    },
+    {
+      "tool": "eclairage-reptiles",
+      "steps": [
+        {
+          "set": {
+            "animalSelect": "3"
+          }
+        },
+        {
+          "call": "updateZone"
+        }
+      ],
+      "outputs": {
+        "zoneDisplay": "Zone 3",
+        "uviAvgDisplay": "1.0 - 2.6",
+        "uviMaxDisplay": "2.9 - 7.4",
+        "distT56": "15 - 20 cm",
+        "distT512": "25 - 35 cm",
+        "distT514": "35 - 45 cm"
+      }
+    },
+    {
+      "tool": "eclairage-reptiles",
+      "steps": [
+        {
+          "set": {
+            "animalSelect": "4"
+          }
+        },
+        {
+          "call": "updateZone"
+        }
+      ],
+      "outputs": {
+        "zoneDisplay": "Zone 4",
+        "uviAvgDisplay": "2.6 - 3.5+",
+        "uviMaxDisplay": "7.4+",
+        "distT56": "Non reco.",
+        "distT512": "20 - 25 cm",
+        "distT514": "25 - 35 cm"
+      }
+    },
+    {
+      "tool": "eclairage-reptiles",
+      "steps": [
+        {
+          "set": {}
+        },
+        {
+          "call": "calcDli"
+        }
+      ],
+      "outputs": {
+        "dliResult": "4.3"
+      }
+    },
+    {
+      "tool": "eclairage-reptiles",
+      "steps": [
+        {
+          "set": {
+            "ppfdInput": 250,
+            "hoursInput": 13
+          }
+        },
+        {
+          "call": "calcDli"
+        }
+      ],
+      "outputs": {
+        "dliResult": "11.7"
+      }
+    },
+    {
+      "tool": "eclairage-reptiles",
+      "steps": [
+        {
+          "set": {
+            "ppfdInput": 40,
+            "hoursInput": 10.5
+          }
+        },
+        {
+          "call": "calcDli"
+        }
+      ],
+      "outputs": {
+        "dliResult": "1.5"
+      }
+    },
+    {
+      "tool": "eclairage-reptiles",
+      "steps": [
+        {
+          "set": {
+            "ppfdInput": 100,
+            "hoursInput": 30
+          }
+        },
+        {
+          "call": "calcDli"
+        }
+      ],
+      "outputs": {
+        "dliResult": "10.8"
+      }
+    },
+    {
+      "tool": "eclairage-reptiles",
+      "steps": [
+        {
+          "set": {
+            "ppfdInput": -100
+          }
+        },
+        {
+          "call": "calcDli"
+        }
+      ],
+      "outputs": {
+        "dliResult": "-4.3"
+      }
+    },
+    {
+      "tool": "eclairage-reptiles",
+      "steps": [
+        {
+          "set": {
+            "ppfdInput": ""
+          }
+        },
+        {
+          "call": "calcDli"
+        }
+      ],
+      "outputs": {
+        "dliResult": "0.0"
+      }
+    }
+  ]
+}

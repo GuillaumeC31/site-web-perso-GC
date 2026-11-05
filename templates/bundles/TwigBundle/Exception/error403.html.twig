@@ -1,0 +1,17 @@
+{#
+  Page d'erreur 403 (accès refusé) en production.
+  Affichée par : le gestionnaire d'erreurs de Symfony (TwigBundle), uniquement si APP_DEBUG=0.
+  Aucune variable spécifique.
+#}
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'error.forbidden_title'|trans }} · {{ site_owner_name }}{% endblock %}
+{% block robots %}noindex, nofollow{% endblock %}
+
+{% block body %}
+    {{ include('bundles/TwigBundle/Exception/_error_content.html.twig', {
+        code: 403,
+        title: 'error.forbidden_title'|trans,
+        text: 'error.forbidden_text'|trans,
+    }) }}
+{% endblock %}

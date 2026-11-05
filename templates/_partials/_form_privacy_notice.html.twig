@@ -1,0 +1,13 @@
+{#
+  Bloc : mention courte sous un formulaire (RGPD) : finalité, durée de conservation, lien vers la politique de
+  confidentialité (section concernée).
+  Inclus par : contact/show.html.twig, recruiter_area/index.html.twig (deux formulaires),
+  recruiter_area/link_invalid.html.twig, recruiter_area/question.html.twig.
+  Variables attendues :
+    - notice  : clé de la mention (form.notice.<notice>)
+    - section : ancre de la section de la politique (ex. « contact », « espace-recruteur »)
+#}
+<p class="mt-4 text-xs text-secondary-600 dark:text-secondary-400" data-testid="form-privacy-notice">
+    {{ ('form.notice.' ~ notice)|trans }}
+    {{ 'form.notice.more'|trans }} <a href="{{ path('legal_privacy') }}#{{ section }}" class="link">{{ 'legal.privacy.title'|trans|lower }}</a>.
+</p>

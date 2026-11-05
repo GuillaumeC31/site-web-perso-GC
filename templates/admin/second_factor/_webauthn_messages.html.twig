@@ -1,0 +1,14 @@
+{#
+  Textes affichés par le contrôleur Stimulus « webauthn », encodés en JSON pour l'attribut
+  data-webauthn-messages-value.
+  Inclus par : admin/second_factor/verify.html.twig, admin/second_factor/enroll.html.twig.
+  Aucune variable attendue.
+#}
+{{- {
+    preparing: 'admin.second_factor.js.preparing'|trans,
+    touch_key: 'admin.second_factor.js.touch_key'|trans,
+    success: 'admin.second_factor.js.success'|trans,
+    cancelled: 'admin.second_factor.js.cancelled'|trans,
+    error: 'admin.second_factor.js.error'|trans,
+    ip_host: 'admin.second_factor.js.ip_host'|trans,
+}|json_encode -}}

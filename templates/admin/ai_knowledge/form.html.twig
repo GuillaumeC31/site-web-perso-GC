@@ -1,0 +1,35 @@
+{#
+  Écran : création ou modification d'une fiche du « Cerveau de l'IA ».
+  Affiché par : Admin\AiKnowledgeController::new() et ::edit() (routes admin_ai_knowledge_new, _edit).
+  Variables attendues :
+    - form     : AiKnowledgeEntryType
+    - entry    : AiKnowledgeEntry (id null pour une nouvelle fiche)
+    - question : UnansweredQuestion d'origine (« Créer une fiche »), ou null
+#}
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}{{ (entry.id ? 'admin.ai_knowledge.edit_title' : 'admin.ai_knowledge.new_title')|trans }}{% endblock %}
+
+{% block body %}
+    <nav class="mb-4 text-sm"><a href="{{ path('admin_ai_knowledge_index') }}" class="link">← {{ 'admin.ai_knowledge.title'|trans }}</a></nav>
+    <h1 class="mb-4 text-2xl font-bold dark:text-white">{{ (entry.id ? 'admin.ai_knowledge.edit_title' : 'admin.ai_knowledge.new_title')|trans }}</h1>
+    <twig:Alert type="warning" class="mb-6">{{ 'admin.ai_knowledge.reminder'|trans }}</twig:Alert>
+    {% if question %}
+        <twig:Alert type="info" class="mb-6" data-testid="ai-entry-from-question">{{ 'admin.ai_knowledge.from_question'|trans({'%question%': question.question}) }}</twig:Alert>
+    {% endif %}
+
+    <twig:Card>
+        {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'space-y-4'}}) }}
+            {{ form_errors(form) }}
+            {{ form_row(form.title) }}
+            {{ form_row(form.category) }}
+            {{ form_row(form.content) }}
+            {{ form_row(form.active) }}
+            {{ form_row(form.position) }}
+            <div class="flex flex-wrap gap-3">
+                <twig:Button type="submit">{{ 'admin.crud.save'|trans }}</twig:Button>
+                <twig:Button href="{{ path('admin_ai_knowledge_index') }}" variant="secondary">{{ 'confirmation.cancel'|trans }}</twig:Button>
+            </div>
+        {{ form_end(form) }}
+    </twig:Card>
+{% endblock %}

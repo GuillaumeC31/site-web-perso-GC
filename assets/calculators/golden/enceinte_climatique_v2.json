@@ -1,0 +1,508 @@
+{
+  "_comment": "Cas de référence de l'enceinte climatique v2, produits par scripts/calculator/climatic_chamber_hand_check.py --write (contre-calcul indépendant). Ne pas modifier à la main.",
+  "cases": {
+    "case1": {
+      "seasons": {
+        "summer": {
+          "lines": {
+            "walls": -54.820641,
+            "doorTransmission": -12.832,
+            "leaks": -0.095287,
+            "infiltration": -3.547921,
+            "freshAir": -0.0
+          },
+          "envelopeW": -71.29585,
+          "internalW": 260.0,
+          "internalAvgW": 223.333333,
+          "waterKgH": -0.02529373,
+          "condensationKgH": 0.174703415,
+          "humidificationKgH": 0.199997145,
+          "dryingKgH": 0.0,
+          "humidifierSensibleW": 5.588809,
+          "coldSensibleW": 194.292959,
+          "condensationLatentW": 121.370345,
+          "coldW": 347.229634,
+          "heatW": 78.425435,
+          "humidificationW": 159.669443,
+          "dryingW": 0.0,
+          "reheatW": 0.0,
+          "cop": 5.0,
+          "consumptionKwhDay": 9.476474,
+          "waterLDay": 3.988263,
+          "condensateLDay": 3.381213
+        },
+        "winter": {
+          "lines": {
+            "walls": -120.605411,
+            "doorTransmission": -28.2304,
+            "leaks": -0.205033,
+            "infiltration": -11.294531,
+            "freshAir": -0.0
+          },
+          "envelopeW": -160.335375,
+          "internalW": 260.0,
+          "internalAvgW": 223.333333,
+          "waterKgH": -0.059798512,
+          "condensationKgH": 0.093467058,
+          "humidificationKgH": 0.15326557,
+          "dryingKgH": 0.0,
+          "humidifierSensibleW": 4.282921,
+          "coldSensibleW": 103.947547,
+          "condensationLatentW": 64.933642,
+          "coldW": 185.769308,
+          "heatW": 176.368912,
+          "humidificationW": 122.360888,
+          "dryingW": 0.0,
+          "reheatW": 0.0,
+          "cop": 5.0,
+          "consumptionKwhDay": 7.957915,
+          "waterLDay": 2.866705,
+          "condensateLDay": 1.43154
+        }
+      },
+      "rampTemperature": {
+        "summer": {
+          "startT": 30,
+          "capacityKjK": 124.663091,
+          "energyKj": 1246.630908,
+          "direction": "heat",
+          "meanLossW": 33.872592,
+          "powerW": 2000,
+          "minutes": 10.567566
+        },
+        "winter": {
+          "startT": 18,
+          "capacityKjK": 124.663091,
+          "energyKj": 2742.587998,
+          "direction": "heat",
+          "meanLossW": 74.519703,
+          "powerW": 2000,
+          "minutes": 23.739428
+        }
+      },
+      "rampHumidity": {
+        "summer": {
+          "waterKg": 0.13231054,
+          "rateKgH": 0.26462108,
+          "powerW": 211.262518,
+          "dryingW": 0.0
+        },
+        "winter": {
+          "waterKg": 0.213237118,
+          "rateKgH": 0.426474236,
+          "powerW": 340.479379,
+          "dryingW": 0.0
+        }
+      },
+      "installed": {
+        "coldW": {
+          "maintenanceW": 347.229634,
+          "rampW": 0.0,
+          "installedW": 347.229634
+        },
+        "heatW": {
+          "maintenanceW": 176.368912,
+          "rampW": 0.0,
+          "installedW": 2000
+        },
+        "humidificationW": {
+          "maintenanceW": 159.669443,
+          "rampW": 340.479379,
+          "installedW": 340.479379
+        },
+        "dryingW": {
+          "maintenanceW": 0.0,
+          "rampW": 0.0,
+          "installedW": 0.0
+        }
+      },
+      "regulation": {
+        "installedColdW": 347.229634,
+        "reheatW": 507.565009,
+        "modulatedKwhDay": {
+          "summer": 9.476474,
+          "winter": 7.957915
+        },
+        "permanentKwhDay": {
+          "summer": 12.145464,
+          "winter": 14.85423
+        }
+      },
+      "pid": {
+        "temperature": {
+          "uaWK": 6.774518,
+          "capacityJK": 124663.090812,
+          "tauS": 18401.764271,
+          "thetaS": 80.0
+        },
+        "loops": {
+          "heat": {
+            "kp": 2.952239,
+            "kc": 38.957216,
+            "xp": 2.566919,
+            "xpPct": 1.711279,
+            "ti": 640.0,
+            "td": 0.0,
+            "minimumW": 71.29585,
+            "minRatioPct": 3.564793,
+            "belowRange": false,
+            "installedToMaintenance": 11.339867,
+            "staging": true
+          },
+          "cold": {
+            "kp": 0.512552,
+            "kc": 224.388774,
+            "xp": 0.445655,
+            "xpPct": 0.297103,
+            "ti": 640.0,
+            "td": 0.0,
+            "minimumW": 59.664625,
+            "minRatioPct": 17.183045,
+            "belowRange": true,
+            "installedToMaintenance": 1.0,
+            "staging": false
+          },
+          "humid": {
+            "maxKgH": 0.426474,
+            "kp": 7.013864,
+            "kc": 14.916063,
+            "xp": 6.704182,
+            "ti": 720.0,
+            "td": 0.0,
+            "minRatioPct": 35.937826,
+            "belowRange": false
+          }
+        },
+        "humidity": {
+          "exchangeKgS": 0.000352,
+          "massKg": 6.623351,
+          "tauS": 18831.462947,
+          "thetaS": 90.0
+        }
+      }
+    },
+    "case2": {
+      "seasons": {
+        "summer": {
+          "lines": {
+            "walls": 27.410321,
+            "doorTransmission": 6.416,
+            "leaks": 0.050736,
+            "infiltration": 1.207551,
+            "freshAir": 70.503085
+          },
+          "envelopeW": 105.587693,
+          "internalW": 260.0,
+          "internalAvgW": 223.333333,
+          "waterKgH": 0.004356576,
+          "condensationKgH": 0.0,
+          "humidificationKgH": 0.0,
+          "dryingKgH": 0.004356576,
+          "humidifierSensibleW": 0.0,
+          "coldSensibleW": 365.587693,
+          "condensationLatentW": 0.0,
+          "coldW": 402.146462,
+          "heatW": 0.0,
+          "humidificationW": 0.0,
+          "dryingW": 12.815839,
+          "reheatW": 9.486568,
+          "cop": 4.663125,
+          "consumptionKwhDay": 7.337393,
+          "waterLDay": 0.0,
+          "condensateLDay": 0.104558
+        },
+        "winter": {
+          "lines": {
+            "walls": -38.374449,
+            "doorTransmission": -8.9824,
+            "leaks": -0.069472,
+            "infiltration": -2.072641,
+            "freshAir": -296.863647
+          },
+          "envelopeW": -346.362609,
+          "internalW": 260.0,
+          "internalAvgW": 223.333333,
+          "waterKgH": -0.349493681,
+          "condensationKgH": 0.0,
+          "humidificationKgH": 0.349493681,
+          "dryingKgH": 0.0,
+          "humidifierSensibleW": 12.474983,
+          "coldSensibleW": 0.0,
+          "condensationLatentW": 0.0,
+          "coldW": 0.0,
+          "heatW": 380.998869,
+          "humidificationW": 279.02129,
+          "dryingW": 0.0,
+          "reheatW": 0.0,
+          "cop": 4.663125,
+          "consumptionKwhDay": 14.10104,
+          "waterLDay": 8.387848,
+          "condensateLDay": 0.0
+        }
+      },
+      "rampTemperature": {
+        "summer": {
+          "startT": 30,
+          "capacityKjK": 125.095506,
+          "energyKj": 625.477532,
+          "direction": "cool",
+          "meanGainW": 321.284713,
+          "requiredW": 544.531319
+        },
+        "winter": {
+          "startT": 18,
+          "capacityKjK": 125.095506,
+          "energyKj": 875.668545,
+          "direction": "heat",
+          "meanLossW": 284.866975,
+          "requiredW": 580.919061
+        }
+      },
+      "rampHumidity": {
+        "summer": {
+          "waterKg": -0.029278914,
+          "rateKgH": -0.058557829,
+          "powerW": 0.0,
+          "dryingW": 172.260892
+        },
+        "winter": {
+          "waterKg": 0.056899569,
+          "rateKgH": 0.113799137,
+          "powerW": 90.852521,
+          "dryingW": 0.0
+        }
+      },
+      "installed": {
+        "coldW": {
+          "maintenanceW": 402.146462,
+          "rampW": 544.531319,
+          "installedW": 544.531319
+        },
+        "heatW": {
+          "maintenanceW": 380.998869,
+          "rampW": 580.919061,
+          "installedW": 580.919061
+        },
+        "humidificationW": {
+          "maintenanceW": 279.02129,
+          "rampW": 90.852521,
+          "installedW": 279.02129
+        },
+        "dryingW": {
+          "maintenanceW": 12.815839,
+          "rampW": 172.260892,
+          "installedW": 172.260892
+        }
+      },
+      "regulation": {
+        "installedColdW": 544.531319,
+        "reheatW": 890.893928,
+        "modulatedKwhDay": {
+          "summer": 7.337393,
+          "winter": 14.10104
+        },
+        "permanentKwhDay": {
+          "summer": 13.621735,
+          "winter": 29.972366
+        }
+      },
+      "pid": {
+        "temperature": {
+          "uaWK": 16.629989,
+          "capacityJK": 125095.506492,
+          "tauS": 7522.284328,
+          "thetaS": 80.0
+        },
+        "loops": {
+          "heat": {
+            "kp": 0.34932,
+            "kc": 134.587926,
+            "xp": 0.743009,
+            "xpPct": 0.495339,
+            "ti": 640.0,
+            "td": 0.0,
+            "minimumW": 346.362609,
+            "minRatioPct": 59.623213,
+            "belowRange": false,
+            "installedToMaintenance": 1.524726,
+            "staging": false
+          },
+          "cold": {
+            "kp": 0.327439,
+            "kc": 143.581625,
+            "xp": 0.696468,
+            "xpPct": 0.464312,
+            "ti": 640.0,
+            "td": 0.0,
+            "minimumW": 0.0,
+            "minRatioPct": 0.0,
+            "belowRange": false,
+            "installedToMaintenance": 1.354062,
+            "staging": false
+          },
+          "humid": {
+            "maxKgH": 0.349494,
+            "kp": 0.488039,
+            "kc": 7.997714,
+            "xp": 12.503573,
+            "ti": 702.575538,
+            "td": 0.0,
+            "minRatioPct": 0.0,
+            "belowRange": false
+          },
+          "dry": {
+            "maxKgH": 0.058558,
+            "kp": 0.081771,
+            "kc": 47.733163,
+            "xp": 2.09498,
+            "ti": 702.575538,
+            "td": 0.0,
+            "minRatioPct": 0.0,
+            "belowRange": false
+          }
+        },
+        "humidity": {
+          "exchangeKgS": 0.010039,
+          "massKg": 7.053187,
+          "tauS": 702.575538,
+          "thetaS": 90.0
+        }
+      }
+    },
+    "case3": {
+      "seasons": {
+        "summer": {
+          "lines": {
+            "walls": 137.051603,
+            "doorTransmission": 32.08,
+            "leaks": 0.273415,
+            "infiltration": 13.917704,
+            "freshAir": 0.0
+          },
+          "envelopeW": 183.322722,
+          "internalW": 760.0,
+          "internalAvgW": 473.333333,
+          "waterKgH": 0.026340486,
+          "condensationKgH": 0.0,
+          "humidificationKgH": 0.0,
+          "dryingKgH": 0.0,
+          "humidifierSensibleW": 0.0,
+          "coldSensibleW": 943.322722,
+          "condensationLatentW": 0.0,
+          "coldW": 1037.654994,
+          "heatW": 0.0,
+          "humidificationW": 0.0,
+          "dryingW": 0.0,
+          "reheatW": 0.0,
+          "cop": 2.53265625,
+          "consumptionKwhDay": 11.582615,
+          "waterLDay": 0.0,
+          "condensateLDay": 0.0
+        },
+        "winter": {
+          "lines": {
+            "walls": 71.266834,
+            "doorTransmission": 16.6816,
+            "leaks": 0.139056,
+            "infiltration": 5.091191,
+            "freshAir": -0.0
+          },
+          "envelopeW": 93.178681,
+          "internalW": 760.0,
+          "internalAvgW": 473.333333,
+          "waterKgH": 0.001620175,
+          "condensationKgH": 0.0,
+          "humidificationKgH": 0.0,
+          "dryingKgH": 0.0,
+          "humidifierSensibleW": 0.0,
+          "coldSensibleW": 853.178681,
+          "condensationLatentW": 0.0,
+          "coldW": 938.496549,
+          "heatW": 0.0,
+          "humidificationW": 0.0,
+          "dryingW": 0.0,
+          "reheatW": 0.0,
+          "cop": 2.53265625,
+          "consumptionKwhDay": 10.728391,
+          "waterLDay": 0.0,
+          "condensateLDay": 0.0
+        }
+      },
+      "rampTemperature": {
+        "summer": {
+          "startT": 30,
+          "capacityKjK": 170.647547,
+          "energyKj": 4266.188664,
+          "direction": "cool",
+          "meanGainW": 844.698571,
+          "requiredW": 2232.726076
+        },
+        "winter": {
+          "startT": 18,
+          "capacityKjK": 170.647547,
+          "energyKj": 2218.418105,
+          "direction": "cool",
+          "meanGainW": 804.043257,
+          "requiredW": 1562.297559
+        }
+      },
+      "installed": {
+        "coldW": {
+          "maintenanceW": 1037.654994,
+          "rampW": 2232.726076,
+          "installedW": 2232.726076
+        },
+        "heatW": {
+          "maintenanceW": 0.0,
+          "rampW": 0.0,
+          "installedW": 0.0
+        },
+        "humidificationW": {
+          "maintenanceW": 0.0,
+          "rampW": 0.0,
+          "installedW": 0.0
+        },
+        "dryingW": {
+          "maintenanceW": 0.0,
+          "rampW": 0.0,
+          "installedW": 0.0
+        }
+      },
+      "regulation": {
+        "installedColdW": 2232.726076,
+        "reheatW": 2139.547395,
+        "modulatedKwhDay": {
+          "summer": 11.582615,
+          "winter": 10.728391
+        },
+        "permanentKwhDay": {
+          "summer": 64.343477,
+          "winter": 66.506934
+        }
+      },
+      "pid": {
+        "temperature": {
+          "uaWK": 6.775886,
+          "capacityJK": 170647.546556,
+          "tauS": 25184.537327,
+          "thetaS": 80.0
+        },
+        "loops": {
+          "cold": {
+            "kp": 3.295106,
+            "kc": 47.768832,
+            "xp": 2.093415,
+            "xpPct": 1.39561,
+            "ti": 640.0,
+            "td": 0.0,
+            "minimumW": 313.178681,
+            "minRatioPct": 14.02674,
+            "belowRange": true,
+            "installedToMaintenance": 2.151704,
+            "staging": false
+          }
+        }
+      }
+    }
+  }
+}

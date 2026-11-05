@@ -1,0 +1,43 @@
+{#
+  Outil : conversion d'unités physiques (pression, température, puissance, énergie, vitesse).
+  Inclus par : calculator/tool.html.twig. Contrôleur : calculator--unites (listes d'unités remplies
+  à partir de assets/calculators/convertisseur.js).
+#}
+{% set c = 'calculator--unites' %}
+
+<div data-controller="{{ c }}" class="space-y-6">
+    <section class="card">
+        <div class="grid gap-4 sm:grid-cols-2">
+            <div class="sm:col-span-2">
+                <label for="conv-type" class="form-label">Grandeur physique</label>
+                <select id="conv-type" class="form-input" data-{{ c }}-target="quantity" data-action="change->{{ c }}#changeQuantity">
+                    <option value="pressure">Pression (bar, psi, Pa…)</option>
+                    <option value="temperature">Température (°C, °F, K)</option>
+                    <option value="power">Puissance (W, kW, ch, hp)</option>
+                    <option value="energy">Énergie (J, kWh, cal, BTU)</option>
+                    <option value="speed">Vitesse (m/s, km/h, tr/min, rad/s)</option>
+                </select>
+            </div>
+            <div>
+                <label for="conv-value" class="form-label">Valeur à convertir</label>
+                <input type="text" inputmode="decimal" autocomplete="off" id="conv-value" class="form-input" placeholder="ex. 100"
+                       data-{{ c }}-target="value" data-action="input->{{ c }}#convert">
+            </div>
+            <div>
+                <label for="conv-from" class="form-label">Unité d'origine</label>
+                <select id="conv-from" class="form-input" data-{{ c }}-target="from" data-action="change->{{ c }}#convert"></select>
+            </div>
+            <div>
+                <span id="conv-result-label" class="form-label">Résultat</span>
+                <output id="conv-result" for="conv-value conv-from conv-to" aria-labelledby="conv-result-label" aria-live="polite"
+                        class="flex min-h-[2.625rem] items-center rounded-lg border border-primary-200 bg-primary-50 px-3 py-2 font-mono text-lg font-bold text-primary-800 dark:border-primary-800 dark:bg-primary-950/50 dark:text-primary-200"
+                        data-{{ c }}-target="result">—</output>
+            </div>
+            <div>
+                <label for="conv-to" class="form-label">Unité cible</label>
+                <select id="conv-to" class="form-input" data-{{ c }}-target="to" data-action="change->{{ c }}#convert"></select>
+            </div>
+            <p hidden aria-live="polite" class="text-sm font-medium text-red-700 sm:col-span-2 dark:text-red-400" data-{{ c }}-target="message"></p>
+        </div>
+    </section>
+</div>

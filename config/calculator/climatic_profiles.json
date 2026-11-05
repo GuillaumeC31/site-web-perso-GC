@@ -1,0 +1,19 @@
+{
+    "_comment": "Profils de consigne de l'enceinte climatique v2 (docs/ENCEINTE_CLIMATIQUE_V2.md, section 1). Chargés dans l'admin par app:calculator:load-reference-data (n'ajoute que les codes manquants) ; lus aussi par assets/calculators/enceinte_climatique.js (valeurs par défaut et tests). Tous à vérifier dans l'admin. rhSet / tolRh null : humidité non régulée.",
+    "profiles": [
+        { "code": "ich_long_term", "sector": "Pharmaceutique", "name": "Long terme", "tSet": 25, "rhSet": 60, "tolT": 2, "tolRh": 5, "source": "ICH Q1A(R2)", "default": true },
+        { "code": "ich_long_term_hot", "sector": "Pharmaceutique", "name": "Long terme (zones chaudes)", "tSet": 30, "rhSet": 65, "tolT": 2, "tolRh": 5, "source": "ICH Q1A(R2)" },
+        { "code": "ich_long_term_hot_humid", "sector": "Pharmaceutique", "name": "Long terme (zones chaudes et humides)", "tSet": 30, "rhSet": 75, "tolT": 2, "tolRh": 5, "source": "ICH Q1A(R2)" },
+        { "code": "ich_intermediate", "sector": "Pharmaceutique", "name": "Intermédiaire", "tSet": 30, "rhSet": 65, "tolT": 2, "tolRh": 5, "source": "ICH Q1A(R2)" },
+        { "code": "ich_accelerated", "sector": "Pharmaceutique", "name": "Accéléré", "tSet": 40, "rhSet": 75, "tolT": 2, "tolRh": 5, "source": "ICH Q1A(R2)" },
+        { "code": "ich_refrigerated", "sector": "Pharmaceutique", "name": "Réfrigéré", "tSet": 5, "rhSet": null, "tolT": 3, "tolRh": null, "source": "ICH Q1A(R2)" },
+        { "code": "ich_frozen", "sector": "Pharmaceutique", "name": "Congelé", "tSet": -20, "rhSet": null, "tolT": 5, "tolRh": null, "source": "ICH Q1A(R2)" },
+        { "code": "iec_damp_heat", "sector": "Électronique", "name": "Chaleur humide continue", "tSet": 40, "rhSet": 93, "tolT": 2, "tolRh": 3, "source": "IEC 60068-2-78" },
+        { "code": "iec_dry_heat_55", "sector": "Électronique", "name": "Chaleur sèche 55 °C", "tSet": 55, "rhSet": null, "tolT": 2, "tolRh": null, "source": "IEC 60068-2-2" },
+        { "code": "iec_dry_heat_70", "sector": "Électronique", "name": "Chaleur sèche 70 °C", "tSet": 70, "rhSet": null, "tolT": 2, "tolRh": null, "source": "IEC 60068-2-2" },
+        { "code": "iec_cold_25", "sector": "Électronique", "name": "Froid −25 °C", "tSet": -25, "rhSet": null, "tolT": 3, "tolRh": null, "source": "IEC 60068-2-1" },
+        { "code": "iec_cold_40", "sector": "Électronique", "name": "Froid −40 °C", "tSet": -40, "rhSet": null, "tolT": 3, "tolRh": null, "source": "IEC 60068-2-1" },
+        { "code": "heritage_conservation", "sector": "Œuvres d'art, archives", "name": "Conservation", "tSet": 20, "rhSet": 50, "tolT": 2, "tolRh": 5, "source": "ASHRAE Handbook Applications, « Museums, galleries, archives and libraries »" },
+        { "code": "cosmetics_accelerated", "sector": "Cosmétique", "name": "Stabilité accélérée", "tSet": 40, "rhSet": 75, "tolT": 2, "tolRh": 5, "source": "pratique du secteur (lignes directrices Cosmetics Europe)" }
+    ]
+}

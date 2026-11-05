@@ -1,0 +1,67 @@
+{#
+  En-tête public : nom, menu principal, bascule de thème, menu mobile.
+  Inclus par : base.html.twig.
+  Composant Tailkit UI : m-s-hero-09 (partie « Main Header »), adapté (menu mobile, lien actif).
+  Utilise : contrôleurs Stimulus « disclosure » (menu mobile) et « site-header » (en-tête fixe : réduit au
+  défilement sur ordinateur, masqué en descendant sur mobile, sans animation si les animations sont réduites).
+  Aucun lien vers l'administration ici (exigence du CDC §4).
+  « children » : routes des pages filles qui gardent le lien du menu actif (ex. détail d'un projet).
+#}
+{% set nav_items = [
+    {route: 'home', label: 'nav.home'},
+    {route: 'cv_show', label: 'nav.cv'},
+    {route: 'project_list', label: 'nav.projects', children: ['project_show']},
+    {route: 'calculator_dashboard', label: 'nav.calculator'},
+    {route: 'contact_show', label: 'nav.contact'},
+] %}
+{% set current_route = app.current_route %}
+
+<header role="banner" class="group/header sticky top-0 z-30 border-b border-secondary-100 bg-white/90 backdrop-blur data-hidden:-translate-y-full motion-safe:transition-transform motion-safe:duration-200 dark:border-secondary-800 dark:bg-secondary-900/90" data-controller="disclosure site-header">
+    <div class="container mx-auto flex items-center justify-between gap-4 px-4 py-4 motion-safe:transition-[padding] lg:px-8 lg:group-data-compact/header:py-2 xl:max-w-7xl">
+        <a href="{{ path('home') }}" class="group inline-flex items-center gap-2 text-lg font-bold text-secondary-900 hover:text-secondary-600 dark:text-secondary-100 dark:hover:text-secondary-300">
+            <span class="inline-flex size-8 items-center justify-center rounded-lg bg-primary-700 text-sm font-black text-white transition group-hover:scale-105" aria-hidden="true">GC</span>
+            <span>{{ site_owner_name }}</span>
+        </a>
+
+        <nav class="hidden items-center gap-6 lg:flex" aria-label="{{ 'common.main_navigation'|trans }}">
+            {% for item in nav_items %}
+                {% set is_current = current_route == item.route or current_route in (item.children ?? []) %}
+                <a href="{{ path(item.route) }}"
+                   class="text-sm font-semibold {{ is_current ? 'text-primary-700 dark:text-primary-300' : 'text-secondary-800 hover:text-primary-700 dark:text-secondary-200 dark:hover:text-primary-300' }}"
+                   {% if current_route == item.route %}aria-current="page"{% endif %}>
+                    {{ item.label|trans }}
+                </a>
+            {% endfor %}
+        </nav>
+
+        <div class="flex items-center gap-2">
+            <a href="{{ path('recruiter_access') }}" class="btn btn-primary btn-sm hidden sm:inline-flex">{{ 'nav.recruiter_area'|trans }}</a>
+            {{ include('_partials/_theme_toggle.html.twig') }}
+            <button type="button"
+                    class="btn btn-secondary btn-sm lg:hidden"
+                    data-action="disclosure#toggle"
+                    data-disclosure-target="button"
+                    aria-expanded="false"
+                    aria-controls="mobile-navigation">
+                <span class="sr-only">{{ 'common.open_menu'|trans }}</span>
+                <svg class="size-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path fill-rule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    {# Menu mobile : masqué par défaut (attribut hidden), ouvert par le contrôleur « disclosure » #}
+    <nav id="mobile-navigation" class="border-t border-secondary-100 lg:hidden dark:border-secondary-800" data-disclosure-target="panel" aria-label="{{ 'common.main_navigation'|trans }}" hidden>
+        <div class="container mx-auto flex flex-col gap-1 px-4 py-3">
+            {% for item in nav_items|merge([{route: 'recruiter_access', label: 'nav.recruiter_area'}]) %}
+                {% set is_current = current_route == item.route or current_route in (item.children ?? []) %}
+                <a href="{{ path(item.route) }}"
+                   class="rounded-lg px-3 py-2 font-medium {{ is_current ? 'bg-primary-50 text-primary-800 dark:bg-secondary-800 dark:text-white' : 'text-secondary-800 hover:bg-secondary-50 dark:text-secondary-200 dark:hover:bg-secondary-800' }}"
+                   {% if current_route == item.route %}aria-current="page"{% endif %}>
+                    {{ item.label|trans }}
+                </a>
+            {% endfor %}
+        </div>
+    </nav>
+</header>

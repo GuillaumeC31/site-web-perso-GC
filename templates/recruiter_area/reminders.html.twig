@@ -1,0 +1,29 @@
+{#
+  Page : refus des rappels d'échéance (lien signé « Ne plus recevoir ces rappels » de l'e-mail de rappel, RGPD).
+  Confirmation par un bouton (POST vers l'adresse signée elle-même), pour qu'un scanner de liens ne déclenche pas le
+  refus ; effet immédiat ensuite.
+  Affichée par : RecruiterAreaController::stopReminders() (route recruiter_reminders_stop).
+  Variables attendues :
+    - signed_url : lien signé (cible du formulaire)
+    - done       : vrai une fois le refus enregistré
+#}
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'recruiter_area.reminders.title'|trans }} · {{ site_owner_name }}{% endblock %}
+{% block robots %}noindex, nofollow{% endblock %}
+
+{% block body %}
+    <div class="container mx-auto max-w-xl px-4 py-16 lg:py-24">
+        <div class="card">
+            <h1 class="text-2xl font-bold text-secondary-900 dark:text-white">{{ 'recruiter_area.reminders.title'|trans }}</h1>
+            {% if done %}
+                <twig:Alert type="success" class="mt-4" data-testid="reminders-stopped">{{ 'recruiter_area.reminders.done'|trans }}</twig:Alert>
+            {% else %}
+                <p class="mt-3 text-secondary-700 dark:text-secondary-300">{{ 'recruiter_area.reminders.text'|trans }}</p>
+                <form method="post" action="{{ signed_url }}" class="mt-6" data-turbo="false">
+                    <twig:Button type="submit">{{ 'recruiter_area.reminders.submit'|trans }}</twig:Button>
+                </form>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

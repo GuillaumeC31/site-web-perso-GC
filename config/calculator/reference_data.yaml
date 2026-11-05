@@ -1,0 +1,81 @@
+# Données de référence de la calculatrice, reprises à l'identique de l'ancien site
+# (guillaume_c : src/DataFixtures/FluidFixtures.php et AppFixtures.php).
+#
+# Chargées par : php bin/console app:calculator:load-reference-data
+# (n'ajoute que ce qui manque, ne modifie jamais une valeur changée dans l'admin).
+#
+# Valeurs indicatives : à vérifier et tenir à jour dans l'admin (Calculatrice › Données de référence).
+
+# Fluides (outil « Chauffe d'un fluide ») : masse volumique en kg/m³, capacité thermique massique en J/(kg·K)
+fluids:
+    - { name: Eau liquide, state: liquide, density: 1000, specific_heat: 4185 }
+    - { name: Eau de mer, state: liquide, density: 1025, specific_heat: 3993 }
+    - { name: Huile thermique (standard), state: liquide, density: 850, specific_heat: 2000 }
+    - { name: Huile moteur, state: liquide, density: 890, specific_heat: 1900 }
+    - { name: Éthylène Glycol (pur), state: liquide, density: 1113, specific_heat: 2400 }
+    - { name: Propylène Glycol (pur), state: liquide, density: 1036, specific_heat: 2500 }
+    - { name: Éthanol (pur), state: liquide, density: 789, specific_heat: 2440 }
+    - { name: Méthanol, state: liquide, density: 792, specific_heat: 2530 }
+    - { name: Ammoniac (liquide), state: liquide, density: 681, specific_heat: 4700 }
+    - { name: Mercure, state: liquide, density: 13534, specific_heat: 139 }
+    - { name: Glycérine, state: liquide, density: 1261, specific_heat: 2430 }
+    - { name: Gasoil / Fioul, state: liquide, density: 840, specific_heat: 2000 }
+    - { name: Air (sec), state: gaz, density: 1.204, specific_heat: 1005 }
+    - { name: Azote (N2), state: gaz, density: 1.165, specific_heat: 1040 }
+    - { name: Oxygène (O2), state: gaz, density: 1.331, specific_heat: 918 }
+    - { name: Dioxyde de carbone (CO2), state: gaz, density: 1.842, specific_heat: 844 }
+    - { name: Hydrogène (H2), state: gaz, density: 0.089, specific_heat: 14300 }
+    - { name: Méthane (CH4), state: gaz, density: 0.668, specific_heat: 2220 }
+    - { name: "Vapeur d'eau (100°C)", state: gaz, density: 0.590, specific_heat: 2080 }
+    - { name: Hélium (He), state: gaz, density: 0.166, specific_heat: 5193 }
+
+# Imprimantes 3D (outil « Coût d'une impression 3D ») : puissance consommée en W
+printers:
+    - { brand: Bambu Lab, model: X1 Carbon, power: 350 }
+    - { brand: Bambu Lab, model: X1E, power: 350 }
+    - { brand: Bambu Lab, model: P1S, power: 300 }
+    - { brand: Bambu Lab, model: P1P, power: 300 }
+    - { brand: Bambu Lab, model: A1, power: 200 }
+    - { brand: Bambu Lab, model: A1 Mini, power: 150 }
+    - { brand: Creality, model: Ender 3, power: 270 }
+    - { brand: Creality, model: Ender 3 V2, power: 350 }
+    - { brand: Creality, model: Ender 3 S1, power: 350 }
+    - { brand: Creality, model: Ender 3 V3 KE, power: 350 }
+    - { brand: Creality, model: CR-10 Smart, power: 350 }
+    - { brand: Creality, model: K1, power: 350 }
+    - { brand: Creality, model: K1 Max, power: 1000 }
+    - { brand: Creality, model: K1C, power: 350 }
+    - { brand: Anycubic, model: i3 Mega S, power: 300 }
+    - { brand: Anycubic, model: Vyper, power: 350 }
+    - { brand: Anycubic, model: Kobra 2, power: 400 }
+    - { brand: Anycubic, model: Kobra 2 Pro, power: 400 }
+    - { brand: Anycubic, model: Kobra 2 Max, power: 500 }
+    - { brand: Anycubic, model: Kobra 3, power: 400 }
+    - { brand: Elegoo, model: Neptune 3 Pro, power: 300 }
+    - { brand: Elegoo, model: Neptune 4, power: 300 }
+    - { brand: Elegoo, model: Neptune 4 Pro, power: 300 }
+    - { brand: Elegoo, model: Neptune 4 Max, power: 400 }
+    - { brand: Prusa Research, model: i3 MK3S+, power: 250 }
+    - { brand: Prusa Research, model: MK4, power: 250 }
+    - { brand: Prusa Research, model: MINI+, power: 160 }
+    - { brand: Prusa Research, model: XL, power: 400 }
+    - { brand: Dagoma, model: DiscoEasy200, power: 100 }
+    - { brand: Dagoma, model: Sigma, power: 150 }
+    - { brand: Artillery, model: Sidewinder X2, power: 300 }
+    - { brand: Artillery, model: Sidewinder X3 Pro, power: 300 }
+    - { brand: Artillery, model: Genius Pro, power: 300 }
+
+# Offres d'électricité (outil « Coût d'une impression 3D ») : prix en €/kWh
+# (l'ancien site indiquait « tarifs France juin 2026 »)
+energy_providers:
+    - { name: EDF, plan: Tarif Bleu (Base), price_kwh: 0.1940 }
+    - { name: EDF, plan: Tarif Bleu (Heures Creuses), price_kwh: 0.1568 }
+    - { name: TotalEnergies, plan: Heures Eco, price_kwh: 0.1850 }
+    - { name: TotalEnergies, plan: Offre Verte Fixe, price_kwh: 0.1890 }
+    - { name: Engie, plan: Elec Référence, price_kwh: 0.1910 }
+    - { name: Ekwateur, plan: Electricité 100% Verte, price_kwh: 0.1750 }
+    - { name: Primeo Energie, plan: Confort+, price_kwh: 0.1690 }
+    - { name: Octopus Energy, plan: Eco-conso Fixe, price_kwh: 0.1790 }
+    - { name: Vattenfall, plan: Eco New Green, price_kwh: 0.1810 }
+    - { name: Alpiq, plan: Electricité Classique, price_kwh: 0.1780 }
+    - { name: Mint Energie, plan: Online & Green, price_kwh: 0.1720 }

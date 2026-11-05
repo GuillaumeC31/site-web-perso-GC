@@ -1,0 +1,19 @@
+{#
+  E-mail (version texte) : accès validé ou prolongé, avec un lien de connexion (recruteur validé : adresse de réponse).
+  Envoyé par : RecruiterMailer::sendApproval(). Variables : recruiter, renewed, url, minutes, texts (EmailTexts), can_reply.
+#}
+{% autoescape false %}
+Bonjour {{ recruiter.fullName }},
+
+{{ texts.intro }}
+
+Accès ouvert jusqu'au {{ recruiter.accessExpiresAt|format_date('long') }}.
+
+Ce lien vous connecte directement. Il est valable {{ minutes }} minutes et ne sert qu'une seule fois ; vous pourrez ensuite en demander un nouveau à tout moment sur la page de l'espace recruteur :
+
+{{ url }}
+
+{{ texts.signature }}
+guillaume-couget.fr
+{{ include('email/_text_footer.txt.twig') }}
+{% endautoescape %}

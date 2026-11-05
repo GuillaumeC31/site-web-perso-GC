@@ -1,0 +1,18 @@
+{#
+  Composant <twig:Badge> : petite étiquette (statut, technologie, catégorie).
+  Utilisé par : home/index.html.twig, pages de l'admin.
+  Propriétés :
+    - tone : primary (défaut), neutral, success, accent ou danger
+  Exemple : <twig:Badge tone="success">Disponible</twig:Badge>
+#}
+{% props tone = 'primary' %}
+{% set tones = {
+    primary: 'border-primary-200 bg-primary-50 text-primary-800 dark:border-primary-800 dark:bg-primary-950/60 dark:text-primary-200',
+    neutral: 'border-secondary-200 bg-secondary-50 text-secondary-700 dark:border-secondary-700 dark:bg-secondary-800 dark:text-secondary-200',
+    success: 'border-emerald-200 bg-emerald-50 text-emerald-800 dark:border-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-200',
+    accent: 'border-amber-200 bg-amber-50 text-amber-800 dark:border-amber-800 dark:bg-amber-950/60 dark:text-amber-200',
+    danger: 'border-red-200 bg-red-50 text-red-800 dark:border-red-800 dark:bg-red-950/60 dark:text-red-200',
+} %}
+<span {{ attributes.defaults({class: 'inline-flex items-center gap-1 rounded-full border px-3 py-1 text-xs font-semibold ' ~ (tones[tone] ?? tones.primary)}) }}>
+    {%- block content %}{% endblock -%}
+</span>

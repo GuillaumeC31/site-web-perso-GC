@@ -1,0 +1,37 @@
+{#
+  Outil : condensateur permanent d'un montage Steinmetz.
+  Inclus par : calculator/tool.html.twig. Contrôleur : calculator--steinmetz.
+  Textes et méthode « courant » repris de l'ancien site ; méthode « puissance » corrigée (règle
+  pratique de 70 µF/kW, anomalie A2 : docs/CALCULATRICE_ANOMALIES.md).
+#}
+{% import 'calculator/_macros.html.twig' as calc %}
+{% set c = 'calculator--steinmetz' %}
+{% set action = 'input->' ~ c ~ '#calculate' %}
+
+<div data-controller="{{ c }}" class="space-y-6">
+    <twig:Alert type="info">
+        Permet d'alimenter un moteur triphasé 230/400 V (couplé en triangle) sur un réseau monophasé 230 V en simulant la troisième phase. Perte de puissance utile d'environ 30 %.
+    </twig:Alert>
+
+    {% set fields %}
+        {{ calc.field('stein-kw', 'Puissance utile (P)', 'kW', {('data-' ~ c ~ '-target'): 'kw', 'data-action': action}, null, 'ex. 1,5') }}
+        {{ calc.field('stein-hp', 'Puissance utile (P)', 'ch', {('data-' ~ c ~ '-target'): 'hp', 'data-action': action}, null, 'ex. 2') }}
+    {% endset %}
+    {{ calc.block('Méthode 1 : selon la puissance du moteur', 'C (µF) ≈ 70 × P (kW) · 1 kW = 1,35962 ch', fields) }}
+    <p class="text-sm text-secondary-600 dark:text-secondary-300">Règle pratique : environ 70 µF par kW pour un moteur 230/400 V couplé en triangle, sur un réseau monophasé 230 V 50 Hz.</p>
+
+    {% set fields %}
+        {{ calc.field('stein-i', 'Courant de plaque pour le couplage 230 V (I)', 'A', {('data-' ~ c ~ '-target'): 'amps', 'data-action': action}, null, 'ex. 6,5') }}
+    {% endset %}
+    {{ calc.block('Méthode 2 : selon le courant de plaque', 'C (µF) = 14 × I (A)', fields) }}
+
+    {% set fields %}
+        {{ calc.result('stein-c', 'Condensateur permanent requis', 'µF', {('data-' ~ c ~ '-target'): 'capacitance'}, 'stein-kw stein-hp stein-i') }}
+        {{ calc.message({('data-' ~ c ~ '-target'): 'message'}) }}
+    {% endset %}
+    {{ calc.block('Résultat', null, fields) }}
+
+    <p class="text-sm text-secondary-600 dark:text-secondary-300">
+        Prendre un condensateur de type permanent 450 V minimum (pas de condensateur de démarrage électrolytique).
+    </p>
+</div>

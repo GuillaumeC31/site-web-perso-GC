@@ -1,0 +1,9 @@
+{#
+  Pied des e-mails texte : règle de l'adresse de réponse (MailFactory::createTyped()).
+  Inclus par : templates/email/**/*.txt.twig. Variables : can_reply, contact_url.
+#}
+{% if contact_url ?? null %}
+Message envoyé automatiquement : merci de ne pas y répondre. Pour écrire à Guillaume, utilisez le formulaire de contact du site : {{ contact_url }}
+{% elseif can_reply ?? false %}
+Vous pouvez répondre à cet e-mail.
+{% endif %}

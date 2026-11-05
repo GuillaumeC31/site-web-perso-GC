@@ -1,0 +1,10 @@
+{#
+  Mention discrète sous une expérience du CV public synthétique : « + n points détaillés dans l'espace recruteur 🔒 »
+  (rien si toutes les puces sont publiques ; ni texte flouté ni faux contenu).
+  Inclus par : cv/_experience.html.twig, cv/_foundation.html.twig.
+  Variables attendues :
+    - count : nombre de puces réservées à l'espace recruteur (CvContentProvider, « hidden_count »)
+#}
+{% if count > 0 %}
+    <p class="mt-1.5 text-xs text-secondary-500 dark:text-secondary-400" data-testid="cv-hidden-count">{{ 'cv.hidden_count'|trans({'%count%': count}) }} <span aria-hidden="true">🔒</span></p>
+{% endif %}

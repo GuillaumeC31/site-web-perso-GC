@@ -1,0 +1,33 @@
+{#
+  Écran : formulaire générique d'ajout ou de modification d'un contenu du CV.
+  Affiché par : AbstractCrudController::new() et ::edit() (routes admin_*_new, admin_*_edit).
+  S'affiche dans la Turbo Frame « crud_form » de la liste ; ouvert directement, c'est une page complète.
+  L'envoi remplace toute la page : retour à la liste avec le message de confirmation, ou formulaire avec ses erreurs
+  (422). data-turbo-frame="_top" sur le <form> est indispensable : Turbo ne recopie pas l'attribut target de la frame
+  de la réponse dans la frame « crud_form » de la liste, et l'envoi restait sinon dans la frame (message perdu ;
+  « Content missing » quand la réponse n'était ni la liste ni le formulaire : bug du 05/11/2026).
+  Variables attendues :
+    - crud   : configuration { route_prefix, translation_prefix, columns[] }
+    - form   : formulaire Symfony
+    - entity : ligne modifiée (sans identifiant pour un ajout)
+#}
+{% extends 'admin/base.html.twig' %}
+
+{% set is_new = entity.id is null %}
+{% set heading = (is_new ? 'admin.crud.new_title' : 'admin.crud.edit_title')|trans({'%name%': (crud.translation_prefix ~ '.singular')|trans}) %}
+
+{% block title %}{{ heading }}{% endblock %}
+
+{% block body %}
+    <turbo-frame id="crud_form" target="_top">
+        <twig:Card title="{{ heading }}">
+            {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'space-y-1', 'data-turbo-frame': '_top'}}) }}
+                {{ form_widget(form) }}
+                <div class="flex flex-wrap gap-3 pt-4">
+                    <twig:Button type="submit">{{ 'admin.crud.save'|trans }}</twig:Button>
+                    <twig:Button href="{{ path(crud.route_prefix ~ '_index') }}" variant="secondary">{{ 'admin.crud.cancel'|trans }}</twig:Button>
+                </div>
+            {{ form_end(form) }}
+        </twig:Card>
+    </turbo-frame>
+{% endblock %}

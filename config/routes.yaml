@@ -1,0 +1,12 @@
+# yaml-language-server: $schema=../vendor/symfony/routing/Loader/schema/routing.schema.json
+
+# Point d'entrée des routes.
+# Seuls les contrôleurs publics (fichiers directement dans src/Controller/) sont
+# importés ici ; ceux de l'admin (src/Controller/Admin/) le sont dans
+# config/routes/admin.php, avec le préfixe configurable ADMIN_PATH.
+
+# Pour lister toutes les routes : bin/console debug:router
+
+controllers:
+    resource: '../src/Controller/*Controller.php'
+    type: attribute

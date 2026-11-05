@@ -1,0 +1,51 @@
+# Messages de validation propres au site (les contraintes standard sont déjà traduites par Symfony).
+user:
+  username:
+    taken: Cet identifiant est déjà utilisé.
+    invalid: "Identifiant invalide : 3 à 64 caractères parmi a-z, 0-9, point, tiret, souligné."
+
+experience:
+  public_company_label:
+    required: Indiquez le libellé public qui remplacera le nom de l'entreprise.
+  end_date:
+    before_start: La date de fin doit être postérieure à la date de début.
+
+certification:
+  expires_on:
+    before_obtained: La fin de validité doit être postérieure à la date d'obtention.
+
+project:
+  slug_taken: Cette adresse est déjà utilisée par un autre projet.
+  slug_format: "Adresse invalide : minuscules, chiffres et tirets uniquement (ex. enceinte-ich)."
+  new_images_too_many: "{{ limit }} images au plus par envoi : enregistrez, puis ajoutez les suivantes."
+
+project_category:
+  slug_taken: Cette adresse est déjà utilisée par une autre catégorie.
+
+refrigerant:
+  code_format: "Le code commence par R, sans tiret ni espace (par ex. R410A ou R1234ze(E))."
+
+climatic_profile:
+  code_format: "Le code ne contient que des minuscules, des chiffres et des soulignés (par ex. ich_long_term)."
+
+panel_model:
+  u_or_lambda: "Renseignez le coefficient U de la fiche ou la conductivité λ de l'isolant."
+
+contact:
+  consent_required: Merci de cocher la case pour que je puisse traiter votre demande.
+  subject_required: Choisissez l'objet de votre message.
+
+admin:
+  social_link:
+    https_only: "Adresse en https seulement (https://…)."
+    wrong_domain: "Adresse attendue sur le domaine de %network% (%domains%)."
+    label_required: "Nom affiché obligatoire pour « Autre »."
+  communication:
+    pin_mismatch: Les deux codes PIN ne correspondent pas.
+    address_fictitious: "Adresse fictive (example.test, example.com, localhost…) : refusée en production."
+    from_name_invalid: "Le nom d'expéditeur ne doit contenir ni <, ni >, ni guillemets, ni saut de ligne."
+    dkim_selector_invalid: "Sélecteur DKIM invalide (lettres, chiffres et tirets)."
+  site_settings:
+    linkedin_invalid: L'adresse doit être un profil LinkedIn (https://www.linkedin.com/…).
+    remote_pin_invalid: Le code PIN doit compter 6 à 12 chiffres.
+    maintenance_ip_invalid: "« %ip% » n'est pas une adresse IP valide (IPv4, IPv6 ou plage CIDR)."

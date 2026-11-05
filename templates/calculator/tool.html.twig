@@ -1,0 +1,66 @@
+{#
+  Page : un outil de la calculatrice (CDC § 8) — une adresse et des balises title/description par outil.
+  Affichée par : CalculatorController::tool() (route calculator_tool, /calculatrice/{category}/{tool}).
+  Variables attendues :
+    - tool     : CalculatorTool public
+    - category : CalculatorCategory de l'outil
+  Contenu : titre, description, favori (contrôleur « calculator--tool »), interface de l'outil
+  (tool.template), aide de l'admin, norme ou source (seulement si validée), avertissement,
+  encart de l'auteur.
+#}
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ tool.title }} · {{ 'calculator.title'|trans }} · {{ site_owner_name }}{% endblock %}
+{% block description %}{{ tool.metaDescription ?? tool.summary ?? ('calculator.tool_meta_description'|trans({'%tool%': tool.title})) }}{% endblock %}
+
+{% block body %}
+    <div class="container mx-auto px-4 py-12 lg:px-8 lg:py-16 xl:max-w-6xl"
+         data-controller="calculator--tool"
+         data-calculator--tool-key-value="{{ tool.key }}"
+         data-calculator--tool-labels-value="{{ {add: 'calculator.favorite_add'|trans, remove: 'calculator.favorite_remove'|trans}|json_encode }}">
+        <nav aria-label="{{ 'calculator.breadcrumb'|trans }}" class="text-sm">
+            <ol class="flex flex-wrap items-center gap-2 text-secondary-600 dark:text-secondary-300">
+                <li><a href="{{ path('calculator_dashboard') }}" class="font-medium text-primary-700 hover:text-primary-800 dark:text-primary-300">{{ 'calculator.title'|trans }}</a></li>
+                <li aria-hidden="true">/</li>
+                <li><a href="{{ path('calculator_category', {category: category.slug}) }}" class="font-medium text-primary-700 hover:text-primary-800 dark:text-primary-300">{{ category.name }}</a></li>
+            </ol>
+        </nav>
+
+        <header class="mt-6 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+            <div class="max-w-3xl">
+                <h1 class="text-3xl font-black tracking-tight text-secondary-900 sm:text-4xl dark:text-white">{{ tool.title }}</h1>
+                {% if tool.summary %}<p class="text-prose-justify mt-3 text-lg/relaxed text-secondary-700 dark:text-secondary-300">{{ tool.summary|hyphenate }}</p>{% endif %}
+            </div>
+            {# Masqué sans JavaScript (le favori a besoin du stockage du navigateur) #}
+            <button type="button" hidden class="btn btn-secondary btn-sm shrink-0" aria-pressed="false"
+                    data-calculator--tool-target="favorite" data-action="calculator--tool#toggleFavorite">
+                <svg class="size-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.62 3.102-1.106 4.637c-.194.813.691 1.456 1.405 1.02L10 15.591l4.069 2.485c.713.436 1.598-.207 1.404-1.02l-1.106-4.637 3.62-3.102c.635-.544.297-1.584-.536-1.65l-4.752-.382-1.831-4.401z" clip-rule="evenodd"/></svg>
+                <span data-calculator--tool-target="favoriteLabel">{{ 'calculator.favorite_add'|trans }}</span>
+            </button>
+        </header>
+
+        <div class="mt-8">
+            {{ include(tool.template) }}
+        </div>
+
+        {% if tool.helpText %}
+            <section class="mt-8 card" aria-labelledby="tool-help-title">
+                <h2 id="tool-help-title" class="text-lg font-bold text-secondary-900 dark:text-white">{{ 'calculator.help'|trans }}</h2>
+                <div class="text-prose-justify mt-3 space-y-3 text-secondary-700 dark:text-secondary-300">
+                    {% for paragraph in tool.helpText|split("\n\n") %}<p>{{ paragraph|hyphenate|nl2br }}</p>{% endfor %}
+                </div>
+            </section>
+        {% endif %}
+
+        <div class="mt-8 space-y-3 text-sm text-secondary-600 dark:text-secondary-300">
+            {% if tool.publicReference %}
+                <p><span class="font-semibold text-secondary-800 dark:text-secondary-200">{{ 'calculator.reference'|trans }} :</span> {{ tool.publicReference }}</p>
+            {% endif %}
+            <p class="rounded-xl border border-amber-200 bg-amber-50 p-4 text-amber-900 dark:border-amber-800 dark:bg-amber-950/50 dark:text-amber-100">
+                <span class="font-semibold">{{ 'calculator.disclaimer_title'|trans }}</span> {{ 'calculator.disclaimer'|trans }}
+            </p>
+        </div>
+
+        {{ include('calculator/_author.html.twig') }}
+    </div>
+{% endblock %}

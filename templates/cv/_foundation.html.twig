@@ -1,0 +1,33 @@
+{#
+  « Expérience fondatrice » : une entreprise (en-tête : période totale, nom, lieu), puis ses postes successifs
+  (« 2017 – Chargé de conception » et missions), sur la grille commune du CV.
+  Inclus par : cv/show.html.twig, recruiter_area/home.html.twig.
+  Variables attendues :
+    - group : groupe de CvContentProvider (company, location, start, end, dates_in_years, roles : expériences publiques)
+#}
+<article class="cv-row">
+    <p class="cv-date">{{ cv_period_numeric(group) }}</p>
+    <div class="min-w-0">
+        <div class="flex flex-wrap items-baseline justify-between gap-x-4">
+            <h3 class="font-bold text-secondary-900 dark:text-white">{{ group.company }}</h3>
+            {% if group.location %}<p class="text-xs font-semibold tracking-wide text-secondary-500 uppercase dark:text-secondary-400">{{ group.location }}</p>{% endif %}
+        </div>
+        <div class="mt-2 space-y-4">
+            {% for role in group.roles %}
+                <div>
+                    <h4 class="text-sm font-semibold text-primary-700 dark:text-primary-300">{{ role.start|date('Y') }} – {{ role.job_title }}</h4>
+                    {% set items = role.achievements|merge(role.missions) %}
+                    {% if items is not empty %}
+                        <ul class="cv-list text-prose-justify mt-1">
+                            {% for item in items %}<li>{{ item|hyphenate|cv_bold }}</li>{% endfor %}
+                        </ul>
+                    {% endif %}
+                    {{ include('cv/_hidden_count.html.twig', {count: role.hidden_count|default(0)}, with_context = false) }}
+                    {% if role.private_note|default(null) %}
+                        <p class="mt-2 inline-flex rounded-lg bg-amber-50 px-2 py-1 text-xs font-medium text-amber-800 dark:bg-amber-500/10 dark:text-amber-200">{{ role.private_note }}</p>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</article>

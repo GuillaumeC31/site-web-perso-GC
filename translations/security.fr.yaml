@@ -1,0 +1,3 @@
+# Messages du composant Security propres au site.
+recruiter:
+  access_inactive: Cet accès n'est pas ouvert ou a pris fin.

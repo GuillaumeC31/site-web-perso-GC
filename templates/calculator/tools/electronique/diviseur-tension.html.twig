@@ -1,0 +1,33 @@
+{#
+  Outil : pont diviseur de tension (tension de sortie ; résistance manquante).
+  Inclus par : calculator/tool.html.twig. Contrôleur : calculator--diviseur-tension.
+#}
+{% import 'calculator/_macros.html.twig' as calc %}
+{% set c = 'calculator--diviseur-tension' %}
+{% macro f(c, id, label, unit, target, method, value = null, placeholder = null) %}
+    {% import 'calculator/_macros.html.twig' as calc %}
+    {{ calc.field(id, label, unit, {('data-' ~ c ~ '-target'): target, 'data-action': 'input->' ~ c ~ '#' ~ method}, value, placeholder) }}
+{% endmacro %}
+
+<div data-controller="{{ c }}" class="space-y-6">
+    {% set fields %}
+        {{ _self.f(c, 'div-vin', 'Tension d\'entrée (Vin)', 'V', 'vIn', 'output', null, 'ex. 5') }}
+        {{ _self.f(c, 'div-r1', 'Résistance R1', 'Ω', 'r1', 'output', null, 'ex. 10000') }}
+        {{ _self.f(c, 'div-r2', 'Résistance R2', 'Ω', 'r2', 'output', null, 'ex. 10000') }}
+        {{ calc.result('div-vout', 'Tension de sortie (Vout)', 'V', {('data-' ~ c ~ '-target'): 'vOut'}, 'div-vin div-r1 div-r2') }}
+        {{ calc.result('div-i', 'Courant dans le pont', 'mA', {('data-' ~ c ~ '-target'): 'current'}, 'div-vin div-r1 div-r2') }}
+        {{ calc.message({('data-' ~ c ~ '-target'): 'outputMessage'}) }}
+    {% endset %}
+    {{ calc.block('1. Tension de sortie', 'Vout = Vin × R2 / (R1 + R2)', fields) }}
+
+    {% set fields %}
+        {{ _self.f(c, 'res-vin', 'Tension d\'entrée (Vin)', 'V', 'resVIn', 'resistor', null, 'ex. 12') }}
+        {{ _self.f(c, 'res-vout', 'Tension de sortie ciblée', 'V', 'resVOut', 'resistor', null, 'ex. 3,3') }}
+        {{ calc.select('res-known', 'Résistance connue', {R1: 'Je connais R1', R2: 'Je connais R2'}, {('data-' ~ c ~ '-target'): 'known', 'data-action': 'change->' ~ c ~ '#resistor'}) }}
+        {{ _self.f(c, 'res-value', 'Valeur de la résistance connue', 'Ω', 'knownValue', 'resistor', null, 'ex. 10000') }}
+        {{ calc.result('res-r', 'Résistance à choisir', 'Ω', {('data-' ~ c ~ '-target'): 'missing'}, 'res-vin res-vout res-known res-value') }}
+        {{ calc.result('res-i', 'Courant dans le pont', 'mA', {('data-' ~ c ~ '-target'): 'resCurrent'}, 'res-vin res-vout res-known res-value') }}
+        {{ calc.message({('data-' ~ c ~ '-target'): 'resistorMessage'}) }}
+    {% endset %}
+    {{ calc.block('2. Résistance manquante', 'R2 = Vout × R1 / (Vin − Vout) · R1 = Vin × R2 / Vout − R2', fields) }}
+</div>

@@ -1,0 +1,29 @@
+{#
+  Page : étape 2 de la connexion, vérification de la clé YubiKey.
+  Affichée par : Admin\SecondFactorController::verify() (route admin_second_factor, /{ADMIN_PATH}/securite/cle),
+  quand le compte a au moins une clé enregistrée.
+  Utilise : contrôleur Stimulus « webauthn » (action authenticate, lancée automatiquement).
+  Aucune variable attendue.
+#}
+{% extends 'admin/base_minimal.html.twig' %}
+
+{% block title %}{{ 'admin.second_factor.verify.title'|trans }}{% endblock %}
+
+{% block body %}
+    <div data-controller="webauthn"
+         data-webauthn-options-url-value="{{ path('admin_second_factor_assertion_options') }}"
+         data-webauthn-verify-url-value="{{ path('admin_second_factor_assertion_verify') }}"
+         data-webauthn-csrf-token-value="{{ csrf_token(constant('App\\Controller\\Admin\\SecondFactorController::CSRF_TOKEN_ID')) }}"
+         data-webauthn-auto-start-value="true"
+         data-webauthn-messages-value="{{ include('admin/second_factor/_webauthn_messages.html.twig') }}"
+         class="space-y-5">
+        <p class="text-secondary-700 dark:text-secondary-300">{{ 'admin.second_factor.verify.text'|trans }}</p>
+        <p class="min-h-6 text-sm font-medium text-primary-800 dark:text-primary-200" data-webauthn-target="status" role="status" aria-live="polite"></p>
+        <twig:Button class="w-full" data-action="webauthn#authenticate" data-webauthn-target="button">
+            {{ 'admin.second_factor.verify.button'|trans }}
+        </twig:Button>
+    </div>
+    <p class="text-sm">
+        <a href="{{ path('admin_logout') }}" class="link" data-turbo="false">{{ 'admin.logout'|trans }}</a>
+    </p>
+{% endblock %}

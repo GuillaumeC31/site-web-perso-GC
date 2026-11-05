@@ -1,0 +1,122 @@
+{#
+  Gabarit commun de mise à l'échelle des signaux analogiques et des transmetteurs :
+  conversion signal ↔ valeur physique (interpolation linéaire), shunt 250 Ω, alertes, tableau.
+  Inclus par : signal-4-20ma, signal-0-20ma, signal-0-10v, transmetteur-humidite, transmetteur-temperature.
+  Contrôleur : calculator--scaling.
+  Paramètres :
+    - signal_min, signal_max, signal_unit : bornes du signal (« mA » ou « V »)
+    - intro : texte d'introduction
+    - default_signal, default_physical : valeurs de départ
+    - output_types : vrai pour un transmetteur (choix 4-20 mA, 0-10 V, 0-20 mA)
+    - physical_unit : unité fixe (transmetteur) ou null (unité libre, « bar » par défaut)
+    - physical_label : libellé de la grandeur (« Valeur mesurée » par défaut)
+    - fixed_range : [min, max] pour une plage imposée (hygromètre 0-100 % HR), sinon null
+    - default_range : [min, max] de départ si la plage est modifiable
+    - presets : liste {label, min, max, unit?} de plages proposées
+#}
+{% set c = 'calculator--scaling' %}
+{% import 'calculator/_macros.html.twig' as calc %}
+{% set physical_label = physical_label ?? 'Valeur mesurée' %}
+{% set fixed_range = fixed_range ?? null %}
+{% set range = fixed_range ?? default_range ?? [0, 100] %}
+
+<div data-controller="{{ c }}" class="space-y-6"
+     data-{{ c }}-signal-min-value="{{ signal_min }}" data-{{ c }}-signal-max-value="{{ signal_max }}" data-{{ c }}-signal-unit-value="{{ signal_unit }}"
+     {% if physical_unit %}data-{{ c }}-physical-unit-fixed-value="{{ physical_unit }}"{% endif %}>
+    <p class="text-secondary-700 dark:text-secondary-300">{{ intro }}</p>
+
+    <section class="card">
+        <h2 class="text-lg font-bold text-secondary-900 dark:text-white">{{ output_types ? 'Sortie du transmetteur et plage' : 'Plage du capteur' }}</h2>
+        <div class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {% if output_types %}
+                <div>
+                    <label for="sc-type" class="form-label">Type de signal</label>
+                    <select id="sc-type" class="form-input" data-{{ c }}-target="outputType" data-action="change->{{ c }}#changeOutputType">
+                        <option value="4-20" data-min="4" data-max="20" data-unit="mA" selected>4-20 mA (industriel)</option>
+                        <option value="0-10" data-min="0" data-max="10" data-unit="V">0-10 V</option>
+                        <option value="0-20" data-min="0" data-max="20" data-unit="mA">0-20 mA</option>
+                    </select>
+                </div>
+            {% endif %}
+            {% if not physical_unit %}
+                <div>
+                    <label for="sc-unit" class="form-label">Unité physique</label>
+                    <input type="text" id="sc-unit" class="form-input" value="bar" maxlength="20" autocomplete="off"
+                           data-{{ c }}-target="physicalUnit" data-action="input->{{ c }}#updatePhysicalUnit">
+                </div>
+            {% endif %}
+            {% if fixed_range %}
+                <input type="hidden" value="{{ fixed_range[0] }}" data-{{ c }}-target="minPhysical">
+                <input type="hidden" value="{{ fixed_range[1] }}" data-{{ c }}-target="maxPhysical">
+                <p class="text-sm text-secondary-700 sm:col-span-2 dark:text-secondary-300">Plage fixe pour un hygromètre industriel : <strong>{{ fixed_range[0] }} à {{ fixed_range[1] }} {{ physical_unit }}</strong>.</p>
+            {% else %}
+                {{ calc.field('sc-min', 'Valeur au signal minimal', null, {('data-' ~ c ~ '-target'): 'minPhysical', 'data-action': 'input->' ~ c ~ '#onRangeChange'}, range[0]) }}
+                {{ calc.field('sc-max', 'Valeur au signal maximal', null, {('data-' ~ c ~ '-target'): 'maxPhysical', 'data-action': 'input->' ~ c ~ '#onRangeChange'}, range[1]) }}
+            {% endif %}
+            {% if presets is not empty %}
+                <div class="flex flex-wrap gap-2 sm:col-span-2 lg:col-span-4" role="group" aria-label="Plages courantes">
+                    {% for preset in presets %}
+                        <button type="button" class="btn btn-secondary btn-sm" data-action="{{ c }}#applyPreset"
+                                data-{{ c }}-min-param="{{ preset.min }}" data-{{ c }}-max-param="{{ preset.max }}" {% if preset.unit is defined %}data-{{ c }}-unit-param="{{ preset.unit }}"{% endif %}>{{ preset.label }}</button>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            {{ calc.message({('data-' ~ c ~ '-target'): 'rangeMessage'}) }}
+        </div>
+    </section>
+
+    <section class="card">
+        <h2 class="text-lg font-bold text-secondary-900 dark:text-white">Conversion</h2>
+        <div class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <div>
+                <label for="sc-signal" class="form-label">Signal</label>
+                <div class="flex">
+                    <input type="text" inputmode="decimal" autocomplete="off" id="sc-signal" class="form-input rounded-r-none" value="{{ default_signal }}"
+                           data-{{ c }}-target="signal" data-action="input->{{ c }}#calculatePhysical">
+                    <span class="inline-flex min-w-12 items-center justify-center rounded-r-lg border border-l-0 border-secondary-200 bg-secondary-50 px-3 text-sm text-secondary-600 dark:border-secondary-600 dark:bg-secondary-800 dark:text-secondary-300" data-{{ c }}-target="unitLabel">{{ signal_unit }}</span>
+                </div>
+            </div>
+            <div>
+                <label for="sc-physical" class="form-label">{{ physical_label }}</label>
+                <div class="flex">
+                    <input type="text" inputmode="decimal" autocomplete="off" id="sc-physical" class="form-input rounded-r-none" value="{{ default_physical }}"
+                           data-{{ c }}-target="physical" data-action="input->{{ c }}#calculateSignal">
+                    <span class="inline-flex min-w-12 items-center justify-center rounded-r-lg border border-l-0 border-secondary-200 bg-secondary-50 px-3 text-sm text-secondary-600 dark:border-secondary-600 dark:bg-secondary-800 dark:text-secondary-300" data-{{ c }}-target="physicalUnitLabel">{{ physical_unit ?? 'bar' }}</span>
+                </div>
+            </div>
+            <div data-{{ c }}-target="shuntCard" {% if signal_unit != 'mA' %}hidden{% endif %}>
+                {{ calc.result('sc-shunt', 'Tension sur shunt 250 Ω', 'V', {('data-' ~ c ~ '-target'): 'shuntVoltage'}, 'sc-signal') }}
+            </div>
+            <p hidden aria-live="polite" class="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-sm font-medium text-amber-900 sm:col-span-2 lg:col-span-4 dark:border-amber-800 dark:bg-amber-950/50 dark:text-amber-100" data-{{ c }}-target="alert"></p>
+        </div>
+        <div class="mt-5 space-y-1 font-mono text-sm text-secondary-700 dark:text-secondary-300">
+            <p data-{{ c }}-target="formulaPhysical"></p>
+            <p data-{{ c }}-target="formulaSignal"></p>
+        </div>
+    </section>
+
+    <section class="card" aria-labelledby="sc-table-title">
+        <h2 id="sc-table-title" class="text-lg font-bold text-secondary-900 dark:text-white">Tableau de référence</h2>
+        <p class="mt-1 text-sm text-secondary-600 dark:text-secondary-300">Signal, valeur physique et pourcentage de la plage.</p>
+        <div class="mt-4 max-w-xs">
+            <label for="sc-step" class="form-label">Pas du signal</label>
+            <select id="sc-step" class="form-input" data-{{ c }}-target="tableStep" data-action="change->{{ c }}#rebuildTable">
+                <option value="1" selected>1</option><option value="2">2</option><option value="4">4</option>
+            </select>
+        </div>
+        <p class="mt-3 text-sm text-secondary-600 dark:text-secondary-300" data-{{ c }}-target="tableCount"></p>
+        <div class="mt-3 max-h-96 overflow-auto rounded-xl border border-secondary-200 dark:border-secondary-700">
+            <table class="min-w-full text-sm">
+                <thead class="sticky top-0 bg-secondary-50 dark:bg-secondary-800">
+                    <tr class="text-left text-secondary-700 dark:text-secondary-200">
+                        <th scope="col" class="px-4 py-2" data-{{ c }}-target="tableSignalHeader">Signal ({{ signal_unit }})</th>
+                        <th scope="col" class="px-4 py-2">{{ physical_label }}</th>
+                        <th scope="col" class="px-4 py-2">% de la plage</th>
+                        <th scope="col" class="px-4 py-2" data-{{ c }}-target="tableShuntHeader" {% if signal_unit != 'mA' %}hidden{% endif %}>U sur 250 Ω (V)</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-secondary-100 font-mono dark:divide-secondary-700/60" data-{{ c }}-target="tableBody"></tbody>
+            </table>
+        </div>
+    </section>
+</div>

@@ -1,0 +1,13 @@
+{#
+  Bouton (lien principal) d'un e-mail HTML, avec l'adresse en clair dessous (si le bouton ne s'affiche pas).
+  Inclus par : templates/email/recruiter/*.html.twig, templates/email/notification.html.twig
+  Variables : url (lien), label (texte du bouton).
+#}
+<tr>
+    <td style="padding:20px 0 8px;" align="center">
+        <a href="{{ url }}" style="display:inline-block;background:#00786f;color:#ffffff;text-decoration:none;font-weight:bold;font-size:15px;padding:12px 22px;border-radius:10px;">{{ label }}</a>
+    </td>
+</tr>
+<tr>
+    <td style="font-size:12px;line-height:1.5;color:#64748b;padding-bottom:8px;">Si le bouton ne fonctionne pas, copiez ce lien dans votre navigateur :<br><span style="word-break:break-all;">{{ url }}</span></td>
+</tr>

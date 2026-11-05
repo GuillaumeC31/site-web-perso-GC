@@ -1,0 +1,76 @@
+# Configuration Apache (l’hébergeur). Racine du site = dossier public/.
+DirectoryIndex index.php
+Options -Indexes -MultiViews
+
+# Indexation : gérée par le site (SITE_NOINDEX, EventSubscriber\NoIndexSubscriber). Le bloc qui visait le
+# sous-domaine de recette (supprimé le 05/11/2026) a été retiré en v2.0.2.
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Redirige /index.php/... vers l'URL propre
+    RewriteCond %{REQUEST_URI}::$0 ^(/.+)/(.*)::\2$
+    RewriteRule .* - [E=BASE:%1]
+    RewriteCond %{HTTP:Authorization} .+
+    RewriteRule ^ - [E=HTTP_AUTHORIZATION:%0]
+    RewriteCond %{ENV:REDIRECT_STATUS} =""
+    RewriteRule ^index\.php(?:/(.*)|$) %{ENV:BASE}/$1 [R=301,L]
+
+    # Fichiers existants servis directement (repérés par STATIC_FILE, au PREMIER passage seulement : après la
+    # réécriture vers index.php, index.php existe aussi et serait pris pour un fichier statique), le reste passe
+    # par Symfony
+    RewriteCond %{ENV:REDIRECT_STATUS} =""
+    RewriteCond %{REQUEST_FILENAME} -f
+    RewriteRule ^ - [L,E=STATIC_FILE:1]
+    RewriteCond %{REQUEST_FILENAME} -f
+    RewriteRule ^ - [L]
+    RewriteRule ^ %{ENV:BASE}/index.php [L]
+</IfModule>
+
+# En-têtes de sécurité : UNE seule source par réponse (v2.0.1, ils étaient envoyés deux fois).
+# - Réponses de Symfony (pages, 404, PDF) : SecurityHeadersSubscriber (CSP à nonce comprise) ; Apache n'y ajoute rien.
+# - Fichiers statiques (build/, images…), qui ne passent pas par PHP : Apache, seulement si STATIC_FILE est posé
+#   par la réécriture ci-dessus. L'ancienne condition « -f %{REQUEST_FILENAME} » était vraie aussi pour index.php.
+# Contrôle en ligne : scripts/security/check-prod-headers.sh (page, fichier de build/, 404 et PDF, doublons signalés).
+<IfModule mod_headers.c>
+    # Ne pas annoncer la version de PHP
+    Header always unset X-Powered-By
+    Header unset X-Powered-By
+
+    Header set X-Content-Type-Options "nosniff" env=STATIC_FILE
+    Header set Referrer-Policy "strict-origin-when-cross-origin" env=STATIC_FILE
+    Header set X-Frame-Options "DENY" env=STATIC_FILE
+    # HSTS (v2.0.3) : même forme que les autres en-têtes. L'ancien bloc conditionnel sur STATIC_FILE était évalué AVANT
+    # que la réécriture pose STATIC_FILE (condition toujours fausse : HSTS absent des fichiers de build/). Envoyé aussi
+    # en HTTP simple, il y est ignoré par les navigateurs (RFC 6797).
+    Header set Strict-Transport-Security "max-age=31536000; includeSubDomains" env=STATIC_FILE
+</IfModule>
+
+# Cache long pour les fichiers Vite (noms versionnés par empreinte)
+<IfModule mod_expires.c>
+    <If "%{REQUEST_URI} =~ m#^/build/assets/#">
+        ExpiresActive On
+        ExpiresDefault "access plus 1 year"
+        Header set Cache-Control "public, max-age=31536000, immutable"
+    </If>
+</IfModule>
+
+# Compression des réponses texte (pages, CSS, JS, JSON, SVG, XML) : Brotli si le module est présent,
+# sinon gzip (lot 8, performance). Les PDF et images, déjà compressés, ne sont pas concernés.
+<IfModule mod_brotli.c>
+    AddOutputFilterByType BROTLI_COMPRESS text/html text/plain text/css text/xml application/xml application/javascript text/javascript application/json application/ld+json image/svg+xml
+</IfModule>
+<IfModule !mod_brotli.c>
+    <IfModule mod_deflate.c>
+        AddOutputFilterByType DEFLATE text/html text/plain text/css text/xml application/xml application/javascript text/javascript application/json application/ld+json image/svg+xml
+    </IfModule>
+</IfModule>
+
+# Cache d'un mois pour les images (noms non versionnés : pas « immutable ») et l'image de partage
+<IfModule mod_expires.c>
+    <If "%{REQUEST_URI} =~ m#^/(images|uploads|partage)/# || %{REQUEST_URI} == '/favicon.svg'">
+        ExpiresActive On
+        ExpiresDefault "access plus 1 month"
+        Header set Cache-Control "public, max-age=2592000"
+    </If>
+</IfModule>

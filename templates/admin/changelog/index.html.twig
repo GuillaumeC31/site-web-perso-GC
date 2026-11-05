@@ -1,0 +1,24 @@
+{#
+  Écran : journal des versions (CHANGELOG.md), en lecture seule.
+  Affiché par : Admin\ChangelogController::index() (route admin_changelog).
+  Variables attendues :
+    - changelog   : HTML nettoyé (ChangelogRenderer : HTML brut du fichier échappé), ou null si le fichier manque
+    - app_version : version en cours (fichier VERSION)
+#}
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}{{ 'admin.changelog.title'|trans }}{% endblock %}
+
+{% block body %}
+    <h1 class="text-2xl font-bold dark:text-white">{{ 'admin.changelog.title'|trans }}</h1>
+    <p class="form-help mb-6">{{ 'admin.changelog.intro'|trans({'%version%': app_version}) }}</p>
+
+    <twig:Card>
+        {% if changelog is null %}
+            <p class="text-secondary-600 dark:text-secondary-300">{{ 'admin.changelog.missing'|trans }}</p>
+        {% else %}
+            {# HTML produit par ChangelogRenderer : HTML brut échappé, puis nettoyé par le sanitizer #}
+            <div class="prose prose-sm max-w-none dark:prose-invert" data-testid="changelog">{{ changelog|raw }}</div>
+        {% endif %}
+    </twig:Card>
+{% endblock %}

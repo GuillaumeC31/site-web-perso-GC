@@ -1,0 +1,114 @@
+{#
+  Assistant de l'espace recruteur (lot 7) : historique des échanges, questions guidées (sans IA ni
+  consentement, toujours disponibles) et question libre à l'IA Mistral AI (notice RGPD et case de
+  consentement avant la première question). Réponses en texte brut, échappées.
+  Inclus par : recruiter_area/home.html.twig (cadre Turbo « assistant » : les formulaires redirigent vers
+  l'accueil et seul ce cadre est remplacé).
+  Variables attendues :
+    - preview   : vrai dans l'aperçu de l'admin (formulaires inactifs, pas d'historique)
+    - assistant : null dans l'aperçu, sinon {
+        history (list<ChatMessage>), topics (sujets guidés), ai_enabled, consent_given,
+        remaining (questions libres restantes aujourd'hui), max_length (caractères) }
+  Formulaires : recruiter_assistant_guided, recruiter_assistant_ask (jeton CSRF « recruiter_assistant »).
+#}
+<turbo-frame id="assistant">
+<section id="assistant-section" class="card mt-12 scroll-mt-24" aria-labelledby="assistant-title">
+    <h2 id="assistant-title" class="text-xl font-bold text-secondary-900 dark:text-white">{{ 'assistant.title'|trans }}</h2>
+    <p class="mt-2 text-sm text-secondary-700 dark:text-secondary-300">{{ 'assistant.intro'|trans }}</p>
+
+    {% if not preview and app.request.hasPreviousSession %}
+        {% for type, messages in app.flashes(['assistant_error', 'assistant_notice']) %}
+            {% for message in messages %}
+                <twig:Alert type="{{ type == 'assistant_error' ? 'warning' : 'info' }}" class="mt-4">{{ message }}</twig:Alert>
+            {% endfor %}
+        {% endfor %}
+    {% endif %}
+
+    {% set history = assistant.history|default([]) %}
+    {% if history is not empty %}
+        <ol class="mt-6 space-y-4" aria-label="{{ 'assistant.history'|trans }}" data-testid="assistant-history">
+            {% for message in history %}
+                <li class="space-y-2">
+                    <p class="ml-auto w-fit max-w-[85%] rounded-2xl rounded-br-sm bg-primary-600 px-4 py-2 text-sm text-white">
+                        <span class="sr-only">{{ 'assistant.you'|trans }} : </span>{{ message.question }}
+                    </p>
+                    <div class="w-fit max-w-[85%] rounded-2xl rounded-bl-sm bg-secondary-100 px-4 py-2 text-sm text-secondary-900 dark:bg-secondary-800 dark:text-secondary-100">
+                        <p><span class="sr-only">{{ 'assistant.bot'|trans }} : </span>{{ message.answer }}</p>
+                        {% if message.notSpecified %}
+                            <p class="mt-2"><a href="{{ path('recruiter_question', {echange: message.id}) }}" class="link font-semibold" data-turbo-frame="_top" data-testid="assistant-question-link">{{ 'assistant.question_link'|trans }}</a></p>
+                        {% endif %}
+                        {% if message.outcome.guidedFallback %}
+                            <p class="mt-2"><a href="{{ path('contact_show') }}" class="link font-semibold" data-turbo-frame="_top">{{ 'assistant.contact_link'|trans }}</a></p>
+                        {% endif %}
+                        <p class="mt-1 text-xs text-secondary-500 dark:text-secondary-400">
+                            {{ message.outcome.ai ? 'assistant.source.ai'|trans({'%model%': message.model}) : ('assistant.source.' ~ (message.outcome.value == 'guided' ? 'guided' : 'site'))|trans }}
+                        </p>
+                    </div>
+                </li>
+            {% endfor %}
+        </ol>
+    {% endif %}
+
+    {# Questions guidées : sans IA, toujours disponibles #}
+    <div class="mt-6">
+        <h3 class="text-sm font-semibold text-secondary-900 dark:text-white">{{ 'assistant.guided_title'|trans }}</h3>
+        {% if preview %}
+            <div class="mt-3 flex flex-wrap gap-2">
+                {% for topic in constant('App\\Service\\Ai\\GuidedAssistant::TOPICS') %}
+                    <span class="btn btn-secondary btn-sm opacity-60" aria-disabled="true">{{ ('assistant.guided.' ~ topic)|trans }}</span>
+                {% endfor %}
+            </div>
+        {% else %}
+            <form method="post" action="{{ path('recruiter_assistant_guided') }}" class="mt-3 flex flex-wrap gap-2">
+                <input type="hidden" name="_token" value="{{ csrf_token('recruiter_assistant') }}">
+                {% for topic in assistant.topics %}
+                    <button type="submit" name="topic" value="{{ topic }}" class="btn btn-secondary btn-sm">{{ ('assistant.guided.' ~ topic)|trans }}</button>
+                {% endfor %}
+            </form>
+        {% endif %}
+    </div>
+
+    {# Question libre à l'IA #}
+    <div class="mt-8 border-t border-secondary-200 pt-6 dark:border-secondary-700">
+        <h3 class="text-sm font-semibold text-secondary-900 dark:text-white">{{ 'assistant.free_title'|trans }}</h3>
+        {% if not preview and not assistant.ai_enabled %}
+            <p class="mt-2 text-sm text-secondary-700 dark:text-secondary-300">{{ 'assistant.free_disabled'|trans }}
+                <a href="{{ path('contact_show') }}" class="link font-semibold" data-turbo-frame="_top">{{ 'assistant.contact_link'|trans }}</a></p>
+        {% else %}
+            {% if preview or not assistant.consent_given %}
+                <div class="mt-3 rounded-xl border border-secondary-200 bg-secondary-50 p-4 text-sm text-secondary-800 dark:border-secondary-700 dark:bg-secondary-900 dark:text-secondary-200" data-testid="assistant-rgpd-notice">
+                    <p class="font-semibold">{{ 'assistant.rgpd.title'|trans }}</p>
+                    <p class="mt-2">{{ 'assistant.rgpd.text'|trans }}</p>
+                    <p class="mt-2">{{ 'assistant.rgpd.mistral'|trans }}</p>
+                    <p class="mt-2">{{ 'assistant.rgpd.journal'|trans }} <a href="{{ path('legal_privacy') }}" class="link" data-turbo-frame="_top">{{ 'assistant.rgpd.privacy_link'|trans }}</a></p>
+                </div>
+            {% endif %}
+            {# Aperçu de l'admin : mêmes champs, inactifs, sans formulaire #}
+            {% if preview %}<div class="mt-4 space-y-3">{% else %}<form method="post" action="{{ path('recruiter_assistant_ask') }}" class="mt-4 space-y-3">
+                <input type="hidden" name="_token" value="{{ csrf_token('recruiter_assistant') }}">{% endif %}
+                <label for="assistant-question" class="form-label">{{ 'assistant.question_label'|trans }}</label>
+                <textarea id="assistant-question" name="question" rows="3" required maxlength="{{ assistant.max_length|default(500) }}"
+                          class="form-input w-full" aria-describedby="assistant-question-help" {{ preview ? 'disabled' }}></textarea>
+                <p id="assistant-question-help" class="text-xs text-secondary-600 dark:text-secondary-400">
+                    {{ 'assistant.question_help'|trans({'%max%': assistant.max_length|default(500)}) }}
+                    {% if not preview %}{{ 'assistant.remaining'|trans({'%count%': assistant.remaining}) }}{% endif %}
+                </p>
+                {% if preview or not assistant.consent_given %}
+                    <label class="flex items-start gap-2 text-sm text-secondary-800 dark:text-secondary-200">
+                        <input type="checkbox" name="consent" value="1" required class="mt-1" {{ preview ? 'disabled' }}>
+                        <span>{{ 'assistant.rgpd.consent'|trans }}</span>
+                    </label>
+                {% endif %}
+                {% if preview %}
+                    <span class="btn btn-primary opacity-60" aria-disabled="true">{{ 'assistant.submit'|trans }}</span>
+                {% else %}
+                    <twig:Button type="submit">{{ 'assistant.submit'|trans }}</twig:Button>
+                {% endif %}
+            {% if preview %}</div>{% else %}</form>{% endif %}
+            {% if not preview and assistant.consent_given %}
+                <p class="mt-3 text-xs text-secondary-600 dark:text-secondary-400">{{ 'assistant.rgpd.reminder'|trans }} <a href="{{ path('legal_privacy') }}" class="link" data-turbo-frame="_top">{{ 'assistant.rgpd.privacy_link'|trans }}</a></p>
+            {% endif %}
+        {% endif %}
+    </div>
+</section>
+</turbo-frame>

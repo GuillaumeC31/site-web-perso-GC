@@ -1,0 +1,52 @@
+{#
+  Outil : vieillissement artificiel UV (dose, durée d'exposition, durée réelle avec les cycles).
+  Inclus par : calculator/tool.html.twig. Contrôleur : calculator--vieillissement-uv.
+  Textes et valeurs par défaut repris de l'ancien site (ASTM G154, ISO 4892-3). D3 (2026-10-23) :
+  irradiance spectrale en W/(m²·nm) et dose en kJ/(m²·nm) à la longueur d'onde de contrôle de la lampe.
+#}
+{% import 'calculator/_macros.html.twig' as calc %}
+{% set c = 'calculator--vieillissement-uv' %}
+{% set t = 'data-' ~ c ~ '-target' %}
+
+<div data-controller="{{ c }}" class="space-y-6">
+    <section class="card space-y-3 text-sm text-secondary-700 dark:text-secondary-300">
+        <h2 class="text-lg font-bold text-secondary-900 dark:text-white">Comprendre les essais de vieillissement</h2>
+        <p>Règle fondamentale : <strong>dose = irradiance × temps d'exposition</strong>. Dans l'ASTM G154, l'irradiance est <strong>spectrale</strong>, mesurée à une longueur d'onde de contrôle : elle s'exprime en W/(m²·nm) et la dose en kJ/(m²·nm) à cette longueur d'onde.</p>
+        <ul class="list-disc space-y-1 pl-5">
+            <li><strong>Irradiance courante :</strong> 0,89 W/(m²·nm) à 340 nm (UVA-340) ou 0,71 W/(m²·nm) à 310 nm (UVB-313).</li>
+            <li><strong>Temps UV et temps machine :</strong> les normes prévoient des phases de condensation (obscurité) ; seules les heures lampes allumées comptent dans la dose.</li>
+        </ul>
+        <div class="max-w-sm">{{ calc.select('uv-lamp', 'Lampe de référence', {uva340: 'UVA-340 (contrôle à 340 nm)', uvb313: 'UVB-313 (contrôle à 310 nm)'}, {(t): 'lamp', 'data-action': 'change->' ~ c ~ '#chooseLamp'}) }}</div>
+        <p class="font-medium text-secondary-900 dark:text-white">Unités : irradiance en W/(m²·nm), dose en kJ/(m²·nm), à <span {{ t }}="wavelength">340</span> nm.</p>
+    </section>
+
+    {% set fields %}
+        {{ calc.field('uv-irradiance', 'Irradiance spectrale', 'W/(m²·nm)', {(t): 'doseIrradiance', 'data-action': 'input->' ~ c ~ '#calcDose'}, '0,89') }}
+        {{ calc.field('uv-hours', 'Temps d\'exposition UV', 'h', {(t): 'doseHours', 'data-action': 'input->' ~ c ~ '#calcDose'}, '1000') }}
+        {{ calc.result('uv-dose', 'Dose d\'irradiation', 'kJ/(m²·nm)', {(t): 'dose'}, 'uv-irradiance uv-hours') }}
+        {{ calc.result('uv-dose-mj', 'Soit', 'MJ/(m²·nm)', {(t): 'doseMj'}, 'uv-irradiance uv-hours') }}
+        {{ calc.message({(t): 'doseMessage'}) }}
+        {{ calc.note({}, 'Temps d\'allumage des lampes uniquement.') }}
+    {% endset %}
+    {{ calc.block('Dose atteinte', 'Dose (kJ/(m²·nm)) = irradiance (W/(m²·nm)) × heures × 3,6', fields) }}
+
+    {% set fields %}
+        {{ calc.field('uv-target', 'Dose cible', 'kJ/(m²·nm)', {(t): 'timeDose', 'data-action': 'input->' ~ c ~ '#calcTime'}, '3204') }}
+        {{ calc.field('uv-irradiance-2', 'Irradiance spectrale', 'W/(m²·nm)', {(t): 'timeIrradiance', 'data-action': 'input->' ~ c ~ '#calcTime'}, '0,89') }}
+        {{ calc.result('uv-time', 'Temps UV requis', 'h', {(t): 'timeHours'}, 'uv-target uv-irradiance-2') }}
+        {{ calc.result('uv-time-days', 'Soit (sans cycle)', 'jours', {(t): 'timeDays'}, 'uv-target uv-irradiance-2') }}
+        {{ calc.message({(t): 'timeMessage'}) }}
+    {% endset %}
+    {{ calc.block('Durée pour une dose visée', 'Heures = dose / (irradiance × 3,6)', fields) }}
+
+    {% set fields %}
+        {{ calc.field('uv-cycle-uv', 'Durée de la phase UV', 'h', {(t): 'cycleUv', 'data-action': 'input->' ~ c ~ '#calcCycles'}, '8') }}
+        {{ calc.field('uv-cycle-dark', 'Durée de la condensation (obscurité)', 'h', {(t): 'cycleDark', 'data-action': 'input->' ~ c ~ '#calcCycles'}, '4') }}
+        {{ calc.field('uv-cycle-target', 'Temps UV visé', 'h', {(t): 'cycleTarget', 'data-action': 'input->' ~ c ~ '#calcCycles'}, '1000') }}
+        {{ calc.result('uv-machine', 'Durée réelle de l\'essai', 'h', {(t): 'machineHours'}, 'uv-cycle-uv uv-cycle-dark uv-cycle-target') }}
+        {{ calc.result('uv-machine-days', 'Soit', 'jours', {(t): 'machineDays'}, 'uv-cycle-uv uv-cycle-dark uv-cycle-target') }}
+        {{ calc.message({(t): 'cycleMessage'}) }}
+        {{ calc.note({}, 'Exemple : cycle 1 de l\'ASTM G154, 8 h d\'UV puis 4 h de condensation.') }}
+    {% endset %}
+    {{ calc.block('Cycles : temps machine et temps UV', 'Temps machine = temps UV × (phase UV + condensation) / phase UV', fields) }}
+</div>

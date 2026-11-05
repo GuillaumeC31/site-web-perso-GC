@@ -1,0 +1,68 @@
+{#
+  Communication › Notifications : tableau « événement → canaux » (e-mail, Discord, Telegram) avec la catégorie de
+  chaque événement (adresse de l'e-mail : Recrutement ou Général du site), état des canaux, notification de test
+  par canal. Déplacé de Paramètres le 2026-10-29 (l'ancienne adresse redirige ici).
+  Affiché par : Admin\CommunicationController::notifications() (route admin_communication_notifications).
+  Variables attendues :
+    - tab, form (CommunicationNotificationsType : champs channels_<événement>), events (NotificationEvent::cases())
+    - addresses  : catégorie => {address, source, fictitious}
+    - configured : canal => configuré ?
+#}
+{% extends 'admin/communication/_layout.html.twig' %}
+{% import 'admin/communication/_macros.html.twig' as ui %}
+
+{% block tab_content %}
+    {{ ui.info('notifications') }}
+
+    <section class="card mb-6">
+            <h2 class="mb-3 text-lg font-semibold text-secondary-900 dark:text-white">{{ 'admin.communication.notifications.channels'|trans }}</h2>
+        <ul class="grid gap-2 text-sm sm:grid-cols-3" data-testid="notification-channels">
+            {% for channel, ok in configured %}
+                <li class="flex flex-col items-start gap-2 rounded-xl border border-secondary-200 p-3 dark:border-secondary-700">
+                    <span class="font-semibold">{{ ('notification.channel.' ~ channel)|trans }}</span>
+                    {{ ui.state(ok ? 'ok' : 'not_applicable', (ok ? 'admin.communication.configured' : 'admin.communication.not_configured')|trans) }}
+                    <form method="post" action="{{ path('admin_communication_test_channel', {channel: channel}) }}" id="notification-test-{{ channel }}">
+                        <input type="hidden" name="_token" value="{{ csrf_token('notification_test_' ~ channel) }}">
+                        <button type="submit" class="btn btn-secondary btn-sm">{{ 'admin.site_settings.test_button'|trans }}<span class="sr-only"> ({{ ('notification.channel.' ~ channel)|trans }})</span></button>
+                    </form>
+                </li>
+            {% endfor %}
+        </ul>
+        <p class="form-help mt-3">{{ 'admin.site_settings.channels_help'|trans }}</p>
+    </section>
+
+    <section class="card">
+            <h2 class="mb-3 text-lg font-semibold text-secondary-900 dark:text-white">{{ 'admin.communication.notifications.table'|trans }}</h2>
+        {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
+            <div class="relative overflow-x-auto">
+                <table class="w-full text-left text-sm" data-testid="notification-table">
+                    <caption class="sr-only">{{ 'admin.communication.notifications.table'|trans }}</caption>
+                    <thead>
+                        <tr class="border-b border-secondary-200 dark:border-secondary-700">
+                            <th scope="col" class="py-2 pr-3">{{ 'admin.communication.notifications.event'|trans }}</th>
+                            <th scope="col" class="py-2 pr-3">{{ 'admin.communication.notifications.category'|trans }} {{ ui.help('admin.communication.notifications.category'|trans, 'admin.communication.help.category'|trans) }}</th>
+                            {% for channel in configured|keys %}<th scope="col" class="px-2 py-2 text-center">{{ ('notification.channel.' ~ channel)|trans }}</th>{% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for event in events %}
+                            {% set field = form['channels_' ~ event.value] %}
+                            <tr class="border-b border-secondary-100 dark:border-secondary-800" data-event="{{ event.value }}">
+                                <th scope="row" class="py-2 pr-3 font-medium">{{ event.translationKey|trans }}</th>
+                                <td class="py-2 pr-3" data-testid="event-category">{{ event.category.translationKey|trans }}<span class="block text-xs text-secondary-700 break-all dark:text-secondary-300">{{ addresses[event.category.value].address ?? 'admin.communication.address_none'|trans }}</span></td>
+                                {% for child in field %}
+                                    <td class="px-2 py-2 text-center">
+                                        {{ form_widget(child) }}
+                                        {{ form_label(child, child.vars.label|trans ~ ' : ' ~ event.translationKey|trans, {label_attr: {class: 'sr-only'}}) }}
+                                    </td>
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {{ form_rest(form) }}
+            <div class="mt-4"><twig:Button type="submit">{{ 'admin.crud.save'|trans }}</twig:Button></div>
+        {{ form_end(form) }}
+    </section>
+{% endblock %}

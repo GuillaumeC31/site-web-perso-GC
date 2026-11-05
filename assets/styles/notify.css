@@ -1,0 +1,67 @@
+/*
+ * Thème des fenêtres et messages (SweetAlert2, contrôleur « notify », assets/lib/notify.js), chargé à la
+ * demande avec SweetAlert2 (assets/lib/swal.js), après sa feuille : nos règles, de spécificité plus forte,
+ * l'emportent. Couleurs du site (turquoise, ardoise), police Inter, mode sombre suivi via .dark.
+ * Contrastes AA : textes secondary-900 / secondary-100, boutons .btn-primary et .btn-danger du site.
+ */
+@reference "./app.css";
+
+.swal2-container {
+    --swal2-backdrop: rgb(15 23 42 / 0.55);
+    --swal2-outline: 0 0 0 3px color-mix(in oklab, var(--color-primary-600) 45%, transparent);
+    --swal2-timer-progress-bar-background: var(--color-primary-600);
+    font-family: var(--font-sans);
+}
+
+.swal2-container .gc-swal {
+    --swal2-background: var(--color-white);
+    --swal2-color: var(--color-secondary-900);
+    --swal2-border-radius: 1rem;
+    --swal2-close-button-color: var(--color-secondary-600);
+    @apply border border-secondary-200 font-sans shadow-xl;
+}
+
+.dark .swal2-container .gc-swal {
+    --swal2-background: var(--color-secondary-800);
+    --swal2-color: var(--color-secondary-100);
+    --swal2-close-button-color: var(--color-secondary-300);
+    @apply border-secondary-700;
+}
+
+.dark .swal2-container {
+    --swal2-backdrop: rgb(2 6 23 / 0.7);
+    --swal2-timer-progress-bar-background: var(--color-primary-400);
+}
+
+.swal2-container .gc-swal .gc-swal-title {
+    @apply text-xl font-bold text-secondary-900 dark:text-white;
+}
+
+.swal2-container .gc-swal .gc-swal-text {
+    @apply text-base/relaxed text-secondary-700 dark:text-secondary-200;
+}
+
+.swal2-container .gc-swal .gc-swal-text a {
+    @apply font-medium text-primary-700 underline decoration-primary-300 underline-offset-4 hover:text-primary-800 dark:text-primary-300 dark:decoration-primary-700 dark:hover:text-primary-200;
+}
+
+.swal2-container .gc-swal .gc-swal-actions {
+    @apply gap-3;
+}
+
+.swal2-container .gc-swal .gc-swal-close:focus-visible {
+    @apply outline-2 outline-offset-2 outline-primary-600 dark:outline-primary-400;
+}
+
+.swal2-container .gc-swal.gc-swal-toast {
+    @apply rounded-xl text-sm font-medium;
+}
+
+.swal2-container .gc-swal .swal2-icon.swal2-info,
+.swal2-container .gc-swal .swal2-icon.swal2-question {
+    @apply border-primary-600 text-primary-700 dark:border-primary-400 dark:text-primary-300;
+}
+
+.swal2-container .gc-swal .swal2-icon.swal2-warning {
+    @apply border-amber-500 text-amber-700 dark:text-amber-400;
+}

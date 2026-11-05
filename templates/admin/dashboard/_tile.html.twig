@@ -1,0 +1,50 @@
+{#
+  Tuile du tableau de bord : titre, statut (icône et texte), valeur principale, détails, lien.
+  Inclus par : admin/dashboard/index.html.twig.
+  Variables attendues :
+    - tile : tuile de DashboardMetrics::getTiles() (id, status, value, value_key, lines, link, items)
+  Blocs :
+    - actions : boutons propres à la tuile (ex. e-mail de test), vide par défaut
+  Les paramètres de traduction qui sont eux-mêmes des clés (admin.…) sont traduits avant usage.
+#}
+<section class="flex flex-col rounded-2xl border bg-white p-5 shadow-xs dark:bg-secondary-800 {{ tile.status == 'problem' ? 'border-red-300 dark:border-red-800' : (tile.status == 'warning' ? 'border-amber-300 dark:border-amber-700' : 'border-secondary-200 dark:border-secondary-700') }}"
+         aria-labelledby="tile-{{ tile.id }}-title" data-testid="tile-{{ tile.id }}" data-status="{{ tile.status }}">
+    <div class="flex items-start justify-between gap-3">
+        <h2 id="tile-{{ tile.id }}-title" class="text-base font-bold text-secondary-900 dark:text-white">{{ ('admin.dashboard.tile.' ~ tile.id)|trans }}</h2>
+        {{ include('admin/dashboard/_status.html.twig', {status: tile.status}, with_context = false) }}
+    </div>
+    <p class="mt-3">
+        <span class="block text-3xl font-bold tabular-nums text-secondary-900 dark:text-white" data-testid="tile-{{ tile.id }}-value">{{ tile.id == 'ai' ? ('admin.assistant.state.' ~ tile.value)|trans : tile.value }}</span>
+        <span class="text-sm text-secondary-600 dark:text-secondary-300">{{ tile.value_key|trans }}</span>
+    </p>
+    {% if tile.lines is not empty %}
+        <ul class="mt-3 space-y-1.5 text-sm text-secondary-700 dark:text-secondary-300">
+            {% for line in tile.lines %}
+                <li class="flex items-start gap-1.5">
+                    {% if line.status is defined %}{{ include('admin/dashboard/_status.html.twig', {status: line.status, small: true}, with_context = false) }}{% endif %}
+                    <span>{{ line.key|trans(line.params|map(value => value matches '/^admin\\./' ? value|trans : value)) }}</span>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    {% if tile.items is not empty %}
+        {% set shown = constant('App\\Service\\Dashboard\\DashboardMetrics::CONTENT_ITEMS_SHOWN') %}
+        <ul class="mt-3 space-y-1.5 text-sm">
+            {% for item in tile.items|slice(0, shown) %}
+                {{ include('admin/dashboard/_content_item.html.twig', {item: item}, with_context = false) }}
+            {% endfor %}
+        </ul>
+        {% if tile.items|length > shown %}
+            <details class="mt-2 text-sm">
+                <summary class="cursor-pointer font-medium text-primary-700 dark:text-primary-300">{{ 'admin.dashboard.show_all'|trans({'%count%': tile.items|length - shown}) }}</summary>
+                <ul class="mt-2 space-y-1.5">
+                    {% for item in tile.items|slice(shown) %}
+                        {{ include('admin/dashboard/_content_item.html.twig', {item: item}, with_context = false) }}
+                    {% endfor %}
+                </ul>
+            </details>
+        {% endif %}
+    {% endif %}
+    {% block actions %}{% endblock %}
+    <p class="mt-auto pt-4 text-sm"><a href="{{ path(tile.link.route, tile.link.params) }}" class="link">{{ tile.link.label|trans }}</a></p>
+</section>

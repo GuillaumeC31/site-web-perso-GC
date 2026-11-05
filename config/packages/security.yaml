@@ -1,0 +1,101 @@
+# Sécurité du site : administration protégée par mot de passe + clé YubiKey (WebAuthn).
+#
+# 1. Identifiant + mot de passe (form_login) : donne ROLE_ADMIN, et rien d'autre.
+# 2. Clé YubiKey vérifiée (App\Controller\Admin\SecondFactorController) : pose le
+#    marqueur de session « clé vérifiée » ; l'attribut ADMIN_KEY_VERIFIED
+#    (App\Security\Voter\SecondFactorVoter) est exigé par tous les écrans d'admin.
+#
+# Aucune réinitialisation par e-mail : mot de passe et clés se réinitialisent
+# uniquement par SSH (app:admin:reset-password, app:admin:reset-webauthn).
+#
+# Espace recruteur (lot 6) : pare-feu séparé « recruiter », connexion par lien magique (login_link)
+# de 30 minutes, à usage unique, vérifié en POST (les scanners de liens des messageries ne le
+# consomment pas). Propriétés signées : identifiant, statut, échéance et dernière connexion ; un
+# changement (révocation, renouvellement, connexion) rend caducs les liens en circulation.
+# App\Security\RecruiterUserChecker refuse tout accès non validé ou échu.
+security:
+    password_hashers:
+        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
+
+    providers:
+        app_user_provider:
+            entity:
+                class: App\Entity\User
+                property: username
+        recruiter_provider:
+            entity:
+                class: App\Entity\Recruiter
+                property: email
+
+    firewalls:
+        dev:
+            # Outils de développement et fichiers statiques sans sécurité
+            pattern: ^/(_profiler|_wdt|build)/
+            security: false
+        recruiter:
+            pattern: ^/espace-recruteur
+            lazy: true
+            provider: recruiter_provider
+            user_checker: App\Security\RecruiterUserChecker
+            entry_point: App\Security\RecruiterEntryPoint
+            login_link:
+                check_route: recruiter_login_check
+                check_post_only: true
+                signature_properties: ['id', 'statusValue', 'accessExpiresAtTimestamp', 'lastLoginAtTimestamp']
+                lifetime: 1800
+                max_uses: 1
+                used_link_cache: 'cache.app'
+                default_target_path: recruiter_home
+                always_use_default_target_path: true
+                failure_path: recruiter_link_invalid
+            logout:
+                path: recruiter_logout
+                target: recruiter_access
+                invalidate_session: true
+        main:
+            lazy: true
+            provider: app_user_provider
+
+            form_login:
+                login_path: admin_login
+                check_path: admin_login
+                enable_csrf: true
+                username_parameter: _username
+                password_parameter: _password
+
+            # 5 tentatives par 15 minutes (par identifiant et par IP)
+            login_throttling:
+                max_attempts: 5
+                interval: '15 minutes'
+
+            logout:
+                path: admin_logout
+                target: home
+                invalidate_session: true
+
+            # Admin connecté sans clé vérifiée : redirection vers l'étape YubiKey
+            access_denied_handler: App\Security\AdminAccessDeniedHandler
+
+    # Seule la première règle qui correspond est appliquée.
+    # Le préfixe admin vient de ADMIN_PATH (voir App\Routing\AdminPath).
+    access_control:
+        # Espace recruteur : pages publiques (demande, lien, prolongation), le reste réservé aux recruteurs validés
+        - { path: '^/espace-recruteur/?$', roles: PUBLIC_ACCESS }
+        - { path: '^/espace-recruteur/(connexion|lien-invalide|prolongation|rappels|deconnexion)', roles: PUBLIC_ACCESS }
+        - { path: '^/espace-recruteur/', roles: ROLE_RECRUITER }
+        # Connexion et déconnexion
+        - { path: '^/%app.admin_path%/(connexion|deconnexion)$', roles: PUBLIC_ACCESS }
+        # Étape YubiKey et enrôlement : mot de passe validé, clé pas encore vérifiée
+        - { path: '^/%app.admin_path%/securite/(cle|enrolement)(/|$)', roles: ROLE_ADMIN }
+        # Tout le reste de l'admin : mot de passe ET clé vérifiée dans la session
+        - { path: '^/%app.admin_path%(/|$)', roles: ADMIN_KEY_VERIFIED }
+
+when@test:
+    security:
+        password_hashers:
+            # Coût minimal en test pour accélérer les tests
+            Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface:
+                algorithm: auto
+                cost: 4 # Lowest possible value for bcrypt
+                time_cost: 3 # Lowest possible value for argon
+                memory_cost: 10 # Lowest possible value for argon

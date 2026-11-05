@@ -1,0 +1,20 @@
+{#
+  Bouton de décision de la fiche d'un recruteur (formulaire POST avec jeton CSRF).
+  Inclus par : admin/recruiter/show.html.twig.
+  Variables attendues :
+    - recruiter     : Recruiter
+    - decision      : approve, refuse, revoke ou renew (Admin\RecruiterController::decide())
+    - label         : texte du bouton
+    - variant       : variante du composant Button
+    - confirm       : texte de la confirmation, facultatif (fenêtre « notify » ; sans JavaScript, le
+                      serveur affiche une page de confirmation)
+    - confirm_title : question de la confirmation
+    - danger        : vrai pour un bouton de confirmation rouge
+#}
+{% import '_partials/_confirm.html.twig' as confirmation %}
+<form method="post" action="{{ path('admin_recruiter_decide', {id: recruiter.id}) }}" {% if confirm|default(null) %}{{ confirmation.attributes(confirm_title, confirm, label, danger|default(false)) }}{% endif %}>
+    <input type="hidden" name="decision" value="{{ decision }}">
+    <input type="hidden" name="_token" value="{{ csrf_token('recruiter_decide_' ~ recruiter.id) }}">
+    {% if confirm|default(null) %}{{ confirmation.field() }}{% endif %}
+    <twig:Button type="submit" variant="{{ variant }}" size="sm">{{ label }}</twig:Button>
+</form>

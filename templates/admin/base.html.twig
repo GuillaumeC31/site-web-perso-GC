@@ -1,0 +1,177 @@
+{#
+  Layout de l'administration (barre latérale + en-tête + contenu).
+  Étendu par : admin/dashboard/index.html.twig et tous les futurs écrans d'admin.
+  Composant Tailkit UI : a-l-light-sidebar-01, adapté (sans recherche ni notifications,
+  barre latérale mobile pilotée par le contrôleur Stimulus « disclosure »).
+  Blocs :
+    - title : titre de l'écran
+    - body  : contenu principal
+  Pages non indexées (noindex). Variables globales : site_owner_name ; pied de page : app_version() (fichier VERSION).
+  Pastille du menu « Tableau de bord » : admin_attention_count() (DashboardMetrics::getAttentionCount()) ;
+  pastille « Messages » : admin_unread_messages() (messages non lus, DashboardMetrics::getUnreadMessages()).
+#}
+{# Menu : sections de liens. « prefix » sert à repérer la page active (toutes les routes du module) ; « exclude » écarte un module voisin au préfixe commun. #}
+{% set admin_nav = [
+    {section: null, items: [
+        {route: 'admin_dashboard', prefix: 'admin_dashboard', label: 'admin.nav.dashboard', icon: 'M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25'},
+    ]},
+    {section: 'admin.section.content', items: [
+        {route: 'admin_profile_edit', prefix: 'admin_profile', label: 'admin.nav.profile', icon: 'M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z'},
+        {route: 'admin_key_figure_index', prefix: 'admin_key_figure', label: 'admin.nav.key_figures', icon: 'M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z'},
+        {route: 'admin_experience_index', prefix: 'admin_experience', label: 'admin.nav.experiences', icon: 'M20.25 14.15v4.25c0 1.094-.787 2.036-1.872 2.18-2.087.277-4.216.42-6.378.42s-4.291-.143-6.378-.42c-1.085-.144-1.872-1.086-1.872-2.18v-4.25m16.5 0a2.18 2.18 0 00.75-1.661V8.706c0-1.081-.768-2.015-1.837-2.175a48.114 48.114 0 00-3.413-.387m4.5 8.006c-.194.165-.42.295-.673.38A23.978 23.978 0 0112 15.75c-2.648 0-5.195-.429-7.577-1.22a2.016 2.016 0 01-.673-.38m0 0A2.18 2.18 0 013 12.489V8.706c0-1.081.768-2.015 1.837-2.175a48.111 48.111 0 013.413-.387m7.5 0V5.25A2.25 2.25 0 0013.5 3h-3a2.25 2.25 0 00-2.25 2.25v.894m7.5 0a48.667 48.667 0 00-7.5 0'},
+        {route: 'admin_pillar_index', prefix: 'admin_pillar_', label: 'admin.nav.skill_pillars', icon: 'M6.429 9.75L2.25 12l4.179 2.25m0-4.5l5.571 3 5.571-3m-11.142 0L2.25 7.5 12 2.25l9.75 5.25-4.179 2.25m0 0L21.75 12l-4.179 2.25m0 0l4.179 2.25L12 21.75 2.25 16.5l4.179-2.25m11.142 0l-5.571 3-5.571-3'},
+        {route: 'admin_skill_index', prefix: 'admin_skill_', label: 'admin.nav.skills', icon: 'M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 11-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 004.486-6.336l-3.276 3.277a3.004 3.004 0 01-2.25-2.25l3.276-3.276a4.5 4.5 0 00-6.336 4.486c.091 1.076-.071 2.264-.904 2.95l-.102.085m-1.745 1.437L5.909 7.5H4.5L2.25 3.75l1.5-1.5L7.5 4.5v1.409l4.26 4.26m-1.745 1.437l1.745-1.437'},
+        {route: 'admin_education_index', prefix: 'admin_education', label: 'admin.nav.educations', icon: 'M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 00-2.658-.813A59.905 59.905 0 0112 3.493a59.902 59.902 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.697 50.697 0 0112 13.489a50.702 50.702 0 017.74-3.342'},
+        {route: 'admin_certification_index', prefix: 'admin_certification', label: 'admin.nav.certifications', icon: 'M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z'},
+        {route: 'admin_language_index', prefix: 'admin_language', label: 'admin.nav.languages', icon: 'M10.5 21l5.25-11.25L21 21m-9-3h7.5M3 5.621a48.474 48.474 0 016-.371m0 0c1.12 0 2.233.038 3.334.114M9 5.25V3m3.334 2.364C11.176 10.658 7.69 15.08 3 17.502m9.334-12.138c.896.061 1.785.147 2.666.257m-4.589 8.495a18.023 18.023 0 01-3.827-5.802'},
+        {route: 'admin_recruitment_argument_index', prefix: 'admin_recruitment_argument', label: 'admin.nav.recruitment_arguments', icon: 'M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z'},
+        {route: 'admin_cv_entry_index', prefix: 'admin_cv_entry', label: 'admin.nav.cv_entries', icon: 'M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zM3.75 12h.007v.008H3.75V12zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm-.375 5.25h.007v.008H3.75v-.008zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z'},
+    ]},
+    {section: 'admin.section.projects', items: [
+        {route: 'admin_project_index', prefix: 'admin_project_', exclude: 'admin_project_category', label: 'admin.nav.projects', icon: 'M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z'},
+        {route: 'admin_project_category_index', prefix: 'admin_project_category', label: 'admin.nav.project_categories', icon: 'M9.568 3H5.25A2.25 2.25 0 003 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 005.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 009.568 3z M6 6h.008v.008H6V6z'},
+    ]},
+    {section: 'admin.section.recruiters', items: [
+        {route: 'admin_recruiter_index', prefix: 'admin_recruiter', label: 'admin.nav.recruiters', icon: 'M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z'},
+        {route: 'admin_contact_message_index', prefix: 'admin_contact_message', label: 'admin.nav.contact_messages', icon: 'M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75'},
+        {route: 'admin_assistant_index', prefix: 'admin_assistant', label: 'admin.nav.assistant', icon: 'M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z'},
+        {route: 'admin_ai_knowledge_index', prefix: 'admin_ai_knowledge', label: 'admin.nav.ai_knowledge', icon: 'M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456Z'},
+        {route: 'admin_communication', prefix: 'admin_communication', label: 'admin.nav.communication', icon: 'M21.75 9v.906a2.25 2.25 0 01-1.183 1.981l-6.478 3.488M2.25 9v.906a2.25 2.25 0 001.183 1.981l6.478 3.488m8.839 2.51-4.66-2.51m0 0-1.023-.55a2.25 2.25 0 00-2.134 0l-1.022.55m0 0-4.661 2.51m16.5 1.615a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V8.844a2.25 2.25 0 011.183-1.981l7.5-4.039a2.25 2.25 0 012.134 0l7.5 4.039a2.25 2.25 0 011.183 1.98V19.5z'},
+        {route: 'admin_site_settings_edit', prefix: 'admin_site_settings', label: 'admin.nav.site_settings', icon: 'M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75'},
+    ]},
+    {section: 'admin.section.calculator', items: [
+        {route: 'admin_calculator_tool_index', prefix: 'admin_calculator_tool', label: 'admin.nav.calculator_tools', icon: 'M15.75 15.75V18m-7.5-6.75h.008v.008H8.25v-.008zm0 2.25h.008v.008H8.25V13.5zm0 2.25h.008v.008H8.25v-.008zm0 2.25h.008v.008H8.25V18zm2.498-6.75h.007v.008h-.007v-.008zm0 2.25h.007v.008h-.007V13.5zm0 2.25h.007v.008h-.007v-.008zm0 2.25h.007v.008h-.007V18zm2.504-6.75h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V13.5zm0 2.25h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V18zm2.498-6.75h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V13.5zM8.25 6h7.5v2.25h-7.5V6zM12 2.25c-1.892 0-3.758.11-5.593.322C5.307 2.7 4.5 3.65 4.5 4.757V19.5a2.25 2.25 0 002.25 2.25h10.5a2.25 2.25 0 002.25-2.25V4.757c0-1.108-.806-2.057-1.907-2.185A48.507 48.507 0 0012 2.25z'},
+        {route: 'admin_fluid_index', prefix: 'admin_fluid', label: 'admin.nav.fluids', icon: 'M12 3.75c2.25 3 5.25 6.4 5.25 9.75a5.25 5.25 0 01-10.5 0c0-3.35 3-6.75 5.25-9.75z'},
+        {route: 'admin_refrigerant_index', prefix: 'admin_refrigerant', label: 'admin.nav.refrigerants', icon: 'M12 3v18m0-18l-3 3m3-3l3 3m-3 15l-3-3m3 3l3-3M3 12h18M3 12l3-3m-3 3l3 3m15-3l-3-3m3 3l-3 3'},
+        {route: 'admin_fgas_rule_index', prefix: 'admin_fgas_rule', label: 'admin.nav.fgas_rules', icon: 'M12 3l7.5 3v5.25c0 4.5-3.2 8.3-7.5 9.75-4.3-1.45-7.5-5.25-7.5-9.75V6L12 3z'},
+        {route: 'admin_panel_model_index', prefix: 'admin_panel_model', label: 'admin.nav.panel_models', icon: 'M3.75 4.5h16.5v15H3.75v-15zM9 4.5v15M15 4.5v15'},
+        {route: 'admin_climatic_profile_index', prefix: 'admin_climatic_profile', label: 'admin.nav.climatic_profiles', icon: 'M12 3v10.5m0 0a3 3 0 100 6 3 3 0 000-6zm-3-7.5h6'},
+        {route: 'admin_printer3d_index', prefix: 'admin_printer3d', label: 'admin.nav.printers3d', icon: 'M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9'},
+        {route: 'admin_energy_provider_index', prefix: 'admin_energy_provider', label: 'admin.nav.energy_providers', icon: 'M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z'},
+    ]},
+    {section: 'admin.section.security', items: [
+        {route: 'admin_security_key_index', prefix: 'admin_security_key', label: 'admin.nav.security_keys', icon: 'M15.75 5.25a3 3 0 013 3m3 0a6 6 0 01-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1121.75 8.25z'},
+        {route: 'admin_security_event_index', prefix: 'admin_security_event', label: 'admin.nav.security_events', icon: 'M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25z'},
+    ]},
+] %}
+{% set current_route = app.current_route %}
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noindex, nofollow">
+        <meta name="color-scheme" content="light dark">
+        <title>{% block title %}{{ 'admin.meta_title'|trans }}{% endblock %} · {{ site_owner_name }}</title>
+        <link rel="icon" href="{{ asset('favicon.ico') }}" sizes="48x48">
+        <link rel="icon" href="{{ asset('favicon.svg') }}" type="image/svg+xml">
+        {# Nonce CSP lu par Turbo et assets/lib/csp_nonce.js (navigations Turbo) #}
+        <meta name="csp-nonce" content="{{ csp_nonce() }}">
+        {{ include('_partials/_theme_script.html.twig') }}
+        {{ vite_entry_link_tags('app') }}
+        {{ vite_entry_script_tags('app') }}
+    </head>
+    <body>
+        <div class="mx-auto flex min-h-dvh w-full min-w-80 flex-col bg-secondary-100 lg:pl-64 dark:bg-secondary-900 dark:text-secondary-100"
+             data-controller="disclosure"
+             data-disclosure-open-class="translate-x-0"
+             data-disclosure-closed-class="-translate-x-full">
+
+            {# Barre latérale #}
+            <nav id="admin-sidebar"
+                 class="fixed top-0 bottom-0 left-0 z-50 flex h-full w-full -translate-x-full flex-col border-r border-secondary-200 bg-white transition-transform duration-300 ease-out lg:w-64 lg:translate-x-0 dark:border-secondary-800 dark:bg-secondary-800 dark:text-secondary-200"
+                 data-disclosure-target="panel"
+                 aria-label="{{ 'admin.sidebar_navigation'|trans }}">
+                <div class="flex h-16 w-full flex-none items-center justify-between px-4 lg:justify-center dark:bg-secondary-600/25">
+                    <a href="{{ path('admin_dashboard') }}" class="group inline-flex items-center gap-2 text-lg font-bold tracking-wide text-secondary-900 hover:text-secondary-600 dark:text-secondary-100 dark:hover:text-secondary-300">
+                        <span class="inline-flex size-7 items-center justify-center rounded-lg bg-primary-700 text-xs font-black text-white" aria-hidden="true">GC</span>
+                        <span>{{ 'admin.brand'|trans }}</span>
+                    </a>
+                    <div class="lg:hidden">
+                        <button type="button" class="btn btn-secondary btn-sm" data-action="disclosure#close" aria-controls="admin-sidebar">
+                            <span class="sr-only">{{ 'admin.close_sidebar'|trans }}</span>
+                            <svg class="-mx-0.5 size-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="overflow-y-auto">
+                    <div class="w-full space-y-1 p-4">
+                        {% for group in admin_nav %}
+                        {% if group.section %}
+                            <div class="px-3 pt-5 pb-2 text-xs font-semibold tracking-wider text-secondary-500 uppercase dark:text-secondary-400">{{ group.section|trans }}</div>
+                        {% endif %}
+                        {% for item in group.items %}
+                            {% set is_current = current_route starts with item.prefix and not (item.exclude is defined and current_route starts with item.exclude) %}
+                            <a href="{{ path(item.route) }}"
+                               class="group flex items-center gap-2 rounded-lg border px-2.5 text-sm font-medium {{ is_current ? 'border-primary-100 bg-primary-50 text-secondary-900 dark:border-transparent dark:bg-secondary-700/75 dark:text-white' : 'border-transparent text-secondary-800 hover:bg-primary-50 hover:text-secondary-900 dark:text-secondary-200 dark:hover:bg-secondary-700/75 dark:hover:text-white' }}"
+                               {% if is_current %}aria-current="page"{% endif %}>
+                                <span class="flex flex-none items-center {{ is_current ? 'text-primary-600 dark:text-secondary-300' : 'text-secondary-400 group-hover:text-primary-600 dark:text-secondary-500' }}">
+                                    <svg class="size-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="{{ item.icon }}"/>
+                                    </svg>
+                                </span>
+                                <span class="grow py-2">{{ item.label|trans }}</span>
+                                {# Pastille « Messages » : messages non lus de la boîte (hors archivés) #}
+                                {% if item.route == 'admin_contact_message_index' and is_granted('ADMIN_KEY_VERIFIED') %}
+                                    {% set unread = admin_unread_messages() %}
+                                    {% if unread > 0 %}
+                                        <span class="rounded-full bg-red-700 px-2 py-0.5 text-xs font-bold text-white tabular-nums" data-testid="admin-unread-badge">{{ unread }}<span class="sr-only"> {{ 'admin.contact_message.unread_badge'|trans({'%count%': unread}) }}</span></span>
+                                    {% endif %}
+                                {% endif %}
+                                {% if item.route == 'admin_dashboard' and is_granted('ADMIN_KEY_VERIFIED') %}
+                                    {% set attention = admin_attention_count() %}
+                                    {% if attention > 0 %}
+                                        <span class="rounded-full bg-red-700 px-2 py-0.5 text-xs font-bold text-white tabular-nums" data-testid="admin-attention-badge">{{ attention }}<span class="sr-only"> {{ 'admin.dashboard.attention'|trans({'%count%': attention}) }}</span></span>
+                                    {% endif %}
+                                {% endif %}
+                            </a>
+                        {% endfor %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </nav>
+
+            {# En-tête #}
+            <header class="fixed top-0 right-0 left-0 z-30 flex h-16 flex-none items-center bg-white shadow-xs lg:pl-64 dark:bg-secondary-800">
+                <div class="mx-auto flex w-full max-w-10xl items-center justify-between px-4 lg:px-8">
+                    <div class="lg:hidden">
+                        <button type="button" class="btn btn-secondary btn-sm" data-action="disclosure#toggle" data-disclosure-target="button" aria-expanded="false" aria-controls="admin-sidebar">
+                            <span class="sr-only">{{ 'admin.open_sidebar'|trans }}</span>
+                            <svg class="size-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h6a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="hidden text-sm font-semibold text-secondary-600 lg:block dark:text-secondary-300">{{ site_owner_name }}</div>
+                    <div class="flex items-center gap-2">
+                        {# Moins de 640 px : icône seule (texte lu par les lecteurs d'écran), sinon les trois boutons ne tiennent pas à 375 px #}
+                        <a href="{{ path('home') }}" class="btn btn-secondary btn-sm" data-turbo="false">
+                            <svg class="size-5 sm:hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M9.293 2.293a1 1 0 0 1 1.414 0l7 7A1 1 0 0 1 17 11h-1v6a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1v-3a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-6H3a1 1 0 0 1-.707-1.707l7-7Z" clip-rule="evenodd"/></svg>
+                            <span class="max-sm:sr-only">{{ 'admin.view_site'|trans }}</span>
+                        </a>
+                        {{ include('_partials/_theme_toggle.html.twig') }}
+                        <a href="{{ path('admin_logout') }}" class="btn btn-secondary btn-sm" data-turbo="false">{{ 'admin.logout'|trans }}</a>
+                    </div>
+                </div>
+            </header>
+
+            {# Contenu #}
+            <main id="main-content" class="flex max-w-full min-w-0 flex-auto flex-col pt-16">
+                <div class="mx-auto w-full max-w-10xl p-4 lg:p-8">
+                    {{ include('_partials/_flash_messages.html.twig') }}
+                    {% block body %}{% endblock %}
+                </div>
+                {# Version (fichier VERSION, service AppVersion) : affichée dans l'admin seulement ; lien vers le journal des versions #}
+                {% set version = app_version() %}
+                {% if version %}
+                    <footer class="mx-auto mt-auto w-full max-w-10xl px-4 pb-6 text-xs text-secondary-600 lg:px-8 dark:text-secondary-400">
+                        <a href="{{ path('admin_changelog') }}" class="hover:underline" title="{{ 'admin.changelog.title'|trans }}">{{ 'admin.dashboard.version'|trans({'%version%': version}) }}</a>
+                    </footer>
+                {% endif %}
+            </main>
+        </div>
+    </body>
+</html>

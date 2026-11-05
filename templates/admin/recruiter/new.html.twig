@@ -1,0 +1,23 @@
+{#
+  Écran : création manuelle d'un accès recruteur (validé tout de suite, e-mail avec un lien de connexion).
+  Affiché par : Admin\RecruiterController::new() (route admin_recruiter_new).
+  Variables attendues :
+    - form : formulaire RecruiterManualType
+#}
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}{{ 'admin.recruiter.new'|trans }}{% endblock %}
+
+{% block body %}
+    <nav class="mb-4 text-sm"><a href="{{ path('admin_recruiter_index') }}" class="link">← {{ 'admin.recruiter.title'|trans }}</a></nav>
+    <twig:Card title="{{ 'admin.recruiter.new'|trans }}">
+        <p class="form-help mb-4">{{ 'admin.recruiter.new_help'|trans }}</p>
+        {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
+            {{ form_widget(form) }}
+            <div class="flex flex-wrap gap-3 pt-2">
+                <twig:Button type="submit">{{ 'admin.recruiter.new_submit'|trans }}</twig:Button>
+                <twig:Button href="{{ path('admin_recruiter_index') }}" variant="secondary">{{ 'admin.crud.cancel'|trans }}</twig:Button>
+            </div>
+        {{ form_end(form) }}
+    </twig:Card>
+{% endblock %}

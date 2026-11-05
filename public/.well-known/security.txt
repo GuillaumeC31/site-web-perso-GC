@@ -1,0 +1,7 @@
+# Signalement de failles de securite - guillaume-couget.fr (RFC 9116)
+# Ecrivez par le formulaire de contact (objet : Question technique) ; reponse en francais.
+# Politique de confidentialite : https://guillaume-couget.fr/confidentialite
+Contact: https://guillaume-couget.fr/contact
+Expires: 2027-10-29T00:00:00.000Z
+Preferred-Languages: fr
+Canonical: https://guillaume-couget.fr/.well-known/security.txt

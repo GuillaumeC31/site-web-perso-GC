@@ -1,0 +1,35 @@
+{#
+  Communication › Réseaux sociaux : ajout ou modification d'un lien (réseau, nom libre, adresse https du domaine du
+  réseau, visible, endroits d'affichage).
+  Affiché par : Admin\SocialLinkController::new() et ::edit() (via AbstractCrudController).
+  Variables attendues :
+    - crud   : configuration du module générique ; form : SocialLinkType ; entity : SocialLink (sans identifiant pour un ajout)
+#}
+{% set tab = 'social' %}
+{% extends 'admin/communication/_layout.html.twig' %}
+{% import 'admin/communication/_macros.html.twig' as ui %}
+
+{% block tab_content %}
+    {% set heading = (entity.id is null ? 'admin.social_link.new_title' : 'admin.social_link.edit_title')|trans %}
+    <section class="card max-w-2xl">
+        <h2 class="mb-3 text-lg font-semibold text-secondary-900 dark:text-white">{{ heading }}</h2>
+        {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
+            {{ form_row(form.network) }}
+            {{ form_row(form.label) }}
+            {{ form_row(form.url) }}
+            {{ form_row(form.visible) }}
+            <fieldset class="mt-4 rounded-xl border border-secondary-200 p-4 dark:border-secondary-700">
+                <legend class="px-1 text-sm font-semibold">{{ 'admin.social_link.where_legend'|trans }}</legend>
+                {{ form_row(form.showInFooter) }}
+                {{ form_row(form.showOnMaintenance) }}
+                {{ form_row(form.showInRecruiterArea) }}
+                {{ form_row(form.showInStructuredData) }}
+            </fieldset>
+            {{ form_rest(form) }}
+            <div class="mt-4 flex flex-wrap gap-3">
+                <twig:Button type="submit">{{ 'admin.crud.save'|trans }}</twig:Button>
+                <twig:Button href="{{ path(crud.route_prefix ~ '_index') }}" variant="secondary">{{ 'admin.crud.cancel'|trans }}</twig:Button>
+            </div>
+        {{ form_end(form) }}
+    </section>
+{% endblock %}

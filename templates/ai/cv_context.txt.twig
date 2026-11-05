@@ -1,0 +1,63 @@
+{#-
+  Contenu PUBLIC du CV en texte brut, envoyé au modèle d'IA avec les consignes du chatbot.
+  Rendu par : ChatContextBuilder::buildCvText().
+  Variables attendues (CvContentProvider::getContent(), jamais getPrivateContent()) :
+    profile, key_figures, career, pillars, entries, educations, certifications, languages
+  Les marques de gras « **…** » sont retirées (cv_plain).
+-#}
+{{ profile.full_name }} — {{ profile.job_title }}
+{% if profile.tagline %}Domaines : {{ profile.tagline }}
+{% endif %}
+{% for fact in [
+    ['Disponibilité', profile.search_status ?: profile.availability],
+    ['Localisation', profile.location],
+    ['Modalités de travail', profile.work_modes],
+    ['Postes visés', profile.target_roles],
+    ['Structures visées', profile.target_companies],
+    ['Contrat recherché', profile.contract_types],
+]|filter(f => f[1]) %}{{ fact[0] }} : {{ fact[1] }}
+{% endfor %}
+{% if profile.summary %}
+PROFIL
+{{ profile.summary|cv_plain }}
+{% endif %}
+{% if key_figures is not empty %}
+CHIFFRES CLÉS
+{% for figure in key_figures %}- {{ figure.value }} {{ figure.label }}
+{% endfor %}{% endif %}
+{% if pillars is not empty %}
+DOMAINES
+{% for pillar in pillars %}- {{ pillar.name }}{% if pillar.summary %} : {{ pillar.summary }}{% endif %}
+{% endfor %}{% endif %}
+{% for section, title in {professional: 'EXPÉRIENCES PROFESSIONNELLES', field: 'PARCOURS TERRAIN'} %}
+{% if career[section] is not empty %}
+{{ title }}
+{% for xp in career[section] %}- {{ cv_period_numeric(xp) }} | {{ xp.company ?: xp.job_title }}{% if xp.location %} ({{ xp.location }}){% endif %}{% if xp.company %} — {{ xp.job_title }}{% endif %}{% if xp.summary %} — {{ xp.summary }}{% endif %}
+
+{% for mission in xp.achievements|merge(xp.missions) %}  · {{ mission|cv_plain }}
+{% endfor %}{% endfor %}{% endif %}
+{% if section == 'professional' and career.foundation is not empty %}
+EXPÉRIENCE FONDATRICE
+{% for group in career.foundation %}- {{ cv_period_numeric(group) }} | {{ group.company }}{% if group.location %} ({{ group.location }}){% endif %}
+
+{% for role in group.roles %}  {{ role.start|date('Y') }} – {{ role.job_title }}
+{% for mission in role.achievements|merge(role.missions) %}  · {{ mission|cv_plain }}
+{% endfor %}{% endfor %}{% endfor %}{% endif %}
+{% endfor %}
+{% for section, title in {tools: 'OUTILS TECHNIQUES AU SERVICE DES ÉQUIPES', expertise: 'EXPERTISES MÉTIERS', software: 'LOGICIELS ET ENVIRONNEMENTS TECHNIQUES', soft_skill: 'SAVOIR-ÊTRE', interest: "CENTRES D'INTÉRÊT"} %}
+{% if entries[section] is defined %}
+{{ title }}
+{% for entry in entries[section] %}- {% if entry.title %}{{ entry.title }} : {% endif %}{{ entry.content|cv_plain }}
+{% endfor %}{% endif %}
+{% endfor %}
+{% if languages is not empty %}
+LANGUES
+{% for language in languages %}- {{ language.name }} : {{ language.proficiency }}
+{% endfor %}{% endif %}
+{% if educations is not empty or certifications is not empty %}
+FORMATIONS ET CERTIFICATIONS
+{% for education in educations %}- {{ education.year }} — {{ education.title }}{% set where = [education.location, education.institution]|filter(v => v) %}{% if where is not empty %} ({{ where|join(', ') }}){% endif %}
+
+{% endfor %}{% for certification in certifications %}- {{ certification.name }}{% if certification.issuer %} ({{ certification.issuer }}){% endif %}
+
+{% endfor %}{% endif %}

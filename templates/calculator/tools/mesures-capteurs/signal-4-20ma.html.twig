@@ -1,0 +1,5 @@
+{#
+  Outil : Mise à l'échelle 4-20 mA. Inclus par : calculator/tool.html.twig.
+  Gabarit : _scaling.html.twig (contrôleur calculator--scaling). Textes, plages et valeurs repris de l'ancien site.
+#}
+{{ include('calculator/tools/mesures-capteurs/_scaling.html.twig', {signal_min: 4, signal_max: 20, signal_unit: 'mA', intro: 'Boucle de courant industrielle : 4 mA = bas de plage, 20 mA = pleine échelle. Un signal inférieur à 4 mA signale un défaut.', default_signal: '12', default_physical: '50', output_types: false, physical_unit: null, presets: [{label: 'Pression 0–10 bar', min: 0, max: 10, unit: 'bar'}, {label: 'Température −50/150 °C', min: -50, max: 150, unit: '°C'}, {label: 'Niveau 0–100 %', min: 0, max: 100, unit: '%'}]}, with_context = false) }}

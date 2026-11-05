@@ -1,0 +1,29 @@
+{#
+  Composant <twig:SectionHeading> : titre de section avec surtitre et texte d'introduction.
+  Utilisé par : pages publiques (CV, projets, calculatrice, pages légales, espace recruteur).
+  Propriétés :
+    - title   : titre (obligatoire)
+    - kicker  : surtitre facultatif au-dessus du titre
+    - level   : niveau de titre HTML, 1 ou 2 (défaut 2)
+  Le bloc de contenu sert de texte d'introduction (facultatif).
+  Exemple : <twig:SectionHeading title="Projets" kicker="Réalisations" :level="1">Intro…</twig:SectionHeading>
+  Largeur (v2.0.2) : le titre prend toute la largeur de la section (une ligne sur ordinateur, « Quatre domaines, une
+  même exigence… » passait sur deux lignes à cause d'un max-w-3xl sur tout le bloc) ; seul le texte d'introduction
+  reste limité à max-w-3xl pour rester lisible. Vérifié par tests/e2e/section-titles.spec.js.
+#}
+{% props title, kicker = null, level = 2 %}
+<div {{ attributes }}>
+    {% if kicker %}
+        <p class="mb-2 text-sm font-semibold tracking-wider text-primary-700 uppercase dark:text-primary-300">{{ kicker }}</p>
+    {% endif %}
+    {% if level == 1 %}
+        <h1 class="text-3xl font-black tracking-tight text-secondary-900 sm:text-4xl dark:text-white">{{ title }}</h1>
+    {% else %}
+        <h2 class="text-2xl font-bold tracking-tight text-secondary-900 sm:text-3xl dark:text-white">{{ title }}</h2>
+    {% endif %}
+    {# Bloc vide par défaut : le composant peut s'utiliser sans contenu (<twig:SectionHeading ... />) #}
+    {% set intro %}{% block content %}{% endblock %}{% endset %}
+    {% if intro|trim is not empty %}
+        <div class="mt-3 max-w-3xl text-lg/relaxed text-secondary-700 dark:text-secondary-300">{{ intro }}</div>
+    {% endif %}
+</div>

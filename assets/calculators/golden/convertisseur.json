@@ -1,0 +1,552 @@
+{
+  "source": "ancien site guillaume_c (capture automatique)",
+  "category": "convertisseur",
+  "results": [
+    {
+      "tool": "unites",
+      "steps": [
+        {
+          "set": {
+            "convType": "pressure"
+          }
+        },
+        {
+          "call": "updateConvUnits"
+        },
+        {
+          "set": {
+            "convValIn": 1,
+            "convUnitIn": "bar",
+            "convUnitOut": "psi"
+          }
+        },
+        {
+          "call": "calculateConv"
+        }
+      ],
+      "outputs": {
+        "convValOut": "14.503768"
+      }
+    },
+    {
+      "tool": "unites",
+      "steps": [
+        {
+          "set": {
+            "convType": "pressure"
+          }
+        },
+        {
+          "call": "updateConvUnits"
+        },
+        {
+          "set": {
+            "convValIn": 100,
+            "convUnitIn": "psi",
+            "convUnitOut": "bar"
+          }
+        },
+        {
+          "call": "calculateConv"
+        }
+      ],
+      "outputs": {
+        "convValOut": "6.89476"
+      }
+    },
+    {
+      "tool": "unites",
+      "steps": [
+        {
+          "set": {
+            "convType": "pressure"
+          }
+        },
+        {
+          "call": "updateConvUnits"
+        },
+        {
+          "set": {
+            "convValIn": 1013.25,
+            "convUnitIn": "hpa",
+            "convUnitOut": "atm"
+          }
+        },
+        {
+          "call": "calculateConv"
+        }
+      ],
+      "outputs": {
+        "convValOut": "1"
+      }
+    },
+    {
+      "tool": "unites",
+      "steps": [
+        {
+          "set": {
+            "convType": "pressure"
+          }
+        },
+        {
+          "call": "updateConvUnits"
+        },
+        {
+          "set": {
+            "convValIn": 2.5,
+            "convUnitIn": "bar",
+            "convUnitOut": "pa"
+          }
+        },
+        {
+          "call": "calculateConv"
+        }
+      ],
+      "outputs": {
+        "convValOut": "250000"
+      }
+    },
+    {
+      "tool": "unites",
+      "steps": [
+        {
+          "set": {
+            "convType": "pressure"
+          }
+        },
+        {
+          "call": "updateConvUnits"
+        },
+        {
+          "set": {
+            "convValIn": 7,
+            "convUnitIn": "bar",
+            "convUnitOut": "bar"
+          }
+        },
+        {
+          "call": "calculateConv"
+        }
+      ],
+      "outputs": {
+        "convValOut": "7"
+      }
+    },
+    {
+      "tool": "unites",
+      "steps": [
+        {
+          "set": {
+            "convType": "temperature"
+          }
+        },
+        {
+          "call": "updateConvUnits"
+        },
+        {
+          "set": {
+            "convValIn": 20,
+            "convUnitIn": "c",
+            "convUnitOut": "f"
+          }
+        },
+        {
+          "call": "calculateConv"
+        }
+      ],
+      "outputs": {
+        "convValOut": "68.00"
+      }
+    },
+    {
+      "tool": "unites",
+      "steps": [
+        {
+          "set": {
+            "convType": "temperature"
+          }
+        },
+        {
+          "call": "updateConvUnits"
+        },
+        {
+          "set": {
+            "convValIn": 98.6,
+            "convUnitIn": "f",
+            "convUnitOut": "c"
+          }
+        },
+        {
+          "call": "calculateConv"
+        }
+      ],
+      "outputs": {
+        "convValOut": "37.00"
+      }
+    },
+    {
+      "tool": "unites",
+      "steps": [
+        {
+          "set": {
+            "convType": "temperature"
+          }
+        },
+        {
+          "call": "updateConvUnits"
+        },
+        {
+          "set": {
+            "convValIn": 0,
+            "convUnitIn": "k",
+            "convUnitOut": "c"
+          }
+        },
+        {
+          "call": "calculateConv"
+        }
+      ],
+      "outputs": {
+        "convValOut": "-273.15"
+      }
+    },
+    {
+      "tool": "unites",
+      "steps": [
+        {
+          "set": {
+            "convType": "temperature"
+          }
+        },
+        {
+          "call": "updateConvUnits"
+        },
+        {
+          "set": {
+            "convValIn": -40,
+            "convUnitIn": "c",
+            "convUnitOut": "k"
+          }
+        },
+        {
+          "call": "calculateConv"
+        }
+      ],
+      "outputs": {
+        "convValOut": "233.15"
+      }
+    },
+    {
+      "tool": "unites",
+      "steps": [
+        {
+          "set": {
+            "convType": "temperature"
+          }
+        },
+        {
+          "call": "updateConvUnits"
+        },
+        {
+          "set": {
+            "convValIn": 25,
+            "convUnitIn": "c",
+            "convUnitOut": "c"
+          }
+        },
+        {
+          "call": "calculateConv"
+        }
+      ],
+      "outputs": {
+        "convValOut": "25"
+      }
+    },
+    {
+      "tool": "unites",
+      "steps": [
+        {
+          "set": {
+            "convType": "power"
+          }
+        },
+        {
+          "call": "updateConvUnits"
+        },
+        {
+          "set": {
+            "convValIn": 1,
+            "convUnitIn": "kw",
+            "convUnitOut": "ch"
+          }
+        },
+        {
+          "call": "calculateConv"
+        }
+      ],
+      "outputs": {
+        "convValOut": "1.359622"
+      }
+    },
+    {
+      "tool": "unites",
+      "steps": [
+        {
+          "set": {
+            "convType": "power"
+          }
+        },
+        {
+          "call": "updateConvUnits"
+        },
+        {
+          "set": {
+            "convValIn": 100,
+            "convUnitIn": "hp",
+            "convUnitOut": "kw"
+          }
+        },
+        {
+          "call": "calculateConv"
+        }
+      ],
+      "outputs": {
+        "convValOut": "74.569987"
+      }
+    },
+    {
+      "tool": "unites",
+      "steps": [
+        {
+          "set": {
+            "convType": "power"
+          }
+        },
+        {
+          "call": "updateConvUnits"
+        },
+        {
+          "set": {
+            "convValIn": 1500,
+            "convUnitIn": "w",
+            "convUnitOut": "hp"
+          }
+        },
+        {
+          "call": "calculateConv"
+        }
+      ],
+      "outputs": {
+        "convValOut": "2.011533"
+      }
+    },
+    {
+      "tool": "unites",
+      "steps": [
+        {
+          "set": {
+            "convType": "energy"
+          }
+        },
+        {
+          "call": "updateConvUnits"
+        },
+        {
+          "set": {
+            "convValIn": 1,
+            "convUnitIn": "kwh",
+            "convUnitOut": "j"
+          }
+        },
+        {
+          "call": "calculateConv"
+        }
+      ],
+      "outputs": {
+        "convValOut": "3600000"
+      }
+    },
+    {
+      "tool": "unites",
+      "steps": [
+        {
+          "set": {
+            "convType": "energy"
+          }
+        },
+        {
+          "call": "updateConvUnits"
+        },
+        {
+          "set": {
+            "convValIn": 1000,
+            "convUnitIn": "cal",
+            "convUnitOut": "btu"
+          }
+        },
+        {
+          "call": "calculateConv"
+        }
+      ],
+      "outputs": {
+        "convValOut": "3.965651"
+      }
+    },
+    {
+      "tool": "unites",
+      "steps": [
+        {
+          "set": {
+            "convType": "energy"
+          }
+        },
+        {
+          "call": "updateConvUnits"
+        },
+        {
+          "set": {
+            "convValIn": 3600,
+            "convUnitIn": "j",
+            "convUnitOut": "kwh"
+          }
+        },
+        {
+          "call": "calculateConv"
+        }
+      ],
+      "outputs": {
+        "convValOut": "0.001"
+      }
+    },
+    {
+      "tool": "unites",
+      "steps": [
+        {
+          "set": {
+            "convType": "speed"
+          }
+        },
+        {
+          "call": "updateConvUnits"
+        },
+        {
+          "set": {
+            "convValIn": 90,
+            "convUnitIn": "kmh",
+            "convUnitOut": "ms"
+          }
+        },
+        {
+          "call": "calculateConv"
+        }
+      ],
+      "outputs": {
+        "convValOut": "25"
+      }
+    },
+    {
+      "tool": "unites",
+      "steps": [
+        {
+          "set": {
+            "convType": "speed"
+          }
+        },
+        {
+          "call": "updateConvUnits"
+        },
+        {
+          "set": {
+            "convValIn": 1500,
+            "convUnitIn": "rpm",
+            "convUnitOut": "rads"
+          }
+        },
+        {
+          "call": "calculateConv"
+        }
+      ],
+      "outputs": {
+        "convValOut": "157.079633"
+      }
+    },
+    {
+      "tool": "unites",
+      "steps": [
+        {
+          "set": {
+            "convType": "speed"
+          }
+        },
+        {
+          "call": "updateConvUnits"
+        },
+        {
+          "set": {
+            "convValIn": 10,
+            "convUnitIn": "ms",
+            "convUnitOut": "rpm"
+          }
+        },
+        {
+          "call": "calculateConv"
+        }
+      ],
+      "outputs": {
+        "convValOut": "N/A (Linéaire/Angle)"
+      }
+    },
+    {
+      "tool": "unites",
+      "steps": [
+        {
+          "set": {
+            "convType": "pressure"
+          }
+        },
+        {
+          "call": "updateConvUnits"
+        },
+        {
+          "set": {
+            "convValIn": "",
+            "convUnitIn": "bar",
+            "convUnitOut": "psi"
+          }
+        },
+        {
+          "call": "calculateConv"
+        }
+      ],
+      "outputs": {
+        "convValOut": ""
+      }
+    },
+    {
+      "tool": "unites",
+      "steps": [
+        {
+          "set": {
+            "convType": "pressure"
+          }
+        },
+        {
+          "call": "updateConvUnits"
+        },
+        {
+          "set": {
+            "convValIn": -1,
+            "convUnitIn": "bar",
+            "convUnitOut": "psi"
+          }
+        },
+        {
+          "call": "calculateConv"
+        }
+      ],
+      "outputs": {
+        "convValOut": "-14.503768"
+      }
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{#
+  Bloc : une section d'une page légale (titre de niveau 2 et contenu).
+  Inclus par : legal/notice.html.twig, legal/privacy.html.twig (via embed).
+  Variables attendues :
+    - id    : identifiant de la section (ancre)
+    - title : titre déjà traduit
+  Bloc : content (paragraphes de la section), justifié avec la césure française (filtre hyphenate_html)
+#}
+<section id="{{ id }}" aria-labelledby="{{ id }}-title" class="scroll-mt-24">
+    <h2 id="{{ id }}-title" class="text-xl font-bold text-secondary-900 dark:text-white">{{ title }}</h2>
+    <div class="text-prose-justify mt-3 space-y-3">
+        {% apply hyphenate_html %}{% block content %}{% endblock %}{% endapply %}
+    </div>
+</section>

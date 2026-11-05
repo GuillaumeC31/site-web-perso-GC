@@ -1,0 +1,49 @@
+{#
+  Écran : diagnostic TEMPORAIRE de la chaîne de mandataires (adresse IP réelle des visiteurs, v2.0.3).
+  Affiché par : Admin\IpDiagnosticController::show() (route admin_ip_diagnostic, /{ADMIN_PATH}/diagnostic-ip),
+  seulement si IP_DIAGNOSTIC=1 dans .env.local.
+  Variables attendues :
+    - remote_addr     : { ip, cloudflare, private, trusted } (adresse qui a ouvert la connexion vers Apache)
+    - headers         : en-têtes reçus (nom => valeur ou null)
+    - hops            : chaîne X-Forwarded-For puis REMOTE_ADDR, chacune décrite comme remote_addr
+    - client_ip       : adresse retenue par Symfony ; client_ips : toutes les adresses non fiables
+    - is_secure       : HTTPS vu par Symfony
+    - trusted_proxies : mandataires de confiance ; trusted_extra : ceux de SYMFONY_TRUSTED_PROXIES
+#}
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Diagnostic de l'adresse IP{% endblock %}
+
+{% block body %}
+    <h1 class="text-2xl font-bold dark:text-white">Diagnostic de l'adresse IP</h1>
+    <twig:Alert type="warning" class="my-4">Page temporaire : à désactiver après usage (retirer IP_DIAGNOSTIC de .env.local, puis cache:clear). Rien n'est enregistré.</twig:Alert>
+
+    <twig:Card title="Adresse retenue par Symfony" class="mb-4">
+        <p class="text-lg font-semibold dark:text-white" data-testid="client-ip">{{ client_ip ?? '(aucune)' }}</p>
+        <p class="form-help">HTTPS vu par Symfony : {{ is_secure ? 'oui' : 'non' }}. Adresses non fiables (de la plus proche à la plus lointaine) : {{ client_ips|join(', ') }}</p>
+    </twig:Card>
+
+    <twig:Card title="Chaîne reçue (X-Forwarded-For, puis REMOTE_ADDR)" class="mb-4">
+        <table class="min-w-full text-sm">
+            <thead><tr><th class="py-1 text-left">Adresse</th><th class="py-1 text-left">Cloudflare</th><th class="py-1 text-left">Privée ou locale</th><th class="py-1 text-left">Mandataire de confiance</th></tr></thead>
+            <tbody>
+                {% for hop in hops %}
+                    <tr><td class="py-1 font-mono">{{ hop.ip ?: '(vide)' }}{% if loop.last %} (REMOTE_ADDR){% endif %}</td><td>{{ hop.cloudflare ? 'oui' : 'non' }}</td><td>{{ hop.private ? 'oui' : 'non' }}</td><td>{{ hop.trusted ? 'oui' : 'non' }}</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </twig:Card>
+
+    <twig:Card title="En-têtes reçus" class="mb-4">
+        <dl class="grid gap-1 text-sm">
+            {% for name, value in headers %}
+                <div><dt class="inline font-medium">{{ name }} :</dt> <dd class="inline font-mono">{{ value ?? '(absent)' }}</dd></div>
+            {% endfor %}
+        </dl>
+    </twig:Card>
+
+    <twig:Card title="Mandataires ajoutés (SYMFONY_TRUSTED_PROXIES)">
+        <p class="font-mono text-sm">{{ trusted_extra is empty ? '(aucun : Cloudflare seulement)' : trusted_extra|join(', ') }}</p>
+        <p class="form-help">Lecture : si REMOTE_ADDR n'est PAS une adresse Cloudflare, c'est un mandataire placé entre Cloudflare et Apache (cache de l’hébergeur) ; ajouter cette adresse dans SYMFONY_TRUSTED_PROXIES seulement si X-Forwarded-For contient bien, juste avant elle, une adresse Cloudflare.</p>
+    </twig:Card>
+{% endblock %}

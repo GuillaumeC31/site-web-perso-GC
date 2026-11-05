@@ -1,0 +1,46 @@
+{#
+  Outil : chauffe d'un fluide (énergie, puis durée selon la puissance ou puissance selon la durée).
+  Inclus par : calculator/tool.html.twig. Contrôleur : calculator--chauffe-fluide.
+  Variables attendues (CalculatorController::toolData()) :
+    - fluids : fluides de référence (Fluid), dans l'ordre de l'admin
+  « Eau liquide » est choisie par défaut, comme sur l'ancien site.
+#}
+{% import 'calculator/_macros.html.twig' as calc %}
+{% set c = 'calculator--chauffe-fluide' %}
+{% set t = 'data-' ~ c ~ '-target' %}
+{% set input = 'input->' ~ c ~ '#calculate' %}
+{% set water = fluids|filter(f => f.name == 'Eau liquide')|first %}
+
+<div data-controller="{{ c }}" class="space-y-6">
+    {% set fields %}
+        <div class="sm:col-span-2">
+            <label for="fh-fluid" class="form-label">Type de fluide</label>
+            <select id="fh-fluid" class="form-input" {{ t }}="fluid" data-action="change->{{ c }}#chooseFluid">
+                {% for fluid in fluids %}
+                    <option value="{{ fluid.id }}" data-cp="{{ fluid.specificHeatCapacity }}" data-density="{{ fluid.density }}" {% if water and fluid.id == water.id %}selected{% endif %}>{{ fluid.name }}{{ fluid.state.value == 'gaz' ? ' (gaz)' : '' }}</option>
+                {% endfor %}
+                <option value="custom">Personnalisé (saisie libre)</option>
+            </select>
+        </div>
+        {{ calc.field('fh-cp', 'Capacité thermique massique (Cp)', 'J/(kg·K)', {(t): 'cp', 'data-action': input, readonly: 'readonly'}, water ? water.specificHeatCapacity : null) }}
+        {{ calc.field('fh-density', 'Masse volumique (ρ)', 'kg/m³', {(t): 'density', 'data-action': input, readonly: 'readonly'}, water ? water.density : null) }}
+    {% endset %}
+    {{ calc.block('Propriétés du fluide', null, fields) }}
+
+    {% set fields %}
+        {{ calc.field('fh-volume', 'Volume du fluide', 'L', {(t): 'volume', 'data-action': input}, null, 'ex. 200') }}
+        {{ calc.field('fh-start', 'Température initiale', '°C', {(t): 'tStart', 'data-action': input}, '20') }}
+        {{ calc.field('fh-end', 'Température finale', '°C', {(t): 'tEnd', 'data-action': input}, '60') }}
+        {{ calc.result('fh-energy', 'Énergie requise', 'kWh', {(t): 'energy'}, 'fh-cp fh-density fh-volume fh-start fh-end') }}
+        {{ calc.message({(t): 'message'}) }}
+    {% endset %}
+    {{ calc.block('Paramètres de chauffe', 'E = V / 1000 × ρ × Cp × |ΔT| / 3 600 000', fields) }}
+
+    {% set fields %}
+        {{ calc.field('fh-power', 'Puissance', 'W', {(t): 'power', 'data-action': 'input->' ~ c ~ '#fromPower'}, null, 'ex. 3000') }}
+        {{ calc.field('fh-hours', 'Temps de chauffe', 'h', {(t): 'hours', 'data-action': 'input->' ~ c ~ '#fromHours'}, null, 'ex. 2,5') }}
+        {{ calc.message({(t): 'sizingMessage'}) }}
+        {{ calc.note({}, 'Saisissez la puissance pour obtenir le temps de chauffe, ou l\'inverse. Rendement de 100 %, sans pertes de chaleur avec l\'environnement.') }}
+    {% endset %}
+    {{ calc.block('Dimensionnement', 't = E / P · P = E / t', fields) }}
+</div>

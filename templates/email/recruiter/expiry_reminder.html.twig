@@ -1,0 +1,21 @@
+{#
+  E-mail : rappel 7 jours avant l'échéance de l'accès, avec un lien pour demander une prolongation (recruteur validé :
+  adresse de réponse).
+  Envoyé par : RecruiterMailer::sendExpiryReminder() (commande app:recruiter:daily).
+  Variables : recruiter, extension_url (lien signé, 14 jours), stop_reminders_url (lien signé « Ne plus recevoir ces
+  rappels », RGPD), texts (EmailTexts : intro, signature), subject, can_reply.
+#}
+{% extends 'email/_layout.html.twig' %}
+
+{% block content %}
+    <p style="margin:0 0 12px;">Bonjour {{ recruiter.fullName }},</p>
+    <p style="margin:0 0 12px;">{{ texts.intro|nl2br }}</p>
+    <p style="margin:0 0 12px;">Fin de l'accès : <strong>{{ recruiter.accessExpiresAt|format_date('long') }}</strong>.</p>
+{% endblock %}
+
+{% block button %}
+    {{ include('email/_button.html.twig', {url: extension_url, label: 'Demander une prolongation'}) }}
+    <tr><td style="font-size:14px;line-height:1.6;padding-top:8px;">Sans prolongation, l'accès se fermera simplement à cette date.</td></tr>
+    <tr><td style="font-size:14px;line-height:1.6;padding-top:12px;">{{ texts.signature|nl2br }}</td></tr>
+    <tr><td style="font-size:12px;line-height:1.6;padding-top:16px;color:#6b7280;"><a href="{{ stop_reminders_url }}" style="color:#6b7280;">Ne plus recevoir ces rappels</a> (effet immédiat).</td></tr>
+{% endblock %}

@@ -1,0 +1,43 @@
+{#
+  Outil : psychrométrie (point de rosée, humidité relative et absolue) selon trois méthodes.
+  Inclus par : calculator/tool.html.twig. Contrôleur : calculator--point-rosee.
+  Formule de Magnus, constantes de Bolton (6,112 hPa ; 17,67 ; 243,5 °C), les mêmes pour tous les outils
+  (C4) ; le bloc 3 (psychromètre) ne fonctionnait pas sur l'ancien site (C2).
+#}
+{% import 'calculator/_macros.html.twig' as calc %}
+{% set c = 'calculator--point-rosee' %}
+{% set t = 'data-' ~ c ~ '-target' %}
+
+<div data-controller="{{ c }}" class="space-y-6">
+    {% set fields %}
+        {{ calc.field('psy1-t', 'Température de l\'air', '°C', {(t): 'rhTemperature', 'data-action': 'input->' ~ c ~ '#fromRelativeHumidity'}, null, 'ex. 20') }}
+        {{ calc.field('psy1-rh', 'Humidité relative', '%', {(t): 'rhHumidity', 'data-action': 'input->' ~ c ~ '#fromRelativeHumidity'}, null, 'ex. 50') }}
+        {{ calc.result('psy1-td', 'Point de rosée', '°C', {(t): 'rhDewPoint'}, 'psy1-t psy1-rh') }}
+        {{ calc.result('psy1-ha', 'Humidité absolue', 'g/m³', {(t): 'rhAbsolute'}, 'psy1-t psy1-rh') }}
+        {{ calc.result('psy1-pv', 'Pression de vapeur', 'hPa', {(t): 'rhVapour'}, 'psy1-t psy1-rh') }}
+        {{ calc.message({(t): 'rhMessage'}) }}
+        {{ calc.note({}, 'Formule de Magnus, constantes de Bolton (1980) : 6,112 hPa ; 17,67 ; 243,5 °C. Td = 243,5 × ln(Pv / 6,112) / (17,67 − ln(Pv / 6,112)).') }}
+    {% endset %}
+    {{ calc.block('1. Depuis la température et l\'humidité relative', 'Pv = Psat(T) × HR · Psat = 6,112 × e^(17,67 T / (T + 243,5))', fields) }}
+
+    {% set fields %}
+        {{ calc.field('psy2-t', 'Température de l\'air', '°C', {(t): 'dewTemperature', 'data-action': 'input->' ~ c ~ '#fromDewPoint'}, null, 'ex. 20') }}
+        {{ calc.field('psy2-td', 'Point de rosée', '°C', {(t): 'dewDewPoint', 'data-action': 'input->' ~ c ~ '#fromDewPoint'}, null, 'ex. 9,3') }}
+        {{ calc.result('psy2-rh', 'Humidité relative', '%', {(t): 'dewHumidity'}, 'psy2-t psy2-td') }}
+        {{ calc.result('psy2-ha', 'Humidité absolue', 'g/m³', {(t): 'dewAbsolute'}, 'psy2-t psy2-td') }}
+        {{ calc.message({(t): 'dewMessage'}) }}
+    {% endset %}
+    {{ calc.block('2. Depuis la température et le point de rosée', 'HR = Psat(Td) / Psat(T)', fields) }}
+
+    {% set fields %}
+        {{ calc.field('psy3-dry', 'Bulbe sec', '°C', {(t): 'wetDry', 'data-action': 'input->' ~ c ~ '#fromWetBulb'}, null, 'ex. 20') }}
+        {{ calc.field('psy3-wet', 'Bulbe humide', '°C', {(t): 'wetWet', 'data-action': 'input->' ~ c ~ '#fromWetBulb'}, null, 'ex. 15') }}
+        {{ calc.field('psy3-p', 'Pression atmosphérique', 'hPa', {(t): 'wetPressure', 'data-action': 'input->' ~ c ~ '#fromWetBulb'}, '1013,25') }}
+        {{ calc.result('psy3-rh', 'Humidité relative', '%', {(t): 'wetHumidity'}, 'psy3-dry psy3-wet psy3-p') }}
+        {{ calc.result('psy3-td', 'Point de rosée', '°C', {(t): 'wetDewPoint'}, 'psy3-dry psy3-wet psy3-p') }}
+        {{ calc.result('psy3-ha', 'Humidité absolue', 'g/m³', {(t): 'wetAbsolute'}, 'psy3-dry psy3-wet psy3-p') }}
+        {{ calc.message({(t): 'wetMessage'}) }}
+        {{ calc.note({}, 'Psychromètre ventilé : coefficient A = 0,000662 /°C.') }}
+    {% endset %}
+    {{ calc.block('3. Psychromètre (bulbe sec et bulbe humide)', 'Pv = Psat(Th) − A × Patm × (Ts − Th)', fields) }}
+</div>

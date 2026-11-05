@@ -1,0 +1,29 @@
+{#
+  E-mail : résumé hebdomadaire du tableau de bord (lundi 7 h), mêmes indicateurs que la page, chiffres
+  seulement : aucune donnée personnelle de recruteur, ni l'adresse de l'admin (chemin secret).
+  Envoyé par : App\Command\DashboardWeeklySummaryCommand.
+  Variables : tiles (DashboardMetrics::getTiles()['tiles']), computed_at, subject, texts (EmailTexts : intro, signature).
+#}
+{% extends 'email/_layout.html.twig' %}
+
+{% set colors = {ok: '#047857', warning: '#92400e', problem: '#b91c1c', not_applicable: '#475569'} %}
+{% set symbols = {ok: '✓', warning: '⚠', problem: '✗', not_applicable: '–'} %}
+
+{% block content %}
+    <p style="margin:0 0 16px;">{{ texts.intro|nl2br }}</p>
+    {% for tile in tiles %}
+        <p style="margin:16px 0 4px;font-weight:bold;">
+            {{ ('admin.dashboard.tile.' ~ tile.id)|trans }}
+            <span style="color:{{ colors[tile.status] }};">· {{ symbols[tile.status] }} {{ ('admin.dashboard.status.' ~ tile.status)|trans }}</span>
+        </p>
+        <p style="margin:0 0 4px;">{{ tile.id == 'ai' ? ('admin.assistant.state.' ~ tile.value)|trans : tile.value }} {{ tile.value_key|trans }}</p>
+        {% if tile.lines is not empty %}
+            <ul style="margin:0;padding-left:20px;color:#334155;">
+                {% for line in tile.lines %}
+                    <li>{% if line.status is defined %}{{ symbols[line.status] }} {% endif %}{{ line.key|trans(line.params|map(value => value matches '/^admin\./' ? value|trans : value)) }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endfor %}
+    <p style="margin:20px 0 0;color:#64748b;">{{ 'admin.dashboard.weekly.computed_at'|trans({'%date%': computed_at|format_datetime('short', 'short', timezone: 'Europe/Paris')}) }} {{ 'admin.dashboard.weekly.outro'|trans }}</p>
+{% endblock %}

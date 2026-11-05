@@ -1,0 +1,41 @@
+{#
+  Macros de la page « Communication ».
+  Utilisées par : templates/admin/communication/*.html.twig.
+  - info(key)          : encadré « À quoi ça sert / Qui le voit / Ce qu'il faut régler » (clés admin.communication.info.<key>.*)
+  - help(label, text)  : aide « ? » accessible au clavier et sans JavaScript (<details> natif)
+  - state(status, label) : état avec icône ET texte (ok, warning, problem, not_applicable)
+#}
+
+{% macro info(key) %}
+    <aside class="mb-6 grid gap-3 rounded-xl border border-primary-200 bg-primary-50 p-4 text-sm text-primary-950 sm:grid-cols-3 dark:border-primary-800 dark:bg-primary-950/50 dark:text-primary-100" aria-label="{{ 'admin.communication.info.label'|trans }}" data-testid="info-box">
+        {% for part in ['purpose', 'audience', 'todo'] %}
+            <div>
+                <p class="font-semibold">{{ ('admin.communication.info.' ~ part)|trans }}</p>
+                <p class="mt-1">{{ ('admin.communication.info.' ~ key ~ '.' ~ part)|trans }}</p>
+            </div>
+        {% endfor %}
+    </aside>
+{% endmacro %}
+
+{% macro help(label, text) %}
+    <details class="group relative inline-block align-middle" data-testid="help">
+        <summary class="inline-flex size-6 cursor-pointer list-none items-center justify-center rounded-full border border-secondary-300 text-xs font-bold text-secondary-800 hover:bg-secondary-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 dark:border-secondary-600 dark:text-secondary-100 dark:hover:bg-secondary-800 [&::-webkit-details-marker]:hidden">
+            <span aria-hidden="true">?</span><span class="sr-only">{{ 'admin.communication.help_label'|trans({'%label%': label}) }}</span>
+        </summary>
+        <p class="mt-2 max-w-sm rounded-lg border border-secondary-200 bg-white p-3 text-sm font-normal text-secondary-800 shadow-sm dark:border-secondary-700 dark:bg-secondary-900 dark:text-secondary-100">{{ text }}</p>
+    </details>
+{% endmacro %}
+
+{% macro state(status, label) %}
+    {% set styles = {
+        ok: {class: 'text-emerald-700 dark:text-emerald-300', path: 'M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z'},
+        warning: {class: 'text-amber-800 dark:text-amber-300', path: 'M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z'},
+        problem: {class: 'text-red-700 dark:text-red-300', path: 'M9.75 9.75l4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z'},
+        not_applicable: {class: 'text-secondary-700 dark:text-secondary-300', path: 'M15 12H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z'},
+    } %}
+    {% set style = styles[status] ?? styles.not_applicable %}
+    <span class="inline-flex items-center gap-1.5 text-sm font-semibold {{ style.class }}" data-status="{{ status }}">
+        <svg class="size-5 shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.75" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="{{ style.path }}"/></svg>
+        <span>{{ label }}</span>
+    </span>
+{% endmacro %}

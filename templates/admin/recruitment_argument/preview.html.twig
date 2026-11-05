@@ -1,0 +1,38 @@
+{#
+  Écran : aperçu du bloc « Pourquoi me recruter » tel qu'il apparaîtra sur l'accueil.
+  Affiché par : Admin\RecruitmentArgumentController::preview() (route admin_recruitment_argument_preview,
+  /{ADMIN_PATH}/pourquoi-me-recruter/apercu ; ?brouillons=1 : tous les arguments).
+  Variables attendues :
+    - arguments     : arguments affichés (ou tous, avec brouillons)
+    - with_drafts   : vrai si les brouillons sont montrés
+    - block_enabled : état de l'interrupteur général
+  Le rendu utilise le même partiel que l'accueil (_partials/_recruitment_arguments.html.twig), avec ses styles.
+#}
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}{{ 'admin.recruitment_argument.preview_title'|trans }}{% endblock %}
+
+{% block body %}
+    <div class="mb-6 flex flex-wrap items-center justify-between gap-4">
+        <div>
+            <h1 class="text-2xl font-bold dark:text-white">{{ 'admin.recruitment_argument.preview_title'|trans }}</h1>
+            <p class="form-help">{{ (block_enabled ? 'admin.recruitment_argument.preview_intro_on' : 'admin.recruitment_argument.preview_intro_off')|trans }}</p>
+        </div>
+        <div class="flex flex-wrap gap-2">
+            {% if with_drafts %}
+                <twig:Button href="{{ path('admin_recruitment_argument_preview') }}" variant="secondary">{{ 'admin.recruitment_argument.preview_visible_only'|trans }}</twig:Button>
+            {% else %}
+                <twig:Button href="{{ path('admin_recruitment_argument_preview', {brouillons: 1}) }}" variant="secondary">{{ 'admin.recruitment_argument.preview_with_drafts'|trans }}</twig:Button>
+            {% endif %}
+            <twig:Button href="{{ path('admin_recruitment_argument_index') }}" variant="secondary">{{ 'admin.recruitment_argument.back'|trans }}</twig:Button>
+        </div>
+    </div>
+
+    {% if arguments is empty %}
+        <twig:Alert type="info" data-testid="recruitment-preview-empty">{{ 'admin.recruitment_argument.preview_empty'|trans }}</twig:Alert>
+    {% else %}
+        <div class="overflow-hidden rounded-2xl border border-secondary-200 dark:border-secondary-700" data-testid="recruitment-preview">
+            {{ include('_partials/_recruitment_arguments.html.twig', {arguments: arguments, drafts: with_drafts}, with_context = false) }}
+        </div>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,853 @@
+{
+  "source": "ancien site guillaume_c (capture automatique)",
+  "category": "electricite",
+  "results": [
+    {
+      "tool": "puissances-ac",
+      "method": "calculateP",
+      "event": null,
+      "inputs": {
+        "u1": 230,
+        "i1": 10,
+        "cos1": 0.8
+      },
+      "outputs": {
+        "resultP": "1840.00"
+      }
+    },
+    {
+      "tool": "puissances-ac",
+      "method": "calculateP",
+      "event": null,
+      "inputs": {
+        "u1": 400,
+        "i1": 16,
+        "cos1": 1
+      },
+      "outputs": {
+        "resultP": "6400.00"
+      }
+    },
+    {
+      "tool": "puissances-ac",
+      "method": "calculateP",
+      "event": null,
+      "inputs": {
+        "u1": 230.5,
+        "i1": 7.3,
+        "cos1": 0.92
+      },
+      "outputs": {
+        "resultP": "1548.04"
+      }
+    },
+    {
+      "tool": "puissances-ac",
+      "method": "calculateP",
+      "event": null,
+      "inputs": {
+        "u1": -230,
+        "i1": 10,
+        "cos1": 0.8
+      },
+      "outputs": {
+        "resultP": "-1840.00"
+      }
+    },
+    {
+      "tool": "puissances-ac",
+      "method": "calculateP",
+      "event": null,
+      "inputs": {
+        "u1": 230,
+        "i1": 10,
+        "cos1": ""
+      },
+      "outputs": {
+        "resultP": ""
+      }
+    },
+    {
+      "tool": "puissances-ac",
+      "method": "calculateI",
+      "event": null,
+      "inputs": {
+        "p2": 2000,
+        "u2": 230,
+        "cos2": 0.8
+      },
+      "outputs": {
+        "resultI": "10.87"
+      }
+    },
+    {
+      "tool": "puissances-ac",
+      "method": "calculateI",
+      "event": null,
+      "inputs": {
+        "p2": 1500,
+        "u2": 400,
+        "cos2": 0.95
+      },
+      "outputs": {
+        "resultI": "3.95"
+      }
+    },
+    {
+      "tool": "puissances-ac",
+      "method": "calculateI",
+      "event": null,
+      "inputs": {
+        "p2": 2000,
+        "u2": 0,
+        "cos2": 0.8
+      },
+      "outputs": {
+        "resultI": ""
+      }
+    },
+    {
+      "tool": "puissances-ac",
+      "method": "calculateI",
+      "event": null,
+      "inputs": {
+        "p2": 2000,
+        "u2": 230,
+        "cos2": 0
+      },
+      "outputs": {
+        "resultI": ""
+      }
+    },
+    {
+      "tool": "puissances-ac",
+      "method": "calculateU",
+      "event": null,
+      "inputs": {
+        "p3": 2000,
+        "i3": 10,
+        "cos3": 0.8
+      },
+      "outputs": {
+        "resultU": "250.00"
+      }
+    },
+    {
+      "tool": "puissances-ac",
+      "method": "calculateU",
+      "event": null,
+      "inputs": {
+        "p3": 2000,
+        "i3": 0,
+        "cos3": 0.8
+      },
+      "outputs": {
+        "resultU": ""
+      }
+    },
+    {
+      "tool": "puissances-ac",
+      "method": "calculateS",
+      "event": null,
+      "inputs": {
+        "u4": 230,
+        "i4": 10
+      },
+      "outputs": {
+        "resultS": "2300.00"
+      }
+    },
+    {
+      "tool": "puissances-ac",
+      "method": "calculateS",
+      "event": null,
+      "inputs": {
+        "u4": 400,
+        "i4": 32.5
+      },
+      "outputs": {
+        "resultS": "13000.00"
+      }
+    },
+    {
+      "tool": "puissances-ac",
+      "method": "calculateS",
+      "event": null,
+      "inputs": {
+        "u4": "",
+        "i4": 10
+      },
+      "outputs": {
+        "resultS": ""
+      }
+    },
+    {
+      "tool": "puissances-ac",
+      "method": "calculateIApp",
+      "event": null,
+      "inputs": {
+        "s5": 2300,
+        "u5": 230
+      },
+      "outputs": {
+        "resultIApp": "10.00"
+      }
+    },
+    {
+      "tool": "puissances-ac",
+      "method": "calculateIApp",
+      "event": null,
+      "inputs": {
+        "s5": 2300,
+        "u5": 0
+      },
+      "outputs": {
+        "resultIApp": ""
+      }
+    },
+    {
+      "tool": "puissances-ac",
+      "method": "calculateUApp",
+      "event": null,
+      "inputs": {
+        "s6": 2300,
+        "i6": 10
+      },
+      "outputs": {
+        "resultUApp": "230.00"
+      }
+    },
+    {
+      "tool": "puissances-ac",
+      "method": "calculateUApp",
+      "event": null,
+      "inputs": {
+        "s6": 2300,
+        "i6": 0
+      },
+      "outputs": {
+        "resultUApp": ""
+      }
+    },
+    {
+      "tool": "puissances-ac",
+      "method": "calculateQ",
+      "event": null,
+      "inputs": {
+        "uReact": 230,
+        "iReact": 10,
+        "cosReact": 0.8
+      },
+      "outputs": {
+        "resultQ": "1380.00"
+      }
+    },
+    {
+      "tool": "puissances-ac",
+      "method": "calculateQ",
+      "event": null,
+      "inputs": {
+        "uReact": 230,
+        "iReact": 10,
+        "cosReact": 1
+      },
+      "outputs": {
+        "resultQ": "0.00"
+      }
+    },
+    {
+      "tool": "puissances-ac",
+      "method": "calculateQ",
+      "event": null,
+      "inputs": {
+        "uReact": 230,
+        "iReact": 10,
+        "cosReact": 1.2
+      },
+      "outputs": {
+        "resultQ": "0.00"
+      }
+    },
+    {
+      "tool": "puissances-ac",
+      "method": "calculateQ",
+      "event": null,
+      "inputs": {
+        "uReact": 230,
+        "iReact": 10,
+        "cosReact": -0.5
+      },
+      "outputs": {
+        "resultQ": "1991.86"
+      }
+    },
+    {
+      "tool": "chute-tension",
+      "method": "calculateDrop",
+      "event": null,
+      "inputs": {
+        "lDrop": 50,
+        "iDrop": 32,
+        "sDrop": 2.5
+      },
+      "outputs": {
+        "resultDrop": "28.80"
+      }
+    },
+    {
+      "tool": "chute-tension",
+      "method": "calculateDrop",
+      "event": null,
+      "inputs": {
+        "lDrop": 100,
+        "iDrop": 16,
+        "sDrop": 1.5
+      },
+      "outputs": {
+        "resultDrop": "48.00"
+      }
+    },
+    {
+      "tool": "chute-tension",
+      "method": "calculateDrop",
+      "event": null,
+      "inputs": {
+        "lDrop": 25,
+        "iDrop": 10,
+        "sDrop": 35
+      },
+      "outputs": {
+        "resultDrop": "0.32"
+      }
+    },
+    {
+      "tool": "chute-tension",
+      "method": "calculateDrop",
+      "event": null,
+      "inputs": {
+        "lDrop": 50,
+        "iDrop": "",
+        "sDrop": 2.5
+      },
+      "outputs": {
+        "resultDrop": ""
+      }
+    },
+    {
+      "tool": "loi-ohm",
+      "method": "calculateUnifiedOhm",
+      "event": "ohmI",
+      "inputs": {
+        "ohmU": 12,
+        "ohmI": 2,
+        "ohmR": "",
+        "ohmP": ""
+      },
+      "outputs": {
+        "ohmU": "12.00",
+        "ohmI": "2",
+        "ohmR": "6.00",
+        "ohmP": "24.00"
+      }
+    },
+    {
+      "tool": "loi-ohm",
+      "method": "calculateUnifiedOhm",
+      "event": "ohmR",
+      "inputs": {
+        "ohmU": 12,
+        "ohmI": "",
+        "ohmR": 6,
+        "ohmP": ""
+      },
+      "outputs": {
+        "ohmU": "12.00",
+        "ohmI": "2.000",
+        "ohmR": "6",
+        "ohmP": "24.00"
+      }
+    },
+    {
+      "tool": "loi-ohm",
+      "method": "calculateUnifiedOhm",
+      "event": "ohmP",
+      "inputs": {
+        "ohmU": 12,
+        "ohmI": "",
+        "ohmR": "",
+        "ohmP": 24
+      },
+      "outputs": {
+        "ohmU": "12.00",
+        "ohmI": "2.000",
+        "ohmR": "6.00",
+        "ohmP": "24"
+      }
+    },
+    {
+      "tool": "loi-ohm",
+      "method": "calculateUnifiedOhm",
+      "event": "ohmR",
+      "inputs": {
+        "ohmU": "",
+        "ohmI": 2,
+        "ohmR": 6,
+        "ohmP": ""
+      },
+      "outputs": {
+        "ohmU": "12.00",
+        "ohmI": "2.000",
+        "ohmR": "6",
+        "ohmP": "24.00"
+      }
+    },
+    {
+      "tool": "loi-ohm",
+      "method": "calculateUnifiedOhm",
+      "event": "ohmP",
+      "inputs": {
+        "ohmU": "",
+        "ohmI": 2,
+        "ohmR": "",
+        "ohmP": 24
+      },
+      "outputs": {
+        "ohmU": "12.00",
+        "ohmI": "2.000",
+        "ohmR": "6.00",
+        "ohmP": "24"
+      }
+    },
+    {
+      "tool": "loi-ohm",
+      "method": "calculateUnifiedOhm",
+      "event": "ohmP",
+      "inputs": {
+        "ohmU": "",
+        "ohmI": "",
+        "ohmR": 6,
+        "ohmP": 24
+      },
+      "outputs": {
+        "ohmU": "12.00",
+        "ohmI": "2.000",
+        "ohmR": "6.00",
+        "ohmP": "24"
+      }
+    },
+    {
+      "tool": "loi-ohm",
+      "method": "calculateUnifiedOhm",
+      "event": "ohmI",
+      "inputs": {
+        "ohmU": 230,
+        "ohmI": 0.437,
+        "ohmR": "",
+        "ohmP": ""
+      },
+      "outputs": {
+        "ohmU": "230.00",
+        "ohmI": "0.437",
+        "ohmR": "526.32",
+        "ohmP": "100.51"
+      }
+    },
+    {
+      "tool": "loi-ohm",
+      "method": "calculateUnifiedOhm",
+      "event": "ohmR",
+      "inputs": {
+        "ohmU": 12,
+        "ohmI": 2,
+        "ohmR": 100,
+        "ohmP": ""
+      },
+      "outputs": {
+        "ohmU": "12.00",
+        "ohmI": "2.000",
+        "ohmR": "100",
+        "ohmP": "24.00"
+      }
+    },
+    {
+      "tool": "loi-ohm",
+      "method": "calculateUnifiedOhm",
+      "event": "ohmI",
+      "inputs": {
+        "ohmU": 12,
+        "ohmI": 0,
+        "ohmR": "",
+        "ohmP": ""
+      },
+      "outputs": {
+        "ohmU": "12.00",
+        "ohmI": "0",
+        "ohmR": "",
+        "ohmP": "0.00"
+      }
+    },
+    {
+      "tool": "loi-ohm",
+      "method": "calculateUnifiedOhm",
+      "event": "ohmU",
+      "inputs": {
+        "ohmU": 5,
+        "ohmI": "",
+        "ohmR": "",
+        "ohmP": ""
+      },
+      "outputs": {
+        "ohmU": "5",
+        "ohmI": "",
+        "ohmR": "",
+        "ohmP": ""
+      }
+    },
+    {
+      "tool": "steinmetz",
+      "method": "calculateSteinmetz",
+      "event": "steinP",
+      "inputs": {
+        "steinP": 1.5,
+        "steinHp": "",
+        "steinI": ""
+      },
+      "outputs": {
+        "steinP": "1.5",
+        "steinHp": "2.04",
+        "steinI": "",
+        "steinC": "326"
+      }
+    },
+    {
+      "tool": "steinmetz",
+      "method": "calculateSteinmetz",
+      "event": "steinP",
+      "inputs": {
+        "steinP": 0.37,
+        "steinHp": "",
+        "steinI": ""
+      },
+      "outputs": {
+        "steinP": "0.37",
+        "steinHp": "0.50",
+        "steinI": "",
+        "steinC": "80"
+      }
+    },
+    {
+      "tool": "steinmetz",
+      "method": "calculateSteinmetz",
+      "event": "steinHp",
+      "inputs": {
+        "steinP": "",
+        "steinHp": 2,
+        "steinI": ""
+      },
+      "outputs": {
+        "steinP": "1.47",
+        "steinHp": "2",
+        "steinI": "",
+        "steinC": "320"
+      }
+    },
+    {
+      "tool": "steinmetz",
+      "method": "calculateSteinmetz",
+      "event": "steinI",
+      "inputs": {
+        "steinP": "",
+        "steinHp": "",
+        "steinI": 6.5
+      },
+      "outputs": {
+        "steinP": "",
+        "steinHp": "",
+        "steinI": "6.5",
+        "steinC": "91"
+      }
+    },
+    {
+      "tool": "steinmetz",
+      "method": "calculateSteinmetz",
+      "event": "steinI",
+      "inputs": {
+        "steinP": "",
+        "steinHp": "",
+        "steinI": ""
+      },
+      "outputs": {
+        "steinP": "",
+        "steinHp": "",
+        "steinI": "",
+        "steinC": ""
+      }
+    },
+    {
+      "tool": "relevement-cos-phi",
+      "method": "calculateCosPhi",
+      "event": null,
+      "inputs": {
+        "cosPFp": 150,
+        "cosPFu": 400,
+        "cosPFhz": 50,
+        "cosPFini": 0.75,
+        "cosPFcib": 0.93
+      },
+      "outputs": {
+        "cosPFqc": "73.00",
+        "cosPFcap": "1452.4"
+      }
+    },
+    {
+      "tool": "relevement-cos-phi",
+      "method": "calculateCosPhi",
+      "event": null,
+      "inputs": {
+        "cosPFp": 100,
+        "cosPFu": 230,
+        "cosPFhz": 50,
+        "cosPFini": 0.8,
+        "cosPFcib": 0.95
+      },
+      "outputs": {
+        "cosPFqc": "42.13",
+        "cosPFcap": "2535.1"
+      }
+    },
+    {
+      "tool": "relevement-cos-phi",
+      "method": "calculateCosPhi",
+      "event": null,
+      "inputs": {
+        "cosPFp": 50,
+        "cosPFu": 400,
+        "cosPFhz": 60,
+        "cosPFini": 0.95,
+        "cosPFcib": 0.9
+      },
+      "outputs": {
+        "cosPFqc": "0.00",
+        "cosPFcap": "0.0"
+      }
+    },
+    {
+      "tool": "relevement-cos-phi",
+      "method": "calculateCosPhi",
+      "event": null,
+      "inputs": {
+        "cosPFp": 50,
+        "cosPFu": 400,
+        "cosPFhz": 50,
+        "cosPFini": 0.8,
+        "cosPFcib": 1.2
+      },
+      "outputs": {
+        "cosPFqc": "",
+        "cosPFcap": ""
+      }
+    },
+    {
+      "tool": "relevement-cos-phi",
+      "method": "calculateCosPhi",
+      "event": null,
+      "inputs": {
+        "cosPFp": 75.5,
+        "cosPFu": 400,
+        "cosPFhz": 50,
+        "cosPFini": 0.68,
+        "cosPFcib": 1
+      },
+      "outputs": {
+        "cosPFqc": "81.41",
+        "cosPFcap": "1619.6"
+      }
+    },
+    {
+      "tool": "calculs-cables",
+      "method": "calculateSection",
+      "event": null,
+      "inputs": {
+        "sectionMat": "cu",
+        "sectionLength": 50,
+        "sectionCurrent": 10,
+        "sectionVoltageDrop": 0.6
+      },
+      "outputs": {
+        "sectionResult": "28.50"
+      }
+    },
+    {
+      "tool": "calculs-cables",
+      "method": "calculateSection",
+      "event": null,
+      "inputs": {
+        "sectionMat": "al",
+        "sectionLength": 50,
+        "sectionCurrent": 10,
+        "sectionVoltageDrop": 0.6
+      },
+      "outputs": {
+        "sectionResult": "47.00"
+      }
+    },
+    {
+      "tool": "calculs-cables",
+      "method": "calculateSection",
+      "event": null,
+      "inputs": {
+        "sectionMat": "cu",
+        "sectionLength": 0,
+        "sectionCurrent": 10,
+        "sectionVoltageDrop": 0.6
+      },
+      "outputs": {
+        "sectionResult": "0.00"
+      }
+    },
+    {
+      "tool": "calculs-cables",
+      "method": "calculateLength",
+      "event": null,
+      "inputs": {
+        "lengthMat": "cu",
+        "lengthSection": 2.5,
+        "lengthCurrent": 10,
+        "lengthVoltageDrop": 0.6
+      },
+      "outputs": {
+        "lengthResult": "4.39"
+      }
+    },
+    {
+      "tool": "calculs-cables",
+      "method": "calculateLength",
+      "event": null,
+      "inputs": {
+        "lengthMat": "al",
+        "lengthSection": 16,
+        "lengthCurrent": 63,
+        "lengthVoltageDrop": 6.9
+      },
+      "outputs": {
+        "lengthResult": "31.07"
+      }
+    },
+    {
+      "tool": "calculs-cables",
+      "method": "calculateLength",
+      "event": null,
+      "inputs": {
+        "lengthMat": "cu",
+        "lengthSection": 2.5,
+        "lengthCurrent": "",
+        "lengthVoltageDrop": 0.6
+      },
+      "outputs": {
+        "lengthResult": "0.00"
+      }
+    },
+    {
+      "tool": "calculs-cables",
+      "method": "calculateDrop",
+      "event": null,
+      "inputs": {
+        "dropMat": "cu",
+        "dropSection": 2.5,
+        "dropLength": 50,
+        "dropCurrent": 10
+      },
+      "outputs": {
+        "dropResult": "6.84"
+      }
+    },
+    {
+      "tool": "calculs-cables",
+      "method": "calculateDrop",
+      "event": null,
+      "inputs": {
+        "dropMat": "al",
+        "dropSection": 16,
+        "dropLength": 100,
+        "dropCurrent": 63
+      },
+      "outputs": {
+        "dropResult": "22.21"
+      }
+    },
+    {
+      "tool": "calculs-cables",
+      "method": "calculateDrop",
+      "event": null,
+      "inputs": {
+        "dropMat": "cu",
+        "dropSection": -2.5,
+        "dropLength": 50,
+        "dropCurrent": 10
+      },
+      "outputs": {
+        "dropResult": "0.00"
+      }
+    },
+    {
+      "tool": "calculs-cables",
+      "method": "calculateWeight",
+      "event": null,
+      "inputs": {
+        "weightMat": "cu",
+        "weightLength": 50,
+        "weightSection": 2.5,
+        "weightCores": 2,
+        "weightInsulation": 20
+      },
+      "outputs": {
+        "weightResult": "2.69"
+      }
+    },
+    {
+      "tool": "calculs-cables",
+      "method": "calculateWeight",
+      "event": null,
+      "inputs": {
+        "weightMat": "al",
+        "weightLength": 100,
+        "weightSection": 16,
+        "weightCores": 3,
+        "weightInsulation": 15
+      },
+      "outputs": {
+        "weightResult": "14.90"
+      }
+    },
+    {
+      "tool": "calculs-cables",
+      "method": "calculateWeight",
+      "event": null,
+      "inputs": {
+        "weightMat": "cu",
+        "weightLength": 10,
+        "weightSection": 1.5,
+        "weightCores": "",
+        "weightInsulation": ""
+      },
+      "outputs": {
+        "weightResult": "0.13"
+      }
+    },
+    {
+      "tool": "calculs-cables",
+      "method": "calculateWeight",
+      "event": null,
+      "inputs": {
+        "weightMat": "cu",
+        "weightLength": 10,
+        "weightSection": 1.5,
+        "weightCores": 2.7,
+        "weightInsulation": 10
+      },
+      "outputs": {
+        "weightResult": "0.30"
+      }
+    }
+  ]
+}

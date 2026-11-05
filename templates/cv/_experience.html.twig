@@ -1,0 +1,40 @@
+{#
+  Une expérience du CV sur la grille commune : période (colonne fixe) | entreprise et lieu, poste, missions.
+  Inclus par : cv/show.html.twig, recruiter_area/home.html.twig (« Expériences professionnelles », « Parcours terrain »).
+  Variables attendues :
+    - experience : expérience publique (CvContentProvider) : job_title, company, company_details, location,
+                   start, end, dates_in_years, summary, missions, achievements, tools, private_note
+  Sans entreprise (ex. « Projet entrepreneurial & développement web »), l'intitulé sert de titre.
+  La note privée n'est remplie que dans l'espace recruteur (CvContentProvider::getPrivateContent()).
+  CV public synthétique : hidden_count > 0 affiche « + n points détaillés dans l'espace recruteur 🔒 ».
+#}
+<article class="cv-row">
+    <p class="cv-date">{{ cv_period_numeric(experience) }}</p>
+    <div class="min-w-0">
+        <div class="flex flex-wrap items-baseline justify-between gap-x-4">
+            <h3 class="font-bold text-secondary-900 dark:text-white">{{ experience.company ?: experience.job_title }}</h3>
+            {% if experience.location %}<p class="text-xs font-semibold tracking-wide text-secondary-500 uppercase dark:text-secondary-400">{{ experience.location }}</p>{% endif %}
+        </div>
+        {% if experience.company %}
+            <p class="text-sm font-semibold text-primary-700 dark:text-primary-300">
+                {{ experience.job_title }}{% if experience.summary %} – {{ experience.summary }}{% endif %}
+            </p>
+        {% elseif experience.summary %}
+            <p class="text-sm font-semibold text-primary-700 dark:text-primary-300">{{ experience.summary }}</p>
+        {% endif %}
+        {% if experience.company_details %}<p class="text-xs text-secondary-500 dark:text-secondary-400">{{ experience.company_details }}</p>{% endif %}
+        {% set items = experience.achievements|merge(experience.missions) %}
+        {% if items is not empty %}
+            <ul class="cv-list text-prose-justify mt-2">
+                {% for item in items %}<li>{{ item|hyphenate|cv_bold }}</li>{% endfor %}
+            </ul>
+        {% endif %}
+        {{ include('cv/_hidden_count.html.twig', {count: experience.hidden_count|default(0)}, with_context = false) }}
+        {% if experience.tools is not empty %}
+            <p class="mt-2 text-xs text-secondary-600 dark:text-secondary-400">{{ experience.tools|join(', ') }}</p>
+        {% endif %}
+        {% if experience.private_note|default(null) %}
+            <p class="mt-2 inline-flex rounded-lg bg-amber-50 px-2 py-1 text-xs font-medium text-amber-800 dark:bg-amber-500/10 dark:text-amber-200">{{ experience.private_note }}</p>
+        {% endif %}
+    </div>
+</article>

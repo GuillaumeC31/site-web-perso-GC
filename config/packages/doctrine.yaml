@@ -1,0 +1,51 @@
+doctrine:
+    dbal:
+        url: '%env(resolve:DATABASE_URL)%'
+        # La version du serveur est donnée dans DATABASE_URL (serverVersion=mariadb-11.4.13)
+        profiling_collect_backtrace: '%kernel.debug%'
+        # Toutes les tables en utf8mb4 (accents, emojis), quel que soit le réglage par défaut du serveur
+        default_table_options:
+            charset: utf8mb4
+            collation: utf8mb4_unicode_ci
+    orm:
+        validate_xml_mapping: true
+        naming_strategy: doctrine.orm.naming_strategy.underscore
+        auto_mapping: true
+        mappings:
+            App:
+                type: attribute
+                is_bundle: false
+                dir: '%kernel.project_dir%/src/Entity'
+                prefix: 'App\Entity'
+                alias: App
+
+when@test:
+    doctrine:
+        dbal:
+            # "TEST_TOKEN" is typically set by ParaTest
+            dbname_suffix: '_test%env(default::TEST_TOKEN)%'
+
+when@prod:
+    doctrine:
+        orm:
+            query_cache_driver:
+                type: pool
+                pool: doctrine.system_cache_pool
+            result_cache_driver:
+                type: pool
+                pool: doctrine.result_cache_pool
+
+    framework:
+        cache:
+            pools:
+                doctrine.result_cache_pool:
+                    adapter: cache.app
+                doctrine.system_cache_pool:
+                    adapter: cache.system
+
+# Développement : les requêtes et commandes des tests de bout en bout (Service\Dev\E2eMode) vont sur la base dédiée
+# « <base>_e2e » ; vos visites restent sur la base de développement (décision du 2026-10-29).
+when@dev:
+    doctrine:
+        dbal:
+            url: '%env(e2e_db:resolve:DATABASE_URL)%'

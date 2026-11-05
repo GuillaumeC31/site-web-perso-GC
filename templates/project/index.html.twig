@@ -1,0 +1,104 @@
+{#
+  Page : liste publique des projets (CDC §6, TEXTES_SITE §7 et §8).
+  Affichée par : ProjectController::index() (route project_list, /projets).
+  Variables attendues :
+    - case_studies     : études de cas visibles (déjà filtrées)
+    - lab_projects     : projets du Labo visibles (déjà filtrés)
+    - types            : ProjectType ayant au moins un projet visible (onglets ; barre masquée s'il y en a moins de 2)
+    - current_type     : ProjectType choisi, ou null (tous)
+    - categories       : catégories proposées dans le filtre (celles des projets visibles)
+    - current_category : ProjectCategory choisie, ou null
+  Onglets et filtres sont de simples liens (fonctionnent sans JavaScript).
+  Pas de compteur de projets (CDC §6). Le logo complet du Labo (iguane) est réservé à cette section.
+#}
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'project.meta_title'|trans({'%name%': site_owner_name}) }}{% endblock %}
+{% block description %}{{ 'project.meta_description'|trans }}{% endblock %}
+
+{% set filter_params = current_category ? {categorie: current_category.slug} : {} %}
+
+{% block body %}
+    <div class="container mx-auto px-4 py-12 lg:px-8 lg:py-16 xl:max-w-7xl">
+        <twig:SectionHeading kicker="{{ 'project.kicker'|trans }}" title="{{ 'project.title'|trans }}" :level="1">
+            {{ 'project.intro'|trans }}
+        </twig:SectionHeading>
+
+        {# Onglets par type (seulement s'il y a au moins deux types à choisir) #}
+        {% if types|length > 1 %}
+        <nav class="mt-8 border-b border-secondary-200 dark:border-secondary-700" aria-label="{{ 'project.tabs_label'|trans }}">
+            <ul class="-mb-px flex flex-wrap gap-x-6">
+                <li>
+                    <a href="{{ path('project_list', filter_params) }}"
+                       class="inline-block border-b-2 py-3 text-sm font-semibold {{ current_type is null ? 'border-primary-700 text-primary-700 dark:border-primary-300 dark:text-primary-300' : 'border-transparent text-secondary-600 hover:border-secondary-300 hover:text-secondary-900 dark:text-secondary-300 dark:hover:text-white' }}"
+                       {% if current_type is null %}aria-current="page"{% endif %}>{{ 'project.tab_all'|trans }}</a>
+                </li>
+                {% for type in types %}
+                    {% set active = current_type == type %}
+                    <li>
+                        <a href="{{ path('project_list', filter_params|merge({type: type.urlValue})) }}"
+                           class="inline-block border-b-2 py-3 text-sm font-semibold {{ active ? 'border-primary-700 text-primary-700 dark:border-primary-300 dark:text-primary-300' : 'border-transparent text-secondary-600 hover:border-secondary-300 hover:text-secondary-900 dark:text-secondary-300 dark:hover:text-white' }}"
+                           {% if active %}aria-current="page"{% endif %}>{{ type.translationKey|trans }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </nav>
+        {% endif %}
+
+        {# Filtre par catégorie #}
+        {% if categories is not empty %}
+            {% set type_params = current_type ? {type: current_type.urlValue} : {} %}
+            <div class="mt-6 flex flex-wrap items-center gap-2" role="group" aria-label="{{ 'project.categories_label'|trans }}">
+                <a href="{{ path('project_list', type_params) }}"
+                   class="rounded-full border px-3 py-1 text-sm font-medium {{ current_category is null ? 'border-primary-700 bg-primary-700 text-white' : 'border-secondary-300 text-secondary-700 hover:border-primary-700 hover:text-primary-700 dark:border-secondary-600 dark:text-secondary-200 dark:hover:border-primary-300 dark:hover:text-primary-300' }}"
+                   {% if current_category is null %}aria-current="true"{% endif %}>{{ 'project.all_categories'|trans }}</a>
+                {% for category in categories %}
+                    {% set active = current_category and current_category.id == category.id %}
+                    <a href="{{ path('project_list', type_params|merge({categorie: category.slug})) }}"
+                       class="rounded-full border px-3 py-1 text-sm font-medium {{ active ? 'border-primary-700 bg-primary-700 text-white' : 'border-secondary-300 text-secondary-700 hover:border-primary-700 hover:text-primary-700 dark:border-secondary-600 dark:text-secondary-200 dark:hover:border-primary-300 dark:hover:text-primary-300' }}"
+                       {% if active %}aria-current="true"{% endif %}>{{ category.name }}</a>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {% if case_studies is empty and lab_projects is empty %}
+            <div class="mt-12 rounded-2xl border border-dashed border-secondary-300 p-8 text-center dark:border-secondary-700">
+                <p class="text-secondary-700 dark:text-secondary-300">{{ 'project.empty'|trans }}</p>
+                {% if current_category or current_type %}
+                    <twig:Button href="{{ path('project_list') }}" variant="secondary" class="mt-4">{{ 'project.reset_filters'|trans }}</twig:Button>
+                {% endif %}
+            </div>
+        {% endif %}
+
+        {# 1. Études de cas (en premier) #}
+        {% if case_studies is not empty %}
+            <section class="mt-12" aria-labelledby="case-studies-title">
+                <h2 id="case-studies-title" class="text-2xl font-bold tracking-tight text-secondary-900 sm:text-3xl dark:text-white">{{ 'project.type.case_study'|trans }}</h2>
+                <p class="mt-2 max-w-3xl text-secondary-700 dark:text-secondary-300">{{ 'project.case_studies_intro'|trans }}</p>
+                <div class="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                    {% for project in case_studies %}
+                        {{ include('project/_card.html.twig', {project: project}) }}
+                    {% endfor %}
+                </div>
+            </section>
+        {% endif %}
+
+        {# 2. Labo (en second), avec l'emblème réservé à cette rubrique #}
+        {% if lab_projects is not empty %}
+            <section class="mt-16" aria-labelledby="lab-title">
+                <div class="flex flex-col gap-6 sm:flex-row sm:items-center">
+                    <img src="{{ asset('images/logos/embleme-labo.webp') }}" alt="" width="900" height="600" loading="lazy" decoding="async" class="h-20 w-auto shrink-0 self-start sm:h-24">
+                    <div>
+                        <h2 id="lab-title" class="text-2xl font-bold tracking-tight text-secondary-900 sm:text-3xl dark:text-white">{{ 'project.type.lab'|trans }}</h2>
+                        <p class="mt-2 max-w-3xl text-secondary-700 dark:text-secondary-300">{{ 'project.lab_intro'|trans }}</p>
+                    </div>
+                </div>
+                <div class="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                    {% for project in lab_projects %}
+                        {{ include('project/_card.html.twig', {project: project}) }}
+                    {% endfor %}
+                </div>
+            </section>
+        {% endif %}
+    </div>
+{% endblock %}

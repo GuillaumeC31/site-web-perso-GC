@@ -1,0 +1,175 @@
+{#
+  Page : CV public SYNTHÉTIQUE (correction de recette n° 1, 2026-10-30), dans l'ordre et les rubriques du CV de
+  référence ; le détail est dans l'espace recruteur.
+  Affichée par : CvController::show() (route cv_show, /cv).
+  Variables attendues (CvContentProvider::getContent()) :
+    - profile        : champs publics du profil (jamais les coordonnées)
+    - key_figures    : chiffres clés complets (non affichés ici)
+    - career         : professional (expériences), foundation (groupes par entreprise), field (parcours terrain) ;
+                       puces publiques seulement, « hidden_count » = puces réservées à l'espace recruteur
+    - pillars        : les quatre domaines (nom, résumé)
+    - entries        : rubriques « liste » (tools, expertise, software : résumés publics ; soft_skill) ; jamais interest
+    - educations, certifications, languages
+    - response_delay     : délai de validation affiché (Paramètres, « sous 24 h ouvrées »)
+    - recruiter_connected : vrai si une session de l'espace recruteur existe (note « voir le CV complet »)
+  Mise en page : haut de page en deux colonnes (profil et expériences | « Ce que je recherche »), puis
+  rubriques du bas en pleine largeur dans l'ordre du CV ; expériences sur la grille .cv-row (dates de
+  largeur fixe).
+#}
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'cv.meta_title'|trans({'%name%': profile.full_name}) }}{% endblock %}
+{% block description %}{{ 'cv.meta_description'|trans({'%name%': profile.full_name, '%title%': profile.job_title}) }}{% endblock %}
+
+{% block structured_data %}
+    {# Person + ProfilePage (schema.org), sans téléphone ni e-mail ; nonce CSP de la page #}
+    <script type="application/ld+json" nonce="{{ csp_nonce() }}">{{ seo_profile_page_json_ld(block('title')) }}</script>
+{% endblock %}
+
+{% block body %}
+    {% set chips = [profile.availability, profile.location, profile.work_modes]|filter(value => value) %}
+    {% set search = [
+        {label: 'cv.header.work_modes', value: profile.work_modes},
+        {label: 'cv.header.location', value: profile.location},
+        {label: 'cv.header.availability', value: profile.search_status ?: profile.availability},
+        {label: 'cv.header.target_roles', value: profile.target_roles},
+        {label: 'cv.header.target_companies', value: profile.target_companies},
+        {label: 'cv.header.contract_types', value: profile.contract_types},
+    ]|filter(fact => fact.value) %}
+
+    <div class="container mx-auto px-4 py-12 lg:px-8 lg:py-16 xl:max-w-6xl">
+
+        {# En-tête : identité, titre, ligne de domaines #}
+        <header class="flex flex-col gap-6 border-b border-secondary-200 pb-8 lg:flex-row lg:items-end lg:justify-between dark:border-secondary-700">
+            <div class="flex flex-col gap-6 sm:flex-row sm:items-center">
+                {# Miniature 400 × 400 (photo de l'admin ou photo par défaut) #}
+                <img src="{{ asset(profile.photo_miniature) }}" alt="{{ 'home.photo_alt'|trans({'%name%': site_owner_name}) }}"
+                     class="size-28 shrink-0 rounded-2xl object-cover object-top shadow-md ring-1 ring-secondary-900/10 sm:size-32" width="400" height="400">
+                <div class="min-w-0">
+                    <p class="mb-2 text-sm font-semibold tracking-wider text-primary-700 uppercase dark:text-primary-300">{{ 'cv.kicker'|trans }}</p>
+                    <h1 class="text-3xl font-black tracking-tight sm:text-4xl dark:text-white">{{ profile.full_name }}</h1>
+                    <p class="mt-2 text-xl font-bold tracking-wide text-secondary-900 uppercase dark:text-white">{{ profile.job_title }}</p>
+                    {% if profile.tagline %}<p class="mt-1 text-sm font-semibold text-primary-700 dark:text-primary-300">{{ profile.tagline }}</p>{% endif %}
+                    {% if chips is not empty %}
+                        <ul class="mt-4 flex flex-wrap gap-2">
+                            {% for chip in chips %}<li><twig:Badge tone="neutral">{{ chip }}</twig:Badge></li>{% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="flex flex-wrap gap-2 print:hidden">
+                <twig:Button href="{{ path('cv_pdf', {variant: 'design'}) }}" size="sm" data-turbo="false" title="{{ 'cv.download.design_help'|trans }}">{{ 'cv.download.design'|trans }}</twig:Button>
+                <twig:Button href="{{ path('cv_pdf', {variant: 'ats'}) }}" variant="secondary" size="sm" data-turbo="false" title="{{ 'cv.download.ats_help'|trans }}">{{ 'cv.download.ats'|trans }}</twig:Button>
+                <twig:Button href="{{ path('contact_show') }}" variant="secondary" size="sm">{{ 'home.cta_contact'|trans }}</twig:Button>
+            </div>
+        </header>
+
+        {# Note « version courte » : le détail est dans l'espace recruteur (corrections de recette n° 1 et 2 bis) ;
+           trois lignes, la première en gras, le lien en fin de troisième ligne (zone de clic agrandie sur mobile) #}
+        <div class="mt-8 space-y-1 rounded-xl border border-secondary-200 bg-secondary-50 px-4 py-3 text-sm text-secondary-700 dark:border-secondary-700 dark:bg-secondary-800/60 dark:text-secondary-200" data-testid="cv-synthetic-note">
+            {% if recruiter_connected %}
+                <p>
+                    <span class="font-semibold text-secondary-900 dark:text-white">{{ 'cv.synthetic_note.connected'|trans }}</span>
+                    <a href="{{ path('recruiter_home') }}" class="link inline-block py-1 font-semibold whitespace-nowrap"><span aria-hidden="true">→</span> {{ 'cv.synthetic_note.connected_link'|trans }}</a>
+                </p>
+            {% else %}
+                <p class="font-semibold text-secondary-900 dark:text-white">{{ 'cv.synthetic_note.title'|trans }}</p>
+                <p><span aria-hidden="true">→</span> {{ 'cv.synthetic_note.details'|trans }}</p>
+                <p>
+                    {{ 'cv.synthetic_note.access'|trans({'%delay%': response_delay}) }}
+                    <a href="{{ path('recruiter_access') }}" class="link inline-block py-1 font-semibold whitespace-nowrap"><span aria-hidden="true">→</span> {{ 'cv.synthetic_note.link'|trans }}</a>
+                </p>
+            {% endif %}
+        </div>
+
+        {# Les quatre domaines (bandeau du CV) #}
+        {% if pillars is not empty %}
+            <section class="mt-4" aria-labelledby="cv-domains">
+                <h2 id="cv-domains" class="sr-only">{{ 'cv.section.domains'|trans }}</h2>
+                <ul class="grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-primary-100 bg-primary-100 lg:grid-cols-4 dark:border-primary-900 dark:bg-primary-900">
+                    {% for pillar in pillars %}
+                        <li class="bg-primary-50 px-4 py-4 text-center dark:bg-secondary-900">
+                            <p class="text-sm font-bold tracking-wide text-secondary-900 uppercase dark:text-white">{{ pillar.name }}</p>
+                            {% if pillar.summary %}<p class="mt-1 text-xs text-secondary-600 dark:text-secondary-300">{{ pillar.summary }}</p>{% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </section>
+        {% endif %}
+
+        {# Haut de page : profil et expériences, avec « Ce que je recherche » en colonne latérale #}
+        <div class="mt-10 grid gap-x-12 gap-y-10 lg:grid-cols-[minmax(0,1fr)_17rem]">
+            <div class="min-w-0 space-y-12">
+                {% if profile.summary %}
+                    <section aria-labelledby="cv-profile">
+                        <h2 id="cv-profile" class="cv-heading">{{ 'cv.section.profile'|trans }}</h2>
+                        <div class="text-prose-justify space-y-3 text-base/relaxed text-secondary-700 dark:text-secondary-300">
+                            {% for paragraph in profile.summary|split("\n\n") %}<p>{{ paragraph|hyphenate|cv_bold }}</p>{% endfor %}
+                        </div>
+                    </section>
+                {% endif %}
+
+                {% if career.professional is not empty %}
+                    <section aria-labelledby="cv-professional">
+                        <h2 id="cv-professional" class="cv-heading">{{ 'cv.career_section.professional'|trans }}</h2>
+                        <ol class="space-y-7">
+                            {% for experience in career.professional %}
+                                <li>{{ include('cv/_experience.html.twig', {experience: experience}, with_context = false) }}</li>
+                            {% endfor %}
+                        </ol>
+                    </section>
+                {% endif %}
+
+                {% if career.foundation is not empty %}
+                    <section aria-labelledby="cv-foundation">
+                        <h2 id="cv-foundation" class="cv-heading">{{ 'cv.career_section.foundation'|trans }}</h2>
+                        <ol class="space-y-7">
+                            {% for group in career.foundation %}
+                                <li>{{ include('cv/_foundation.html.twig', {group: group}, with_context = false) }}</li>
+                            {% endfor %}
+                        </ol>
+                    </section>
+                {% endif %}
+
+            </div>
+
+            <aside class="lg:sticky lg:top-24 lg:self-start">
+                {% if search is not empty %}
+                    <section class="card p-5" aria-labelledby="cv-search">
+                        <h2 id="cv-search" class="cv-heading mb-4">{{ 'cv.section.search'|trans }}</h2>
+                        <dl class="space-y-3 text-sm">
+                            {% for fact in search %}
+                                <div>
+                                    <dt class="font-semibold text-secondary-900 dark:text-white">{{ fact.label|trans }}</dt>
+                                    <dd class="text-secondary-700 dark:text-secondary-300">{{ fact.value }}</dd>
+                                </div>
+                            {% endfor %}
+                        </dl>
+                    </section>
+                {% endif %}
+            </aside>
+        </div>
+
+        {# Bas de page : rubriques en pleine largeur, dans l'ordre du CV (CV synthétique : résumés publics, ni centres d'intérêt) #}
+        <div class="mt-12 space-y-12">
+            {{ include('cv/_rubrics.html.twig', {sections: ['tools'], entries: entries, languages: languages, educations: educations, certifications: certifications, heading: 'h2', id_prefix: 'cv'}, with_context = false) }}
+            {% if career.field is not empty %}
+                <section aria-labelledby="cv-field">
+                    <h2 id="cv-field" class="cv-heading">{{ 'cv.career_section.field'|trans }}</h2>
+                    {# Regroupé et dépliable (TEXTES_SITE § 4) ; ouvert à l'impression. En public : une ligne par poste #}
+                    <details class="group" data-controller="print-open">
+                        <summary class="cursor-pointer text-sm font-semibold text-primary-700 hover:text-primary-800 dark:text-primary-300 print:hidden">
+                            {{ 'cv.field_career.show'|trans({'%count%': career.field|length}) }}
+                        </summary>
+                        <ol class="mt-5 space-y-5">
+                            {% for experience in career.field %}
+                                <li>{{ include('cv/_experience.html.twig', {experience: experience}, with_context = false) }}</li>
+                            {% endfor %}
+                        </ol>
+                    </details>
+                </section>
+            {% endif %}
+            {{ include('cv/_rubrics.html.twig', {sections: ['expertise', 'software', 'soft_skill', 'languages', 'educations', 'interest'], entries: entries, languages: languages, educations: educations, certifications: certifications, heading: 'h2', id_prefix: 'cv'}, with_context = false) }}
+        </div>
+    </div>
+{% endblock %}

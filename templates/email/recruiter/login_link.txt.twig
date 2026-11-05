@@ -1,0 +1,19 @@
+{#
+  E-mail (version texte) : lien de connexion à l'espace recruteur (recruteur validé : adresse de réponse).
+  Envoyé par : RecruiterMailer::sendLoginLink(). Variables : recruiter, url, minutes, texts (EmailTexts), can_reply.
+#}
+{% autoescape false %}
+Bonjour {{ recruiter.fullName }},
+
+{{ texts.intro }}
+
+Ce lien est valable {{ minutes }} minutes et ne sert qu'une seule fois :
+
+{{ url }}
+
+Lien expiré ou déjà utilisé ? Demandez-en un nouveau sur la page de l'espace recruteur. Si vous n'êtes pas à l'origine de cette demande, ignorez simplement cet e-mail.
+
+{{ texts.signature }}
+guillaume-couget.fr
+{{ include('email/_text_footer.txt.twig') }}
+{% endautoescape %}

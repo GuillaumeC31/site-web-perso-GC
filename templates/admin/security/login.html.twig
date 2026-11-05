@@ -1,0 +1,31 @@
+{#
+  Page : connexion à l'administration (étape 1 : identifiant et mot de passe).
+  Affichée par : Admin\SecurityController::login() (route admin_login, /{ADMIN_PATH}/connexion).
+  Variables attendues :
+    - last_username : dernier identifiant saisi (chaîne vide au premier affichage)
+    - error         : AuthenticationException de la dernière tentative, ou null
+  Le formulaire est traité par le pare-feu (form_login, jeton CSRF « authenticate »).
+  Pas de lien « mot de passe oublié » : la réinitialisation se fait uniquement par SSH.
+#}
+{% extends 'admin/base_minimal.html.twig' %}
+
+{% block title %}{{ 'admin.login.title'|trans }}{% endblock %}
+
+{% block body %}
+    {% if error %}
+        <twig:Alert type="danger">{{ error.messageKey|trans(error.messageData, 'security') }}</twig:Alert>
+    {% endif %}
+    <form method="post" action="{{ path('admin_login') }}" class="space-y-5" data-turbo="false">
+        <div>
+            <label for="username" class="form-label">{{ 'admin.login.username'|trans }}</label>
+            <input type="text" id="username" name="_username" value="{{ last_username }}" class="form-input" autocomplete="username" autocapitalize="none" spellcheck="false" required autofocus>
+        </div>
+        <div>
+            <label for="password" class="form-label">{{ 'admin.login.password'|trans }}</label>
+            <input type="password" id="password" name="_password" class="form-input" autocomplete="current-password" required>
+        </div>
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}" data-controller="csrf-protection">
+        <twig:Button type="submit" class="w-full">{{ 'admin.login.submit'|trans }}</twig:Button>
+    </form>
+    <p class="form-help">{{ 'admin.login.second_step_notice'|trans }}</p>
+{% endblock %}

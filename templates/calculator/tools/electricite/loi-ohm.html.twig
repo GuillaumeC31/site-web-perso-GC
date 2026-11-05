@@ -1,0 +1,42 @@
+{#
+  Outil : loi d'Ohm et puissance (deux valeurs connues → les deux autres).
+  Inclus par : calculator/tool.html.twig. Contrôleur : calculator--loi-ohm (assets/controllers/calculator/loi_ohm_controller.js).
+  Intègre les formules de l'ancien « Cercle de la loi d'Ohm » (fusionné, adresse redirigée).
+#}
+{% import 'calculator/_macros.html.twig' as calc %}
+{% set c = 'calculator--loi-ohm' %}
+{% set input = 'input->' ~ c ~ '#calculate' %}
+
+<div data-controller="{{ c }}" class="space-y-6">
+    {% set fields %}
+        {{ calc.field('ohm-u', 'Tension (U)', 'V', {('data-' ~ c ~ '-target'): 'u', 'data-action': input}, null, 'ex. 12') }}
+        {{ calc.field('ohm-i', 'Courant (I)', 'A', {('data-' ~ c ~ '-target'): 'i', 'data-action': input}, null, 'ex. 2') }}
+        {{ calc.field('ohm-r', 'Résistance (R)', 'Ω', {('data-' ~ c ~ '-target'): 'r', 'data-action': input}, null, 'ex. 6') }}
+        {{ calc.field('ohm-p', 'Puissance (P)', 'W', {('data-' ~ c ~ '-target'): 'p', 'data-action': input}, null, 'ex. 24') }}
+        {{ calc.message({('data-' ~ c ~ '-target'): 'message'}) }}
+        <div class="sm:col-span-2 lg:col-span-4">
+            <button type="button" class="btn btn-secondary btn-sm" data-action="{{ c }}#reset">Effacer les champs</button>
+        </div>
+    {% endset %}
+    {{ calc.block('Saisissez deux valeurs pour calculer les deux autres', 'U = R × I · P = U × I · P = R × I² · P = U² / R', fields) }}
+
+    <section class="card" aria-labelledby="ohm-formulas-title">
+        <h2 id="ohm-formulas-title" class="text-lg font-bold text-secondary-900 dark:text-white">Formules de référence</h2>
+        <p class="mt-1 text-sm text-secondary-600 dark:text-secondary-300">Toutes les formules dérivées de la loi d'Ohm et de la puissance électrique, par grandeur recherchée.</p>
+        <dl class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {% for quantity in [
+                {name: 'Tension U (V)', formulas: ['U = R × I', 'U = P / I', 'U = √(P × R)']},
+                {name: 'Courant I (A)', formulas: ['I = U / R', 'I = P / U', 'I = √(P / R)']},
+                {name: 'Résistance R (Ω)', formulas: ['R = U / I', 'R = U² / P', 'R = P / I²']},
+                {name: 'Puissance P (W)', formulas: ['P = U × I', 'P = R × I²', 'P = U² / R']},
+            ] %}
+                <div class="rounded-xl border border-secondary-200 p-4 dark:border-secondary-700">
+                    <dt class="font-semibold text-secondary-900 dark:text-white">{{ quantity.name }}</dt>
+                    {% for formula in quantity.formulas %}
+                        <dd class="mt-1 font-mono text-sm text-secondary-700 dark:text-secondary-300">{{ formula }}</dd>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        </dl>
+    </section>
+</div>

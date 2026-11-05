@@ -1,0 +1,864 @@
+{
+  "source": "ancien site guillaume_c (capture automatique)",
+  "category": "electronique",
+  "results": [
+    {
+      "tool": "resistance-led",
+      "method": "calculateLed",
+      "event": null,
+      "inputs": {
+        "vAlimLed": 5,
+        "vLed": 2,
+        "iLed": 20
+      },
+      "outputs": {
+        "resultLed": "150.0",
+        "resultE24": "150 ",
+        "resultPowerLed": "0.060",
+        "powerAdvice": "1/8 W (0.125W)"
+      }
+    },
+    {
+      "tool": "resistance-led",
+      "method": "calculateLed",
+      "event": null,
+      "inputs": {
+        "vAlimLed": 12,
+        "vLed": 3.2,
+        "iLed": 20
+      },
+      "outputs": {
+        "resultLed": "440.0",
+        "resultE24": "470 ",
+        "resultPowerLed": "0.176",
+        "powerAdvice": "1/4 W (0.25W)"
+      }
+    },
+    {
+      "tool": "resistance-led",
+      "method": "calculateLed",
+      "event": null,
+      "inputs": {
+        "vAlimLed": 3.3,
+        "vLed": 1.8,
+        "iLed": 10
+      },
+      "outputs": {
+        "resultLed": "150.0",
+        "resultE24": "150 ",
+        "resultPowerLed": "0.015",
+        "powerAdvice": "1/8 W (0.125W)"
+      }
+    },
+    {
+      "tool": "resistance-led",
+      "method": "calculateLed",
+      "event": null,
+      "inputs": {
+        "vAlimLed": 24,
+        "vLed": 2.1,
+        "iLed": 20
+      },
+      "outputs": {
+        "resultLed": "1095.0",
+        "resultE24": "1.1 k",
+        "resultPowerLed": "0.438",
+        "powerAdvice": "1/2 W (0.5W)"
+      }
+    },
+    {
+      "tool": "resistance-led",
+      "method": "calculateLed",
+      "event": null,
+      "inputs": {
+        "vAlimLed": 24,
+        "vLed": 3.2,
+        "iLed": 350
+      },
+      "outputs": {
+        "resultLed": "59.4",
+        "resultE24": "62 ",
+        "resultPowerLed": "7.280",
+        "powerAdvice": "8 W (Résistance de puissance)"
+      }
+    },
+    {
+      "tool": "resistance-led",
+      "method": "calculateLed",
+      "event": null,
+      "inputs": {
+        "vAlimLed": 3.6,
+        "vLed": 3.2,
+        "iLed": 100
+      },
+      "outputs": {
+        "resultLed": "4.0",
+        "resultE24": "4 ",
+        "resultPowerLed": "0.040",
+        "powerAdvice": "1/8 W (0.125W)"
+      }
+    },
+    {
+      "tool": "resistance-led",
+      "method": "calculateLed",
+      "event": null,
+      "inputs": {
+        "vAlimLed": 230,
+        "vLed": 3.2,
+        "iLed": 20
+      },
+      "outputs": {
+        "resultLed": "11340.0",
+        "resultE24": "12.0 k",
+        "resultPowerLed": "4.536",
+        "powerAdvice": "5 W (Résistance de puissance)"
+      }
+    },
+    {
+      "tool": "resistance-led",
+      "method": "calculateLed",
+      "event": null,
+      "inputs": {
+        "vAlimLed": 2,
+        "vLed": 3.2,
+        "iLed": 20
+      },
+      "outputs": {
+        "resultLed": "",
+        "resultE24": "",
+        "resultPowerLed": "",
+        "powerAdvice": "1/4 W"
+      }
+    },
+    {
+      "tool": "resistance-led",
+      "method": "calculateLed",
+      "event": null,
+      "inputs": {
+        "vAlimLed": 5,
+        "vLed": 2,
+        "iLed": 0
+      },
+      "outputs": {
+        "resultLed": "",
+        "resultE24": "",
+        "resultPowerLed": "",
+        "powerAdvice": "1/4 W"
+      }
+    },
+    {
+      "tool": "resistance-led",
+      "method": "calculateLed",
+      "event": null,
+      "inputs": {
+        "vAlimLed": 5,
+        "vLed": "",
+        "iLed": 20
+      },
+      "outputs": {
+        "resultLed": "",
+        "resultE24": "",
+        "resultPowerLed": "",
+        "powerAdvice": "1/4 W"
+      }
+    },
+    {
+      "tool": "diviseur-tension",
+      "method": "calculateDiv",
+      "event": null,
+      "inputs": {
+        "vInDiv": 5,
+        "r1Div": 10000,
+        "r2Div": 10000
+      },
+      "outputs": {
+        "resultDiv": "2.50",
+        "resultDivCurrent": "0.250"
+      }
+    },
+    {
+      "tool": "diviseur-tension",
+      "method": "calculateDiv",
+      "event": null,
+      "inputs": {
+        "vInDiv": 12,
+        "r1Div": 27000,
+        "r2Div": 10000
+      },
+      "outputs": {
+        "resultDiv": "3.24",
+        "resultDivCurrent": "0.324"
+      }
+    },
+    {
+      "tool": "diviseur-tension",
+      "method": "calculateDiv",
+      "event": null,
+      "inputs": {
+        "vInDiv": 24,
+        "r1Div": 4700,
+        "r2Div": 1000
+      },
+      "outputs": {
+        "resultDiv": "4.21",
+        "resultDivCurrent": "4.211"
+      }
+    },
+    {
+      "tool": "diviseur-tension",
+      "method": "calculateDiv",
+      "event": null,
+      "inputs": {
+        "vInDiv": 5,
+        "r1Div": 0,
+        "r2Div": 0
+      },
+      "outputs": {
+        "resultDiv": "",
+        "resultDivCurrent": ""
+      }
+    },
+    {
+      "tool": "diviseur-tension",
+      "method": "calculateDiv",
+      "event": null,
+      "inputs": {
+        "vInDiv": 5,
+        "r1Div": -1000,
+        "r2Div": 10000
+      },
+      "outputs": {
+        "resultDiv": "5.56",
+        "resultDivCurrent": "0.556"
+      }
+    },
+    {
+      "tool": "diviseur-tension",
+      "method": "calculateDiv",
+      "event": null,
+      "inputs": {
+        "vInDiv": 5,
+        "r1Div": "",
+        "r2Div": 10000
+      },
+      "outputs": {
+        "resultDiv": "",
+        "resultDivCurrent": ""
+      }
+    },
+    {
+      "tool": "diviseur-tension",
+      "method": "calculateDivRes",
+      "event": null,
+      "inputs": {
+        "vInDivCalc": 12,
+        "vOutDivCalc": 3.3,
+        "fixedResType": "R1",
+        "fixedResVal": 10000
+      },
+      "outputs": {
+        "resultDivRes": "3793.1",
+        "resultDivCalcCurrent": "0.870"
+      }
+    },
+    {
+      "tool": "diviseur-tension",
+      "method": "calculateDivRes",
+      "event": null,
+      "inputs": {
+        "vInDivCalc": 12,
+        "vOutDivCalc": 3.3,
+        "fixedResType": "R2",
+        "fixedResVal": 10000
+      },
+      "outputs": {
+        "resultDivRes": "26363.6",
+        "resultDivCalcCurrent": "0.330"
+      }
+    },
+    {
+      "tool": "diviseur-tension",
+      "method": "calculateDivRes",
+      "event": null,
+      "inputs": {
+        "vInDivCalc": 5,
+        "vOutDivCalc": 3.3,
+        "fixedResType": "R2",
+        "fixedResVal": 4700
+      },
+      "outputs": {
+        "resultDivRes": "2421.2",
+        "resultDivCalcCurrent": "0.702"
+      }
+    },
+    {
+      "tool": "diviseur-tension",
+      "method": "calculateDivRes",
+      "event": null,
+      "inputs": {
+        "vInDivCalc": 5,
+        "vOutDivCalc": 6,
+        "fixedResType": "R1",
+        "fixedResVal": 10000
+      },
+      "outputs": {
+        "resultDivRes": "",
+        "resultDivCalcCurrent": ""
+      }
+    },
+    {
+      "tool": "diviseur-tension",
+      "method": "calculateDivRes",
+      "event": null,
+      "inputs": {
+        "vInDivCalc": 5,
+        "vOutDivCalc": 2.5,
+        "fixedResType": "R1",
+        "fixedResVal": 0
+      },
+      "outputs": {
+        "resultDivRes": "",
+        "resultDivCalcCurrent": ""
+      }
+    },
+    {
+      "tool": "autonomie-batterie",
+      "method": "calculateBat",
+      "event": null,
+      "inputs": {
+        "capBat": 2000,
+        "iBat": 50
+      },
+      "outputs": {
+        "resultBat": "28.0"
+      }
+    },
+    {
+      "tool": "autonomie-batterie",
+      "method": "calculateBat",
+      "event": null,
+      "inputs": {
+        "capBat": 2600,
+        "iBat": 120
+      },
+      "outputs": {
+        "resultBat": "15.2"
+      }
+    },
+    {
+      "tool": "autonomie-batterie",
+      "method": "calculateBat",
+      "event": null,
+      "inputs": {
+        "capBat": 500,
+        "iBat": 0.5
+      },
+      "outputs": {
+        "resultBat": "700.0"
+      }
+    },
+    {
+      "tool": "autonomie-batterie",
+      "method": "calculateBat",
+      "event": null,
+      "inputs": {
+        "capBat": 2000,
+        "iBat": 0
+      },
+      "outputs": {
+        "resultBat": ""
+      }
+    },
+    {
+      "tool": "autonomie-batterie",
+      "method": "calculateBat",
+      "event": null,
+      "inputs": {
+        "capBat": 2000,
+        "iBat": -50
+      },
+      "outputs": {
+        "resultBat": "-28.0"
+      }
+    },
+    {
+      "tool": "autonomie-batterie",
+      "method": "calculateBat",
+      "event": null,
+      "inputs": {
+        "capBat": "",
+        "iBat": 50
+      },
+      "outputs": {
+        "resultBat": ""
+      }
+    },
+    {
+      "tool": "code-couleur-resistance",
+      "fn": "decodeBands",
+      "args": [
+        [
+          "1",
+          "0",
+          "2",
+          "gold"
+        ],
+        4
+      ],
+      "result": {
+        "ohms": 1000,
+        "tolerancePct": 5,
+        "toleranceId": "gold",
+        "tempPpm": null
+      }
+    },
+    {
+      "tool": "code-couleur-resistance",
+      "fn": "decodeBands",
+      "args": [
+        [
+          "4",
+          "7",
+          "gold",
+          "gold"
+        ],
+        4
+      ],
+      "result": {
+        "ohms": 4.7,
+        "tolerancePct": 5,
+        "toleranceId": "gold",
+        "tempPpm": null
+      }
+    },
+    {
+      "tool": "code-couleur-resistance",
+      "fn": "decodeBands",
+      "args": [
+        [
+          "2",
+          "2",
+          "silver",
+          "silver"
+        ],
+        4
+      ],
+      "result": {
+        "ohms": 0.22,
+        "tolerancePct": 10,
+        "toleranceId": "silver",
+        "tempPpm": null
+      }
+    },
+    {
+      "tool": "code-couleur-resistance",
+      "fn": "decodeBands",
+      "args": [
+        [
+          "1",
+          "0",
+          "0",
+          "1",
+          "brown"
+        ],
+        5
+      ],
+      "result": {
+        "ohms": 1000,
+        "tolerancePct": 1,
+        "toleranceId": "brown",
+        "tempPpm": null,
+        "tempId": null
+      }
+    },
+    {
+      "tool": "code-couleur-resistance",
+      "fn": "decodeBands",
+      "args": [
+        [
+          "4",
+          "7",
+          "5",
+          "3",
+          "red"
+        ],
+        5
+      ],
+      "result": {
+        "ohms": 475000,
+        "tolerancePct": 2,
+        "toleranceId": "red",
+        "tempPpm": null,
+        "tempId": null
+      }
+    },
+    {
+      "tool": "code-couleur-resistance",
+      "fn": "decodeBands",
+      "args": [
+        [
+          "2",
+          "4",
+          "9",
+          "2",
+          "violet",
+          "brown"
+        ],
+        6
+      ],
+      "result": {
+        "ohms": 24900,
+        "tolerancePct": 0.1,
+        "toleranceId": "violet",
+        "tempPpm": 100,
+        "tempId": "brown"
+      }
+    },
+    {
+      "tool": "code-couleur-resistance",
+      "fn": "decodeBands",
+      "args": [
+        [
+          "9",
+          "9",
+          "6",
+          "gold"
+        ],
+        4
+      ],
+      "result": {
+        "ohms": 99000000,
+        "tolerancePct": 5,
+        "toleranceId": "gold",
+        "tempPpm": null
+      }
+    },
+    {
+      "tool": "code-couleur-resistance",
+      "fn": "decodeBands",
+      "args": [
+        [
+          "x",
+          "0",
+          "2",
+          "gold"
+        ],
+        4
+      ],
+      "result": null
+    },
+    {
+      "tool": "code-couleur-resistance",
+      "fn": "encodeValue",
+      "args": [
+        1000,
+        4,
+        "gold"
+      ],
+      "result": {
+        "bandIds": [
+          "1",
+          "0",
+          "2",
+          "gold"
+        ],
+        "ohms": 1000
+      }
+    },
+    {
+      "tool": "code-couleur-resistance",
+      "fn": "encodeValue",
+      "args": [
+        4700,
+        4,
+        "gold"
+      ],
+      "result": {
+        "bandIds": [
+          "4",
+          "7",
+          "2",
+          "gold"
+        ],
+        "ohms": 4700
+      }
+    },
+    {
+      "tool": "code-couleur-resistance",
+      "fn": "encodeValue",
+      "args": [
+        0.22,
+        4,
+        "silver"
+      ],
+      "result": {
+        "bandIds": [
+          "2",
+          "2",
+          "silver",
+          "silver"
+        ],
+        "ohms": 0.22
+      }
+    },
+    {
+      "tool": "code-couleur-resistance",
+      "fn": "encodeValue",
+      "args": [
+        1.5,
+        4,
+        "gold"
+      ],
+      "result": {
+        "bandIds": [
+          "1",
+          "5",
+          "gold",
+          "gold"
+        ],
+        "ohms": 1.5
+      }
+    },
+    {
+      "tool": "code-couleur-resistance",
+      "fn": "encodeValue",
+      "args": [
+        47500,
+        5,
+        "brown"
+      ],
+      "result": {
+        "bandIds": [
+          "4",
+          "7",
+          "5",
+          "2",
+          "brown"
+        ],
+        "ohms": 47500
+      }
+    },
+    {
+      "tool": "code-couleur-resistance",
+      "fn": "encodeValue",
+      "args": [
+        2490,
+        6,
+        "violet"
+      ],
+      "result": {
+        "bandIds": [
+          "2",
+          "4",
+          "9",
+          "1",
+          "violet",
+          "brown"
+        ],
+        "ohms": 2490
+      }
+    },
+    {
+      "tool": "code-couleur-resistance",
+      "fn": "encodeValue",
+      "args": [
+        123,
+        4,
+        "gold"
+      ],
+      "result": null
+    },
+    {
+      "tool": "code-couleur-resistance",
+      "fn": "encodeValue",
+      "args": [
+        1,
+        5,
+        "brown"
+      ],
+      "result": null
+    },
+    {
+      "tool": "code-couleur-resistance",
+      "fn": "encodeValue",
+      "args": [
+        0,
+        4,
+        "gold"
+      ],
+      "result": null
+    },
+    {
+      "tool": "code-couleur-resistance",
+      "fn": "encodeValue",
+      "args": [
+        -10,
+        4,
+        "gold"
+      ],
+      "result": null
+    },
+    {
+      "tool": "code-couleur-resistance",
+      "fn": "encodeValue",
+      "args": [
+        1000,
+        4,
+        "inconnue"
+      ],
+      "result": {
+        "bandIds": [
+          "1",
+          "0",
+          "2",
+          "gold"
+        ],
+        "ohms": 1000
+      }
+    },
+    {
+      "tool": "code-couleur-resistance",
+      "fn": "formatOhms",
+      "args": [
+        0.22
+      ],
+      "result": "220.0 mΩ"
+    },
+    {
+      "tool": "code-couleur-resistance",
+      "fn": "formatOhms",
+      "args": [
+        4.7
+      ],
+      "result": "4.70 Ω"
+    },
+    {
+      "tool": "code-couleur-resistance",
+      "fn": "formatOhms",
+      "args": [
+        470
+      ],
+      "result": "470.0 Ω"
+    },
+    {
+      "tool": "code-couleur-resistance",
+      "fn": "formatOhms",
+      "args": [
+        4700
+      ],
+      "result": "4.70 kΩ"
+    },
+    {
+      "tool": "code-couleur-resistance",
+      "fn": "formatOhms",
+      "args": [
+        1000
+      ],
+      "result": "1 kΩ"
+    },
+    {
+      "tool": "code-couleur-resistance",
+      "fn": "formatOhms",
+      "args": [
+        2200000
+      ],
+      "result": "2.20 MΩ"
+    },
+    {
+      "tool": "code-couleur-resistance",
+      "fn": "formatOhms",
+      "args": [
+        1000000
+      ],
+      "result": "1 MΩ"
+    },
+    {
+      "tool": "code-couleur-resistance",
+      "fn": "nearestE24",
+      "args": [
+        1234
+      ],
+      "result": 1200
+    },
+    {
+      "tool": "code-couleur-resistance",
+      "fn": "nearestE24",
+      "args": [
+        4.6
+      ],
+      "result": 4.7
+    },
+    {
+      "tool": "code-couleur-resistance",
+      "fn": "nearestE24",
+      "args": [
+        99
+      ],
+      "result": 91
+    },
+    {
+      "tool": "code-couleur-resistance",
+      "fn": "nearestE24",
+      "args": [
+        0
+      ],
+      "result": null
+    },
+    {
+      "tool": "code-couleur-resistance",
+      "fn": "suggestPowerRating",
+      "args": [
+        0.03
+      ],
+      "result": "1/8 W (0,125 W) suffisant"
+    },
+    {
+      "tool": "code-couleur-resistance",
+      "fn": "suggestPowerRating",
+      "args": [
+        0.1
+      ],
+      "result": "1/4 W (0,25 W) recommandé"
+    },
+    {
+      "tool": "code-couleur-resistance",
+      "fn": "suggestPowerRating",
+      "args": [
+        0.2
+      ],
+      "result": "1/2 W (0,5 W) recommandé"
+    },
+    {
+      "tool": "code-couleur-resistance",
+      "fn": "suggestPowerRating",
+      "args": [
+        0.4
+      ],
+      "result": "1 W recommandé"
+    },
+    {
+      "tool": "code-couleur-resistance",
+      "fn": "suggestPowerRating",
+      "args": [
+        0.9
+      ],
+      "result": "2 W recommandé"
+    },
+    {
+      "tool": "code-couleur-resistance",
+      "fn": "suggestPowerRating",
+      "args": [
+        3
+      ],
+      "result": "5 W ou plus (vérifier refroidissement)"
+    },
+    {
+      "tool": "code-couleur-resistance",
+      "fn": "suggestPowerRating",
+      "args": [
+        0
+      ],
+      "result": "1/4 W (0,25 W) minimum courant"
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{#
+  E-mail (version texte) : demande d'accès non retenue (sans motif, aucune adresse de réponse).
+  Envoyé par : RecruiterMailer::sendRefusal(). Variables : recruiter, texts (EmailTexts : intro, signature), contact_url.
+#}
+{% autoescape false %}
+Bonjour {{ recruiter.fullName }},
+
+{{ texts.intro }}
+
+Les informations de votre demande seront supprimées 30 jours après cette décision.
+
+{{ texts.signature }}
+guillaume-couget.fr
+{{ include('email/_text_footer.txt.twig') }}
+{% endautoescape %}

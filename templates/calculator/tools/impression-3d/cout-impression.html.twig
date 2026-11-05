@@ -1,0 +1,57 @@
+{#
+  Outil : coût d'une impression 3D (matière + électricité).
+  Inclus par : calculator/tool.html.twig. Contrôleur : calculator--cout-impression.
+  Variables attendues (CalculatorController::toolData()) :
+    - printers  : imprimantes de référence (Printer3d), dans l'ordre de l'admin
+    - providers : offres d'électricité (EnergyProvider), dans l'ordre de l'admin
+  Prix du kWh par défaut (0,25 €) repris de l'ancien site.
+#}
+{% import 'calculator/_macros.html.twig' as calc %}
+{% set c = 'calculator--cout-impression' %}
+{% set input = 'input->' ~ c ~ '#calculate' %}
+
+<div data-controller="{{ c }}" class="space-y-6">
+    <section class="card">
+        <h2 class="text-lg font-bold text-secondary-900 dark:text-white">Valeurs de référence (facultatif)</h2>
+        <p class="mt-1 text-sm text-secondary-600 dark:text-secondary-300">Choisir une imprimante ou une offre remplit la puissance ou le prix du kWh ; vous pouvez ensuite les modifier.</p>
+        <div class="mt-4 grid gap-4 sm:grid-cols-2">
+            <div>
+                <label for="cost-printer" class="form-label">Imprimante 3D</label>
+                <select id="cost-printer" class="form-input" data-action="change->{{ c }}#choosePrinter">
+                    <option value="">Choisir une imprimante…</option>
+                    {% for printer in printers %}
+                        <option value="{{ printer.powerConsumption }}">{{ printer.brand }} {{ printer.model }} ({{ printer.powerConsumption }} W)</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <label for="cost-provider" class="form-label">Offre d'électricité</label>
+                <select id="cost-provider" class="form-input" data-action="change->{{ c }}#chooseProvider">
+                    <option value="">Choisir une offre…</option>
+                    {% for provider in providers %}
+                        <option value="{{ provider.priceKwh }}">{{ provider.name }} — {{ provider.planName }} ({{ provider.priceKwh|number_format(4, ',', ' ') }} €/kWh)</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+    </section>
+
+    {% set fields %}
+        {{ calc.field('cost-weight', 'Poids de la pièce', 'g', {('data-' ~ c ~ '-target'): 'weight', 'data-action': input}, null, 'ex. 150') }}
+        {{ calc.field('cost-spool', 'Prix de la bobine de 1 kg', '€', {('data-' ~ c ~ '-target'): 'spool', 'data-action': input}, null, 'ex. 20') }}
+        {{ calc.field('cost-hours', 'Durée : heures', 'h', {('data-' ~ c ~ '-target'): 'hours', 'data-action': input}, null, 'ex. 4') }}
+        {{ calc.field('cost-minutes', 'Durée : minutes', 'min', {('data-' ~ c ~ '-target'): 'minutes', 'data-action': input}, null, 'ex. 30') }}
+        {{ calc.field('cost-power', 'Puissance de l\'imprimante', 'W', {('data-' ~ c ~ '-target'): 'power', 'data-action': input}, null, 'ex. 150') }}
+        {{ calc.field('cost-kwh', 'Prix du kWh', '€', {('data-' ~ c ~ '-target'): 'priceKwh', 'data-action': input}, '0,25') }}
+        {{ calc.message({('data-' ~ c ~ '-target'): 'message'}) }}
+    {% endset %}
+    {{ calc.block('Prix de revient', 'Coût = poids / 1000 × prix de la bobine + durée × puissance / 1000 × prix du kWh', fields) }}
+
+    {% set fields %}
+        {{ calc.result('cost-total', 'Coût total', '€', {('data-' ~ c ~ '-target'): 'total'}, 'cost-weight cost-spool cost-hours cost-minutes cost-power cost-kwh') }}
+        {{ calc.result('cost-material', 'Dont matière', '€', {('data-' ~ c ~ '-target'): 'material'}, 'cost-weight cost-spool') }}
+        {{ calc.result('cost-electricity', 'Dont électricité', '€', {('data-' ~ c ~ '-target'): 'electricity'}, 'cost-hours cost-minutes cost-power cost-kwh') }}
+        {{ calc.note({}, 'Puissances et tarifs de référence indicatifs, à vérifier selon votre matériel et votre contrat.') }}
+    {% endset %}
+    {{ calc.block('Résultats', null, fields) }}
+</div>

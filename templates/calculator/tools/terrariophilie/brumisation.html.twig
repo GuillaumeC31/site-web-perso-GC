@@ -1,0 +1,24 @@
+{#
+  Outil : système de brumisation (consommation d'eau, réserve conseillée).
+  Inclus par : calculator/tool.html.twig. Contrôleur : calculator--brumisation.
+  Valeurs par défaut et conseils repris de l'ancien site.
+#}
+{% import 'calculator/_macros.html.twig' as calc %}
+{% set c = 'calculator--brumisation' %}
+{% set t = 'data-' ~ c ~ '-target' %}
+{% set input = 'input->' ~ c ~ '#calculate' %}
+
+<div data-controller="{{ c }}" class="space-y-6">
+    {% set fields %}
+        {{ calc.field('tm-nozzles', 'Nombre de buses', null, {(t): 'nozzles', 'data-action': input}, '2') }}
+        {{ calc.field('tm-flow', 'Débit par buse', 'L/h', {(t): 'flow', 'data-action': input}, '2') }}
+        {{ calc.field('tm-duration', 'Durée par pluie', 's', {(t): 'duration', 'data-action': input}, '15') }}
+        {{ calc.field('tm-frequency', 'Pluies par jour', null, {(t): 'frequency', 'data-action': input}, '4') }}
+        {{ calc.result('tm-day', 'Consommation par jour', 'L', {(t): 'day'}, 'tm-nozzles tm-flow tm-duration tm-frequency') }}
+        {{ calc.result('tm-week', 'Consommation par semaine', 'L', {(t): 'week'}, 'tm-nozzles tm-flow tm-duration tm-frequency') }}
+        {{ calc.result('tm-tank', 'Réserve recommandée', 'L', {(t): 'tank'}, 'tm-nozzles tm-flow tm-duration tm-frequency') }}
+        {{ calc.message({(t): 'message'}) }}
+        {{ calc.note({}, 'Réserve prévue pour une semaine d\'autonomie, plus 20 % de sécurité pour ne pas désamorcer la pompe. Exemple de débit : 2 L/h pour une buse fine. Utilisez de l\'eau osmosée.') }}
+    {% endset %}
+    {{ calc.block('Système de brumisation', 'Eau par jour = débit / 3600 × durée × buses × pluies · réserve = 7 jours × 1,2', fields) }}
+</div>

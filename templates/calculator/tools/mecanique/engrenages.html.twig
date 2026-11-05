@@ -1,0 +1,45 @@
+{#
+  Outil : train d'engrenages (rapport, vitesse et couple de sortie, alertes).
+  Inclus par : calculator/tool.html.twig. Contrôleur : calculator--engrenages.
+  Champs, rendement par défaut (95 %) et alerte de dent de chasse repris de l'ancien site ; correction
+  B4 (seuils d'interférence calculés depuis l'angle de pression) : docs/CALCULATRICE_ANOMALIES.md.
+#}
+{% import 'calculator/_macros.html.twig' as calc %}
+{% set c = 'calculator--engrenages' %}
+{% set input = 'input->' ~ c ~ '#calculate' %}
+
+<div data-controller="{{ c }}" class="space-y-6">
+    {% set fields %}
+        {{ calc.field('gear-z1', 'Menante 1 (Z1)', 'dents', {('data-' ~ c ~ '-target'): 'z1', 'data-action': input}, null, 'ex. 12') }}
+        {{ calc.field('gear-z2', 'Menée 1 (Z2)', 'dents', {('data-' ~ c ~ '-target'): 'z2', 'data-action': input}, null, 'ex. 48') }}
+        {{ calc.field('gear-z3', 'Menante 2 (Z3, facultatif)', 'dents', {('data-' ~ c ~ '-target'): 'z3', 'data-action': input}, null, 'Z3') }}
+        {{ calc.field('gear-z4', 'Menée 2 (Z4, facultatif)', 'dents', {('data-' ~ c ~ '-target'): 'z4', 'data-action': input}, null, 'Z4') }}
+    {% endset %}
+    {{ calc.block('Denture (nombre de dents)', 'Rapport = (Z1 × Z3) / (Z2 × Z4)', fields) }}
+
+    {% set fields %}
+        {{ calc.field('gear-angle', 'Angle de pression α', '°', {('data-' ~ c ~ '-target'): 'angle', 'data-action': input}, '20') }}
+        <p class="text-sm text-secondary-700 sm:col-span-2 lg:col-span-3 dark:text-secondary-300" aria-live="polite" data-{{ c }}-target="limits">z théorique = 2 / sin²(20°) = 17,1 → 17 dents · z pratique ≈ 5/6 × 17,1 → 14 dents</p>
+        {{ calc.note({}, 'Denture droite taillée par crémaillère, sans déport. Avertissement sous la limite théorique, alerte forte sous la limite pratique.') }}
+    {% endset %}
+    {{ calc.block('Interférence de taillage', 'z min = 2 / sin²α', fields) }}
+
+    {% set fields %}
+        {{ calc.field('gear-speed', 'Vitesse d\'entrée', 'tr/min', {('data-' ~ c ~ '-target'): 'speed', 'data-action': input}, null, 'ex. 3000') }}
+        {{ calc.field('gear-torque', 'Couple d\'entrée', 'N·m', {('data-' ~ c ~ '-target'): 'torque', 'data-action': input}, null, 'ex. 5') }}
+        {{ calc.field('gear-eff', 'Rendement', '%', {('data-' ~ c ~ '-target'): 'efficiency', 'data-action': input}, '95') }}
+    {% endset %}
+    {{ calc.block('Moteur et rendement', 'Vitesse de sortie = vitesse × rapport · couple de sortie = couple / rapport × rendement', fields) }}
+
+    {% set fields %}
+        <div>
+            <span id="gear-ratio-label" class="form-label">Rapport de réduction</span>
+            <output id="gear-ratio" aria-labelledby="gear-ratio-label" aria-live="polite" class="flex min-h-[2.625rem] items-center rounded-lg border border-primary-200 bg-primary-50 px-3 py-2 font-mono text-lg font-bold text-primary-800 dark:border-primary-800 dark:bg-primary-950/50 dark:text-primary-200" data-{{ c }}-target="ratio">—</output>
+        </div>
+        {{ calc.result('gear-speed-out', 'Vitesse de sortie', 'tr/min', {('data-' ~ c ~ '-target'): 'speedOut'}, 'gear-z1 gear-z2 gear-z3 gear-z4 gear-speed') }}
+        {{ calc.result('gear-torque-out', 'Couple de sortie', 'N·m', {('data-' ~ c ~ '-target'): 'torqueOut'}, 'gear-z1 gear-z2 gear-z3 gear-z4 gear-torque gear-eff') }}
+        {{ calc.message({('data-' ~ c ~ '-target'): 'message'}) }}
+        <ul class="space-y-2 sm:col-span-2 lg:col-span-4" aria-live="polite" data-{{ c }}-target="alerts"></ul>
+    {% endset %}
+    {{ calc.block('Résultats', null, fields) }}
+</div>

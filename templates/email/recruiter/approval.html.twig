@@ -1,0 +1,18 @@
+{#
+  E-mail : accès à l'espace recruteur validé (ou prolongé), avec un lien de connexion (recruteur validé : adresse de réponse).
+  Envoyé par : RecruiterMailer::sendApproval(). Variables : recruiter, renewed, url, minutes, texts (EmailTexts : intro,
+  signature), subject, can_reply.
+#}
+{% extends 'email/_layout.html.twig' %}
+
+{% block content %}
+    <p style="margin:0 0 12px;">Bonjour {{ recruiter.fullName }},</p>
+    <p style="margin:0 0 12px;">{{ texts.intro|nl2br }}</p>
+    <p style="margin:0 0 12px;">Accès ouvert jusqu'au <strong>{{ recruiter.accessExpiresAt|format_date('long') }}</strong>.</p>
+    <p style="margin:0 0 12px;">Le lien ci-dessous vous connecte directement. Il est valable <strong>{{ minutes }} minutes</strong> et ne sert <strong>qu'une seule fois</strong> ; vous pourrez ensuite en demander un nouveau à tout moment sur la page de l'espace recruteur.</p>
+{% endblock %}
+
+{% block button %}
+    {{ include('email/_button.html.twig', {url: url, label: 'Accéder à l\'espace recruteur'}) }}
+    <tr><td style="font-size:14px;line-height:1.6;padding-top:12px;">{{ texts.signature|nl2br }}</td></tr>
+{% endblock %}

@@ -1,0 +1,18 @@
+{#
+  E-mail (version texte) : résumé hebdomadaire du tableau de bord, chiffres seulement.
+  Envoyé par : App\Command\DashboardWeeklySummaryCommand. Variables : tiles, computed_at, texts (EmailTexts : intro, signature).
+#}
+{% set symbols = {ok: '[OK]', warning: '[!]', problem: '[X]', not_applicable: '[-]'} %}
+{% autoescape false %}
+{{ texts.intro }}
+{% for tile in tiles %}
+
+{{ ('admin.dashboard.tile.' ~ tile.id)|trans }} {{ symbols[tile.status] }} {{ ('admin.dashboard.status.' ~ tile.status)|trans }}
+{{ tile.id == 'ai' ? ('admin.assistant.state.' ~ tile.value)|trans : tile.value }} {{ tile.value_key|trans }}
+{% for line in tile.lines %}
+- {% if line.status is defined %}{{ symbols[line.status] }} {% endif %}{{ line.key|trans(line.params|map(value => value matches '/^admin\./' ? value|trans : value)) }}
+{% endfor %}
+{% endfor %}
+
+{{ 'admin.dashboard.weekly.computed_at'|trans({'%date%': computed_at|format_datetime('short', 'short', timezone: 'Europe/Paris')}) }} {{ 'admin.dashboard.weekly.outro'|trans }}
+{% endautoescape %}

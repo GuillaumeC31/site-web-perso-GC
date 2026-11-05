@@ -1,0 +1,28 @@
+{#
+  Outil : flexion d'une poutre encastrée chargée à son extrémité libre.
+  Inclus par : calculator/tool.html.twig. Contrôleur : calculator--flexion-poutre.
+  Cas de charge et repères (acier ≈ 210 000 MPa, aluminium ≈ 69 000 MPa) repris de l'ancien site.
+#}
+{% import 'calculator/_macros.html.twig' as calc %}
+{% set c = 'calculator--flexion-poutre' %}
+{% set input = 'input->' ~ c ~ '#calculate' %}
+
+<div data-controller="{{ c }}" class="space-y-6">
+    <p class="text-secondary-700 dark:text-secondary-300">Poutre encastrée à une extrémité, soumise à une force ponctuelle F à son extrémité libre.</p>
+
+    {% set fields %}
+        {{ calc.field('beam-f', 'Force appliquée (F)', 'N', {('data-' ~ c ~ '-target'): 'force', 'data-action': input}, null, 'ex. 1000') }}
+        {{ calc.field('beam-l', 'Longueur (L)', 'mm', {('data-' ~ c ~ '-target'): 'length', 'data-action': input}, null, 'ex. 500') }}
+        {{ calc.field('beam-e', 'Module de Young (E)', 'MPa', {('data-' ~ c ~ '-target'): 'modulus', 'data-action': input}, null, 'acier ≈ 210 000') }}
+        {{ calc.field('beam-i', 'Moment quadratique (I)', 'mm⁴', {('data-' ~ c ~ '-target'): 'inertia', 'data-action': input}, null, 'ex. 416 000') }}
+        {{ calc.message({('data-' ~ c ~ '-target'): 'message'}) }}
+        {{ calc.note({}, 'Repères : acier ≈ 210 000 MPa, aluminium ≈ 69 000 MPa.') }}
+    {% endset %}
+    {{ calc.block('Données', 'f = F × L³ / (3 × E × I) · M = F × L', fields) }}
+
+    {% set fields %}
+        {{ calc.result('beam-deflection', 'Flèche maximale', 'mm', {('data-' ~ c ~ '-target'): 'deflection'}, 'beam-f beam-l beam-e beam-i') }}
+        {{ calc.result('beam-moment', 'Moment fléchissant maximal (encastrement)', 'N·m', {('data-' ~ c ~ '-target'): 'moment'}, 'beam-f beam-l') }}
+    {% endset %}
+    {{ calc.block('Résultats', null, fields) }}
+</div>

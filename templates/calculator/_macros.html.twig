@@ -1,0 +1,92 @@
+{#
+  Éléments communs de l'interface des outils de la calculatrice.
+  Importé par : templates/calculator/tools/**/*.html.twig
+    {% import 'calculator/_macros.html.twig' as calc %}
+
+  Les champs numériques sont en type="text" + inputmode="decimal" : clavier numérique sur
+  mobile, et la virgule décimale est acceptée (lue par assets/calculators/format.js).
+#}
+
+{#
+  Bloc de calcul : titre (h2), formule affichée, contenu (champs et résultats).
+  Paramètres : title, formula (texte, facultatif), content (HTML des champs).
+#}
+{% macro block(title, formula, content) %}
+    <section class="card">
+        <h2 class="text-lg font-bold text-secondary-900 dark:text-white">{{ title }}</h2>
+        {% if formula %}
+            <p class="mt-2 inline-block rounded-lg bg-secondary-100 px-3 py-1 font-mono text-sm text-secondary-800 dark:bg-secondary-900 dark:text-secondary-200">{{ formula }}</p>
+        {% endif %}
+        <div class="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {{ content }}
+        </div>
+    </section>
+{% endmacro %}
+
+{#
+  Champ de saisie numérique avec son unité.
+  Paramètres : id, label, unit, attrs (attributs data-* : target, action), value (facultatif), placeholder (facultatif).
+#}
+{% macro field(id, label, unit, attrs, value = null, placeholder = null) %}
+    <div>
+        <label for="{{ id }}" class="form-label">{{ label }}</label>
+        <div class="flex">
+            <input type="text" inputmode="decimal" autocomplete="off" spellcheck="false" id="{{ id }}" class="form-input {{ unit ? 'rounded-r-none' : '' }}"
+                   {% if value is not null %}value="{{ value }}"{% endif %} {% if placeholder %}placeholder="{{ placeholder }}"{% endif %}
+                   {% for name, attr in attrs %} {{ name }}="{{ attr }}"{% endfor %}>
+            {% if unit %}
+                <span class="inline-flex min-w-12 items-center justify-center rounded-r-lg border border-l-0 border-secondary-200 bg-secondary-50 px-3 text-sm text-secondary-600 dark:border-secondary-600 dark:bg-secondary-800 dark:text-secondary-300">{{ unit }}</span>
+            {% endif %}
+        </div>
+    </div>
+{% endmacro %}
+
+{#
+  Liste de choix (matériau, section…).
+  Paramètres : id, label, options (valeur => libellé), attrs (attributs data-*), selected (facultatif),
+  wide (vrai : occupe deux colonnes, pour les libellés longs).
+#}
+{% macro select(id, label, options, attrs, selected = null, wide = false) %}
+    <div {% if wide %}class="sm:col-span-2"{% endif %}>
+        <label for="{{ id }}" class="form-label">{{ label }}</label>
+        <select id="{{ id }}" class="form-input" {% for name, attr in attrs %} {{ name }}="{{ attr }}"{% endfor %}>
+            {% for value, text in options %}
+                <option value="{{ value }}" {% if selected is not null and value ~ '' == selected ~ '' %}selected{% endif %}>{{ text }}</option>
+            {% endfor %}
+        </select>
+    </div>
+{% endmacro %}
+
+{#
+  Résultat calculé (élément <output>, annoncé aux lecteurs d'écran).
+  Paramètres : id, label, unit, attrs (attributs data-* : target), for (ids des champs utilisés).
+#}
+{% macro result(id, label, unit, attrs, for = '') %}
+    <div>
+        <span id="{{ id }}-label" class="form-label">{{ label }}</span>
+        <div class="flex min-h-[2.625rem] items-center justify-between gap-2 rounded-lg border border-primary-200 bg-primary-50 px-3 py-2 dark:border-primary-800 dark:bg-primary-950/50">
+            <output id="{{ id }}" for="{{ for }}" aria-labelledby="{{ id }}-label" aria-live="polite"
+                    class="font-mono text-lg font-bold text-primary-800 tabular-nums dark:text-primary-200"
+                    {% for name, attr in attrs %} {{ name }}="{{ attr }}"{% endfor %}>—</output>
+            {% if unit %}<span class="text-sm font-medium text-primary-800 dark:text-primary-200">{{ unit }}</span>{% endif %}
+        </div>
+    </div>
+{% endmacro %}
+
+{#
+  Message sous un bloc : saisie refusée (erreur) ou information, écrit par le contrôleur Stimulus.
+  Masqué tant qu'il est vide. Paramètres : attrs (attributs data-* : target).
+#}
+{% macro message(attrs) %}
+    <p hidden aria-live="polite" class="text-sm font-medium text-red-700 sm:col-span-2 lg:col-span-4 dark:text-red-400"
+       {% for name, attr in attrs %} {{ name }}="{{ attr }}"{% endfor %}></p>
+{% endmacro %}
+
+{#
+  Note sous un résultat (hypothèse de calcul, valeur retenue, norme), mise à jour par le contrôleur.
+  Paramètres : attrs (attributs data-* : target), text (texte initial).
+#}
+{% macro note(attrs, text) %}
+    <p class="text-sm text-secondary-600 sm:col-span-2 lg:col-span-4 dark:text-secondary-300"
+       {% for name, attr in attrs %} {{ name }}="{{ attr }}"{% endfor %}>{{ text }}</p>
+{% endmacro %}

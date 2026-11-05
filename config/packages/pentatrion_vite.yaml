@@ -1,0 +1,14 @@
+# Configuration de Vite (pentatrion/vite-bundle).
+# Les balises <script> reçoivent le nonce CSP via ViteAssetNonceSubscriber.
+# data-turbo-track="reload" : Turbo recharge la page entière si les fichiers changent (nouveau déploiement).
+pentatrion_vite:
+    build_directory: build
+    crossorigin: anonymous
+    script_attributes:
+        data-turbo-track: reload
+    link_attributes:
+        data-turbo-track: reload
+
+when@prod:
+    pentatrion_vite:
+        cache: true

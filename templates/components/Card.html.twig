@@ -1,0 +1,14 @@
+{#
+  Composant <twig:Card> : encadré de contenu (fond, bordure, ombre légère).
+  Utilisé par : admin/dashboard/index.html.twig et les autres écrans de l'admin, espace recruteur.
+  Propriétés :
+    - title : titre facultatif affiché en haut de la carte (h2)
+  Exemple : <twig:Card title="Version">1.0.0</twig:Card>
+#}
+{% props title = null %}
+<section {{ attributes.defaults({class: 'card'}) }}>
+    {% if title %}
+        <h2 class="mb-3 text-lg font-semibold text-secondary-900 dark:text-white">{{ title }}</h2>
+    {% endif %}
+    {% block content %}{% endblock %}
+</section>

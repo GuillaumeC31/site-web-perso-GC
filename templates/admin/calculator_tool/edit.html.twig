@@ -1,0 +1,30 @@
+{#
+  Écran : réglages d'un outil de la calculatrice (activation, norme et sa validation, aide, ordre).
+  Affiché par : Admin\CalculatorToolController::edit() (route admin_calculator_tool_edit).
+  Variables attendues :
+    - tool : CalculatorTool (définition du registre + réglages actuels)
+    - form : formulaire CalculatorToolSettingType
+#}
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}{{ tool.title }}{% endblock %}
+
+{% block body %}
+    <p class="text-sm"><a href="{{ path('admin_calculator_tool_index') }}" class="font-medium text-primary-700 hover:text-primary-800 dark:text-primary-300">← {{ 'admin.calculator_tool.title'|trans }}</a></p>
+    <h1 class="mt-1 text-2xl font-bold dark:text-white">{{ tool.title }}</h1>
+    <p class="form-help mb-6">{{ tool.key }} · {{ ('admin.calculator_tool.status.' ~ tool.status)|trans }}</p>
+
+    {% if not tool.canBeEnabled %}
+        <twig:Alert type="info" class="mb-6">{{ ('admin.calculator_tool.status_help.' ~ tool.status)|trans }}</twig:Alert>
+    {% endif %}
+
+    <twig:Card class="max-w-3xl">
+        {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
+            {{ form_widget(form) }}
+            <div class="flex flex-wrap gap-3 pt-4">
+                <twig:Button type="submit">{{ 'admin.crud.save'|trans }}</twig:Button>
+                <twig:Button href="{{ path('admin_calculator_tool_index') }}" variant="secondary">{{ 'admin.crud.cancel'|trans }}</twig:Button>
+            </div>
+        {{ form_end(form) }}
+    </twig:Card>
+{% endblock %}

@@ -1,0 +1,174 @@
+{#
+  Page : espace recruteur privé (TEXTES_SITE § 11, contenu 🔒) : coordonnées directes, prétentions si
+  leur affichage est coché, CV complet en PDF, parcours avec les vrais noms d'entreprises, projets
+  réservés aux recruteurs, bouton « Je suis intéressé ». Jamais d'adresse postale ni de date de naissance.
+  Affichée par : RecruiterAreaController::home() (route recruiter_home) et, en lecture seule,
+  Admin\RecruiterController::preview() (aperçu « vu par un recruteur », sans session recruteur).
+  Variables attendues :
+    - recruiter : Recruiter connecté (null dans l'aperçu)
+    - preview   : vrai dans l'aperçu de l'admin (bandeau, formulaires et liens d'action inactifs)
+    - private   : {phone, email, salary} (CvContentProvider::getPrivateContent())
+    - profile, career (professional, foundation, field) : contenu du CV (vrais noms d'entreprises, notes privées)
+    - entries, languages, educations, certifications : rubriques complètes (centres d'intérêt compris)
+    - projects  : projets réservés aux recruteurs (publiés et complets)
+    - assistant : données de l'assistant (RecruiterAreaController::home()), absente dans l'aperçu
+  Fenêtre de bienvenue : à la première connexion seulement (flash « recruiter_welcome » posé par
+  RecruiterLoginSubscriber), recruiter_area/_welcome.html.twig.
+#}
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'recruiter_area.home.title'|trans }} · {{ site_owner_name }}{% endblock %}
+{% block robots %}noindex, nofollow{% endblock %}
+
+{% block body %}
+    <div class="container mx-auto px-4 py-12 lg:px-8 lg:py-16 xl:max-w-6xl">
+        {% if preview %}
+            <twig:Alert type="warning" class="mb-6">
+                {{ 'recruiter_area.home.preview_notice'|trans }}
+                <a href="{{ path('admin_recruiter_index') }}" class="font-semibold underline">{{ 'recruiter_area.home.preview_back'|trans }}</a>
+            </twig:Alert>
+        {% endif %}
+
+        {% if recruiter and not preview and app.flashes('recruiter_welcome') is not empty %}
+            {{ include('recruiter_area/_welcome.html.twig', {recruiter: recruiter}, with_context = false) }}
+        {% endif %}
+
+        <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+            <twig:SectionHeading title="{{ 'recruiter_area.home.title'|trans }}" :level="1">
+                {% if recruiter %}
+                    {{ 'recruiter_area.home.welcome'|trans({'%name%': recruiter.fullName, '%date%': recruiter.accessExpiresAt|format_date('long')}) }}
+                {% else %}
+                    {{ 'recruiter_area.home.welcome_preview'|trans }}
+                {% endif %}
+            </twig:SectionHeading>
+            {% if not preview %}
+                <twig:Button href="{{ path('recruiter_logout') }}" variant="secondary" size="sm" class="shrink-0" data-turbo-prefetch="false">{{ 'recruiter_area.home.logout'|trans }}</twig:Button>
+            {% endif %}
+        </div>
+
+        <div class="mt-10 grid gap-6 lg:grid-cols-3">
+            <twig:Card title="{{ 'recruiter_area.home.contact_title'|trans }}">
+                {% if not private.phone and not private.email and not private.salary %}
+                    <p class="text-sm text-secondary-600 dark:text-secondary-300">{{ 'recruiter_area.home.contact_empty'|trans }}</p>
+                {% else %}
+                <dl class="space-y-3 text-sm">
+                    {% if private.phone %}
+                        <div><dt class="font-semibold text-secondary-900 dark:text-white">{{ 'recruiter_area.home.phone'|trans }}</dt><dd><a href="tel:{{ private.phone|replace({' ': ''}) }}" class="link">{{ private.phone }}</a></dd></div>
+                    {% endif %}
+                    {% if private.email %}
+                        <div><dt class="font-semibold text-secondary-900 dark:text-white">{{ 'recruiter_area.home.email'|trans }}</dt><dd><a href="mailto:{{ private.email }}" class="link break-all">{{ private.email }}</a></dd></div>
+                    {% endif %}
+                    {% if private.salary %}
+                        <div><dt class="font-semibold text-secondary-900 dark:text-white">{{ 'recruiter_area.home.salary'|trans }}</dt><dd>{{ private.salary }}</dd></div>
+                    {% endif %}
+                </dl>
+                {% endif %}
+            </twig:Card>
+
+            <twig:Card title="{{ 'recruiter_area.home.cv_title'|trans }}">
+                <p class="text-sm text-secondary-700 dark:text-secondary-300">{{ 'recruiter_area.home.cv_text'|trans }}</p>
+                <div class="mt-4 flex flex-wrap gap-2">
+                    {% for variant in ['design', 'ats'] %}
+                        {% if preview %}
+                            <span class="btn btn-secondary btn-sm opacity-60" aria-disabled="true">{{ ('recruiter_area.home.cv_' ~ variant)|trans }}</span>
+                        {% else %}
+                            <a href="{{ path('recruiter_cv_pdf', {variant: variant}) }}" class="btn btn-secondary btn-sm" data-turbo="false" data-turbo-prefetch="false">{{ ('recruiter_area.home.cv_' ~ variant)|trans }}</a>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </twig:Card>
+
+            <twig:Card title="{{ 'recruiter_area.home.interest_title'|trans }}">
+                <p class="text-sm text-secondary-700 dark:text-secondary-300">{{ 'recruiter_area.home.interest_text'|trans }}</p>
+                {% if preview %}
+                    <span class="btn btn-primary mt-4 opacity-60" aria-disabled="true">{{ 'recruiter_area.home.interest_submit'|trans }}</span>
+                {% else %}
+                    {# POST avec jeton CSRF, jamais un lien : ni l'affichage, ni le survol, ni le préchargement, ni un robot
+                       de messagerie ne peuvent envoyer le signal (v2.0.3) #}
+                    <form method="post" action="{{ path('recruiter_interest') }}" class="mt-4" data-turbo-prefetch="false">
+                        <input type="hidden" name="_token" value="{{ csrf_token('recruiter_interest') }}">
+                        <twig:Button type="submit">{{ 'recruiter_area.home.interest_submit'|trans }}</twig:Button>
+                    </form>
+                {% endif %}
+            </twig:Card>
+        </div>
+
+        {% if projects is not empty %}
+            <section class="mt-12" aria-labelledby="projects-title">
+                <h2 id="projects-title" class="text-xl font-bold text-secondary-900 dark:text-white">{{ 'recruiter_area.home.projects_title'|trans }}</h2>
+                <ul class="mt-4 grid gap-4 sm:grid-cols-2">
+                    {% for project in projects %}
+                        <li class="card">
+                            <h3 class="font-semibold text-secondary-900 dark:text-white">
+                                {% if preview %}{{ project.title }}{% else %}<a href="{{ path('recruiter_project', {slug: project.slug}) }}" class="link">{{ project.title }}</a>{% endif %}
+                            </h3>
+                            {% if project.summary %}<p class="mt-2 text-sm text-secondary-700 dark:text-secondary-300">{{ project.summary }}</p>{% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </section>
+        {% endif %}
+
+        <section class="mt-12 space-y-10" aria-labelledby="career-title">
+            <div>
+                <h2 id="career-title" class="text-xl font-bold text-secondary-900 dark:text-white">{{ 'recruiter_area.home.career_title'|trans }}</h2>
+                <p class="mt-1 text-sm text-secondary-600 dark:text-secondary-300">{{ 'recruiter_area.home.career_text'|trans }}</p>
+            </div>
+            {% if career.professional is not empty %}
+                <div>
+                    <h3 class="cv-heading">{{ 'cv.career_section.professional'|trans }}</h3>
+                    <ol class="space-y-7">
+                        {% for experience in career.professional %}
+                            <li>{{ include('cv/_experience.html.twig', {experience: experience}, with_context = false) }}</li>
+                        {% endfor %}
+                    </ol>
+                </div>
+            {% endif %}
+            {% if career.foundation is not empty %}
+                <div>
+                    <h3 class="cv-heading">{{ 'cv.career_section.foundation'|trans }}</h3>
+                    <ol class="space-y-7">
+                        {% for group in career.foundation %}
+                            <li>{{ include('cv/_foundation.html.twig', {group: group}, with_context = false) }}</li>
+                        {% endfor %}
+                    </ol>
+                </div>
+            {% endif %}
+            {% if career.field is not empty %}
+                <div>
+                    <h3 class="cv-heading">{{ 'cv.career_section.field'|trans }}</h3>
+                    <ol class="space-y-5">
+                        {% for experience in career.field %}
+                            <li>{{ include('cv/_experience.html.twig', {experience: experience}, with_context = false) }}</li>
+                        {% endfor %}
+                    </ol>
+                </div>
+            {% endif %}
+        </section>
+
+        {# Rubriques complètes du CV (le CV public n'en montre qu'un résumé, sans centres d'intérêt) #}
+        <section class="mt-12 space-y-10" aria-labelledby="recruiter-cv-rubrics" data-testid="recruiter-cv-rubrics">
+            <h2 id="recruiter-cv-rubrics" class="text-xl font-bold text-secondary-900 dark:text-white">{{ 'recruiter_area.home.rubrics_title'|trans }}</h2>
+            {{ include('cv/_rubrics.html.twig', {sections: ['tools', 'expertise', 'software', 'soft_skill', 'languages', 'educations', 'interest'], entries: entries, languages: languages, educations: educations, certifications: certifications, heading: 'h3', id_prefix: 'recruiter-cv'}, with_context = false) }}
+        </section>
+
+        {# Assistant (lot 7) : questions guidées sans IA, questions libres à l'IA Mistral AI #}
+        {{ include('recruiter_area/_assistant.html.twig', {preview: preview, assistant: assistant|default(null)}, with_context = false) }}
+
+        {# Réseaux visibles et cochés « espace recruteur » (Communication › Réseaux sociaux) #}
+        {% set recruiter_links = social_links('recruiter') %}
+        {% if recruiter_links is not empty %}
+            <section class="mt-12" aria-labelledby="social-heading" data-testid="recruiter-social-links">
+                <h2 id="social-heading" class="text-lg font-semibold text-secondary-900 dark:text-white">{{ 'recruiter_area.home.social_title'|trans }}</h2>
+                <p class="mt-3 flex flex-wrap gap-x-5 gap-y-2 text-sm">
+                    {{ include('_partials/_social_links.html.twig', {links: recruiter_links, link_class: 'link inline-flex items-center gap-1.5'}, with_context = false) }}
+                </p>
+            </section>
+        {% endif %}
+
+        <p class="mt-12 text-sm text-secondary-600 dark:text-secondary-300">{{ 'recruiter_area.home.confidential'|trans }}</p>
+        {% if not preview %}
+            <p class="mt-2 text-sm"><a href="{{ path('recruiter_data') }}" class="link">{{ 'recruiter_area.home.data_link'|trans }}</a></p>
+        {% endif %}
+    </div>
+{% endblock %}

@@ -1,0 +1,66 @@
+{#
+  Gabarit commun des sondes platine (PT100, PT1000) : conversion température ↔ résistance
+  (Callendar-Van Dusen, CEI 60751) et tableau de référence.
+  Inclus par : pt100.html.twig, pt1000.html.twig. Contrôleur : calculator--pt-sensor.
+  Paramètres : r0 (résistance à 0 °C), label (« PT100 »), intro (texte), default_resistance.
+#}
+{% set c = 'calculator--pt-sensor' %}
+{% import 'calculator/_macros.html.twig' as calc %}
+
+<div data-controller="{{ c }}" data-{{ c }}-r0-value="{{ r0 }}" class="space-y-6">
+    <p class="text-secondary-700 dark:text-secondary-300">{{ intro }}</p>
+
+    {% set fields %}
+        {{ calc.field('pt-t', 'Température', '°C', {('data-' ~ c ~ '-target'): 'temperature', 'data-action': 'input->' ~ c ~ '#resistanceFromTemperature'}, '0') }}
+        {{ calc.field('pt-r', 'Résistance', 'Ω', {('data-' ~ c ~ '-target'): 'resistance', 'data-action': 'input->' ~ c ~ '#temperatureFromResistance'}, default_resistance) }}
+        <p hidden aria-live="polite" class="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-sm font-medium text-amber-900 sm:col-span-2 lg:col-span-4 dark:border-amber-800 dark:bg-amber-950/50 dark:text-amber-100" data-{{ c }}-target="alert">
+            La température sort de la plage de la norme (−200 °C à 850 °C) : la précision du calcul n'est pas garantie.
+        </p>
+    {% endset %}
+    {{ calc.block('Conversion ' ~ label, 'Saisissez une température ou une résistance', fields) }}
+
+    <section class="card">
+        <h2 class="text-lg font-bold text-secondary-900 dark:text-white">Formule de Callendar-Van Dusen</h2>
+        <p class="mt-2 text-sm text-secondary-700 dark:text-secondary-300">Coefficients de la <strong>CEI 60751</strong> (α = 0,00385) :</p>
+        <ul class="mt-2 grid gap-1 font-mono text-sm text-secondary-800 sm:grid-cols-2 dark:text-secondary-200">
+            <li>R₀ = {{ r0 }} Ω</li>
+            <li>A = 3,9083 × 10⁻³</li>
+            <li>B = −5,775 × 10⁻⁷</li>
+            <li>C = −4,183 × 10⁻¹² (sous 0 °C)</li>
+            <li class="sm:col-span-2">T ≥ 0 °C : R = R₀ (1 + A·T + B·T²)</li>
+            <li class="sm:col-span-2">T &lt; 0 °C : R = R₀ (1 + A·T + B·T² + C·(T − 100)·T³)</li>
+        </ul>
+    </section>
+
+    <section class="card" aria-labelledby="pt-table-title">
+        <h2 id="pt-table-title" class="text-lg font-bold text-secondary-900 dark:text-white">Tableau de référence {{ label }}</h2>
+        <p class="mt-1 text-sm text-secondary-600 dark:text-secondary-300">Température, résistance et écart ΔR entre deux pas consécutifs.</p>
+        <div class="mt-4 grid gap-4 sm:grid-cols-3">
+            <div>
+                <label for="pt-step" class="form-label">Pas</label>
+                <select id="pt-step" class="form-input" data-{{ c }}-target="tableStep" data-action="change->{{ c }}#rebuildTable">
+                    <option value="10" selected>10 °C</option><option value="5">5 °C</option><option value="1">1 °C</option>
+                </select>
+            </div>
+            <div>
+                <label for="pt-range" class="form-label">Plage</label>
+                <select id="pt-range" class="form-input" data-{{ c }}-target="tableRange" data-action="change->{{ c }}#rebuildTable">
+                    <option value="common" selected>−50 °C → +200 °C</option><option value="full">−200 °C → +850 °C</option>
+                </select>
+            </div>
+            <div>
+                <label for="pt-search" class="form-label">Rechercher</label>
+                <input type="search" id="pt-search" class="form-input" placeholder="ex. 25 °C ou 109 Ω" autocomplete="off" data-{{ c }}-target="tableSearch" data-action="input->{{ c }}#searchTable">
+            </div>
+        </div>
+        <p class="mt-3 text-sm text-secondary-600 dark:text-secondary-300" data-{{ c }}-target="tableCount"></p>
+        <div class="mt-3 max-h-96 overflow-auto rounded-xl border border-secondary-200 dark:border-secondary-700">
+            <table class="min-w-full text-sm">
+                <thead class="sticky top-0 bg-secondary-50 dark:bg-secondary-800">
+                    <tr class="text-left text-secondary-700 dark:text-secondary-200"><th scope="col" class="px-4 py-2">T (°C)</th><th scope="col" class="px-4 py-2">R (Ω)</th><th scope="col" class="px-4 py-2">ΔR (Ω)</th></tr>
+                </thead>
+                <tbody class="divide-y divide-secondary-100 font-mono dark:divide-secondary-700/60" data-{{ c }}-target="tableBody"></tbody>
+            </table>
+        </div>
+    </section>
+</div>

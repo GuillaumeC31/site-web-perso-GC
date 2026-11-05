@@ -1,0 +1,39 @@
+{#
+  Layout minimal de l'administration (sans menu) : connexion et étape YubiKey.
+  Étendu par : admin/security/login.html.twig, admin/second_factor/*.html.twig.
+  Blocs :
+    - title : titre de la page
+    - body  : contenu de la carte centrale
+  Ces pages ne montrent aucun contenu d'admin : elles sont accessibles avant la vérification de la clé.
+#}
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noindex, nofollow">
+        <meta name="color-scheme" content="light dark">
+        <title>{% block title %}{{ 'admin.meta_title'|trans }}{% endblock %}</title>
+        <link rel="icon" href="{{ asset('favicon.svg') }}" type="image/svg+xml">
+        {# Nonce CSP lu par Turbo et assets/lib/csp_nonce.js (navigations Turbo) #}
+        <meta name="csp-nonce" content="{{ csp_nonce() }}">
+        {{ include('_partials/_theme_script.html.twig') }}
+        {{ vite_entry_link_tags('app') }}
+        {{ vite_entry_script_tags('app') }}
+    </head>
+    <body class="bg-secondary-100 dark:bg-secondary-900">
+        <main id="main-content" class="flex min-h-dvh items-center justify-center px-4 py-12">
+            <div class="w-full max-w-md">
+                <h1 class="mb-6 text-center text-2xl font-bold dark:text-white">{{ block('title') }}</h1>
+                {% for type, messages in app.flashes %}
+                    {% for message in messages %}
+                        <twig:Alert type="{{ type }}" class="mb-4">{{ message|trans }}</twig:Alert>
+                    {% endfor %}
+                {% endfor %}
+                <div class="card space-y-5">
+                    {% block body %}{% endblock %}
+                </div>
+            </div>
+        </main>
+    </body>
+</html>

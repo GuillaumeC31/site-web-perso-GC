@@ -1,0 +1,143 @@
+{#
+  PDF : CV version ATS (une colonne, texte simple, lisible par les logiciels de recrutement), même contenu et
+  même ordre que le CV de référence.
+  Rendu par : CvPdfRenderer::renderHtml('ats') pour les routes cv_pdf (/cv/pdf/ats) et recruiter_cv_pdf.
+  Variables attendues (CvContentProvider) : profile, career (professional, foundation, field), pillars, entries,
+  educations, certifications, languages ; plus generated_at, private_contact (téléphone, e-mail, prétentions ;
+  null pour le CV public), qr_code (url, caption). Jamais l'adresse postale ni de date de naissance.
+  QR code (v2.0.2) : à la fin, après le texte, avec sa légende et l'adresse en clair ; une image seule, sans tableau :
+  les logiciels de tri l'ignorent et lisent le texte comme avant.
+  CSS limité à ce que mPDF comprend (pas de flex ni de grid) ; aucune image ni tableau de mise en page.
+  Mise en page (2026-10-25) : police 10 pt partout (ligne de contact comprise), interligne 1,25, marges 15 / 13 mm (CvPdfRenderer) : 3 pages au plus,
+  sans retirer de contenu ; aligné à gauche, sans césure (lecture par les logiciels de tri).
+  Version publique = CV SYNTHÉTIQUE (synthetic vrai, 2026-10-30) : même contenu que le CV synthétique mis en page,
+  en texte, avec la ligne « CV complet sur demande » à la fin.
+#}
+{% set facts = [profile.location, profile.work_modes, profile.availability]|filter(f => f) %}
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<style>
+    body { font-family: dejavusans; font-size: 10pt; color: #1d293d; line-height: 1.25; }
+    h1 { font-size: 18pt; margin: 0; color: #1d293d; }
+    h2 { font-size: 11pt; margin: 10pt 0 4pt; padding-bottom: 2pt; border-bottom: 1pt solid #00786f; color: #005f5a; text-transform: uppercase; }
+    h3 { font-size: 10pt; margin: 7pt 0 1pt; color: #1d293d; }
+    p { margin: 0 0 3pt; }
+    ul { margin: 2pt 0 3pt 14pt; padding: 0; }
+    li { margin-bottom: 1.5pt; }
+    .title { font-size: 12pt; font-weight: bold; margin-top: 2pt; }
+    .job { font-weight: bold; color: #00786f; }
+    .muted { color: #45556c; }
+</style>
+</head>
+<body>
+    <h1>{{ profile.full_name }}</h1>
+    <p class="title">{{ profile.job_title }}</p>
+    {% if profile.tagline %}<p>{{ profile.tagline }}</p>{% endif %}
+    {% if facts is not empty %}<p class="muted">{{ facts|join(' · ') }}</p>{% endif %}
+    {% if private_contact %}
+        <p class="muted">{{ [private_contact.phone ? 'cv.pdf.phone'|trans ~ ' : ' ~ private_contact.phone : null, private_contact.email ? 'cv.pdf.email'|trans ~ ' : ' ~ private_contact.email : null, 'cv.pdf.website'|trans ~ ' : guillaume-couget.fr', private_contact.salary ? 'cv.pdf.salary'|trans ~ ' : ' ~ private_contact.salary : null]|filter(v => v)|join(' · ') }}</p>
+    {% else %}
+        <p class="muted">{{ 'cv.pdf.contact_notice'|trans }}</p>
+    {% endif %}
+
+    {% if pillars is not empty %}
+        <h2>{{ 'cv.section.domains'|trans }}</h2>
+        <ul>{% for pillar in pillars %}<li><b>{{ pillar.name }}</b>{% if pillar.summary %} : {{ pillar.summary }}{% endif %}</li>{% endfor %}</ul>
+    {% endif %}
+
+    {% if profile.summary %}
+        <h2>{{ 'cv.section.profile'|trans }}</h2>
+        {% for paragraph in profile.summary|split("\n\n") %}<p>{{ paragraph|cv_bold }}</p>{% endfor %}
+    {% endif %}
+
+    {% if career.professional is not empty %}
+        <h2>{{ 'cv.career_section.professional'|trans }}</h2>
+        {% for xp in career.professional %}
+            <h3>{{ cv_period_numeric(xp) }} | {{ xp.company ?: xp.job_title }}{% if xp.location %} — {{ xp.location }}{% endif %}</h3>
+            {% if xp.company %}<p class="job">{{ xp.job_title }}{% if xp.summary %} – {{ xp.summary }}{% endif %}</p>{% endif %}
+            {% set items = xp.achievements|merge(xp.missions) %}
+            {% if items is not empty or xp.private_note %}
+                <ul>
+                    {% for item in items %}<li>{{ item|cv_bold }}</li>{% endfor %}
+                    {% if xp.private_note %}<li>{{ xp.private_note }}</li>{% endif %}
+                </ul>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+
+    {% if career.foundation is not empty %}
+        <h2>{{ 'cv.career_section.foundation'|trans }}</h2>
+        {% for group in career.foundation %}
+            <h3>{{ cv_period_numeric(group) }} | {{ group.company }}{% if group.location %} — {{ group.location }}{% endif %}</h3>
+            {% for role in group.roles %}
+                <p class="job">{{ role.start|date('Y') }} – {{ role.job_title }}</p>
+                {% set items = role.achievements|merge(role.missions) %}
+                {% if items is not empty %}<ul>{% for item in items %}<li>{{ item|cv_bold }}</li>{% endfor %}</ul>{% endif %}
+            {% endfor %}
+        {% endfor %}
+    {% endif %}
+
+    {% if entries.tools is defined %}
+        <h2>{{ 'cv.section.tools'|trans }}</h2>
+        <ul>{% for entry in entries.tools %}<li>{{ entry.content|cv_bold }}</li>{% endfor %}</ul>
+    {% endif %}
+
+    {% if career.field is not empty %}
+        <h2>{{ 'cv.career_section.field'|trans }}</h2>
+        {% for xp in career.field %}
+            {% if synthetic %}
+                {# CV synthétique : une ligne par poste (sans la description) #}
+                <p>{{ cv_period_numeric(xp) }} | <span class="job">{{ xp.job_title }}</span> — {{ xp.company }}{% if xp.location %} — {{ xp.location }}{% endif %}</p>
+            {% else %}
+            <h3>{{ cv_period_numeric(xp) }} | {{ xp.company }}{% if xp.location %} — {{ xp.location }}{% endif %}</h3>
+            <p><span class="job">{{ xp.job_title }}</span>{% if xp.missions is not empty %} – {{ xp.missions|first|lower_first|cv_bold }}{% endif %}</p>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+
+    {% for section in ['expertise', 'software', 'soft_skill'] %}
+        {% if entries[section] is defined %}
+            <h2>{{ ('cv.section.' ~ section)|trans }}</h2>
+            <ul>{% for entry in entries[section] %}<li>{% if entry.title %}<b>{{ entry.title }} :</b> {% endif %}{{ entry.content|cv_bold }}</li>{% endfor %}</ul>
+        {% endif %}
+    {% endfor %}
+
+    {% if languages is not empty %}
+        <h2>{{ 'cv.section.languages'|trans }}</h2>
+        <ul>{% for language in languages %}<li><b>{{ language.name }}</b> : {{ language.proficiency }}</li>{% endfor %}</ul>
+    {% endif %}
+
+    {% if educations is not empty or certifications is not empty %}
+        <h2>{{ 'cv.section.educations'|trans }}</h2>
+        {# Deux listes, chacune de la plus récente à la plus ancienne (correction de recette n° 3) #}
+        {% if educations is not empty %}
+            <h3>{{ 'cv.section.diplomas'|trans }}</h3>
+            <ul>
+                {% for education in educations %}
+                    <li><b>{{ education.year }}</b> — {{ education.title }}{% set where = [education.location, education.institution]|filter(v => v) %}{% if where is not empty %} — {{ where|join(', ') }}{% endif %}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        {% if certifications is not empty %}
+            <h3>{{ 'cv.section.certifications'|trans }}</h3>
+            <ul>
+                {% for certification in certifications %}
+                    <li>{% if certification.obtainedOn %}<b>{{ certification.obtainedOn|date('Y') }}</b> — {% endif %}{{ certification.name }}{% if certification.issuer %} — {{ certification.issuer }}{% endif %}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endif %}
+
+    {% if entries.interest is defined %}
+        <h2>{{ 'cv.section.interest'|trans }}</h2>
+        <ul>{% for entry in entries.interest %}<li>{% if entry.title %}<b>{{ entry.title }} :</b> {% endif %}{{ entry.content|cv_bold }}</li>{% endfor %}</ul>
+    {% endif %}
+
+    {# CV synthétique : renvoi vers le CV complet #}
+    {% if synthetic %}<p class="muted" style="margin-top: 10pt;">{{ 'cv.pdf.full_cv_footer'|trans }}</p>{% endif %}
+
+    <div style="margin-top: 8pt;"><barcode code="{{ qr_code.url }}" type="QR" error="M" size="0.68" disableborder="1" /></div>
+    <p class="muted" style="font-size: 8pt;">{{ qr_code.caption|trans }} : {{ qr_code.url|replace({'https://': ''}) }}</p>
+</body>
+</html>

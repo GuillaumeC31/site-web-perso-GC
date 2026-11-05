@@ -1,0 +1,16 @@
+{#
+  Contenu commun des pages d'erreur.
+  Inclus par : error.html.twig, error403.html.twig, error404.html.twig.
+  Variables attendues :
+    - code  : code HTTP affiché
+    - title : titre de l'erreur (traduit)
+    - text  : explication courte (traduite)
+#}
+<div class="container mx-auto px-4 py-20 text-center lg:px-8 xl:max-w-7xl">
+    <p class="text-sm font-semibold tracking-wider text-primary-700 uppercase dark:text-primary-300">{{ 'error.code'|trans({'%code%': code}) }}</p>
+    <h1 class="mt-2 text-3xl font-black tracking-tight sm:text-4xl dark:text-white">{{ title }}</h1>
+    <p class="mx-auto mt-4 max-w-xl text-lg text-secondary-700 dark:text-secondary-300">{{ text }}</p>
+    <div class="mt-8">
+        <twig:Button href="{{ path('home') }}">{{ 'common.back_home'|trans }}</twig:Button>
+    </div>
+</div>

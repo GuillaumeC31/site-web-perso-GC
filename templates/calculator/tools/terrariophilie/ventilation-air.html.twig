@@ -1,0 +1,20 @@
+{#
+  Outil : renouvellement d'air d'un terrarium (débit d'extraction en m³/h et CFM).
+  Inclus par : calculator/tool.html.twig. Contrôleur : calculator--ventilation-air.
+  Valeurs par défaut et taux de renouvellement repris de l'ancien site.
+#}
+{% import 'calculator/_macros.html.twig' as calc %}
+{% set c = 'calculator--ventilation-air' %}
+{% set t = 'data-' ~ c ~ '-target' %}
+
+<div data-controller="{{ c }}" class="space-y-6">
+    {% set fields %}
+        {{ calc.field('tv-volume', 'Volume brut du terrarium', 'L', {(t): 'volume', 'data-action': 'input->' ~ c ~ '#calculate'}, '250') }}
+        {{ calc.select('tv-turnover', 'Renouvellement souhaité', {1: '1 fois par heure (reptiles classiques)', 2: '2 fois par heure (milieu moite, tropical clos)', 4: '4 fois par heure (caméléons, bacs très aérés)'}, {(t): 'turnover', 'data-action': 'change->' ~ c ~ '#calculate'}, '4', true) }}
+        {{ calc.result('tv-m3h', 'Débit d\'extraction', 'm³/h', {(t): 'm3h'}, 'tv-volume tv-turnover') }}
+        {{ calc.result('tv-cfm', 'Équivalent ventilateur', 'CFM', {(t): 'cfm'}, 'tv-volume tv-turnover') }}
+        {{ calc.message({(t): 'message'}) }}
+        {{ calc.note({}, 'Le CFM (pied cube par minute) est l\'unité indiquée sur les ventilateurs d\'ordinateur. 1 m³/h = 0,5885 CFM.') }}
+    {% endset %}
+    {{ calc.block('Renouvellement d\'air', 'Débit (m³/h) = volume (L) / 1000 × renouvellements par heure', fields) }}
+</div>

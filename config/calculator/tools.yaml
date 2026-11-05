@@ -1,0 +1,154 @@
+# Registre de la calculatrice (CDC § 8) : catégories et outils, dans l'ordre d'affichage par défaut.
+#
+# Lu par : App\Service\Calculator\CalculatorRegistry. L'admin peut ensuite, outil par outil,
+# activer ou désactiver, modifier le texte d'aide, la norme citée et l'ordre (CalculatorToolSetting).
+#
+# Les adresses (slugs) sont celles de l'ancien site : /calculatrice/{categorie}/{outil}.
+#
+# Statuts :
+#   available : porté sur ce site, résultats identiques à l'ancien (tests de non-régression)
+#   legacy    : existe dans l'ancien site, portage prévu (lots 5b et suivants) ; non publié
+#   planned   : n'existait pas dans l'ancien site (page « en construction » ou vide) ; à créer (lot 5-bis)
+#   merged    : fusionné dans un autre outil (« merged_into ») ; l'ancienne adresse redirige (301)
+#
+# meta_description (facultatif) : texte court de la balise meta (160 caractères au plus) quand le résumé
+# (summary) est plus long ; sinon, le résumé sert aussi de balise meta.
+#
+# reference : norme ou source proposée. Elle n'est affichée qu'une fois validée dans l'admin
+# (« à vérifier » par défaut).
+#
+# Icônes : tracés Heroicons (contour, 24 px), repris de l'ancien site.
+
+categories:
+    electricite:
+        name: Électricité
+        description: Loi d'Ohm, puissances, câbles, chute de tension, condensateurs.
+        icon: 'M13 10V3L4 14h7v7l9-11h-7z'
+    electronique:
+        name: Électronique
+        description: LED, pont diviseur, autonomie de batterie, code couleur des résistances.
+        icon: 'M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z'
+    thermodynamique:
+        name: Thermodynamique
+        description: Chauffe, psychrométrie, fluides frigorigènes, chambres froides, enceintes climatiques.
+        icon: 'M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z'
+    mesures-capteurs:
+        name: Capteurs et mesures
+        description: Sondes PT100 et PT1000, signaux 4-20 mA, 0-20 mA et 0-10 V, transmetteurs.
+        icon: 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z'
+    mecanique:
+        name: Mécanique
+        description: Engrenages, vérins, flexion des poutres.
+        icon: 'M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z M15 12a3 3 0 11-6 0 3 3 0 016 0z'
+    impression-3d:
+        name: Impression 3D
+        description: Calibrage, coût d'impression, débit et rétraction.
+        icon: 'M14 10l-2 1m0 0l-2-1m2 1v2.5M20 7l-2 1m2-1l-2-1m2 1v2.5M14 4l-2-1-2 1M4 7l2-1M4 7l2 1M4 7v2.5M12 21l-2-1m2 1l2-1m-2 1v-2.5M6 18l-2-1v-2.5M18 18l2-1v-2.5'
+    eclairage:
+        name: Éclairage
+        description: Adresses DMX, éclairage horticole, vieillissement UV, lux et lumens.
+        icon: 'M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z'
+    convertisseur:
+        name: Convertisseur
+        description: Conversion d'unités physiques.
+        icon: 'M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4'
+    reseaux-it:
+        name: Réseaux et informatique
+        description: Sous-réseaux IPv4, conversions binaire, hexadécimal et décimal.
+        icon: 'M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9'
+    terrariophilie:
+        name: Terrariophilie
+        description: Éclairage, chauffage, brumisation, ventilation et volumes pour terrariums.
+        icon: 'M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z'
+
+tools:
+    # --- Électricité : courant continu ---
+    - { slug: loi-ohm, category: electricite, group: Courant continu, status: available, title: "Loi d'Ohm et puissance", summary: "Calculez tension, courant, résistance et puissance à partir de deux valeurs connues, avec toutes les formules dérivées de la loi d'Ohm.", reference: "Loi d'Ohm (U = R × I) et loi de Joule (P = U × I)" }
+    - { slug: cercle-loi-ohm, category: electricite, group: Courant continu, status: merged, merged_into: electricite/loi-ohm, title: "Cercle de la loi d'Ohm" }
+    - { slug: resistance-conducteur, category: electricite, group: Courant continu, status: planned, title: "Résistance d'un conducteur" }
+    - { slug: resistances-parallele, category: electricite, group: Courant continu, status: planned, title: "Résistances en parallèle" }
+    - { slug: resistivite, category: electricite, group: Courant continu, status: planned, title: "Résistivité" }
+    - { slug: charge-condensateur, category: electricite, group: Courant continu, status: planned, title: "Charge d'un condensateur" }
+    - { slug: fem-fcem, category: electricite, group: Courant continu, status: planned, title: "Force électromotrice et force contre-électromotrice" }
+    - { slug: resistance-interne-batterie, category: electricite, group: Courant continu, status: planned, title: "Résistance interne d'une batterie" }
+    - { slug: autonomie-batterie-plomb, category: electricite, group: Courant continu, status: planned, title: "Autonomie d'une batterie au plomb" }
+    - { slug: electrolyse, category: electricite, group: Courant continu, status: planned, title: "Durée d'une électrolyse" }
+    # --- Électricité : courant alternatif ---
+    - { slug: puissances-ac, category: electricite, group: Courant alternatif, status: available, title: "Puissances active, réactive et apparente", summary: "Calculez les puissances active (P), réactive (Q) et apparente (S), le courant ou la tension d'un circuit monophasé en alternatif.", reference: "Puissances en régime sinusoïdal : P = U·I·cos φ, Q = U·I·sin φ, S = U·I" }
+    - { slug: puissance-triphasee, category: electricite, group: Courant alternatif, status: planned, title: "Puissance triphasée" }
+    - { slug: puissance-moteur-ac, category: electricite, group: Courant alternatif, status: planned, title: "Puissance d'un moteur en alternatif" }
+    - { slug: relevement-cos-phi, category: electricite, group: Courant alternatif, status: available, title: "Relèvement du facteur de puissance (cos φ)", summary: "Dimensionnez la batterie de condensateurs (kvar, et µF par phase en étoile et en triangle) pour relever le cos φ d'une installation triphasée.", reference: "Compensation de l'énergie réactive : Qc = P × (tan φ1 − tan φ2)" }
+    - { slug: condensateur-monophase, category: electricite, group: Courant alternatif, status: planned, title: "Condensateur en monophasé" }
+    - { slug: steinmetz, category: electricite, group: Courant alternatif, status: available, title: "Condensateur Steinmetz", summary: "Estimez le condensateur permanent pour alimenter un moteur triphasé 230/400 V sur un réseau monophasé 230 V (montage Steinmetz).", reference: "Montage Steinmetz : règle pratique d'environ 70 µF/kW (230 V 50 Hz)" }
+    - { slug: condensateur-tri-vers-mono, category: electricite, group: Courant alternatif, status: planned, title: "Condensateur moteur triphasé vers monophasé" }
+    - { slug: impedance-rl, category: electricite, group: Courant alternatif, status: planned, title: "Impédance d'un circuit RL" }
+    - { slug: impedance-rc, category: electricite, group: Courant alternatif, status: planned, title: "Impédance d'un circuit RC" }
+    # --- Électricité : installation ---
+    - { slug: calculs-cables, category: electricite, group: Installation, status: available, title: "Dimensionnement des câbles", summary: "Section minimale, longueur maximale, chute de tension et masse d'un câble en cuivre ou en aluminium (résistivités de la NF C 15-100).", reference: "NF C 15-100 / UTE C 15-105 : ρ = 0,0225 (cuivre) et 0,036 (aluminium) Ω·mm²/m" }
+    - { slug: chute-tension, category: electricite, group: Installation, status: available, title: "Chute de tension", summary: "Calculez la chute de tension d'une ligne monophasée en cuivre ou en aluminium selon sa longueur, le courant et la section du câble.", reference: "NF C 15-100 / UTE C 15-105 (chute de tension), méthode simplifiée" }
+    - { slug: courant-emploi-ib, category: electricite, group: Installation, status: planned, title: "Courant d'emploi Ib" }
+    - { slug: controle-protections, category: electricite, group: Installation, status: planned, title: "Contrôle des protections des lignes" }
+    - { slug: prise-de-terre, category: electricite, group: Installation, status: planned, title: "Estimation d'une prise de terre" }
+    - { slug: compteur-energie, category: electricite, group: Installation, status: planned, title: "Mesure de puissance avec un compteur" }
+    - { slug: indice-protection, category: electricite, group: Installation, status: planned, title: "Indices de protection (IP)" }
+    - { slug: trigonometrie, category: electricite, group: Installation, status: planned, title: "Trigonométrie" }
+
+    # --- Électronique ---
+    - { slug: resistance-led, category: electronique, status: available, title: "Résistance pour LED", summary: "Calculez la résistance série d'une ou plusieurs LED, la valeur normalisée E24 et la puissance de la résistance selon la tension d'alimentation.", reference: "Loi d'Ohm : R = (Ualim − n × Uled) / I ; série E24 (CEI 60063)" }
+    - { slug: diviseur-tension, category: electronique, status: available, title: "Pont diviseur de tension", summary: "Calculez la tension de sortie d'un pont diviseur, ou la résistance manquante pour obtenir une tension donnée.", reference: "Pont diviseur : Us = Ue × R2 / (R1 + R2)" }
+    - { slug: boucle-4-20, category: electronique, status: merged, merged_into: mesures-capteurs/signal-4-20ma, title: "Boucle 4-20 mA" }
+    - { slug: filtre-rc, category: electronique, status: planned, title: "Filtre RC (fréquence de coupure)" }
+    - { slug: autonomie-batterie, category: electronique, status: available, title: "Autonomie d'une batterie", summary: "Estimez l'autonomie d'une batterie selon sa capacité et la consommation du montage, avec une marge de 30 % pour les pertes.", reference: "Autonomie = capacité / consommation × 0,7 (règle pratique)" }
+    - { slug: code-couleur-resistance, category: electronique, status: available, title: "Code couleur des résistances", summary: "Retrouvez la valeur, la tolérance et le coefficient de température d'une résistance à 4, 5 ou 6 anneaux, et l'inverse.", reference: "Code couleur des résistances (CEI 60062)" }
+
+    # --- Thermodynamique ---
+    - { slug: chauffe-eau, category: thermodynamique, status: available, title: "Chauffe d'un volume d'eau", summary: "Calculez l'énergie, le temps de chauffe selon la puissance ou la puissance selon le temps pour chauffer un volume d'eau.", reference: "Q = m × c × ΔT, c = 4185 J/(kg·K) ; rendement de 100 %, sans pertes" }
+    - { slug: chauffe-fluide, category: thermodynamique, status: available, title: "Chauffe d'un fluide", summary: "Énergie, puissance et temps de chauffe d'un liquide ou d'un gaz (eau, huile, glycol, air…) selon sa masse volumique et sa capacité thermique.", reference: "Q = ρ × V × Cp × ΔT ; propriétés des fluides indicatives (admin)" }
+    - { slug: bilan-thermique, category: thermodynamique, status: planned, title: "Bilan thermique d'une paroi" }
+    - { slug: point-rosee, category: thermodynamique, status: available, title: "Psychrométrie (point de rosée)", summary: "Calculez le point de rosée, l'humidité relative et absolue depuis la température et l'humidité, le point de rosée ou un psychromètre.", reference: "Formule de Magnus (6,112 hPa ; 17,67 ; 243,5 °C), psychromètre ventilé A = 0,000662 /°C" }
+    - { slug: aeraulique, category: thermodynamique, status: planned, title: "Aéraulique (armoire électrique)" }
+    - { slug: gaz-parfaits, category: thermodynamique, status: available, title: "Loi des gaz parfaits", summary: "Calculez la pression d'un gaz parfait à partir de la quantité de matière, de la température et du volume.", reference: "Loi des gaz parfaits : P·V = n·R·T, R = 8,314 J/(mol·K)" }
+    - { slug: fluides-frigorifiques, category: thermodynamique, status: available, title: "Fluides frigorigènes et F-Gas", summary: "Équivalent tonnes CO2 d'une charge de fluide frigorigène et base de données des fluides (PRG, statut F-Gas, sécurité, huiles).", reference: "Règlement (UE) 2024/573 (F-Gas), annexe I ; PRG avec le rapport du GIEC indiqué pour chaque fluide (AR4)" }
+    - { slug: chambre-froide, category: thermodynamique, status: available, title: "Dimensionnement d'une chambre froide", summary: "Bilan frigorifique complet d'une chambre froide positive ou négative : parois, sol, portes et infiltrations, vitrages, cordons chauffants, produits et respiration, dégivrage. Puissance à installer, consommation électrique, givre, charge de fluide et obligations F-Gas.", meta_description: "Bilan frigorifique complet d'une chambre froide : puissance à installer, consommation électrique, givre, charge de fluide et obligations F-Gas.", reference: "Méthode de bilan thermique d'une chambre froide ; coefficients et profils indicatifs" }
+    - { slug: enceinte-climatique, category: thermodynamique, status: available, title: "Enceinte climatique (stabilité ICH)", summary: "Dimensionnez une enceinte climatique (stabilité ICH, essais IEC 60068, conservation) : froid, chauffe, humidification et séchage en été et en hiver, mise en température, consommation, fluide et F-Gas.", meta_description: "Enceinte climatique : froid, chauffe, humidification et séchage en été et en hiver, mise en température, consommation et F-Gas.", reference: "ICH Q1A(R2), IEC 60068-2 (profils de consigne) ; ASHRAE (infiltrations) ; psychrométrie de l'air humide ; caractérisation FD X 15-140" }
+
+    # --- Capteurs et mesures ---
+    - { slug: pt100, category: mesures-capteurs, group: Sondes de température, status: available, title: "Sonde PT100", summary: "Convertissez une température en résistance et une résistance en température pour une sonde PT100, avec table de valeurs.", reference: "CEI 60751 (équation de Callendar-Van Dusen), −200 à 850 °C" }
+    - { slug: pt1000, category: mesures-capteurs, group: Sondes de température, status: available, title: "Sonde PT1000", summary: "Convertissez une température en résistance et une résistance en température pour une sonde PT1000, avec table de valeurs.", reference: "CEI 60751 (équation de Callendar-Van Dusen), −200 à 850 °C" }
+    - { slug: signal-4-20ma, category: mesures-capteurs, group: Signaux analogiques, status: available, title: "Mise à l'échelle 4-20 mA", summary: "Convertissez un signal 4-20 mA en grandeur physique et inversement, avec tension aux bornes du shunt et alertes de défaut de boucle.", reference: "Boucle de courant 4-20 mA (CEI 60381-1), shunt de 250 Ω" }
+    - { slug: signal-0-20ma, category: mesures-capteurs, group: Signaux analogiques, status: available, title: "Mise à l'échelle 0-20 mA", summary: "Convertissez un signal 0-20 mA en grandeur physique et inversement, avec table de mise à l'échelle.", reference: "Signal analogique 0-20 mA (CEI 60381-1), mise à l'échelle linéaire" }
+    - { slug: signal-0-10v, category: mesures-capteurs, group: Signaux analogiques, status: available, title: "Mise à l'échelle 0-10 V", summary: "Convertissez un signal 0-10 V en grandeur physique et inversement, avec table de mise à l'échelle.", reference: "Signal analogique 0-10 V (CEI 60381-2), mise à l'échelle linéaire" }
+    - { slug: transmetteur-humidite, category: mesures-capteurs, group: Transmetteurs, status: available, title: "Transmetteur d'humidité", summary: "Convertissez le signal d'un transmetteur d'humidité (4-20 mA ou 0-10 V) en humidité relative de 0 à 100 % HR, et inversement.", reference: "Mise à l'échelle linéaire d'un transmetteur (CEI 60381)" }
+    - { slug: transmetteur-temperature, category: mesures-capteurs, group: Transmetteurs, status: available, title: "Transmetteur de température", summary: "Convertissez le signal d'un transmetteur de température (4-20 mA ou 0-10 V) en degrés selon la plage réglée, et inversement.", reference: "Mise à l'échelle linéaire d'un transmetteur (CEI 60381)" }
+
+    # --- Mécanique ---
+    - { slug: engrenages, category: mecanique, status: available, title: "Train d'engrenages", summary: "Calculez le rapport de réduction, la vitesse et le couple de sortie d'un train d'engrenages, avec contrôle d'interférence.", reference: "Rapport de transmission i = Z2 / Z1 ; couple de sortie = couple × i × rendement" }
+    - { slug: verin, category: mecanique, status: available, title: "Poussée d'un vérin", summary: "Calculez la force de poussée et de traction d'un vérin selon la pression et les diamètres d'alésage et de tige.", reference: "Force d'un vérin : F = p × S (côté tige : surface annulaire)" }
+    - { slug: flexion-poutre, category: mecanique, status: available, title: "Flexion d'une poutre", summary: "Calculez la flèche et le moment fléchissant maximal d'une poutre en porte-à-faux chargée à son extrémité.", reference: "Résistance des matériaux : f = F·L³ / (3·E·I), poutre encastrée-libre" }
+
+    # --- Impression 3D ---
+    - { slug: debit-volumetrique, category: impression-3d, status: planned, title: "Débit volumétrique maximal" }
+    - { slug: retraction, category: impression-3d, status: planned, title: "Rétraction thermique" }
+    - { slug: steps-mm, category: impression-3d, status: available, title: "Calibrage des steps/mm", summary: "Recalculez le réglage steps/mm d'un axe ou de l'extrudeur d'une imprimante 3D à partir d'une mesure.", reference: "Nouveau = actuel × distance demandée / distance obtenue" }
+    - { slug: cout-impression, category: impression-3d, status: available, title: "Coût d'une impression 3D", summary: "Estimez le coût d'une impression 3D : matière selon le poids et le prix de la bobine, électricité selon la durée et la puissance.", reference: "Coût = poids × prix au gramme + durée × puissance × prix du kWh" }
+
+    # --- Convertisseur ---
+    - { slug: unites, category: convertisseur, status: available, title: "Unités physiques", summary: "Convertissez pressions, températures, puissances, énergies et vitesses entre les unités courantes (bar, psi, °F, ch, kWh, tr/min…).", reference: "Système international d'unités (SI), facteurs de conversion usuels" }
+
+    # --- Réseaux et informatique ---
+    - { slug: subnet-ipv4, category: reseaux-it, group: IPv4 et réseaux, status: planned, title: "Sous-réseaux IPv4" }
+    - { slug: binaire-hexa, category: reseaux-it, group: Conversions, status: planned, title: "Conversion binaire, hexadécimal et décimal" }
+
+    # --- Éclairage ---
+    - { slug: adresse-dmx, category: eclairage, status: available, title: "Adresse DMX (interrupteurs DIP)", summary: "Trouvez la position des interrupteurs DIP d'un projecteur à partir de son adresse DMX (1 à 512), ou l'adresse à partir des interrupteurs.", reference: "DMX512-A (ANSI E1.11) : 512 adresses par univers, codage binaire des interrupteurs" }
+    - { slug: eclairage-phyto, category: eclairage, status: available, title: "Éclairage horticole", summary: "Dimensionnez un éclairage horticole : PPFD, DLI et PPF selon la culture, spectre par bande de LED, simulateur de panneau et photopériode.", reference: "ANSI/ASABE S640 (PPF, PPFD, PAR) ; IES LM-85-22 ; IEC TR 62471-5" }
+    - { slug: lux-lumens, category: eclairage, status: planned, title: "Lux et lumens par surface" }
+    - { slug: vieillissement-uv, category: eclairage, status: available, title: "Vieillissement UV (ASTM, ISO)", summary: "Calculez la dose UV d'un essai de vieillissement, la durée d'exposition pour une dose visée et la durée réelle avec les cycles de condensation.", reference: "ASTM G154 et ISO 4892-3 (vieillissement sous lampes fluorescentes UV)" }
+
+    # --- Terrariophilie ---
+    - { slug: eclairage-reptiles, category: terrariophilie, status: available, title: "Éclairage et zones de Ferguson", summary: "Indice UV visé selon la zone de Ferguson de l'espèce, distance des tubes T5 et DLI de l'éclairage des plantes d'un terrarium.", reference: "Zones de Ferguson (Baines et al., 2016, Journal of Zoo and Aquarium Research)" }
+    - { slug: chauffage-terrarium, category: terrariophilie, status: available, title: "Puissance de chauffage", summary: "Estimez la puissance de la lampe ou du tapis chauffant d'un terrarium selon sa taille, son matériau et l'écart de température visé.", reference: "Règle empirique de l'ancien site : facteur par litre et par degré d'écart" }
+    - { slug: volume-substrat, category: terrariophilie, status: available, title: "Volume de substrat et bioactif", summary: "Calculez le volume de substrat à acheter pour l'épaisseur voulue et la recette d'un mélange tropical bioactif ou aride.", reference: "Volume = longueur × largeur × épaisseur ; recettes indicatives" }
+    - { slug: brumisation, category: terrariophilie, status: available, title: "Système de brumisation", summary: "Consommation d'eau d'un système de brumisation par jour et par semaine, et réserve conseillée pour une semaine d'autonomie.", reference: "Bilan de débit : débit × durée × nombre de buses × fréquence" }
+    - { slug: bassin-paludarium, category: terrariophilie, status: available, title: "Volume et poids d'un bassin", summary: "Volume d'eau, poids sur le meuble et débit de pompe conseillé pour le bassin d'un paludarium ou d'un bac à tortues.", reference: "Volume et masse de l'eau (1 kg/L) ; brassage de 4 volumes par heure" }
+    - { slug: ventilation-air, category: terrariophilie, status: available, title: "Renouvellement d'air", summary: "Débit d'extraction d'un terrarium selon son volume et le renouvellement d'air souhaité, en m³/h et en CFM (ventilateurs).", reference: "Débit = volume × taux de renouvellement ; 1 m³/h = 0,5885 CFM" }

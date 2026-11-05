@@ -1,0 +1,18 @@
+{#
+  E-mail : lien de connexion à l'espace recruteur (30 minutes, usage unique ; recruteur validé : adresse de réponse).
+  Envoyé par : RecruiterMailer::sendLoginLink(). Variables : recruiter, url, minutes, texts (EmailTexts : intro,
+  signature), subject, can_reply.
+#}
+{% extends 'email/_layout.html.twig' %}
+
+{% block content %}
+    <p style="margin:0 0 12px;">Bonjour {{ recruiter.fullName }},</p>
+    <p style="margin:0 0 12px;">{{ texts.intro|nl2br }}</p>
+    <p style="margin:0 0 12px;">Ce lien est valable <strong>{{ minutes }} minutes</strong> et ne sert <strong>qu'une seule fois</strong>.</p>
+{% endblock %}
+
+{% block button %}
+    {{ include('email/_button.html.twig', {url: url, label: 'Se connecter à l\'espace recruteur'}) }}
+    <tr><td style="font-size:14px;line-height:1.6;padding-top:8px;">Lien expiré ou déjà utilisé ? Demandez-en un nouveau sur la page de l'espace recruteur. Si vous n'êtes pas à l'origine de cette demande, ignorez simplement cet e-mail.</td></tr>
+    <tr><td style="font-size:14px;line-height:1.6;padding-top:12px;">{{ texts.signature|nl2br }}</td></tr>
+{% endblock %}

@@ -1,0 +1,26 @@
+{#
+  Écran : import d'un projet depuis une archive ZIP (ce site ou l'ancien site).
+  Affiché par : Admin\ProjectController::import() (route admin_project_import).
+  Variables attendues :
+    - form : formulaire ProjectImportType
+  Le projet importé est toujours créé en brouillon : il faut le relire avant de le publier.
+#}
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}{{ 'admin.project.import.title'|trans }}{% endblock %}
+
+{% block body %}
+    <p class="text-sm"><a href="{{ path('admin_project_index') }}" class="font-medium text-primary-700 hover:text-primary-800 dark:text-primary-300">← {{ 'admin.project.title'|trans }}</a></p>
+    <h1 class="mt-1 mb-6 text-2xl font-bold dark:text-white">{{ 'admin.project.import.title'|trans }}</h1>
+
+    <twig:Card class="max-w-2xl">
+        <twig:Alert type="info" class="mb-4">{{ 'admin.project.import.notice'|trans }}</twig:Alert>
+        {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
+            {{ form_row(form.archive) }}
+            <div class="flex flex-wrap gap-3 pt-2">
+                <twig:Button type="submit">{{ 'admin.project.import.submit'|trans }}</twig:Button>
+                <twig:Button href="{{ path('admin_project_index') }}" variant="secondary">{{ 'admin.crud.cancel'|trans }}</twig:Button>
+            </div>
+        {{ form_end(form) }}
+    </twig:Card>
+{% endblock %}

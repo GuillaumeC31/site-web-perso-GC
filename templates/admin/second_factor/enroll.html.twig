@@ -1,0 +1,36 @@
+{#
+  Page : enregistrement d'une clé YubiKey.
+  Affichée par : Admin\SecondFactorController::enroll() (route admin_second_factor_enroll,
+  /{ADMIN_PATH}/securite/enrolement), avec une fenêtre d'enrôlement ouverte (première clé)
+  ou une clé déjà vérifiée (clé de secours).
+  Utilise : contrôleur Stimulus « webauthn » (action register).
+  Variables attendues :
+    - is_first_key : vrai pour la première clé (après un lien d'enrôlement), faux pour une clé de secours
+#}
+{% extends 'admin/base_minimal.html.twig' %}
+
+{% block title %}{{ (is_first_key ? 'admin.second_factor.enroll.title_first' : 'admin.second_factor.enroll.title_backup')|trans }}{% endblock %}
+
+{% block body %}
+    <div data-controller="webauthn"
+         data-webauthn-options-url-value="{{ path('admin_second_factor_registration_options') }}"
+         data-webauthn-verify-url-value="{{ path('admin_second_factor_registration_verify') }}"
+         data-webauthn-csrf-token-value="{{ csrf_token(constant('App\\Controller\\Admin\\SecondFactorController::CSRF_TOKEN_ID')) }}"
+         data-webauthn-messages-value="{{ include('admin/second_factor/_webauthn_messages.html.twig') }}"
+         class="space-y-5">
+        <p class="text-secondary-700 dark:text-secondary-300">{{ 'admin.second_factor.enroll.text'|trans }}</p>
+        <div>
+            <label for="key-label" class="form-label">{{ 'admin.second_factor.enroll.label'|trans }}</label>
+            <input type="text" id="key-label" class="form-input" maxlength="80"
+                   value="{{ (is_first_key ? 'admin.second_factor.enroll.default_label_first' : 'admin.second_factor.enroll.default_label_backup')|trans }}"
+                   data-webauthn-target="label">
+        </div>
+        <p class="min-h-6 text-sm font-medium text-primary-800 dark:text-primary-200" data-webauthn-target="status" role="status" aria-live="polite"></p>
+        <twig:Button class="w-full" data-action="webauthn#register" data-webauthn-target="button">
+            {{ 'admin.second_factor.enroll.button'|trans }}
+        </twig:Button>
+    </div>
+    {% if not is_first_key %}
+        <p class="text-sm"><a href="{{ path('admin_security_key_index') }}" class="link">{{ 'admin.security_key.back'|trans }}</a></p>
+    {% endif %}
+{% endblock %}

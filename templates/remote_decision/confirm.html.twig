@@ -1,0 +1,48 @@
+{#
+  Page : confirmation d'une décision à distance ouverte depuis un lien Discord (GET sans effet). Le bouton
+  envoie la décision en POST avec le jeton CSRF et le code PIN personnel.
+  Affichée par : RemoteDecisionController::show() et confirm() (code PIN faux, jeton CSRF invalide).
+  Variables attendues :
+    - decision   : App\Enum\RemoteDecision (accepter ou refuser)
+    - name       : demande désignée (« Camille Martin (Acme) » ou « la demande d'essai »)
+    - trial      : vrai pour un lien d'essai (notification de test : rien n'est décidé)
+    - lines      : résumé de la demande « libellé => valeur » (AccessRequestSummary::lines())
+    - token      : jeton du lien, renvoyé tel quel dans l'adresse du formulaire
+    - expires_at : fin de validité du lien
+    - error      : clé de traduction de l'erreur, ou null
+    - remaining  : essais de code PIN restants après un code faux, ou null
+#}
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ (trial ? 'remote_decision.trial.' ~ decision.value ~ '_title' : decision.translationKey('confirm_title'))|trans({'%name%': name}) }} · {{ site_owner_name }}{% endblock %}
+{% block robots %}noindex, nofollow{% endblock %}
+
+{% block body %}
+    <div class="container mx-auto max-w-xl px-4 py-16 lg:py-24">
+        <div class="card">
+            <h1 class="text-2xl font-bold text-secondary-900 dark:text-white">{{ (trial ? 'remote_decision.trial.' ~ decision.value ~ '_title' : decision.translationKey('confirm_title'))|trans({'%name%': name}) }}</h1>
+            <p class="mt-3 text-secondary-700 dark:text-secondary-300">{{ (trial ? 'remote_decision.trial.confirm_text' : decision.translationKey('confirm_text'))|trans }}</p>
+
+            {# Valeurs saisies par le demandeur : texte simple, jamais de lien #}
+            <dl class="mt-6 grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 text-sm" data-testid="remote-decision-summary">
+                {% for label, value in lines %}
+                    <dt class="font-semibold text-secondary-900 dark:text-white">{{ label }}</dt><dd class="break-words text-secondary-700 dark:text-secondary-300">{{ value }}</dd>
+                {% endfor %}
+            </dl>
+
+            {% if error %}
+                <twig:Alert type="danger" class="mt-6" data-testid="remote-decision-error">{{ error|trans({'%count%': remaining ?? 0}) }}</twig:Alert>
+            {% endif %}
+
+            <form method="post" action="{{ path('remote_decision_confirm', {token: token}) }}" class="mt-6" data-turbo="false" novalidate>
+                <input type="hidden" name="_token" value="{{ csrf_token('remote_decision') }}">
+                <label for="remote-decision-pin" class="form-label">{{ 'remote_decision.pin_label'|trans }}</label>
+                <input type="password" id="remote-decision-pin" name="pin" class="form-input" inputmode="numeric" autocomplete="off" pattern="[0-9]*" minlength="6" maxlength="12" required aria-describedby="remote-decision-pin-help">
+                <p id="remote-decision-pin-help" class="form-help">{{ 'remote_decision.pin_help'|trans({'%date%': expires_at|format_datetime('short', 'short')}) }}</p>
+                <div class="mt-6">
+                    <twig:Button type="submit" variant="{{ decision.value == 'approve' ? 'primary' : 'danger' }}">{{ decision.translationKey('submit')|trans }}</twig:Button>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,64 @@
+{#
+  Écran : modification du profil (textes publics, coordonnées privées, photo).
+  Affiché par : Admin\ProfileController::edit() (route admin_profile_edit, /{ADMIN_PATH}/profil).
+  Variables attendues :
+    - form            : formulaire ProfileType
+    - profile : Profile
+    - photo   : array{photo, miniature, is_default} (ProfilePhotoProvider::getPhoto())
+#}
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}{{ 'admin.profile.title'|trans }}{% endblock %}
+
+{% block body %}
+    <h1 class="text-2xl font-bold dark:text-white">{{ 'admin.profile.title'|trans }}</h1>
+    <p class="form-help mb-6">{{ 'admin.profile.intro'|trans }}</p>
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
+        <div class="grid gap-6 xl:grid-cols-2">
+            <twig:Card title="{{ 'admin.profile.section.public'|trans }}">
+                {{ form_row(form.fullName) }}
+                {{ form_row(form.jobTitle) }}
+                {{ form_row(form.tagline) }}
+                {{ form_row(form.pitch) }}
+                {{ form_row(form.summary) }}
+            </twig:Card>
+
+            <div class="space-y-6">
+                <twig:Card title="{{ 'admin.profile.section.search'|trans }}">
+                    {{ form_row(form.searchStatus) }}
+                    {{ form_row(form.location) }}
+                    {{ form_row(form.mobility) }}
+                    {{ form_row(form.workModes) }}
+                    {{ form_row(form.targetRoles) }}
+                    {{ form_row(form.targetCompanies) }}
+                    {{ form_row(form.contractTypes) }}
+                    {{ form_row(form.availability) }}
+                </twig:Card>
+
+                <twig:Card title="{{ 'admin.profile.section.private'|trans }}">
+                    <twig:Alert type="info" class="mb-4">{{ 'admin.profile.private_notice'|trans }}</twig:Alert>
+                    {{ form_row(form.privatePhone) }}
+                    {{ form_row(form.privateEmail) }}
+                    {{ form_row(form.privatePostalAddress) }}
+                    {{ form_row(form.privateSalaryExpectation) }}
+                    {{ form_row(form.showSalaryInRecruiterArea) }}
+                </twig:Card>
+
+                <twig:Card title="{{ 'admin.profile.section.photo'|trans }}">
+                    <img src="{{ asset(photo.miniature) }}" alt="{{ 'admin.profile.photo_alt'|trans }}" class="mb-2 size-32 rounded-2xl object-cover object-top" width="400" height="400">
+                    {% if photo.is_default %}
+                        <p class="mb-4 text-sm text-secondary-600 dark:text-secondary-300">{{ 'admin.profile.photo_default'|trans }}</p>
+                        {% do form.removePhoto.setRendered %}
+                    {% else %}
+                        <div class="mt-2">{{ form_row(form.removePhoto) }}</div>
+                    {% endif %}
+                    {{ form_row(form.photo) }}
+                </twig:Card>
+            </div>
+        </div>
+        <div class="mt-6">
+            <twig:Button type="submit">{{ 'admin.crud.save'|trans }}</twig:Button>
+        </div>
+    {{ form_end(form) }}
+{% endblock %}

@@ -1,0 +1,3614 @@
+{
+  "source": "ancien site guillaume_c (capture automatique)",
+  "category": "thermodynamique",
+  "results": [
+    {
+      "tool": "chauffe-eau",
+      "method": "calculateWaterTime",
+      "event": null,
+      "inputs": {
+        "vWater": 200,
+        "tStartWater": 20,
+        "tEndWater": 60,
+        "pWater": 3000
+      },
+      "outputs": {
+        "resultEWaterTime": "9.30",
+        "resultTimeWater": "3.10"
+      }
+    },
+    {
+      "tool": "chauffe-eau",
+      "method": "calculateWaterTime",
+      "event": null,
+      "inputs": {
+        "vWater": 150,
+        "tStartWater": 12.5,
+        "tEndWater": 55,
+        "pWater": 2200
+      },
+      "outputs": {
+        "resultEWaterTime": "7.41",
+        "resultTimeWater": "3.37"
+      }
+    },
+    {
+      "tool": "chauffe-eau",
+      "method": "calculateWaterTime",
+      "event": null,
+      "inputs": {
+        "vWater": 200,
+        "tStartWater": 60,
+        "tEndWater": 20,
+        "pWater": 3000
+      },
+      "outputs": {
+        "resultEWaterTime": "9.30",
+        "resultTimeWater": "3.10"
+      }
+    },
+    {
+      "tool": "chauffe-eau",
+      "method": "calculateWaterTime",
+      "event": null,
+      "inputs": {
+        "vWater": 200,
+        "tStartWater": 20,
+        "tEndWater": 60,
+        "pWater": ""
+      },
+      "outputs": {
+        "resultEWaterTime": "9.30",
+        "resultTimeWater": ""
+      }
+    },
+    {
+      "tool": "chauffe-eau",
+      "method": "calculateWaterTime",
+      "event": null,
+      "inputs": {
+        "vWater": 200,
+        "tStartWater": 20,
+        "tEndWater": 60,
+        "pWater": 0
+      },
+      "outputs": {
+        "resultEWaterTime": "9.30",
+        "resultTimeWater": ""
+      }
+    },
+    {
+      "tool": "chauffe-eau",
+      "method": "calculateWaterTime",
+      "event": null,
+      "inputs": {
+        "vWater": 200,
+        "tStartWater": 20,
+        "tEndWater": 60,
+        "pWater": -3000
+      },
+      "outputs": {
+        "resultEWaterTime": "9.30",
+        "resultTimeWater": "-3.10"
+      }
+    },
+    {
+      "tool": "chauffe-eau",
+      "method": "calculateWaterTime",
+      "event": null,
+      "inputs": {
+        "vWater": -200,
+        "tStartWater": 20,
+        "tEndWater": 60,
+        "pWater": 3000
+      },
+      "outputs": {
+        "resultEWaterTime": "-9.30",
+        "resultTimeWater": "-3.10"
+      }
+    },
+    {
+      "tool": "chauffe-eau",
+      "method": "calculateWaterTime",
+      "event": null,
+      "inputs": {
+        "vWater": "",
+        "tStartWater": 20,
+        "tEndWater": 60,
+        "pWater": 3000
+      },
+      "outputs": {
+        "resultEWaterTime": "",
+        "resultTimeWater": ""
+      }
+    },
+    {
+      "tool": "chauffe-eau",
+      "method": "calculateWaterPower",
+      "event": null,
+      "inputs": {
+        "vWaterPow": 200,
+        "tStartWaterPow": 20,
+        "tEndWaterPow": 60,
+        "timeWaterPow": 2.5
+      },
+      "outputs": {
+        "resultEWaterPow": "9.30",
+        "resultPowWater": "3720"
+      }
+    },
+    {
+      "tool": "chauffe-eau",
+      "method": "calculateWaterPower",
+      "event": null,
+      "inputs": {
+        "vWaterPow": 300,
+        "tStartWaterPow": 10,
+        "tEndWaterPow": 65,
+        "timeWaterPow": 6
+      },
+      "outputs": {
+        "resultEWaterPow": "19.18",
+        "resultPowWater": "3197"
+      }
+    },
+    {
+      "tool": "chauffe-eau",
+      "method": "calculateWaterPower",
+      "event": null,
+      "inputs": {
+        "vWaterPow": 200,
+        "tStartWaterPow": 20,
+        "tEndWaterPow": 60,
+        "timeWaterPow": 0
+      },
+      "outputs": {
+        "resultEWaterPow": "9.30",
+        "resultPowWater": ""
+      }
+    },
+    {
+      "tool": "chauffe-eau",
+      "method": "calculateWaterPower",
+      "event": null,
+      "inputs": {
+        "vWaterPow": 200,
+        "tStartWaterPow": 20,
+        "tEndWaterPow": 60,
+        "timeWaterPow": -2
+      },
+      "outputs": {
+        "resultEWaterPow": "9.30",
+        "resultPowWater": "-4650"
+      }
+    },
+    {
+      "tool": "chauffe-eau",
+      "method": "calculateWaterPower",
+      "event": null,
+      "inputs": {
+        "vWaterPow": 200,
+        "tStartWaterPow": 20,
+        "tEndWaterPow": "",
+        "timeWaterPow": 2
+      },
+      "outputs": {
+        "resultEWaterPow": "",
+        "resultPowWater": ""
+      }
+    },
+    {
+      "tool": "gaz-parfaits",
+      "method": "calculateGas",
+      "event": null,
+      "inputs": {
+        "nGas": 1,
+        "tGas": 0,
+        "vGas": 22.4
+      },
+      "outputs": {
+        "resultGas": "1.01"
+      }
+    },
+    {
+      "tool": "gaz-parfaits",
+      "method": "calculateGas",
+      "event": null,
+      "inputs": {
+        "nGas": 1,
+        "tGas": 20,
+        "vGas": 22.4
+      },
+      "outputs": {
+        "resultGas": "1.09"
+      }
+    },
+    {
+      "tool": "gaz-parfaits",
+      "method": "calculateGas",
+      "event": null,
+      "inputs": {
+        "nGas": 2.5,
+        "tGas": 80,
+        "vGas": 10
+      },
+      "outputs": {
+        "resultGas": "7.34"
+      }
+    },
+    {
+      "tool": "gaz-parfaits",
+      "method": "calculateGas",
+      "event": null,
+      "inputs": {
+        "nGas": 0.5,
+        "tGas": -40,
+        "vGas": 1.5
+      },
+      "outputs": {
+        "resultGas": "6.46"
+      }
+    },
+    {
+      "tool": "gaz-parfaits",
+      "method": "calculateGas",
+      "event": null,
+      "inputs": {
+        "nGas": 1,
+        "tGas": 20,
+        "vGas": 0
+      },
+      "outputs": {
+        "resultGas": ""
+      }
+    },
+    {
+      "tool": "gaz-parfaits",
+      "method": "calculateGas",
+      "event": null,
+      "inputs": {
+        "nGas": -1,
+        "tGas": 20,
+        "vGas": 22.4
+      },
+      "outputs": {
+        "resultGas": "-1.09"
+      }
+    },
+    {
+      "tool": "gaz-parfaits",
+      "method": "calculateGas",
+      "event": null,
+      "inputs": {
+        "nGas": 1,
+        "tGas": -300,
+        "vGas": 22.4
+      },
+      "outputs": {
+        "resultGas": "-0.10"
+      }
+    },
+    {
+      "tool": "gaz-parfaits",
+      "method": "calculateGas",
+      "event": null,
+      "inputs": {
+        "nGas": 1,
+        "tGas": 20,
+        "vGas": -5
+      },
+      "outputs": {
+        "resultGas": "-4.87"
+      }
+    },
+    {
+      "tool": "gaz-parfaits",
+      "method": "calculateGas",
+      "event": null,
+      "inputs": {
+        "nGas": "",
+        "tGas": 20,
+        "vGas": 22.4
+      },
+      "outputs": {
+        "resultGas": ""
+      }
+    },
+    {
+      "tool": "point-rosee",
+      "method": "calculatePsy1",
+      "event": null,
+      "inputs": {
+        "psyT1": 20,
+        "psyHr1": 50
+      },
+      "outputs": {
+        "psyTd1": "9.27",
+        "psyHa1": "8.64",
+        "psyPv1": "11.68"
+      }
+    },
+    {
+      "tool": "point-rosee",
+      "method": "calculatePsy1",
+      "event": null,
+      "inputs": {
+        "psyT1": 25,
+        "psyHr1": 60
+      },
+      "outputs": {
+        "psyTd1": "16.71",
+        "psyHa1": "13.81",
+        "psyPv1": "19.00"
+      }
+    },
+    {
+      "tool": "point-rosee",
+      "method": "calculatePsy1",
+      "event": null,
+      "inputs": {
+        "psyT1": -5,
+        "psyHr1": 80
+      },
+      "outputs": {
+        "psyTd1": "-7.91",
+        "psyHa1": "2.73",
+        "psyPv1": "3.38"
+      }
+    },
+    {
+      "tool": "point-rosee",
+      "method": "calculatePsy1",
+      "event": null,
+      "inputs": {
+        "psyT1": 35.5,
+        "psyHr1": 95
+      },
+      "outputs": {
+        "psyTd1": "34.58",
+        "psyHa1": "38.61",
+        "psyPv1": "55.00"
+      }
+    },
+    {
+      "tool": "point-rosee",
+      "method": "calculatePsy1",
+      "event": null,
+      "inputs": {
+        "psyT1": 20,
+        "psyHr1": 100
+      },
+      "outputs": {
+        "psyTd1": "20.00",
+        "psyHa1": "17.27",
+        "psyPv1": "23.37"
+      }
+    },
+    {
+      "tool": "point-rosee",
+      "method": "calculatePsy1",
+      "event": null,
+      "inputs": {
+        "psyT1": 20,
+        "psyHr1": 0
+      },
+      "outputs": {
+        "psyTd1": "-80.45",
+        "psyHa1": "0.00",
+        "psyPv1": "0.00"
+      }
+    },
+    {
+      "tool": "point-rosee",
+      "method": "calculatePsy1",
+      "event": null,
+      "inputs": {
+        "psyT1": 20,
+        "psyHr1": 120
+      },
+      "outputs": {
+        "psyTd1": "22.98",
+        "psyHa1": "20.73",
+        "psyPv1": "28.04"
+      }
+    },
+    {
+      "tool": "point-rosee",
+      "method": "calculatePsy1",
+      "event": null,
+      "inputs": {
+        "psyT1": 20,
+        "psyHr1": -10
+      },
+      "outputs": {
+        "psyTd1": "",
+        "psyHa1": "",
+        "psyPv1": ""
+      }
+    },
+    {
+      "tool": "point-rosee",
+      "method": "calculatePsy1",
+      "event": null,
+      "inputs": {
+        "psyT1": "",
+        "psyHr1": 50
+      },
+      "outputs": {
+        "psyTd1": "",
+        "psyHa1": "",
+        "psyPv1": ""
+      }
+    },
+    {
+      "tool": "point-rosee",
+      "method": "calculatePsy2",
+      "event": null,
+      "inputs": {
+        "psyT2": 20,
+        "psyTd2": 9.3
+      },
+      "outputs": {
+        "psyHr2": "50.1",
+        "psyHa2": "8.65"
+      }
+    },
+    {
+      "tool": "point-rosee",
+      "method": "calculatePsy2",
+      "event": null,
+      "inputs": {
+        "psyT2": 25,
+        "psyTd2": 16.7
+      },
+      "outputs": {
+        "psyHr2": "60.0",
+        "psyHa2": "13.81"
+      }
+    },
+    {
+      "tool": "point-rosee",
+      "method": "calculatePsy2",
+      "event": null,
+      "inputs": {
+        "psyT2": 20,
+        "psyTd2": 20
+      },
+      "outputs": {
+        "psyHr2": "100.0",
+        "psyHa2": "17.27"
+      }
+    },
+    {
+      "tool": "point-rosee",
+      "method": "calculatePsy2",
+      "event": null,
+      "inputs": {
+        "psyT2": 5,
+        "psyTd2": -3
+      },
+      "outputs": {
+        "psyHr2": "56.2",
+        "psyHa2": "3.82"
+      }
+    },
+    {
+      "tool": "point-rosee",
+      "method": "calculatePsy2",
+      "event": null,
+      "inputs": {
+        "psyT2": 20,
+        "psyTd2": 25
+      },
+      "outputs": {
+        "psyHr2": "",
+        "psyHa2": ""
+      }
+    },
+    {
+      "tool": "point-rosee",
+      "method": "calculatePsy2",
+      "event": null,
+      "inputs": {
+        "psyT2": 20,
+        "psyTd2": ""
+      },
+      "outputs": {
+        "psyHr2": "",
+        "psyHa2": ""
+      }
+    },
+    {
+      "tool": "chauffe-fluide",
+      "steps": [
+        {
+          "set": {
+            "volume": 200
+          }
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "energyResult": "9.30",
+        "power": "",
+        "time": ""
+      }
+    },
+    {
+      "tool": "chauffe-fluide",
+      "steps": [
+        {
+          "set": {
+            "volume": 200,
+            "power": 3000
+          }
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "energyResult": "9.30",
+        "power": "3000",
+        "time": "3.10"
+      }
+    },
+    {
+      "tool": "chauffe-fluide",
+      "steps": [
+        {
+          "set": {
+            "volume": 200,
+            "time": 2.5
+          }
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "energyResult": "9.30",
+        "power": "3720",
+        "time": "2.5"
+      }
+    },
+    {
+      "tool": "chauffe-fluide",
+      "steps": [
+        {
+          "set": {
+            "volume": 1000,
+            "tempStart": 15,
+            "tempEnd": 85,
+            "power": 12000
+          }
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "energyResult": "81.38",
+        "power": "12000",
+        "time": "6.78"
+      }
+    },
+    {
+      "tool": "chauffe-fluide",
+      "steps": [
+        {
+          "set": {
+            "volume": 200,
+            "tempStart": 60,
+            "tempEnd": 20,
+            "power": 3000
+          }
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "energyResult": "9.30",
+        "power": "3000",
+        "time": "3.10"
+      }
+    },
+    {
+      "tool": "chauffe-fluide",
+      "steps": [
+        {
+          "set": {
+            "volume": 1,
+            "tempStart": 20,
+            "tempEnd": 21,
+            "power": 100
+          }
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "energyResult": "0.00",
+        "power": "100",
+        "time": "0.00"
+      }
+    },
+    {
+      "tool": "chauffe-fluide",
+      "steps": [
+        {
+          "set": {
+            "volume": 200,
+            "power": 0
+          }
+        },
+        {
+          "call": "calculateTime"
+        }
+      ],
+      "outputs": {
+        "energyResult": "0.00",
+        "power": "0",
+        "time": ""
+      }
+    },
+    {
+      "tool": "chauffe-fluide",
+      "steps": [
+        {
+          "set": {
+            "volume": 200
+          }
+        },
+        {
+          "call": "calculate"
+        },
+        {
+          "set": {
+            "power": 3000
+          }
+        },
+        {
+          "call": "calculateTime",
+          "event": "power"
+        }
+      ],
+      "outputs": {
+        "energyResult": "9.30",
+        "power": "3000",
+        "time": "3.10"
+      }
+    },
+    {
+      "tool": "chauffe-fluide",
+      "steps": [
+        {
+          "set": {
+            "volume": 200
+          }
+        },
+        {
+          "call": "calculate"
+        },
+        {
+          "set": {
+            "time": 4
+          }
+        },
+        {
+          "call": "calculatePower",
+          "event": "time"
+        }
+      ],
+      "outputs": {
+        "energyResult": "9.30",
+        "power": "2325",
+        "time": "4"
+      }
+    },
+    {
+      "tool": "chauffe-fluide",
+      "steps": [
+        {
+          "set": {
+            "volume": 200
+          }
+        },
+        {
+          "call": "calculate"
+        },
+        {
+          "set": {
+            "time": -1
+          }
+        },
+        {
+          "call": "calculatePower",
+          "event": "time"
+        }
+      ],
+      "outputs": {
+        "energyResult": "9.30",
+        "power": "",
+        "time": "-1"
+      }
+    },
+    {
+      "tool": "chauffe-fluide",
+      "steps": [
+        {
+          "set": {
+            "fluidType": "3"
+          }
+        },
+        {
+          "call": "changeFluid"
+        },
+        {
+          "set": {
+            "volume": 500,
+            "tempStart": 20,
+            "tempEnd": 180,
+            "power": 9000
+          }
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "energyResult": "37.78",
+        "power": "9000",
+        "time": "4.20",
+        "cp": "2000",
+        "rho": "850"
+      }
+    },
+    {
+      "tool": "chauffe-fluide",
+      "steps": [
+        {
+          "set": {
+            "fluidType": "5"
+          }
+        },
+        {
+          "call": "changeFluid"
+        },
+        {
+          "set": {
+            "volume": 100,
+            "time": 1.5
+          }
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "energyResult": "2.97",
+        "power": "1980",
+        "time": "1.5",
+        "cp": "2400",
+        "rho": "1113"
+      }
+    },
+    {
+      "tool": "chauffe-fluide",
+      "steps": [
+        {
+          "set": {
+            "fluidType": "13"
+          }
+        },
+        {
+          "call": "changeFluid"
+        },
+        {
+          "set": {
+            "volume": 50000,
+            "tempStart": 10,
+            "tempEnd": 35,
+            "power": 2000
+          }
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "energyResult": "0.42",
+        "power": "2000",
+        "time": "0.21",
+        "cp": "1005",
+        "rho": "1.204"
+      }
+    },
+    {
+      "tool": "chauffe-fluide",
+      "steps": [
+        {
+          "set": {
+            "fluidType": "custom"
+          }
+        },
+        {
+          "call": "changeFluid"
+        },
+        {
+          "set": {
+            "cp": 3800,
+            "rho": 1050,
+            "volume": 80,
+            "power": 1500
+          }
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "energyResult": "3.55",
+        "power": "1500",
+        "time": "2.37"
+      }
+    },
+    {
+      "tool": "chauffe-fluide",
+      "steps": [
+        {
+          "set": {
+            "volume": -200,
+            "power": 3000
+          }
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "energyResult": "-9.30",
+        "power": "3000",
+        "time": "-3.10"
+      }
+    },
+    {
+      "tool": "chauffe-fluide",
+      "steps": [
+        {
+          "set": {
+            "volume": ""
+          }
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "energyResult": "0.00",
+        "power": "",
+        "time": ""
+      }
+    },
+    {
+      "tool": "fluides-frigorifiques",
+      "method": "calculate",
+      "event": null,
+      "inputs": {
+        "fluidSelect": "R410A",
+        "chargeInput": 2.5
+      },
+      "outputs": {
+        "gwpDisplay": "2088",
+        "teqDisplay": "5.220",
+        "statusDisplay": "En transition"
+      }
+    },
+    {
+      "tool": "fluides-frigorifiques",
+      "method": "calculate",
+      "event": null,
+      "inputs": {
+        "fluidSelect": "R404A",
+        "chargeInput": 10
+      },
+      "outputs": {
+        "gwpDisplay": "3922",
+        "teqDisplay": "39.220",
+        "statusDisplay": "Interdit (Neuf)"
+      }
+    },
+    {
+      "tool": "fluides-frigorifiques",
+      "method": "calculate",
+      "event": null,
+      "inputs": {
+        "fluidSelect": "R22",
+        "chargeInput": 3
+      },
+      "outputs": {
+        "gwpDisplay": "1810",
+        "teqDisplay": "5.430",
+        "statusDisplay": "Interdit"
+      }
+    },
+    {
+      "tool": "fluides-frigorifiques",
+      "method": "calculate",
+      "event": null,
+      "inputs": {
+        "fluidSelect": "R32",
+        "chargeInput": 1.2
+      },
+      "outputs": {
+        "gwpDisplay": "675",
+        "teqDisplay": "0.810",
+        "statusDisplay": "En transition"
+      }
+    },
+    {
+      "tool": "fluides-frigorifiques",
+      "method": "calculate",
+      "event": null,
+      "inputs": {
+        "fluidSelect": "R134a",
+        "chargeInput": 3.5
+      },
+      "outputs": {
+        "gwpDisplay": "1430",
+        "teqDisplay": "5.005",
+        "statusDisplay": "En transition"
+      }
+    },
+    {
+      "tool": "fluides-frigorifiques",
+      "method": "calculate",
+      "event": null,
+      "inputs": {
+        "fluidSelect": "R290",
+        "chargeInput": 0.15
+      },
+      "outputs": {
+        "gwpDisplay": "3",
+        "teqDisplay": "0.000",
+        "statusDisplay": "Avenir"
+      }
+    },
+    {
+      "tool": "fluides-frigorifiques",
+      "method": "calculate",
+      "event": null,
+      "inputs": {
+        "fluidSelect": "R744",
+        "chargeInput": 50
+      },
+      "outputs": {
+        "gwpDisplay": "1",
+        "teqDisplay": "0.050",
+        "statusDisplay": "Avenir"
+      }
+    },
+    {
+      "tool": "fluides-frigorifiques",
+      "method": "calculate",
+      "event": null,
+      "inputs": {
+        "fluidSelect": "R717",
+        "chargeInput": 100
+      },
+      "outputs": {
+        "gwpDisplay": "0",
+        "teqDisplay": "0.000",
+        "statusDisplay": "Avenir"
+      }
+    },
+    {
+      "tool": "fluides-frigorifiques",
+      "method": "calculate",
+      "event": null,
+      "inputs": {
+        "fluidSelect": "R1234yf",
+        "chargeInput": 0.6
+      },
+      "outputs": {
+        "gwpDisplay": "4",
+        "teqDisplay": "0.002",
+        "statusDisplay": "Avenir"
+      }
+    },
+    {
+      "tool": "fluides-frigorifiques",
+      "method": "calculate",
+      "event": null,
+      "inputs": {
+        "fluidSelect": "R410A",
+        "chargeInput": ""
+      },
+      "outputs": {
+        "gwpDisplay": "2088",
+        "teqDisplay": "0.000",
+        "statusDisplay": "En transition"
+      }
+    },
+    {
+      "tool": "fluides-frigorifiques",
+      "method": "calculate",
+      "event": null,
+      "inputs": {
+        "fluidSelect": "R410A",
+        "chargeInput": -5
+      },
+      "outputs": {
+        "gwpDisplay": "2088",
+        "teqDisplay": "-10.440",
+        "statusDisplay": "En transition"
+      }
+    },
+    {
+      "tool": "chambre-froide",
+      "steps": [
+        {
+          "set": {}
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resTransmission": "0.46",
+        "resProduct": "3.30",
+        "resInfiltration": "0.00",
+        "resInternal": "0.07",
+        "resAir": "0.00",
+        "resDefrost": "0.06",
+        "resDoorTrans": "0.06",
+        "resLighting": "0.05",
+        "resPeople": "0.00",
+        "resAirSensible": "0.00",
+        "resAirLatent": "0.00",
+        "resTotalW": "3.90",
+        "resFrigoKw": "5.98",
+        "resElecKw": "2.85",
+        "resVolume": "30.0",
+        "resSurface": "59.0"
+      }
+    },
+    {
+      "tool": "chambre-froide",
+      "steps": [
+        {
+          "set": {
+            "sRegime": "positive"
+          }
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resTransmission": "0.24",
+        "resProduct": "0.32",
+        "resInfiltration": "0.00",
+        "resInternal": "0.07",
+        "resAir": "0.00",
+        "resDefrost": "0.00",
+        "resDoorTrans": "0.03",
+        "resLighting": "0.05",
+        "resPeople": "0.00",
+        "resAirSensible": "0.00",
+        "resAirLatent": "0.00",
+        "resTotalW": "0.64",
+        "resFrigoKw": "0.98",
+        "resElecKw": "0.33",
+        "resVolume": "30.0",
+        "resSurface": "59.0"
+      }
+    },
+    {
+      "tool": "chambre-froide",
+      "steps": [
+        {
+          "set": {
+            "sRegime": "positive0",
+            "sUsage": "prep"
+          }
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resTransmission": "0.31",
+        "resProduct": "0.41",
+        "resInfiltration": "0.01",
+        "resInternal": "0.09",
+        "resAir": "0.00",
+        "resDefrost": "0.00",
+        "resDoorTrans": "0.08",
+        "resLighting": "0.05",
+        "resPeople": "0.02",
+        "resAirSensible": "0.00",
+        "resAirLatent": "0.00",
+        "resTotalW": "0.81",
+        "resFrigoKw": "1.24",
+        "resElecKw": "0.41",
+        "resVolume": "30.0",
+        "resSurface": "59.0"
+      }
+    },
+    {
+      "tool": "chambre-froide",
+      "steps": [
+        {
+          "set": {
+            "sRegime": "negative25",
+            "sAirlock": "yes"
+          }
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resTransmission": "0.54",
+        "resProduct": "3.59",
+        "resInfiltration": "0.00",
+        "resInternal": "0.07",
+        "resAir": "0.00",
+        "resDefrost": "0.06",
+        "resDoorTrans": "0.07",
+        "resLighting": "0.05",
+        "resPeople": "0.00",
+        "resAirSensible": "0.00",
+        "resAirLatent": "0.00",
+        "resTotalW": "4.26",
+        "resFrigoKw": "6.53",
+        "resElecKw": "3.11",
+        "resVolume": "30.0",
+        "resSurface": "59.0"
+      }
+    },
+    {
+      "tool": "chambre-froide",
+      "steps": [
+        {
+          "set": {
+            "sLoadMode": "empty"
+          }
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resTransmission": "0.46",
+        "resProduct": "0.00",
+        "resInfiltration": "0.00",
+        "resInternal": "0.07",
+        "resAir": "0.00",
+        "resDefrost": "0.06",
+        "resDoorTrans": "0.06",
+        "resLighting": "0.05",
+        "resPeople": "0.00",
+        "resAirSensible": "0.00",
+        "resAirLatent": "0.00",
+        "resTotalW": "0.59",
+        "resFrigoKw": "0.91",
+        "resElecKw": "0.43",
+        "resVolume": "30.0",
+        "resSurface": "59.0"
+      }
+    },
+    {
+      "tool": "chambre-froide",
+      "steps": [
+        {
+          "set": {
+            "sLength": 6,
+            "sWidth": 5,
+            "sHeight": 3,
+            "sFloorInsulated": "no",
+            "sGlazing": "yes",
+            "sGlazingArea": 2
+          }
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resTransmission": "2.36",
+        "resProduct": "3.30",
+        "resInfiltration": "0.00",
+        "resInternal": "0.18",
+        "resAir": "0.00",
+        "resDefrost": "0.15",
+        "resDoorTrans": "0.06",
+        "resLighting": "0.12",
+        "resPeople": "0.00",
+        "resAirSensible": "0.00",
+        "resAirLatent": "0.00",
+        "resTotalW": "6.00",
+        "resFrigoKw": "9.20",
+        "resElecKw": "4.38",
+        "resVolume": "90.0",
+        "resSurface": "126.0"
+      }
+    },
+    {
+      "tool": "chambre-froide",
+      "steps": [
+        {
+          "set": {
+            "sRegime": "positive",
+            "sAirRenewal": 100,
+            "sAirRhExt": 60,
+            "sAirRhSet": 85
+          }
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resTransmission": "0.24",
+        "resProduct": "0.32",
+        "resInfiltration": "0.00",
+        "resInternal": "0.07",
+        "resAir": "1.53",
+        "resDefrost": "0.00",
+        "resDoorTrans": "0.03",
+        "resLighting": "0.05",
+        "resPeople": "0.00",
+        "resAirSensible": "0.77",
+        "resAirLatent": "0.76",
+        "resTotalW": "2.17",
+        "resFrigoKw": "3.32",
+        "resElecKw": "1.11",
+        "resVolume": "30.0",
+        "resSurface": "59.0"
+      }
+    },
+    {
+      "tool": "chambre-froide",
+      "steps": [
+        {
+          "set": {
+            "sRegime": "negative",
+            "sAirRenewal": 50
+          }
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resTransmission": "0.46",
+        "resProduct": "3.30",
+        "resInfiltration": "0.00",
+        "resInternal": "0.07",
+        "resAir": "1.15",
+        "resDefrost": "0.06",
+        "resDoorTrans": "0.06",
+        "resLighting": "0.05",
+        "resPeople": "0.00",
+        "resAirSensible": "0.72",
+        "resAirLatent": "0.43",
+        "resTotalW": "5.05",
+        "resFrigoKw": "7.75",
+        "resElecKw": "3.69",
+        "resVolume": "30.0",
+        "resSurface": "59.0"
+      }
+    },
+    {
+      "tool": "chambre-froide",
+      "steps": [
+        {
+          "set": {
+            "sFluid": "R290",
+            "sRunHours": 16,
+            "sMargin": 10
+          }
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resTransmission": "0.46",
+        "resProduct": "3.30",
+        "resInfiltration": "0.00",
+        "resInternal": "0.07",
+        "resAir": "0.00",
+        "resDefrost": "0.06",
+        "resDoorTrans": "0.06",
+        "resLighting": "0.05",
+        "resPeople": "0.00",
+        "resAirSensible": "0.00",
+        "resAirLatent": "0.00",
+        "resTotalW": "3.90",
+        "resFrigoKw": "6.43",
+        "resElecKw": "2.80",
+        "resVolume": "30.0",
+        "resSurface": "59.0"
+      }
+    },
+    {
+      "tool": "chambre-froide",
+      "steps": [
+        {
+          "set": {
+            "sMargin": 0
+          }
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resTransmission": "0.46",
+        "resProduct": "3.30",
+        "resInfiltration": "0.00",
+        "resInternal": "0.07",
+        "resAir": "0.00",
+        "resDefrost": "0.06",
+        "resDoorTrans": "0.06",
+        "resLighting": "0.05",
+        "resPeople": "0.00",
+        "resAirSensible": "0.00",
+        "resAirLatent": "0.00",
+        "resTotalW": "3.90",
+        "resFrigoKw": "5.98",
+        "resElecKw": "2.85",
+        "resVolume": "30.0",
+        "resSurface": "59.0"
+      }
+    },
+    {
+      "tool": "chambre-froide",
+      "steps": [
+        {
+          "set": {
+            "sLength": "",
+            "sWidth": 3,
+            "sHeight": 2.5
+          }
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resTransmission": "0.16",
+        "resProduct": "3.30",
+        "resInfiltration": "0.00",
+        "resInternal": "0.00",
+        "resAir": "0.00",
+        "resDefrost": "0.00",
+        "resDoorTrans": "0.06",
+        "resLighting": "0.00",
+        "resPeople": "0.00",
+        "resAirSensible": "0.00",
+        "resAirLatent": "0.00",
+        "resTotalW": "3.47",
+        "resFrigoKw": "5.32",
+        "resElecKw": "2.53",
+        "resVolume": "0.0",
+        "resSurface": "15.0"
+      }
+    },
+    {
+      "tool": "chambre-froide",
+      "steps": [
+        {
+          "set": {
+            "sLength": -4
+          }
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resTransmission": "-0.13",
+        "resProduct": "3.30",
+        "resInfiltration": "0.00",
+        "resInternal": "-0.07",
+        "resAir": "0.00",
+        "resDefrost": "-0.06",
+        "resDoorTrans": "0.06",
+        "resLighting": "-0.05",
+        "resPeople": "0.00",
+        "resAirSensible": "0.00",
+        "resAirLatent": "0.00",
+        "resTotalW": "3.04",
+        "resFrigoKw": "4.66",
+        "resElecKw": "2.22",
+        "resVolume": "-30.0",
+        "resSurface": "-29.0"
+      }
+    },
+    {
+      "tool": "chambre-froide",
+      "steps": [
+        {
+          "set": {
+            "sProductProfile": "meat"
+          }
+        },
+        {
+          "call": "onProductProfileChange",
+          "params": {
+            "prefix": "simple"
+          }
+        },
+        {
+          "set": {}
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resTransmission": "0.46",
+        "resProduct": "2.42",
+        "resInfiltration": "0.00",
+        "resInternal": "0.07",
+        "resAir": "0.00",
+        "resDefrost": "0.06",
+        "resDoorTrans": "0.06",
+        "resLighting": "0.05",
+        "resPeople": "0.00",
+        "resAirSensible": "0.00",
+        "resAirLatent": "0.00",
+        "resTotalW": "3.02",
+        "resFrigoKw": "4.63",
+        "resElecKw": "2.20",
+        "resVolume": "30.0",
+        "resSurface": "59.0"
+      }
+    },
+    {
+      "tool": "chambre-froide",
+      "steps": [
+        {
+          "set": {
+            "sProductProfile": "vegetables"
+          }
+        },
+        {
+          "call": "onProductProfileChange",
+          "params": {
+            "prefix": "simple"
+          }
+        },
+        {
+          "set": {
+            "sRegime": "positive"
+          }
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resTransmission": "0.24",
+        "resProduct": "0.69",
+        "resInfiltration": "0.00",
+        "resInternal": "0.07",
+        "resAir": "0.00",
+        "resDefrost": "0.00",
+        "resDoorTrans": "0.03",
+        "resLighting": "0.05",
+        "resPeople": "0.00",
+        "resAirSensible": "0.00",
+        "resAirLatent": "0.00",
+        "resTotalW": "1.01",
+        "resFrigoKw": "1.55",
+        "resElecKw": "0.52",
+        "resVolume": "30.0",
+        "resSurface": "59.0"
+      }
+    },
+    {
+      "tool": "chambre-froide",
+      "steps": [
+        {
+          "set": {
+            "sProductProfile": "frozen"
+          }
+        },
+        {
+          "call": "onProductProfileChange",
+          "params": {
+            "prefix": "simple"
+          }
+        },
+        {
+          "set": {
+            "sRegime": "negative25"
+          }
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resTransmission": "0.54",
+        "resProduct": "0.00",
+        "resInfiltration": "0.00",
+        "resInternal": "0.07",
+        "resAir": "0.00",
+        "resDefrost": "0.06",
+        "resDoorTrans": "0.07",
+        "resLighting": "0.05",
+        "resPeople": "0.00",
+        "resAirSensible": "0.00",
+        "resAirLatent": "0.00",
+        "resTotalW": "0.67",
+        "resFrigoKw": "1.03",
+        "resElecKw": "0.49",
+        "resVolume": "30.0",
+        "resSurface": "59.0"
+      }
+    },
+    {
+      "tool": "chambre-froide",
+      "steps": [
+        {
+          "set": {
+            "sProductProfile": "pharma_cold"
+          }
+        },
+        {
+          "call": "onProductProfileChange",
+          "params": {
+            "prefix": "simple"
+          }
+        },
+        {
+          "set": {
+            "sRegime": "positive"
+          }
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resTransmission": "0.24",
+        "resProduct": "0.21",
+        "resInfiltration": "0.00",
+        "resInternal": "0.07",
+        "resAir": "0.00",
+        "resDefrost": "0.00",
+        "resDoorTrans": "0.03",
+        "resLighting": "0.05",
+        "resPeople": "0.00",
+        "resAirSensible": "0.00",
+        "resAirLatent": "0.00",
+        "resTotalW": "0.52",
+        "resFrigoKw": "0.80",
+        "resElecKw": "0.27",
+        "resVolume": "30.0",
+        "resSurface": "59.0"
+      }
+    },
+    {
+      "tool": "chambre-froide",
+      "steps": [
+        {
+          "set": {
+            "sPanelBrand": "laine_roche",
+            "sThickness": "200"
+          }
+        },
+        {
+          "call": "onPanelChange"
+        }
+      ],
+      "outputs": {
+        "resTransmission": "0.51",
+        "resProduct": "3.30",
+        "resInfiltration": "0.00",
+        "resInternal": "0.07",
+        "resAir": "0.00",
+        "resDefrost": "0.06",
+        "resDoorTrans": "0.06",
+        "resLighting": "0.05",
+        "resPeople": "0.00",
+        "resAirSensible": "0.00",
+        "resAirLatent": "0.00",
+        "resTotalW": "3.95",
+        "resFrigoKw": "6.05",
+        "resElecKw": "2.88",
+        "resVolume": "30.0",
+        "resSurface": "59.0",
+        "sPanelU": "0.18",
+        "panelInfo": "Laine de roche — Laine de roche (NF EN 13162) — U ≈ 0.18 W/m²·K"
+      }
+    },
+    {
+      "tool": "chambre-froide",
+      "steps": [
+        {
+          "set": {
+            "sPanelBrand": "isocab",
+            "sThickness": "100"
+          }
+        },
+        {
+          "call": "onPanelChange"
+        }
+      ],
+      "outputs": {
+        "resTransmission": "0.54",
+        "resProduct": "3.30",
+        "resInfiltration": "0.00",
+        "resInternal": "0.07",
+        "resAir": "0.00",
+        "resDefrost": "0.06",
+        "resDoorTrans": "0.06",
+        "resLighting": "0.05",
+        "resPeople": "0.00",
+        "resAirSensible": "0.00",
+        "resAirLatent": "0.00",
+        "resTotalW": "3.97",
+        "resFrigoKw": "6.09",
+        "resElecKw": "2.90",
+        "resVolume": "30.0",
+        "resSurface": "59.0",
+        "sPanelU": "0.19",
+        "panelInfo": "Isocab (PIR) — PIR (NF EN 13167) — U ≈ 0.19 W/m²·K"
+      }
+    },
+    {
+      "tool": "chambre-froide",
+      "steps": [
+        {
+          "call": "setMode",
+          "params": {
+            "mode": "pro"
+          }
+        },
+        {
+          "set": {}
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resTransmission": "0.50",
+        "resProduct": "1.13",
+        "resInfiltration": "0.00",
+        "resInternal": "0.08",
+        "resAir": "0.00",
+        "resDefrost": "0.13",
+        "resDoorTrans": "0.06",
+        "resLighting": "0.04",
+        "resPeople": "0.04",
+        "resAirSensible": "0.00",
+        "resAirLatent": "0.00",
+        "resTotalW": "1.84",
+        "resFrigoKw": "2.82",
+        "resElecKw": "1.34",
+        "resVolume": "30.0",
+        "resSurface": "59.0"
+      }
+    },
+    {
+      "tool": "chambre-froide",
+      "steps": [
+        {
+          "call": "setMode",
+          "params": {
+            "mode": "pro"
+          }
+        },
+        {
+          "set": {
+            "pTSet": 2
+          }
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resTransmission": "0.26",
+        "resProduct": "0.32",
+        "resInfiltration": "0.00",
+        "resInternal": "0.06",
+        "resAir": "0.00",
+        "resDefrost": "0.13",
+        "resDoorTrans": "0.03",
+        "resLighting": "0.04",
+        "resPeople": "0.02",
+        "resAirSensible": "0.00",
+        "resAirLatent": "0.00",
+        "resTotalW": "0.77",
+        "resFrigoKw": "1.18",
+        "resElecKw": "0.39",
+        "resVolume": "30.0",
+        "resSurface": "59.0"
+      }
+    },
+    {
+      "tool": "chambre-froide",
+      "steps": [
+        {
+          "call": "setMode",
+          "params": {
+            "mode": "pro"
+          }
+        },
+        {
+          "set": {
+            "pTSet": 0
+          }
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resTransmission": "0.26",
+        "resProduct": "0.32",
+        "resInfiltration": "0.00",
+        "resInternal": "0.06",
+        "resAir": "0.00",
+        "resDefrost": "0.13",
+        "resDoorTrans": "0.03",
+        "resLighting": "0.04",
+        "resPeople": "0.02",
+        "resAirSensible": "0.00",
+        "resAirLatent": "0.00",
+        "resTotalW": "0.77",
+        "resFrigoKw": "1.18",
+        "resElecKw": "0.39",
+        "resVolume": "30.0",
+        "resSurface": "59.0"
+      }
+    },
+    {
+      "tool": "chambre-froide",
+      "steps": [
+        {
+          "call": "setMode",
+          "params": {
+            "mode": "pro"
+          }
+        },
+        {
+          "set": {
+            "pTSet": 4,
+            "pFloorInsulated": "no",
+            "pTExtFloor": 12
+          }
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resTransmission": "0.38",
+        "resProduct": "0.24",
+        "resInfiltration": "0.00",
+        "resInternal": "0.06",
+        "resAir": "0.00",
+        "resDefrost": "0.13",
+        "resDoorTrans": "0.03",
+        "resLighting": "0.04",
+        "resPeople": "0.02",
+        "resAirSensible": "0.00",
+        "resAirLatent": "0.00",
+        "resTotalW": "0.80",
+        "resFrigoKw": "1.23",
+        "resElecKw": "0.41",
+        "resVolume": "30.0",
+        "resSurface": "59.0"
+      }
+    },
+    {
+      "tool": "chambre-froide",
+      "steps": [
+        {
+          "call": "setMode",
+          "params": {
+            "mode": "pro"
+          }
+        },
+        {
+          "set": {
+            "pBridgePct": 0,
+            "pGlazing": "yes",
+            "pGlazingArea": 1.5,
+            "pGlazingU": 1.1
+          }
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resTransmission": "0.53",
+        "resProduct": "1.13",
+        "resInfiltration": "0.00",
+        "resInternal": "0.08",
+        "resAir": "0.00",
+        "resDefrost": "0.13",
+        "resDoorTrans": "0.06",
+        "resLighting": "0.04",
+        "resPeople": "0.04",
+        "resAirSensible": "0.00",
+        "resAirLatent": "0.00",
+        "resTotalW": "1.87",
+        "resFrigoKw": "2.87",
+        "resElecKw": "1.36",
+        "resVolume": "30.0",
+        "resSurface": "59.0"
+      }
+    },
+    {
+      "tool": "chambre-froide",
+      "steps": [
+        {
+          "call": "setMode",
+          "params": {
+            "mode": "pro"
+          }
+        },
+        {
+          "set": {
+            "pDoorCount": 2,
+            "pDoorW": 1.2,
+            "pDoorH": 2.2,
+            "pDoorJoints": "3",
+            "pDoorPorthole": "yes"
+          }
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resTransmission": "0.65",
+        "resProduct": "1.13",
+        "resInfiltration": "0.01",
+        "resInternal": "0.08",
+        "resAir": "0.00",
+        "resDefrost": "0.13",
+        "resDoorTrans": "0.21",
+        "resLighting": "0.04",
+        "resPeople": "0.04",
+        "resAirSensible": "0.00",
+        "resAirLatent": "0.00",
+        "resTotalW": "2.00",
+        "resFrigoKw": "3.06",
+        "resElecKw": "1.46",
+        "resVolume": "30.0",
+        "resSurface": "59.0"
+      }
+    },
+    {
+      "tool": "chambre-froide",
+      "steps": [
+        {
+          "call": "setMode",
+          "params": {
+            "mode": "pro"
+          }
+        },
+        {
+          "set": {
+            "pDoorType": "rapid"
+          }
+        },
+        {
+          "call": "onDoorTypeChange"
+        }
+      ],
+      "outputs": {
+        "resTransmission": "0.65",
+        "resProduct": "1.13",
+        "resInfiltration": "0.00",
+        "resInternal": "0.08",
+        "resAir": "0.00",
+        "resDefrost": "0.13",
+        "resDoorTrans": "0.21",
+        "resLighting": "0.04",
+        "resPeople": "0.04",
+        "resAirSensible": "0.00",
+        "resAirLatent": "0.00",
+        "resTotalW": "1.99",
+        "resFrigoKw": "3.05",
+        "resElecKw": "1.45",
+        "resVolume": "30.0",
+        "resSurface": "59.0",
+        "pDoorU": "2.5"
+      }
+    },
+    {
+      "tool": "chambre-froide",
+      "steps": [
+        {
+          "call": "setMode",
+          "params": {
+            "mode": "pro"
+          }
+        },
+        {
+          "set": {
+            "pAirlock": "yes",
+            "pOpeningsPerDay": 60,
+            "pOpenDuration": 15,
+            "pDoorActivityHours": 10
+          }
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resTransmission": "0.50",
+        "resProduct": "1.13",
+        "resInfiltration": "0.00",
+        "resInternal": "0.08",
+        "resAir": "0.00",
+        "resDefrost": "0.13",
+        "resDoorTrans": "0.06",
+        "resLighting": "0.04",
+        "resPeople": "0.04",
+        "resAirSensible": "0.00",
+        "resAirLatent": "0.00",
+        "resTotalW": "1.84",
+        "resFrigoKw": "2.82",
+        "resElecKw": "1.34",
+        "resVolume": "30.0",
+        "resSurface": "59.0"
+      }
+    },
+    {
+      "tool": "chambre-froide",
+      "steps": [
+        {
+          "call": "setMode",
+          "params": {
+            "mode": "pro"
+          }
+        },
+        {
+          "set": {
+            "pLightCount": 0,
+            "pLighting": 12
+          }
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resTransmission": "0.50",
+        "resProduct": "1.13",
+        "resInfiltration": "0.00",
+        "resInternal": "0.11",
+        "resAir": "0.00",
+        "resDefrost": "0.13",
+        "resDoorTrans": "0.06",
+        "resLighting": "0.07",
+        "resPeople": "0.04",
+        "resAirSensible": "0.00",
+        "resAirLatent": "0.00",
+        "resTotalW": "1.87",
+        "resFrigoKw": "2.87",
+        "resElecKw": "1.37",
+        "resVolume": "30.0",
+        "resSurface": "59.0"
+      }
+    },
+    {
+      "tool": "chambre-froide",
+      "steps": [
+        {
+          "call": "setMode",
+          "params": {
+            "mode": "pro"
+          }
+        },
+        {
+          "set": {
+            "pLightDefrost": "yes",
+            "pLightSimult": 50
+          }
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resTransmission": "0.50",
+        "resProduct": "1.13",
+        "resInfiltration": "0.00",
+        "resInternal": "0.06",
+        "resAir": "0.00",
+        "resDefrost": "0.13",
+        "resDoorTrans": "0.06",
+        "resLighting": "0.02",
+        "resPeople": "0.04",
+        "resAirSensible": "0.00",
+        "resAirLatent": "0.00",
+        "resTotalW": "1.82",
+        "resFrigoKw": "2.79",
+        "resElecKw": "1.33",
+        "resVolume": "30.0",
+        "resSurface": "59.0"
+      }
+    },
+    {
+      "tool": "chambre-froide",
+      "steps": [
+        {
+          "call": "setMode",
+          "params": {
+            "mode": "pro"
+          }
+        },
+        {
+          "set": {
+            "pPeople": 3,
+            "pPeopleHours": 6,
+            "pPeopleActivity": "moderate",
+            "pEquipment": 500
+          }
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resTransmission": "0.50",
+        "resProduct": "1.13",
+        "resInfiltration": "0.00",
+        "resInternal": "0.44",
+        "resAir": "0.00",
+        "resDefrost": "0.13",
+        "resDoorTrans": "0.06",
+        "resLighting": "0.04",
+        "resPeople": "0.24",
+        "resAirSensible": "0.00",
+        "resAirLatent": "0.00",
+        "resTotalW": "2.20",
+        "resFrigoKw": "3.38",
+        "resElecKw": "1.61",
+        "resVolume": "30.0",
+        "resSurface": "59.0"
+      }
+    },
+    {
+      "tool": "chambre-froide",
+      "steps": [
+        {
+          "call": "setMode",
+          "params": {
+            "mode": "pro"
+          }
+        },
+        {
+          "set": {
+            "pDailyKg": 0,
+            "pStoredKg": 3000
+          }
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resTransmission": "0.50",
+        "resProduct": "0.06",
+        "resInfiltration": "0.00",
+        "resInternal": "0.08",
+        "resAir": "0.00",
+        "resDefrost": "0.13",
+        "resDoorTrans": "0.06",
+        "resLighting": "0.04",
+        "resPeople": "0.04",
+        "resAirSensible": "0.00",
+        "resAirLatent": "0.00",
+        "resTotalW": "0.76",
+        "resFrigoKw": "1.17",
+        "resElecKw": "0.56",
+        "resVolume": "30.0",
+        "resSurface": "59.0"
+      }
+    },
+    {
+      "tool": "chambre-froide",
+      "steps": [
+        {
+          "call": "setMode",
+          "params": {
+            "mode": "pro"
+          }
+        },
+        {
+          "set": {
+            "pDefrostPower": 0
+          }
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resTransmission": "0.50",
+        "resProduct": "1.13",
+        "resInfiltration": "0.00",
+        "resInternal": "0.08",
+        "resAir": "0.00",
+        "resDefrost": "0.00",
+        "resDoorTrans": "0.06",
+        "resLighting": "0.04",
+        "resPeople": "0.04",
+        "resAirSensible": "0.00",
+        "resAirLatent": "0.00",
+        "resTotalW": "1.71",
+        "resFrigoKw": "2.63",
+        "resElecKw": "1.25",
+        "resVolume": "30.0",
+        "resSurface": "59.0"
+      }
+    },
+    {
+      "tool": "chambre-froide",
+      "steps": [
+        {
+          "call": "setMode",
+          "params": {
+            "mode": "pro"
+          }
+        },
+        {
+          "set": {
+            "pAirRenewal": 200,
+            "pAirTExt": 30,
+            "pAirRhExt": 70,
+            "pAirRhSet": 90
+          }
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resTransmission": "0.50",
+        "resProduct": "1.13",
+        "resInfiltration": "0.00",
+        "resInternal": "0.08",
+        "resAir": "6.57",
+        "resDefrost": "0.13",
+        "resDoorTrans": "0.06",
+        "resLighting": "0.04",
+        "resPeople": "0.04",
+        "resAirSensible": "3.22",
+        "resAirLatent": "3.35",
+        "resTotalW": "8.40",
+        "resFrigoKw": "12.89",
+        "resElecKw": "6.14",
+        "resVolume": "30.0",
+        "resSurface": "59.0"
+      }
+    },
+    {
+      "tool": "chambre-froide",
+      "steps": [
+        {
+          "call": "setMode",
+          "params": {
+            "mode": "pro"
+          }
+        },
+        {
+          "set": {
+            "pCopOverride": 2.5,
+            "pFluid": "R744"
+          }
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resTransmission": "0.50",
+        "resProduct": "1.13",
+        "resInfiltration": "0.00",
+        "resInternal": "0.08",
+        "resAir": "0.00",
+        "resDefrost": "0.13",
+        "resDoorTrans": "0.06",
+        "resLighting": "0.04",
+        "resPeople": "0.04",
+        "resAirSensible": "0.00",
+        "resAirLatent": "0.00",
+        "resTotalW": "1.84",
+        "resFrigoKw": "2.82",
+        "resElecKw": "1.13",
+        "resVolume": "30.0",
+        "resSurface": "59.0"
+      }
+    },
+    {
+      "tool": "chambre-froide",
+      "steps": [
+        {
+          "call": "setMode",
+          "params": {
+            "mode": "pro"
+          }
+        },
+        {
+          "set": {
+            "pRunHours": 20,
+            "pMargin": 0
+          }
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resTransmission": "0.50",
+        "resProduct": "1.13",
+        "resInfiltration": "0.00",
+        "resInternal": "0.08",
+        "resAir": "0.00",
+        "resDefrost": "0.13",
+        "resDoorTrans": "0.06",
+        "resLighting": "0.04",
+        "resPeople": "0.04",
+        "resAirSensible": "0.00",
+        "resAirLatent": "0.00",
+        "resTotalW": "1.84",
+        "resFrigoKw": "2.54",
+        "resElecKw": "1.21",
+        "resVolume": "30.0",
+        "resSurface": "59.0"
+      }
+    },
+    {
+      "tool": "chambre-froide",
+      "steps": [
+        {
+          "call": "setMode",
+          "params": {
+            "mode": "pro"
+          }
+        },
+        {
+          "set": {
+            "pProductProfile": "ice"
+          }
+        },
+        {
+          "call": "onProductProfileChange",
+          "params": {
+            "prefix": "pro"
+          }
+        },
+        {
+          "set": {
+            "pDailyKg": 200,
+            "pEntryTemp": 15
+          }
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resTransmission": "0.50",
+        "resProduct": "1.09",
+        "resInfiltration": "0.00",
+        "resInternal": "0.08",
+        "resAir": "0.00",
+        "resDefrost": "0.13",
+        "resDoorTrans": "0.06",
+        "resLighting": "0.04",
+        "resPeople": "0.04",
+        "resAirSensible": "0.00",
+        "resAirLatent": "0.00",
+        "resTotalW": "1.80",
+        "resFrigoKw": "2.75",
+        "resElecKw": "1.31",
+        "resVolume": "30.0",
+        "resSurface": "59.0"
+      }
+    },
+    {
+      "tool": "chambre-froide",
+      "steps": [
+        {
+          "call": "setMode",
+          "params": {
+            "mode": "pro"
+          }
+        },
+        {
+          "set": {
+            "pProductProfile": "fish"
+          }
+        },
+        {
+          "call": "onProductProfileChange",
+          "params": {
+            "prefix": "pro"
+          }
+        },
+        {
+          "set": {
+            "pTSet": -25,
+            "pFreezingInRoom": "yes"
+          }
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resTransmission": "0.58",
+        "resProduct": "4.41",
+        "resInfiltration": "0.00",
+        "resInternal": "0.08",
+        "resAir": "0.00",
+        "resDefrost": "0.13",
+        "resDoorTrans": "0.07",
+        "resLighting": "0.04",
+        "resPeople": "0.04",
+        "resAirSensible": "0.00",
+        "resAirLatent": "0.00",
+        "resTotalW": "5.20",
+        "resFrigoKw": "7.97",
+        "resElecKw": "3.79",
+        "resVolume": "30.0",
+        "resSurface": "59.0"
+      }
+    },
+    {
+      "tool": "chambre-froide",
+      "steps": [
+        {
+          "call": "setMode",
+          "params": {
+            "mode": "pro"
+          }
+        },
+        {
+          "set": {
+            "pLength": 10,
+            "pWidth": 8,
+            "pHeight": 4,
+            "pTSet": -30,
+            "pPanelU": 0.1
+          }
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resTransmission": "1.89",
+        "resProduct": "1.62",
+        "resInfiltration": "0.00",
+        "resInternal": "0.08",
+        "resAir": "0.00",
+        "resDefrost": "0.13",
+        "resDoorTrans": "0.08",
+        "resLighting": "0.04",
+        "resPeople": "0.04",
+        "resAirSensible": "0.00",
+        "resAirLatent": "0.00",
+        "resTotalW": "3.71",
+        "resFrigoKw": "5.69",
+        "resElecKw": "2.71",
+        "resVolume": "320.0",
+        "resSurface": "304.0"
+      }
+    },
+    {
+      "tool": "enceinte-climatique",
+      "steps": [
+        {
+          "set": {}
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resVolume": "6.00",
+        "resDewPoint": "16.7",
+        "resColdKw": "37.36",
+        "resHeatKw": "0.03",
+        "resHumidRate": "43",
+        "resHumidKw": "0.03",
+        "resDehumidRate": "25",
+        "resDehumidKw": "37.36",
+        "resTransW": "0.00",
+        "resInternalW": "0.08",
+        "resLeakW": "0.00",
+        "resSampleW": "0.00",
+        "resRampTimeRh": "30",
+        "resEnergyKwh": "897.6"
+      }
+    },
+    {
+      "tool": "enceinte-climatique",
+      "steps": [
+        {
+          "set": {
+            "sIchProfile": "accelerated"
+          }
+        },
+        {
+          "call": "onIchChange",
+          "params": {
+            "prefix": "simple"
+          }
+        },
+        {
+          "set": {}
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resVolume": "6.00",
+        "resDewPoint": "34.7",
+        "resColdKw": "58.49",
+        "resHeatKw": "0.22",
+        "resHumidRate": "108",
+        "resHumidKw": "0.09",
+        "resDehumidRate": "55",
+        "resDehumidKw": "58.48",
+        "resTransW": "0.10",
+        "resInternalW": "0.08",
+        "resLeakW": "0.00",
+        "resSampleW": "0.00",
+        "resRampTimeRh": "30",
+        "resEnergyKwh": "1409.1"
+      }
+    },
+    {
+      "tool": "enceinte-climatique",
+      "steps": [
+        {
+          "set": {
+            "sIchProfile": "intermediate"
+          }
+        },
+        {
+          "call": "onIchChange",
+          "params": {
+            "prefix": "simple"
+          }
+        },
+        {
+          "set": {}
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resVolume": "6.00",
+        "resDewPoint": "22.7",
+        "resColdKw": "42.87",
+        "resHeatKw": "0.09",
+        "resHumidRate": "59",
+        "resHumidKw": "0.05",
+        "resDehumidRate": "33",
+        "resDehumidKw": "42.86",
+        "resTransW": "0.04",
+        "resInternalW": "0.08",
+        "resLeakW": "0.00",
+        "resSampleW": "0.00",
+        "resRampTimeRh": "30",
+        "resEnergyKwh": "1031.0"
+      }
+    },
+    {
+      "tool": "enceinte-climatique",
+      "steps": [
+        {
+          "set": {
+            "sIchProfile": "refrigerated"
+          }
+        },
+        {
+          "call": "onIchChange",
+          "params": {
+            "prefix": "simple"
+          }
+        },
+        {
+          "set": {}
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resVolume": "6.00",
+        "resDewPoint": "-2.1",
+        "resColdKw": "27.07",
+        "resHeatKw": "0.04",
+        "resHumidRate": "16",
+        "resHumidKw": "0.01",
+        "resDehumidRate": "10",
+        "resDehumidKw": "26.89",
+        "resTransW": "0.14",
+        "resInternalW": "0.08",
+        "resLeakW": "0.00",
+        "resSampleW": "0.00",
+        "resRampTimeRh": "30",
+        "resEnergyKwh": "650.6"
+      }
+    },
+    {
+      "tool": "enceinte-climatique",
+      "steps": [
+        {
+          "set": {
+            "sIchProfile": "freezer"
+          }
+        },
+        {
+          "call": "onIchChange",
+          "params": {
+            "prefix": "simple"
+          }
+        },
+        {
+          "set": {}
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resVolume": "6.00",
+        "resDewPoint": "-25.7",
+        "resColdKw": "21.58",
+        "resHeatKw": "0.05",
+        "resHumidRate": "2",
+        "resHumidKw": "0.00",
+        "resDehumidRate": "2",
+        "resDehumidKw": "21.18",
+        "resTransW": "0.32",
+        "resInternalW": "0.08",
+        "resLeakW": "0.00",
+        "resSampleW": "0.00",
+        "resRampTimeRh": "30",
+        "resEnergyKwh": "519.1"
+      }
+    },
+    {
+      "tool": "enceinte-climatique",
+      "steps": [
+        {
+          "set": {
+            "sHumidType": "ultrasonic"
+          }
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resVolume": "6.00",
+        "resDewPoint": "16.7",
+        "resColdKw": "37.39",
+        "resHeatKw": "0.00",
+        "resHumidRate": "43",
+        "resHumidKw": "0.03",
+        "resDehumidRate": "25",
+        "resDehumidKw": "37.36",
+        "resTransW": "0.00",
+        "resInternalW": "0.08",
+        "resLeakW": "0.00",
+        "resSampleW": "0.00",
+        "resRampTimeRh": "30",
+        "resEnergyKwh": "896.8"
+      }
+    },
+    {
+      "tool": "enceinte-climatique",
+      "steps": [
+        {
+          "set": {
+            "sHumidType": "steam",
+            "sHumidTime": 60
+          }
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resVolume": "6.00",
+        "resDewPoint": "16.7",
+        "resColdKw": "37.36",
+        "resHeatKw": "0.02",
+        "resHumidRate": "22",
+        "resHumidKw": "0.02",
+        "resDehumidRate": "25",
+        "resDehumidKw": "37.36",
+        "resTransW": "0.00",
+        "resInternalW": "0.08",
+        "resLeakW": "0.00",
+        "resSampleW": "0.00",
+        "resRampTimeRh": "60",
+        "resEnergyKwh": "897.2"
+      }
+    },
+    {
+      "tool": "enceinte-climatique",
+      "steps": [
+        {
+          "set": {
+            "sDehumidMethod": "desiccant",
+            "sDehumidRhTarget": 30
+          }
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resVolume": "6.00",
+        "resDewPoint": "16.7",
+        "resColdKw": "48.57",
+        "resHeatKw": "0.03",
+        "resHumidRate": "43",
+        "resHumidKw": "0.03",
+        "resDehumidRate": "32",
+        "resDehumidKw": "48.57",
+        "resTransW": "0.00",
+        "resInternalW": "0.08",
+        "resLeakW": "0.00",
+        "resSampleW": "0.00",
+        "resRampTimeRh": "30",
+        "resEnergyKwh": "1166.6"
+      }
+    },
+    {
+      "tool": "enceinte-climatique",
+      "steps": [
+        {
+          "set": {
+            "sDehumidMethod": "dry_air"
+          }
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resVolume": "6.00",
+        "resDewPoint": "16.7",
+        "resColdKw": "14.95",
+        "resHeatKw": "0.03",
+        "resHumidRate": "43",
+        "resHumidKw": "0.03",
+        "resDehumidRate": "10",
+        "resDehumidKw": "14.95",
+        "resTransW": "0.00",
+        "resInternalW": "0.08",
+        "resLeakW": "0.00",
+        "resSampleW": "0.00",
+        "resRampTimeRh": "30",
+        "resEnergyKwh": "359.5"
+      }
+    },
+    {
+      "tool": "enceinte-climatique",
+      "steps": [
+        {
+          "set": {
+            "sLength": 3,
+            "sWidth": 2,
+            "sHeight": 2.2,
+            "sUEnvelope": 0.25,
+            "sLeakRate": 1,
+            "sLightingW": 100
+          }
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resVolume": "13.20",
+        "resDewPoint": "16.7",
+        "resColdKw": "82.20",
+        "resHeatKw": "0.08",
+        "resHumidRate": "96",
+        "resHumidKw": "0.08",
+        "resDehumidRate": "55",
+        "resDehumidKw": "82.20",
+        "resTransW": "0.00",
+        "resInternalW": "0.13",
+        "resLeakW": "0.00",
+        "resSampleW": "0.00",
+        "resRampTimeRh": "30",
+        "resEnergyKwh": "1974.7"
+      }
+    },
+    {
+      "tool": "enceinte-climatique",
+      "steps": [
+        {
+          "set": {
+            "sTSet": 0
+          }
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resVolume": "6.00",
+        "resDewPoint": "16.7",
+        "resColdKw": "37.36",
+        "resHeatKw": "0.03",
+        "resHumidRate": "43",
+        "resHumidKw": "0.03",
+        "resDehumidRate": "25",
+        "resDehumidKw": "37.36",
+        "resTransW": "0.00",
+        "resInternalW": "0.08",
+        "resLeakW": "0.00",
+        "resSampleW": "0.00",
+        "resRampTimeRh": "30",
+        "resEnergyKwh": "897.6"
+      }
+    },
+    {
+      "tool": "enceinte-climatique",
+      "steps": [
+        {
+          "set": {
+            "sRhStart": 70
+          }
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resVolume": "6.00",
+        "resDewPoint": "16.7",
+        "resColdKw": "20.10",
+        "resHeatKw": "0.00",
+        "resHumidRate": "0",
+        "resHumidKw": "0.00",
+        "resDehumidRate": "0",
+        "resDehumidKw": "20.10",
+        "resTransW": "0.00",
+        "resInternalW": "0.08",
+        "resLeakW": "0.00",
+        "resSampleW": "0.00",
+        "resRampTimeRh": "0",
+        "resEnergyKwh": "482.4"
+      }
+    },
+    {
+      "tool": "enceinte-climatique",
+      "steps": [
+        {
+          "set": {
+            "sLength": ""
+          }
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resVolume": "0.00",
+        "resDewPoint": "16.7",
+        "resColdKw": "0.00",
+        "resHeatKw": "0.00",
+        "resHumidRate": "0",
+        "resHumidKw": "0.00",
+        "resDehumidRate": "0",
+        "resDehumidKw": "0.00",
+        "resTransW": "0.00",
+        "resInternalW": "0.08",
+        "resLeakW": "0.00",
+        "resSampleW": "0.00",
+        "resRampTimeRh": "0",
+        "resEnergyKwh": "0.0"
+      }
+    },
+    {
+      "tool": "enceinte-climatique",
+      "steps": [
+        {
+          "call": "setMode",
+          "params": {
+            "mode": "pro"
+          }
+        },
+        {
+          "set": {}
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resVolume": "6.00",
+        "resDewPoint": "16.7",
+        "resColdKw": "37.37",
+        "resHeatKw": "0.09",
+        "resHumidRate": "43",
+        "resHumidKw": "0.03",
+        "resDehumidRate": "25",
+        "resDehumidKw": "37.36",
+        "resTransW": "0.00",
+        "resInternalW": "0.05",
+        "resLeakW": "0.00",
+        "resSampleW": "0.00",
+        "resRampTimeRh": "30",
+        "resEnergyKwh": "899.2"
+      }
+    },
+    {
+      "tool": "enceinte-climatique",
+      "steps": [
+        {
+          "call": "setMode",
+          "params": {
+            "mode": "pro"
+          }
+        },
+        {
+          "set": {
+            "pStabilityClass": "0.5"
+          }
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resVolume": "6.00",
+        "resDewPoint": "16.7",
+        "resColdKw": "37.37",
+        "resHeatKw": "0.09",
+        "resHumidRate": "43",
+        "resHumidKw": "0.03",
+        "resDehumidRate": "25",
+        "resDehumidKw": "37.36",
+        "resTransW": "0.00",
+        "resInternalW": "0.05",
+        "resLeakW": "0.00",
+        "resSampleW": "0.00",
+        "resRampTimeRh": "30",
+        "resEnergyKwh": "899.2"
+      }
+    },
+    {
+      "tool": "enceinte-climatique",
+      "steps": [
+        {
+          "call": "setMode",
+          "params": {
+            "mode": "pro"
+          }
+        },
+        {
+          "set": {
+            "pStabilityClass": "2",
+            "pMargin": 20
+          }
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resVolume": "6.00",
+        "resDewPoint": "16.7",
+        "resColdKw": "37.37",
+        "resHeatKw": "0.10",
+        "resHumidRate": "43",
+        "resHumidKw": "0.03",
+        "resDehumidRate": "25",
+        "resDehumidKw": "37.36",
+        "resTransW": "0.00",
+        "resInternalW": "0.05",
+        "resLeakW": "0.00",
+        "resSampleW": "0.00",
+        "resRampTimeRh": "30",
+        "resEnergyKwh": "899.4"
+      }
+    },
+    {
+      "tool": "enceinte-climatique",
+      "steps": [
+        {
+          "call": "setMode",
+          "params": {
+            "mode": "pro"
+          }
+        },
+        {
+          "set": {
+            "pAirRecovery": "yes"
+          }
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resVolume": "6.00",
+        "resDewPoint": "16.7",
+        "resColdKw": "37.37",
+        "resHeatKw": "0.09",
+        "resHumidRate": "43",
+        "resHumidKw": "0.03",
+        "resDehumidRate": "25",
+        "resDehumidKw": "37.36",
+        "resTransW": "0.00",
+        "resInternalW": "0.05",
+        "resLeakW": "0.00",
+        "resSampleW": "0.00",
+        "resRampTimeRh": "30",
+        "resEnergyKwh": "899.2"
+      }
+    },
+    {
+      "tool": "enceinte-climatique",
+      "steps": [
+        {
+          "call": "setMode",
+          "params": {
+            "mode": "pro"
+          }
+        },
+        {
+          "set": {
+            "pPeople": 2,
+            "pPeopleMinutes": 60
+          }
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resVolume": "6.00",
+        "resDewPoint": "16.7",
+        "resColdKw": "37.37",
+        "resHeatKw": "0.11",
+        "resHumidRate": "43",
+        "resHumidKw": "0.03",
+        "resDehumidRate": "25",
+        "resDehumidKw": "37.36",
+        "resTransW": "0.00",
+        "resInternalW": "0.06",
+        "resLeakW": "0.00",
+        "resSampleW": "0.00",
+        "resRampTimeRh": "30",
+        "resEnergyKwh": "899.6"
+      }
+    },
+    {
+      "tool": "enceinte-climatique",
+      "steps": [
+        {
+          "call": "setMode",
+          "params": {
+            "mode": "pro"
+          }
+        },
+        {
+          "set": {
+            "pSampleKg": 50,
+            "pSampleCp": 2,
+            "pSampleDeltaT": 20
+          }
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resVolume": "6.00",
+        "resDewPoint": "16.7",
+        "resColdKw": "37.38",
+        "resHeatKw": "0.15",
+        "resHumidRate": "43",
+        "resHumidKw": "0.03",
+        "resDehumidRate": "25",
+        "resDehumidKw": "37.36",
+        "resTransW": "0.00",
+        "resInternalW": "0.05",
+        "resLeakW": "0.00",
+        "resSampleW": "0.05",
+        "resRampTimeRh": "30",
+        "resEnergyKwh": "900.8"
+      }
+    },
+    {
+      "tool": "enceinte-climatique",
+      "steps": [
+        {
+          "call": "setMode",
+          "params": {
+            "mode": "pro"
+          }
+        },
+        {
+          "set": {
+            "pHumidType": "steam",
+            "pWaterTemp": 10
+          }
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resVolume": "6.00",
+        "resDewPoint": "16.7",
+        "resColdKw": "37.37",
+        "resHeatKw": "0.10",
+        "resHumidRate": "43",
+        "resHumidKw": "0.03",
+        "resDehumidRate": "25",
+        "resDehumidKw": "37.36",
+        "resTransW": "0.00",
+        "resInternalW": "0.05",
+        "resLeakW": "0.00",
+        "resSampleW": "0.00",
+        "resRampTimeRh": "30",
+        "resEnergyKwh": "899.2"
+      }
+    },
+    {
+      "tool": "enceinte-climatique",
+      "steps": [
+        {
+          "call": "setMode",
+          "params": {
+            "mode": "pro"
+          }
+        },
+        {
+          "set": {
+            "pHumidType": "atomization"
+          }
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resVolume": "6.00",
+        "resDewPoint": "16.7",
+        "resColdKw": "37.40",
+        "resHeatKw": "0.06",
+        "resHumidRate": "43",
+        "resHumidKw": "0.03",
+        "resDehumidRate": "25",
+        "resDehumidKw": "37.36",
+        "resTransW": "0.00",
+        "resInternalW": "0.05",
+        "resLeakW": "0.00",
+        "resSampleW": "0.00",
+        "resRampTimeRh": "30",
+        "resEnergyKwh": "898.4"
+      }
+    },
+    {
+      "tool": "enceinte-climatique",
+      "steps": [
+        {
+          "call": "setMode",
+          "params": {
+            "mode": "pro"
+          }
+        },
+        {
+          "set": {
+            "pDehumidMethod": "heat_pump",
+            "pEvapTemp": 5
+          }
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resVolume": "6.00",
+        "resDewPoint": "16.7",
+        "resColdKw": "51.73",
+        "resHeatKw": "0.09",
+        "resHumidRate": "43",
+        "resHumidKw": "0.03",
+        "resDehumidRate": "22",
+        "resDehumidKw": "51.72",
+        "resTransW": "0.00",
+        "resInternalW": "0.05",
+        "resLeakW": "0.00",
+        "resSampleW": "0.00",
+        "resRampTimeRh": "30",
+        "resEnergyKwh": "1243.7"
+      }
+    },
+    {
+      "tool": "enceinte-climatique",
+      "steps": [
+        {
+          "call": "setMode",
+          "params": {
+            "mode": "pro"
+          }
+        },
+        {
+          "set": {
+            "pTExt": 35,
+            "pTSet": 40,
+            "pRhSet": 75
+          }
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resVolume": "6.00",
+        "resDewPoint": "34.7",
+        "resColdKw": "127.02",
+        "resHeatKw": "0.32",
+        "resHumidRate": "214",
+        "resHumidKw": "0.17",
+        "resDehumidRate": "111",
+        "resDehumidKw": "127.00",
+        "resTransW": "0.04",
+        "resInternalW": "0.05",
+        "resLeakW": "0.03",
+        "resSampleW": "0.00",
+        "resRampTimeRh": "30",
+        "resEnergyKwh": "3056.3"
+      }
+    },
+    {
+      "tool": "enceinte-climatique",
+      "steps": [
+        {
+          "call": "setMode",
+          "params": {
+            "mode": "pro"
+          }
+        },
+        {
+          "set": {
+            "pDoorCount": 2,
+            "pDoorOpenings": 20,
+            "pDoorDuration": 30
+          }
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resVolume": "6.00",
+        "resDewPoint": "16.7",
+        "resColdKw": "37.37",
+        "resHeatKw": "0.09",
+        "resHumidRate": "43",
+        "resHumidKw": "0.03",
+        "resDehumidRate": "25",
+        "resDehumidKw": "37.36",
+        "resTransW": "0.00",
+        "resInternalW": "0.05",
+        "resLeakW": "0.00",
+        "resSampleW": "0.00",
+        "resRampTimeRh": "30",
+        "resEnergyKwh": "899.2"
+      }
+    },
+    {
+      "tool": "enceinte-climatique",
+      "steps": [
+        {
+          "call": "setMode",
+          "params": {
+            "mode": "pro"
+          }
+        },
+        {
+          "set": {
+            "pIchProfile": "refrigerated"
+          }
+        },
+        {
+          "call": "onIchChange",
+          "params": {
+            "prefix": "pro"
+          }
+        },
+        {
+          "set": {}
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resVolume": "6.00",
+        "resDewPoint": "-2.1",
+        "resColdKw": "7.38",
+        "resHeatKw": "0.09",
+        "resHumidRate": "16",
+        "resHumidKw": "0.01",
+        "resDehumidRate": "10",
+        "resDehumidKw": "6.79",
+        "resTransW": "0.17",
+        "resInternalW": "0.05",
+        "resLeakW": "0.26",
+        "resSampleW": "0.00",
+        "resRampTimeRh": "30",
+        "resEnergyKwh": "179.2"
+      }
+    },
+    {
+      "tool": "enceinte-climatique",
+      "steps": [
+        {
+          "call": "setMode",
+          "params": {
+            "mode": "pro"
+          }
+        },
+        {
+          "set": {
+            "pIchProfile": "accelerated"
+          }
+        },
+        {
+          "call": "onIchChange",
+          "params": {
+            "prefix": "pro"
+          }
+        },
+        {
+          "set": {
+            "pTExt": 22
+          }
+        },
+        {
+          "call": "calculate"
+        }
+      ],
+      "outputs": {
+        "resVolume": "6.00",
+        "resDewPoint": "34.7",
+        "resColdKw": "88.68",
+        "resHeatKw": "0.48",
+        "resHumidRate": "108",
+        "resHumidKw": "0.09",
+        "resDehumidRate": "55",
+        "resDehumidKw": "88.63",
+        "resTransW": "0.15",
+        "resInternalW": "0.05",
+        "resLeakW": "0.12",
+        "resSampleW": "0.00",
+        "resRampTimeRh": "30",
+        "resEnergyKwh": "2139.8"
+      }
+    },
+    {
+      "tool": "psychrometrie",
+      "fn": "saturationPressurePa",
+      "args": [
+        -20
+      ],
+      "result": 125.7399875776582
+    },
+    {
+      "tool": "psychrometrie",
+      "fn": "saturationPressurePa",
+      "args": [
+        0
+      ],
+      "result": 611.2
+    },
+    {
+      "tool": "psychrometrie",
+      "fn": "saturationPressurePa",
+      "args": [
+        5
+      ],
+      "result": 872.1465197650521
+    },
+    {
+      "tool": "psychrometrie",
+      "fn": "saturationPressurePa",
+      "args": [
+        20
+      ],
+      "result": 2336.947123406443
+    },
+    {
+      "tool": "psychrometrie",
+      "fn": "saturationPressurePa",
+      "args": [
+        25
+      ],
+      "result": 3167.4294361872853
+    },
+    {
+      "tool": "psychrometrie",
+      "fn": "saturationPressurePa",
+      "args": [
+        40
+      ],
+      "result": 7394.900581024528
+    },
+    {
+      "tool": "psychrometrie",
+      "fn": "dewPoint",
+      "args": [
+        25,
+        60
+      ],
+      "result": 16.68424959549877
+    },
+    {
+      "tool": "psychrometrie",
+      "fn": "dewPoint",
+      "args": [
+        20,
+        50
+      ],
+      "result": 9.254294282076941
+    },
+    {
+      "tool": "psychrometrie",
+      "fn": "dewPoint",
+      "args": [
+        5,
+        90
+      ],
+      "result": 3.4975534086344218
+    },
+    {
+      "tool": "psychrometrie",
+      "fn": "dewPoint",
+      "args": [
+        25,
+        0
+      ],
+      "result": -999
+    },
+    {
+      "tool": "psychrometrie",
+      "fn": "absoluteHumidityGPerM3",
+      "args": [
+        25,
+        60
+      ],
+      "result": 13.811844487102544
+    },
+    {
+      "tool": "psychrometrie",
+      "fn": "absoluteHumidityGPerM3",
+      "args": [
+        2,
+        85
+      ],
+      "result": 4.724743387990666
+    },
+    {
+      "tool": "psychrometrie",
+      "fn": "absoluteHumidityGPerM3",
+      "args": [
+        -18,
+        85
+      ],
+      "result": 1.0766574562407811
+    },
+    {
+      "tool": "psychrometrie",
+      "fn": "humidityRatio",
+      "args": [
+        25,
+        60
+      ],
+      "result": 0.011888882046949722
+    },
+    {
+      "tool": "psychrometrie",
+      "fn": "humidityRatio",
+      "args": [
+        40,
+        75
+      ],
+      "result": 0.03601641817211731
+    },
+    {
+      "tool": "psychrometrie",
+      "fn": "relativeHumidityFromDewPoint",
+      "args": [
+        20,
+        9.3
+      ],
+      "result": 50.10081262695034
+    },
+    {
+      "tool": "psychrometrie",
+      "fn": "relativeHumidityFromDewPoint",
+      "args": [
+        20,
+        25
+      ],
+      "result": 100
+    },
+    {
+      "tool": "psychrometrie",
+      "fn": "sensibleAirPowerW",
+      "args": [
+        100,
+        20
+      ],
+      "result": 670
+    },
+    {
+      "tool": "psychrometrie",
+      "fn": "sensibleAirPowerW",
+      "args": [
+        100,
+        -20
+      ],
+      "result": 670
+    },
+    {
+      "tool": "psychrometrie",
+      "fn": "latentDehumidPowerW",
+      "args": [
+        100,
+        25,
+        60,
+        2,
+        85
+      ],
+      "result": 757.2584249259899
+    },
+    {
+      "tool": "psychrometrie",
+      "fn": "latentDehumidPowerW",
+      "args": [
+        100,
+        25,
+        50,
+        -18,
+        85
+      ],
+      "result": 869.4344124731673
+    },
+    {
+      "tool": "psychrometrie",
+      "fn": "latentDehumidPowerW",
+      "args": [
+        100,
+        10,
+        40,
+        25,
+        60
+      ],
+      "result": 0
+    },
+    {
+      "tool": "psychrometrie",
+      "fn": "humidificationRateGPerH",
+      "args": [
+        6,
+        25,
+        40,
+        60,
+        30
+      ],
+      "result": 57.78923265728905
+    },
+    {
+      "tool": "psychrometrie",
+      "fn": "humidificationRateGPerH",
+      "args": [
+        6,
+        25,
+        60,
+        40,
+        30
+      ],
+      "result": 0
+    },
+    {
+      "tool": "psychrometrie",
+      "fn": "humidificationThermalPowerW",
+      "args": [
+        100,
+        "boiler",
+        20
+      ],
+      "result": 78.73333333333333
+    },
+    {
+      "tool": "psychrometrie",
+      "fn": "humidificationThermalPowerW",
+      "args": [
+        100,
+        "ultrasonic",
+        20
+      ],
+      "result": -59.02777777777777
+    },
+    {
+      "tool": "psychrometrie",
+      "fn": "humidificationThermalPowerW",
+      "args": [
+        100,
+        "autre",
+        20
+      ],
+      "result": 69.44444444444444
+    },
+    {
+      "tool": "psychrometrie",
+      "fn": "dehumidRefrigPowerW",
+      "args": [
+        6,
+        25,
+        60,
+        40,
+        15
+      ],
+      "result": {
+        "sensible": 20.099999999999994,
+        "latent": 23.019740811837572,
+        "total": 43.119740811837566,
+        "dewPoint": 10.449267877039382
+      }
+    },
+    {
+      "tool": "psychrometrie",
+      "fn": "dehumidRefrigPowerW",
+      "args": [
+        6,
+        40,
+        75,
+        60,
+        30
+      ],
+      "result": {
+        "sensible": 20.099999999999994,
+        "latent": 38.37686386845991,
+        "total": 58.4768638684599,
+        "dewPoint": 30.724255207605914
+      }
+    }
+  ]
+}

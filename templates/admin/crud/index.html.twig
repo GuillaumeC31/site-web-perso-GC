@@ -1,0 +1,122 @@
+{#
+  Écran : liste générique d'un contenu du CV (expériences, compétences, piliers, formations,
+  certifications, langues, chiffres clés).
+  Affiché par : AbstractCrudController::index() (routes admin_*_index).
+  Composant Tailkit UI : tableau inspiré des « Tables » Application UI, adapté.
+  Variables attendues :
+    - crud     : configuration { route_prefix, translation_prefix, columns[], row_actions[], header_actions[], full_page_form }
+                 colonnes : { label, field, type? } avec type = text (défaut), bool, date, date_month, count, enum,
+                 warning (badge « à compléter » si vrai)
+    - entities : lignes dans l'ordre d'affichage
+  Le formulaire d'ajout ou de modification s'ouvre dans la Turbo Frame « crud_form » de cette page
+  (ou en pleine page si crud.full_page_form est vrai, ex. projets).
+#}
+{% extends 'admin/base.html.twig' %}
+
+{% set prefix = crud.route_prefix %}
+{# Formulaire dans la liste (Turbo Frame) ou en pleine page #}
+{% set form_frame = crud.full_page_form ? '_top' : 'crud_form' %}
+
+{% block title %}{{ (crud.translation_prefix ~ '.title')|trans }}{% endblock %}
+
+{% block body %}
+    <div class="mb-6 flex flex-wrap items-center justify-between gap-4">
+        <div>
+            <h1 class="text-2xl font-bold dark:text-white">{{ (crud.translation_prefix ~ '.title')|trans }}</h1>
+            <p class="form-help">{{ (crud.translation_prefix ~ '.intro')|trans }}</p>
+        </div>
+        <div class="flex flex-wrap gap-2">
+            {% for action in crud.header_actions %}
+                <twig:Button href="{{ path(action.route) }}" variant="secondary" data-turbo-frame="_top">{{ action.label|trans }}</twig:Button>
+            {% endfor %}
+            <twig:Button href="{{ path(prefix ~ '_new') }}" data-turbo-frame="{{ form_frame }}">{{ 'admin.crud.add'|trans }}</twig:Button>
+        </div>
+    </div>
+
+    {# Contenu propre à un module (ex. interrupteur général du bloc « Pourquoi me recruter ») #}
+    {% block crud_before_list %}{% endblock %}
+
+    <turbo-frame id="crud_form" class="mb-6 block"></turbo-frame>
+
+    {% if entities is empty %}
+        <twig:Card>
+            <p class="text-secondary-600 dark:text-secondary-300">{{ 'admin.crud.empty'|trans }}</p>
+        </twig:Card>
+    {% else %}
+        <div tabindex="0" role="region" aria-label="{{ 'admin.crud.table_region'|trans }}" class="overflow-x-auto rounded-2xl border border-secondary-200 bg-white dark:border-secondary-700 dark:bg-secondary-800">
+            <table class="min-w-full divide-y divide-secondary-200 text-sm dark:divide-secondary-700">
+                <thead class="bg-secondary-50 dark:bg-secondary-800/80">
+                    <tr>
+                        {% for column in crud.columns %}
+                            <th scope="col" class="px-4 py-3 text-left font-semibold text-secondary-700 dark:text-secondary-200">{{ column.label|trans }}</th>
+                        {% endfor %}
+                        <th scope="col" class="px-4 py-3 text-right font-semibold text-secondary-700 dark:text-secondary-200">{{ 'admin.crud.actions'|trans }}</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-secondary-100 dark:divide-secondary-700/60">
+                    {% for entity in entities %}
+                        <tr class="align-top">
+                            {% for column in crud.columns %}
+                                {% set value = admin_field_value(entity, column.field) %}
+                                {% set type = column.type ?? 'text' %}
+                                <td class="px-4 py-3 text-secondary-800 dark:text-secondary-200">
+                                    {% if type == 'bool' %}
+                                        <twig:Badge tone="{{ value ? 'success' : 'neutral' }}">{{ (value ? 'admin.crud.yes' : 'admin.crud.no')|trans }}</twig:Badge>
+                                    {% elseif type == 'date_month' %}
+                                        {{ value ? value|format_date(pattern: 'MMMM y')|capitalize : '—' }}
+                                    {% elseif type == 'date' %}
+                                        {{ value ? value|format_date('medium') : '—' }}
+                                    {% elseif type == 'count' %}
+                                        {{ value|length }}
+                                    {% elseif type == 'warning' %}
+                                        {% if value %}<twig:Badge tone="accent">{{ 'admin.crud.to_complete'|trans }}</twig:Badge>{% else %}<span class="text-secondary-400">—</span>{% endif %}
+                                    {% elseif type == 'enum' %}
+                                        {{ value ? value.translationKey|trans : '—' }}
+                                    {% else %}
+                                        {{ value ?: '—' }}
+                                    {% endif %}
+                                </td>
+                            {% endfor %}
+                            <td class="px-4 py-3">
+                                <div class="flex flex-wrap items-center justify-end gap-2">
+                                    <form method="post" action="{{ path(prefix ~ '_move', {id: entity.id, direction: 'haut'}) }}">
+                                        <input type="hidden" name="_token" value="{{ csrf_token(prefix ~ '_move_' ~ entity.id) }}">
+                                        <button type="submit" class="btn btn-secondary btn-sm" title="{{ 'admin.crud.move_up'|trans }}" {% if loop.first %}disabled{% endif %}>
+                                            <span class="sr-only">{{ 'admin.crud.move_up'|trans }}</span><span aria-hidden="true">↑</span>
+                                        </button>
+                                    </form>
+                                    <form method="post" action="{{ path(prefix ~ '_move', {id: entity.id, direction: 'bas'}) }}">
+                                        <input type="hidden" name="_token" value="{{ csrf_token(prefix ~ '_move_' ~ entity.id) }}">
+                                        <button type="submit" class="btn btn-secondary btn-sm" title="{{ 'admin.crud.move_down'|trans }}" {% if loop.last %}disabled{% endif %}>
+                                            <span class="sr-only">{{ 'admin.crud.move_down'|trans }}</span><span aria-hidden="true">↓</span>
+                                        </button>
+                                    </form>
+                                    {% for action in crud.row_actions %}
+                                        {% if action.post ?? false %}
+                                            {# Action qui modifie la ligne : POST avec jeton CSRF « route_id » #}
+                                            <form method="post" action="{{ path(action.route, {id: entity.id}) }}" data-turbo-frame="_top">
+                                                <input type="hidden" name="_token" value="{{ csrf_token(action.route ~ '_' ~ entity.id) }}">
+                                                <twig:Button type="submit" variant="secondary" size="sm">{{ action.label|trans }}</twig:Button>
+                                            </form>
+                                        {% elseif action.external ?? false %}
+                                            <twig:Button href="{{ path(action.route, {id: entity.id}) }}" variant="secondary" size="sm" data-turbo="false">{{ action.label|trans }}</twig:Button>
+                                        {% else %}
+                                            <twig:Button href="{{ path(action.route, {id: entity.id}) }}" variant="secondary" size="sm" data-turbo-frame="_top">{{ action.label|trans }}</twig:Button>
+                                        {% endif %}
+                                    {% endfor %}
+                                    <twig:Button href="{{ path(prefix ~ '_edit', {id: entity.id}) }}" variant="secondary" size="sm" data-turbo-frame="{{ form_frame }}">{{ 'admin.crud.edit'|trans }}</twig:Button>
+                                    {% import '_partials/_confirm.html.twig' as confirmation %}
+                                    <form method="post" action="{{ path(prefix ~ '_delete', {id: entity.id}) }}" {{ confirmation.attributes('admin.crud.delete_confirm'|trans({'%name%': entity}), '', 'admin.crud.delete'|trans, true) }}>
+                                        <input type="hidden" name="_token" value="{{ csrf_token(prefix ~ '_delete_' ~ entity.id) }}">
+                                        {{ confirmation.field() }}
+                                        <twig:Button type="submit" variant="danger" size="sm">{{ 'admin.crud.delete'|trans }}</twig:Button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+{% endblock %}

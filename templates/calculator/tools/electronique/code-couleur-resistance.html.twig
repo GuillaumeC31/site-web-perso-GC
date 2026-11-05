@@ -1,0 +1,147 @@
+{#
+  Outil : code couleur des résistances (CEI 60062), 4, 5 ou 6 anneaux, dans les deux sens.
+  Inclus par : calculator/tool.html.twig. Contrôleur : calculator--code-couleur-resistance.
+  Contenu (modes, tableaux de référence, puissances, types) repris de l'ancien site.
+#}
+{% set c = 'calculator--code-couleur-resistance' %}
+{% set colors = [
+    {name: 'Noir', hex: '#1a1a1a', digit: '0', mult: '×1', tol: '—'},
+    {name: 'Marron', hex: '#92400e', digit: '1', mult: '×10', tol: '±1 %'},
+    {name: 'Rouge', hex: '#dc2626', digit: '2', mult: '×100', tol: '±2 %'},
+    {name: 'Orange', hex: '#ea580c', digit: '3', mult: '×1 k', tol: '—'},
+    {name: 'Jaune', hex: '#eab308', digit: '4', mult: '×10 k', tol: '—'},
+    {name: 'Vert', hex: '#16a34a', digit: '5', mult: '×100 k', tol: '±0,5 %'},
+    {name: 'Bleu', hex: '#2563eb', digit: '6', mult: '×1 M', tol: '±0,25 %'},
+    {name: 'Violet', hex: '#7c3aed', digit: '7', mult: '×10 M', tol: '±0,1 %'},
+    {name: 'Gris', hex: '#6b7280', digit: '8', mult: '×100 M', tol: '±0,05 %'},
+    {name: 'Blanc', hex: '#f3f4f6', digit: '9', mult: '×1 G', tol: '—'},
+    {name: 'Or', hex: '#fbbf24', digit: '—', mult: '×0,1', tol: '±5 %'},
+    {name: 'Argent', hex: '#d1d5db', digit: '—', mult: '×0,01', tol: '±10 %'},
+] %}
+
+<div data-controller="{{ c }}" class="space-y-6">
+    <section class="card">
+        <div class="flex flex-wrap items-end gap-4">
+            <div class="flex rounded-xl border border-secondary-200 p-1 dark:border-secondary-700" role="group" aria-label="Sens de la conversion">
+                <button type="button" class="rounded-lg px-4 py-2 text-sm font-semibold aria-pressed:bg-primary-700 aria-pressed:text-white" aria-pressed="true"
+                        data-{{ c }}-target="modeTab" data-mode="decode" data-action="{{ c }}#setMode">Couleurs → valeur</button>
+                <button type="button" class="rounded-lg px-4 py-2 text-sm font-semibold aria-pressed:bg-primary-700 aria-pressed:text-white" aria-pressed="false"
+                        data-{{ c }}-target="modeTab" data-mode="encode" data-action="{{ c }}#setMode">Valeur → couleurs</button>
+            </div>
+            <div class="min-w-56">
+                <label for="rc-count" class="form-label">Nombre d'anneaux</label>
+                <select id="rc-count" class="form-input" data-{{ c }}-target="bandCount" data-action="change->{{ c }}#onBandCountChange">
+                    <option value="4" selected>4 anneaux (± tolérance)</option>
+                    <option value="5">5 anneaux (3 chiffres + tolérance)</option>
+                    <option value="6">6 anneaux (+ coefficient de température)</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="mt-6" data-mode-panel="decode">
+            <h2 class="text-lg font-bold text-secondary-900 dark:text-white">Anneaux</h2>
+            <div class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {% for i in 1..6 %}
+                    <div data-band-row data-band-index="{{ i }}">
+                        <label for="rc-band-{{ i }}" class="form-label" data-{{ c }}-target="bandRoleLabel" data-band-index="{{ i }}">Anneau {{ i }}</label>
+                        <select id="rc-band-{{ i }}" class="form-input" data-{{ c }}-target="bandSelect" data-band-index="{{ i }}" data-action="change->{{ c }}#decodeFromBands"></select>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="mt-6" data-mode-panel="encode" hidden>
+            <h2 class="text-lg font-bold text-secondary-900 dark:text-white">Valeur cible</h2>
+            <div class="mt-4 grid gap-4 sm:grid-cols-2">
+                <div>
+                    <label for="rc-target" class="form-label">Résistance (Ω)</label>
+                    <input type="text" inputmode="decimal" autocomplete="off" id="rc-target" class="form-input" value="1000"
+                           data-{{ c }}-target="targetValue" data-action="input->{{ c }}#encodeFromValue">
+                </div>
+                <div>
+                    <label for="rc-tolerance" class="form-label">Tolérance souhaitée</label>
+                    <select id="rc-tolerance" class="form-input" data-{{ c }}-target="targetTolerance" data-action="change->{{ c }}#encodeFromValue">
+                        <option value="brown">±1 % Marron</option>
+                        <option value="red">±2 % Rouge</option>
+                        <option value="green">±0,5 % Vert</option>
+                        <option value="blue">±0,25 % Bleu</option>
+                        <option value="violet">±0,1 % Violet</option>
+                        <option value="grey">±0,05 % Gris</option>
+                        <option value="gold" selected>±5 % Or</option>
+                        <option value="silver">±10 % Argent</option>
+                    </select>
+                </div>
+            </div>
+            <p class="mt-4 text-secondary-800 dark:text-secondary-200">Résultat : <strong data-{{ c }}-target="encodeResult" aria-live="polite">—</strong></p>
+            <p class="mt-1 text-sm text-secondary-600 dark:text-secondary-300" data-{{ c }}-target="encodeNote"></p>
+        </div>
+    </section>
+
+    <section class="card">
+        <h2 class="text-lg font-bold text-secondary-900 dark:text-white">Aperçu de la résistance</h2>
+        <div class="mt-4 flex justify-center overflow-x-auto py-2" data-{{ c }}-target="preview" aria-hidden="true"></div>
+        <dl class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3" aria-live="polite">
+            <div><dt class="form-label">Valeur</dt><dd class="font-mono text-lg font-bold text-primary-800 dark:text-primary-200" data-{{ c }}-target="resultValue">—</dd></div>
+            <div><dt class="form-label">Tolérance</dt><dd class="font-mono text-lg font-bold text-primary-800 dark:text-primary-200" data-{{ c }}-target="resultTolerance">—</dd></div>
+            <div><dt class="form-label">Plage</dt><dd class="font-mono text-sm font-semibold text-secondary-800 dark:text-secondary-200" data-{{ c }}-target="resultRange">—</dd></div>
+            <div><dt class="form-label">E24 la plus proche</dt><dd class="font-mono text-sm font-semibold text-secondary-800 dark:text-secondary-200" data-{{ c }}-target="nearestE24">—</dd></div>
+            <div><dt class="form-label">E24 juste en dessous / au-dessus</dt><dd class="font-mono text-sm font-semibold text-secondary-800 dark:text-secondary-200" data-{{ c }}-target="e24Neighbors">—</dd></div>
+            <div><dt class="form-label">Coefficient de température</dt><dd class="font-mono text-sm font-semibold text-secondary-800 dark:text-secondary-200" data-{{ c }}-target="resultTemp">—</dd></div>
+        </dl>
+    </section>
+
+    <section class="card">
+        <h2 class="text-lg font-bold text-secondary-900 dark:text-white">Puissance dissipée</h2>
+        <p class="mt-1 text-sm text-secondary-600 dark:text-secondary-300">P = U² / R ou P = R × I² : choisir une marge de 2 au minimum.</p>
+        <div class="mt-4 max-w-sm">
+            <label for="rc-power" class="form-label">Puissance dissipée (W)</label>
+            <input type="text" inputmode="decimal" autocomplete="off" id="rc-power" class="form-input" placeholder="ex. 0,125"
+                   data-{{ c }}-target="targetPower" data-action="input->{{ c }}#updatePowerAdvice">
+        </div>
+        <p class="mt-3 font-medium text-secondary-800 dark:text-secondary-200" aria-live="polite" data-{{ c }}-target="powerAdvice">Indiquez la puissance dissipée pour une recommandation.</p>
+    </section>
+
+    <div class="grid gap-6 lg:grid-cols-2">
+        <section class="card">
+            <h2 class="text-lg font-bold text-secondary-900 dark:text-white">Puissances nominales courantes</h2>
+            <ul class="mt-3 space-y-1 text-sm text-secondary-700 dark:text-secondary-300">
+                <li>1/8 W (0,125 W) — CMS, signaux faibles</li>
+                <li>1/4 W (0,25 W) — plaque d'essai, LED, usage général</li>
+                <li>1/2 W (0,5 W) — petits montages de puissance</li>
+                <li>1 W — dissipateurs recommandés au-delà</li>
+                <li>2 W et plus — bobinée, céramique, sur dissipateur</li>
+            </ul>
+        </section>
+        <section class="card">
+            <h2 class="text-lg font-bold text-secondary-900 dark:text-white">Types de résistances</h2>
+            <ul class="mt-3 space-y-1 text-sm text-secondary-700 dark:text-secondary-300">
+                <li>Couche carbone (CF) — économique, bruit modéré</li>
+                <li>Couche métallique (MF) — stable, faible bruit, précise</li>
+                <li>Fil métallique (bobinée) — forte puissance, inductance parasite</li>
+                <li>CMS (0402 à 2512) — code numérique ou marquage</li>
+                <li>Céramique ou ciment — haute puissance, forte chaleur</li>
+            </ul>
+        </section>
+    </div>
+
+    <section class="card overflow-x-auto">
+        <h2 class="text-lg font-bold text-secondary-900 dark:text-white">Tableau des couleurs (CEI 60062)</h2>
+        <table class="mt-4 min-w-full text-sm">
+            <thead>
+                <tr class="text-left text-secondary-700 dark:text-secondary-200">
+                    <th scope="col" class="py-2 pr-4">Couleur</th><th scope="col" class="py-2 pr-4">Chiffre</th><th scope="col" class="py-2 pr-4">Multiplicateur</th><th scope="col" class="py-2">Tolérance</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-secondary-100 dark:divide-secondary-700/60">
+                {% for color in colors %}
+                    <tr class="text-secondary-800 dark:text-secondary-200">
+                        <th scope="row" class="py-2 pr-4 text-left font-medium">
+                            <span class="mr-2 inline-block size-3 rounded-full border border-secondary-400 align-middle" style="background: {{ color.hex }}" aria-hidden="true"></span>{{ color.name }}
+                        </th>
+                        <td class="py-2 pr-4">{{ color.digit }}</td><td class="py-2 pr-4">{{ color.mult }}</td><td class="py-2">{{ color.tol }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+</div>

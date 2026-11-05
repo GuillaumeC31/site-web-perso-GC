@@ -1,0 +1,37 @@
+{#
+  Pied de page public : copyright, numéro du site (sans préversion, lien vers la page « Nouveautés »), mention
+  « conçu et développé avec ❤️ et ☕ sous Symfony », liens légaux. Jamais la version de Symfony, de PHP ni d'une
+  dépendance (décision du 2026-10-29). Mobile : deux lignes au plus pour le texte (tests/e2e/footer.spec.js).
+  Inclus par : base.html.twig. Fonctions Twig : app_public_version() (Service\AppVersion::getPublic()),
+  admin_link() (Twig\AdminLinkExtension : lien du cœur vers l'admin, appareil de confiance seulement).
+  Composant Tailkit UI : m-s-footers-02 ; réseaux sociaux réglables dans l'admin (Communication › Réseaux sociaux,
+  fonction Twig social_links('footer')).
+  Texte repris de TEXTES_SITE.md (§13).
+#}
+{% set public_version = app_public_version() %}
+<footer role="contentinfo" class="border-t border-secondary-100 bg-white dark:border-secondary-800 dark:bg-secondary-900">
+    <div class="container mx-auto flex flex-col gap-4 px-4 py-10 text-center text-sm lg:flex-row lg:items-center lg:justify-between lg:px-8 lg:text-left xl:max-w-7xl">
+        {# Sous lg : deux lignes (copyright et version, puis la mention) ; au-delà : une seule ligne #}
+        <p class="text-secondary-600 dark:text-secondary-400" data-testid="footer-credits">
+            <span class="block lg:inline">
+                <span class="font-medium">{{ 'footer.copyright'|trans({'%year%': 'now'|date('Y'), '%name%': site_owner_name}) }}</span>
+                {%- if public_version %}
+                    <span aria-hidden="true"> · </span>
+                    <a href="{{ path('whats_new') }}" class="underline decoration-secondary-300 underline-offset-2 hover:text-secondary-950 dark:decoration-secondary-600 dark:hover:text-secondary-50" data-testid="footer-version"><span class="sr-only">{{ 'footer.version_label'|trans }} </span>v{{ public_version }}</a>
+                {%- endif %}
+            </span>
+            <span class="hidden lg:inline" aria-hidden="true"> · </span>
+            {# Sous 440 px, texte réduit pour tenir sur une ligne (les émojis sont larges) #}
+            {# Appareil de confiance seulement (cookie signé, Security\TrustedDeviceCookie) : le cœur devient un lien
+               vers l'admin. Sinon admin_link() renvoie null et l'adresse de l'admin n'apparaît nulle part. #}
+            {% set admin_url = admin_link() %}
+            <span class="block max-[440px]:text-xs lg:inline">{{ 'footer.built_with_start'|trans }} {% if admin_url %}<a href="{{ admin_url }}" aria-label="{{ 'footer.admin_link'|trans }}" title="{{ 'footer.admin_link'|trans }}" class="no-underline" data-turbo="false" data-testid="footer-admin-link">❤️</a>{% else %}<span role="img" aria-label="{{ 'footer.love'|trans }}">❤️</span>{% endif %} {{ 'footer.built_with_and'|trans }} <span role="img" aria-label="{{ 'footer.coffee'|trans }}">☕</span> {{ 'footer.built_with_end'|trans }}</span>
+        </p>
+        <nav class="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 lg:justify-end" aria-label="{{ 'footer.legal_navigation'|trans }}">
+            {# Réseaux visibles et cochés « pied de page » (Communication › Réseaux sociaux) #}
+            {{ include('_partials/_social_links.html.twig', {links: social_links('footer'), link_class: 'inline-flex items-center gap-1.5 font-medium text-secondary-700 hover:text-secondary-950 dark:text-secondary-400 dark:hover:text-secondary-50'}, with_context = false) }}
+            <a href="{{ path('legal_notice') }}" class="font-medium text-secondary-700 hover:text-secondary-950 dark:text-secondary-400 dark:hover:text-secondary-50">{{ 'footer.legal_notice'|trans }}</a>
+            <a href="{{ path('legal_privacy') }}" class="font-medium text-secondary-700 hover:text-secondary-950 dark:text-secondary-400 dark:hover:text-secondary-50">{{ 'footer.privacy'|trans }}</a>
+        </nav>
+    </div>
+</footer>

@@ -1,0 +1,45 @@
+# see https://symfony.com/doc/current/reference/configuration/framework.html
+framework:
+    secret: '%env(APP_SECRET)%'
+
+    # Mandataires de confiance (v2.0.3) : plages officielles de Cloudflare (config/cloudflare_ip_ranges.php) +
+    # SYMFONY_TRUSTED_PROXIES (ex. adresse du cache de l’hébergeur, établie par le diagnostic IP de l'admin).
+    # Seuls X-Forwarded-For et X-Forwarded-Proto sont crus : Cloudflare transmet les autres en-têtes du client tels
+    # quels (X-Forwarded-Host ou -Port pourraient être imposés par n'importe qui).
+    trusted_proxies: '%env(trusted_proxies:SYMFONY_TRUSTED_PROXIES)%'
+    trusted_headers: ['x-forwarded-for', 'x-forwarded-proto']
+
+    # Paquet « vite » : asset('<fichier source>', 'vite') renvoie le fichier compilé (nom avec empreinte)
+    # d'après le manifeste de Vite. Utilisé pour précharger la police Inter (templates/base.html.twig).
+    assets:
+        packages:
+            vite:
+                version_strategy: 'Pentatrion\ViteBundle\Asset\ViteAssetVersionStrategy'
+
+    # La session ne démarre que si on la lit ou l'écrit (pages publiques sans cookie).
+    session:
+        name: GC_SESSID
+        cookie_secure: auto
+        cookie_samesite: lax
+        cookie_httponly: true
+        cookie_lifetime: 0
+        # Fichiers de session dans var/ (et non dans le dossier commun du serveur) ;
+        # ceux inactifs depuis plus d'1 heure peuvent être supprimés par PHP.
+        # La règle « 1 h d'inactivité, 8 h maximum » de l'admin est appliquée par
+        # App\EventSubscriber\AdminSessionLifetimeSubscriber.
+        handler_id: session.handler.native_file
+        save_path: '%kernel.project_dir%/var/sessions/%kernel.environment%'
+        gc_maxlifetime: 3600
+
+    # Pas de fragments ni d'ESI : hébergement mutualisé sans reverse proxy
+    #esi: true
+    #fragments: true
+
+when@test:
+    framework:
+        test: true
+        # Aucun appel réseau en test : Turnstile, Discord et Telegram simulés
+        http_client:
+            mock_response_factory: App\Tests\Support\MockHttpResponseFactory
+        session:
+            storage_factory_id: session.storage.factory.mock_file

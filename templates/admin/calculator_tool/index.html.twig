@@ -1,0 +1,77 @@
+{#
+  Écran : outils de la calculatrice, par catégorie, avec leur état (porté, à porter, à créer,
+  fusionné), leur visibilité et leur norme (validée ou à vérifier).
+  Affiché par : Admin\CalculatorToolController::index() (route admin_calculator_tool_index).
+  Variables attendues :
+    - categories   : toutes les catégories du registre (CalculatorCategory), tous outils compris
+    - public_count : nombre d'outils visibles sur le site
+#}
+{% extends 'admin/base.html.twig' %}
+
+{% set status_tones = {available: 'success', legacy: 'accent', planned: 'neutral', merged: 'neutral'} %}
+
+{% block title %}{{ 'admin.calculator_tool.title'|trans }}{% endblock %}
+
+{% block body %}
+    <div class="mb-6">
+        <h1 class="text-2xl font-bold dark:text-white">{{ 'admin.calculator_tool.title'|trans }}</h1>
+        <p class="form-help">{{ 'admin.calculator_tool.intro'|trans({'%count%': public_count}) }}</p>
+    </div>
+
+    <div class="space-y-8">
+        {% for category in categories %}
+            <section aria-labelledby="admin-category-{{ category.slug }}">
+                <h2 id="admin-category-{{ category.slug }}" class="mb-3 text-lg font-semibold dark:text-white">{{ category.name }}</h2>
+                <div tabindex="0" role="region" aria-label="{{ 'admin.crud.table_region'|trans }}" class="overflow-x-auto rounded-2xl border border-secondary-200 bg-white dark:border-secondary-700 dark:bg-secondary-800">
+                    <table class="min-w-full divide-y divide-secondary-200 text-sm dark:divide-secondary-700">
+                        <thead class="bg-secondary-50 dark:bg-secondary-800/80">
+                            <tr>
+                                <th scope="col" class="px-4 py-3 text-left font-semibold text-secondary-700 dark:text-secondary-200">{{ 'admin.calculator_tool.column.tool'|trans }}</th>
+                                <th scope="col" class="px-4 py-3 text-left font-semibold text-secondary-700 dark:text-secondary-200">{{ 'admin.calculator_tool.column.status'|trans }}</th>
+                                <th scope="col" class="px-4 py-3 text-left font-semibold text-secondary-700 dark:text-secondary-200">{{ 'admin.calculator_tool.column.visible'|trans }}</th>
+                                <th scope="col" class="px-4 py-3 text-left font-semibold text-secondary-700 dark:text-secondary-200">{{ 'admin.calculator_tool.column.reference'|trans }}</th>
+                                <th scope="col" class="px-4 py-3 text-right font-semibold text-secondary-700 dark:text-secondary-200">{{ 'admin.crud.actions'|trans }}</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-secondary-100 dark:divide-secondary-700/60">
+                            {% for tool in category.tools %}
+                                <tr class="align-top">
+                                    <td class="px-4 py-3 text-secondary-800 dark:text-secondary-200">
+                                        <span class="font-medium">{{ tool.title }}</span>
+                                        <span class="block text-xs text-secondary-500 dark:text-secondary-400">{{ tool.key }}{% if tool.mergedInto %} → {{ tool.mergedInto }}{% endif %}</span>
+                                    </td>
+                                    <td class="px-4 py-3"><twig:Badge tone="{{ status_tones[tool.status] }}">{{ ('admin.calculator_tool.status.' ~ tool.status)|trans }}</twig:Badge></td>
+                                    <td class="px-4 py-3">
+                                        {% if tool.canBeEnabled %}
+                                            <twig:Badge tone="{{ tool.public ? 'success' : 'neutral' }}">{{ (tool.public ? 'admin.crud.yes' : 'admin.crud.no')|trans }}</twig:Badge>
+                                        {% else %}
+                                            <span class="text-secondary-400">—</span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="px-4 py-3 text-secondary-800 dark:text-secondary-200">
+                                        {% if tool.reference %}
+                                            {{ tool.reference }}
+                                            {% if not tool.referenceVerified %}<twig:Badge tone="accent" class="mt-1">{{ 'admin.calculator_tool.to_verify'|trans }}</twig:Badge>{% endif %}
+                                        {% else %}
+                                            <span class="text-secondary-400">—</span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="px-4 py-3">
+                                        <div class="flex flex-wrap items-center justify-end gap-2">
+                                            {% if tool.public %}
+                                                <twig:Button href="{{ path('calculator_tool', {category: tool.category, tool: tool.slug}) }}" variant="secondary" size="sm" target="_blank" rel="noopener">{{ 'admin.calculator_tool.view'|trans }}</twig:Button>
+                                            {% endif %}
+                                            {% if tool.status != 'merged' %}
+                                                <twig:Button href="{{ path('admin_calculator_tool_edit', {category: tool.category, slug: tool.slug}) }}" variant="secondary" size="sm">{{ 'admin.crud.edit'|trans }}</twig:Button>
+                                            {% endif %}
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        {% endfor %}
+    </div>
+{% endblock %}

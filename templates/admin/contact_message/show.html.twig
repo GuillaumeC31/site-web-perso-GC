@@ -1,0 +1,49 @@
+{#
+  Écran : un message reçu (passé en « lu » à l'ouverture) : réponse par e-mail (depuis webmail), « Marquer comme
+  répondu » ou « non répondu » (le site ne peut pas savoir seul qu'une réponse est partie), non lu, archiver ou
+  désarchiver, suppression (confirmation).
+  Affiché par : Admin\ContactMessageController::show() (route admin_contact_message_show).
+  Variables attendues :
+    - message : ContactMessage
+#}
+{% extends 'admin/base.html.twig' %}
+{% import '_partials/_confirm.html.twig' as confirmation %}
+
+{% block title %}{{ message.name }} · {{ 'admin.contact_message.title'|trans }}{% endblock %}
+
+{% macro action_button(message, action, variant) %}
+    <form method="post" action="{{ path('admin_contact_message_action', {id: message.id}) }}">
+        <input type="hidden" name="action" value="{{ action }}">
+        <input type="hidden" name="_token" value="{{ csrf_token('contact_message_action_' ~ message.id) }}">
+        <button type="submit" class="btn {{ variant }} btn-sm">{{ ('admin.contact_message.action.' ~ action)|trans }}</button>
+    </form>
+{% endmacro %}
+
+{% block body %}
+    <nav class="mb-4 text-sm"><a href="{{ path('admin_contact_message_index') }}" class="link">← {{ 'admin.contact_message.title'|trans }}</a></nav>
+    <section class="card">
+        <h1 class="mb-3 text-lg font-semibold text-secondary-900 dark:text-white">{{ message.subject.translationKey|trans }} · {{ message.name }}</h1>
+        <dl class="grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 text-sm" data-testid="message-details">
+            <dt class="font-semibold">{{ 'admin.contact_message.type'|trans }}</dt><dd>{{ message.source.translationKey|trans }}</dd>
+            <dt class="font-semibold">{{ 'admin.contact_message.field.email'|trans }}</dt><dd class="break-all"><a href="mailto:{{ message.email }}" class="link">{{ message.email }}</a></dd>
+            <dt class="font-semibold">{{ 'admin.contact_message.field.company'|trans }}</dt><dd>{{ message.company ?? '—' }}</dd>
+            <dt class="font-semibold">{{ 'admin.contact_message.field.date'|trans }}</dt><dd>{{ message.createdAt|format_datetime('long', 'short') }}</dd>
+            <dt class="font-semibold">{{ 'admin.contact_message.field.status'|trans }}</dt><dd>{{ message.status.translationKey|trans }}{% if message.archived %} · {{ 'admin.contact_message.archived_on'|trans({'%date%': message.archivedAt|format_date('long')}) }}{% endif %}</dd>
+            <dt class="font-semibold">{{ 'admin.contact_message.field.replied'|trans }}</dt>
+            <dd data-testid="replied-at">{{ message.replied ? message.repliedAt|format_datetime('long', 'short') : 'admin.contact_message.not_replied'|trans }}</dd>
+        </dl>
+        <p class="mt-6 text-sm whitespace-pre-line text-secondary-800 dark:text-secondary-200">{{ message.message }}</p>
+        <div class="mt-6 flex flex-wrap gap-2">
+            <twig:Button href="mailto:{{ message.email }}?subject={{ ('Re : ' ~ (message.subject.translationKey|trans))|url_encode }}" size="sm">{{ 'admin.contact_message.reply'|trans }}</twig:Button>
+            {{ _self.action_button(message, message.replied ? 'unreplied' : 'replied', 'btn-secondary') }}
+            {% if message.status.value == 'read' %}{{ _self.action_button(message, 'unread', 'btn-secondary') }}{% endif %}
+            {{ _self.action_button(message, message.archived ? 'unarchive' : 'archive', 'btn-secondary') }}
+            <form method="post" action="{{ path('admin_contact_message_delete', {id: message.id}) }}" {{ confirmation.attributes('admin.contact_message.confirm_delete'|trans, '', 'admin.contact_message.delete'|trans, true) }}>
+                <input type="hidden" name="_token" value="{{ csrf_token('contact_message_delete_' ~ message.id) }}">
+                {{ confirmation.field() }}
+                <twig:Button type="submit" variant="danger" size="sm">{{ 'admin.contact_message.delete'|trans }}</twig:Button>
+            </form>
+        </div>
+        <p class="form-help mt-3">{{ 'admin.contact_message.replied_help'|trans }}</p>
+    </section>
+{% endblock %}

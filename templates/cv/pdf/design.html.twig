@@ -1,0 +1,314 @@
+{#
+  PDF : CV « mis en page », reproduction du CV de référence aux couleurs du site.
+  Rendu par : CvPdfRenderer::renderHtml('design') pour les routes cv_pdf (/cv/pdf/design) et recruiter_cv_pdf.
+  Variables attendues (CvContentProvider) : profile, career (professional, foundation, field), pillars, entries,
+  educations, certifications, languages ; plus photo_path (chemin local de la miniature, ou null), band_path
+  (fond de la colonne de gauche), generated_at, private_contact (téléphone, e-mail, prétentions ; null en public),
+  qr_code (url, caption : QR code vers l'espace recruteur en public, vers le CV en ligne dans l'espace recruteur ;
+  bas de la colonne de gauche de la dernière page, v2.0.2).
+  Version publique = CV SYNTHÉTIQUE (synthetic vrai, correction de recette n° 1 du 2026-10-30) : une page, aucune
+  coordonnée (« Coordonnées sur demande via l'espace recruteur »), savoir-être dans la colonne de gauche, pied de page
+  « CV complet sur demande ». Jamais d'adresse postale ni de date de naissance.
+  Mise en page (mPDF : ni flex ni grid) :
+    - colonne de gauche = fond de page (band_path) + blocs en position absolue : page 1 photo, nom, profil,
+      modalités, langues ; page 2 savoir-être (position absolue : mesurée depuis le bord de la page) ;
+    - colonne principale = flux normal dans la marge de droite (@page margin-left), encadrés en tableaux.
+#}
+{% set name_parts = profile.full_name|split(' ') %}
+{% set last_name = (name_parts|last)|upper %}
+{% set first_name = name_parts|slice(0, name_parts|length - 1)|join(' ')|upper %}
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<style>
+    @page { margin: 9mm 9mm 9mm 68mm; background: url("{{ band_path }}") no-repeat 0 0; background-image-resize: 6; }
+    body { font-family: dejavusans; font-size: 7.3pt; color: #1d293d; line-height: 1.25; }
+    table { border-collapse: collapse; width: 100%; }
+    td { vertical-align: top; }
+    p { margin: 0 0 2pt; }
+    ul { margin: 1pt 0 1pt 0; padding-left: 11pt; }
+    li { margin-bottom: 0; }
+
+    /* Colonne de gauche */
+    .photo { width: 34mm; height: 34mm; border: 1.6pt solid #1d293d; }
+    .name { font-size: 16pt; font-weight: bold; color: #1d293d; text-align: center; letter-spacing: 2.5pt; line-height: 1.25; }
+    .side-box { border: 0.8pt solid #1d293d; background-color: #ffffff; padding: 0 0 4pt; margin-top: 5mm; }
+    .side-title { background-color: #005f5a; color: #ffffff; font-weight: bold; font-size: 7.8pt; padding: 1.5pt 4pt; margin: 4pt 4pt 3pt; text-transform: uppercase; }
+    .side-row { padding: 3pt 6pt; border-bottom: 0.4pt solid #cbd5e1; font-size: 7.8pt; }
+    .side-text { padding: 2pt 6pt; font-size: 7.8pt; }
+    .side-strong { font-weight: bold; color: #005f5a; }
+
+    /* Colonne principale */
+    .title { font-size: 15pt; font-weight: bold; text-align: center; letter-spacing: 1pt; color: #1d293d; }
+    .tagline { font-size: 7.6pt; font-weight: bold; text-align: center; margin: 4pt 0 5pt; }
+    .pillars td { background-color: #e6f4f1; text-align: center; padding: 4pt 3pt; width: 25%; }
+    .pillar-name { font-weight: bold; font-size: 8pt; text-transform: uppercase; }
+    .pillar-text { font-size: 7.4pt; color: #314158; }
+    /* Profil en 3 paragraphes (CV de référence) : espacements resserrés de la page 1 pour tenir sur 2 pages (2026-10-25) */
+    .summary { text-align: justify; font-size: 7.5pt; line-height: 1.2; margin: 3pt 0 2pt; }
+    .summary p { margin: 0 0 1.5pt; }
+    /* Puces longues et phrases justifiées, comme le CV de référence, SANS césure (décision du 2026-10-25 : mots
+       coupés et copier-coller cassé) ; jamais la liste des logiciels ni la colonne de gauche (trop étroite) */
+    .justify { text-align: justify; }
+    .bar { background-color: #005f5a; color: #ffffff; font-weight: bold; font-size: 8pt; padding: 1.4pt 6pt; margin: 4pt 0 2pt; text-transform: uppercase; }
+    .xp { margin-bottom: 3pt; }
+    .xp-head td { padding: 0; }
+    .xp-period { font-weight: bold; color: #314158; }
+    .xp-company { font-weight: bold; color: #1d293d; font-size: 8.2pt; }
+    .xp-place { text-align: right; font-weight: bold; color: #45556c; font-size: 7.8pt; text-transform: uppercase; white-space: nowrap; }
+    .xp-job { font-weight: bold; color: #00786f; }
+    .note { color: #00786f; }
+    .box { border: 0.8pt solid #1d293d; padding: 3pt 6pt; margin-top: 5pt; }
+    .box-title { font-weight: bold; font-size: 8.3pt; text-transform: uppercase; margin-bottom: 3pt; }
+    .edu td { padding: 1pt 2pt; border-bottom: 0.6pt solid #1d293d; font-size: 8pt; }
+    .edu .year { font-weight: bold; width: 9mm; }
+    .muted { color: #45556c; }
+    .small { font-size: 7.4pt; }
+    .edu td.edu-group { font-weight: bold; color: #005f5a; border-bottom: 0; padding-top: 3pt; }
+    .field-line { margin-bottom: 1.5pt; }
+    .duo { border-collapse: separate; border-spacing: 0; margin-top: 5pt; }
+    .duo td.box { width: 50%; }
+    .footer { text-align: center; font-size: 7.4pt; font-weight: bold; color: #005f5a; }
+    .qr { text-align: center; }
+    .qr-caption { font-size: 6pt; line-height: 1.1; color: #45556c; text-align: center; }
+</style>
+</head>
+<body>
+{# CV synthétique : ligne en pied de page vers l'espace recruteur #}
+{% if synthetic %}
+    <htmlpagefooter name="cv-footer"><div class="footer">{{ 'cv.pdf.full_cv_footer'|trans }}</div></htmlpagefooter>
+    <sethtmlpagefooter name="cv-footer" value="on" />
+{% endif %}
+
+{# ===== Page 1 : colonne de gauche ===== #}
+<div class="side" style="position: absolute; left: 7mm; top: 9mm; width: 48mm;">
+    {% if photo_path %}
+        <div style="text-align: center;"><img src="{{ photo_path }}" class="photo" alt=""></div>
+    {% endif %}
+    <div class="name" style="margin-top: 6mm;">{{ last_name }}<br>{{ first_name }}</div>
+    <div style="border-bottom: 0.8pt solid #1d293d; margin: 4mm 2mm 0;"></div>
+
+    <div class="side-box">
+        <div class="side-title">{{ 'cv.pdf.profile'|trans }} :</div>
+        {% if profile.location %}<div class="side-row">{{ profile.location|upper }}</div>{% endif %}
+        {% if private_contact %}
+            {% if private_contact.phone %}<div class="side-row">{{ private_contact.phone }}</div>{% endif %}
+            {% if private_contact.email %}<div class="side-row">{{ private_contact.email }}</div>{% endif %}
+        {% endif %}
+        <div class="side-row">guillaume-couget.fr</div>
+        {% if private_contact %}
+            {% if private_contact.salary %}<div class="side-text"><span class="side-strong">{{ 'cv.pdf.salary'|trans }} :</span> {{ private_contact.salary }}</div>{% endif %}
+        {% else %}
+            <div class="side-text small muted">{{ 'cv.pdf.contact_notice'|trans }}</div>
+        {% endif %}
+
+        {% if profile.work_modes %}
+            <div class="side-title" style="margin-top: 7pt;">{{ 'cv.header.work_modes'|trans }} :</div>
+            <div class="side-text" style="text-align: center;">{{ profile.work_modes }}</div>
+        {% endif %}
+        {% if profile.availability %}
+            <div class="side-text" style="text-align: center;">{{ profile.availability }}</div>
+        {% endif %}
+
+        {% if languages is not empty %}
+            <div class="side-title" style="margin-top: 7pt;">{{ 'cv.section.languages'|trans }} :</div>
+            {% for language in languages %}
+                <div class="side-text"><span class="side-strong">{{ language.name }}</span> : {{ language.proficiency }}</div>
+            {% endfor %}
+        {% endif %}
+    </div>
+    {# CV synthétique (une page) : savoir-être sous les langues #}
+    {% if synthetic and entries.soft_skill is defined %}
+        <div class="side-box">
+            <div class="side-title">{{ 'cv.section.soft_skill'|trans }} :</div>
+            {% for entry in entries.soft_skill %}
+                <div class="side-text" style="margin-bottom: 3pt;">
+                    {% if entry.title %}<span class="side-strong">&#10148; {{ entry.title }} :</span><br>{% endif %}{{ entry.content|capitalize_first|cv_bold }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    {# CV synthétique : formations et certifications en liste courte dans la colonne de gauche #}
+    {% if synthetic and (educations is not empty or certifications is not empty) %}
+        <div class="side-box">
+            <div class="side-title">{{ 'cv.section.educations'|trans }} :</div>
+            {% for education in educations %}
+                <div class="side-text"><span class="side-strong">{{ education.year }}</span> {{ education.title }}</div>
+            {% endfor %}
+            {% for certification in certifications %}
+                <div class="side-text">{% if certification.obtainedOn %}<span class="side-strong">{{ certification.obtainedOn|date('Y') }}</span> {% endif %}{{ certification.name }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+
+{# ===== Page 1 : colonne principale ===== #}
+<div class="title">{{ profile.job_title|upper }}</div>
+{% if profile.tagline %}<div class="tagline">{{ profile.tagline|replace({' · ': ' | '}) }}</div>{% endif %}
+
+{% if pillars is not empty %}
+    <table class="pillars">
+        <tr>
+            {% for pillar in pillars %}
+                <td><div class="pillar-name">{{ pillar.name }}</div>{% if pillar.summary %}<div class="pillar-text">{{ pillar.summary }}</div>{% endif %}</td>
+            {% endfor %}
+        </tr>
+    </table>
+{% endif %}
+
+{# Profil en paragraphes, comme le CV de référence #}
+{% if profile.summary %}<div class="summary">{% for paragraph in profile.summary|split("\n\n") %}<p>{{ paragraph|cv_bold }}</p>{% endfor %}</div>{% endif %}
+
+{% macro experience(xp) %}
+    <div class="xp">
+        <table class="xp-head">
+            <tr>
+                <td><span class="xp-period">{{ cv_period_numeric(xp) }}</span> <span class="xp-company">| {{ xp.company ?: xp.job_title }}</span></td>
+                {% if xp.location %}<td class="xp-place">{{ xp.location }}</td>{% endif %}
+            </tr>
+        </table>
+        {% if xp.company %}<div class="xp-job">{{ xp.job_title }}{% if xp.summary %} – {{ xp.summary }}{% endif %}</div>{% endif %}
+        {% set items = xp.achievements|merge(xp.missions) %}
+        {% if items is not empty or xp.private_note %}
+            <ul class="justify">
+                {% for item in items %}<li>{{ item|cv_bold }}</li>{% endfor %}
+                {% if xp.private_note %}<li class="note">{{ xp.private_note }}</li>{% endif %}
+            </ul>
+        {% endif %}
+    </div>
+{% endmacro %}
+
+{% if career.professional is not empty %}
+    <div class="bar">&#10148;&nbsp; {{ 'cv.career_section.professional'|trans }}</div>
+    {% for xp in career.professional %}{{ _self.experience(xp) }}{% endfor %}
+{% endif %}
+
+{% if career.foundation is not empty %}
+    <div class="bar">&#10148;&nbsp; {{ 'cv.career_section.foundation'|trans|replace({' — ': ' - '}) }}</div>
+    {% for group in career.foundation %}
+        <div class="xp">
+            <table class="xp-head">
+                <tr>
+                    <td><span class="xp-period">{{ cv_period_numeric(group) }}</span> <span class="xp-company">| {{ group.company }}</span></td>
+                    {% if group.location %}<td class="xp-place">{{ group.location }}</td>{% endif %}
+                </tr>
+            </table>
+            {% for role in group.roles %}
+                <div class="xp-job">{{ role.start|date('Y') }} – {{ role.job_title }}</div>
+                {% set items = role.achievements|merge(role.missions) %}
+                {% if items is not empty %}<ul class="justify">{% for item in items %}<li>{{ item|cv_bold }}</li>{% endfor %}</ul>{% endif %}
+            {% endfor %}
+        </div>
+    {% endfor %}
+{% endif %}
+
+{% if entries.tools is defined %}
+    <div class="box">
+        <div class="box-title">{{ 'cv.section.tools'|trans }}</div>
+        <ul class="justify">{% for entry in entries.tools %}<li>{{ entry.content|cv_bold }}</li>{% endfor %}</ul>
+    </div>
+{% endif %}
+
+{# ===== Page 2 (CV complet seulement ; le CV synthétique tient sur une page) ===== #}
+{% if not synthetic %}<pagebreak />{% endif %}
+
+{% if not synthetic and entries.soft_skill is defined %}
+    <div class="side" style="position: absolute; left: 7mm; top: 9mm; width: 48mm;">
+        <div class="side-box" style="margin-top: 0;">
+            <div class="side-title">{{ 'cv.section.soft_skill'|trans }} :</div>
+            {% for entry in entries.soft_skill %}
+                <div class="side-text" style="margin-bottom: 4pt;">
+                    {% if entry.title %}<span class="side-strong">&#10148; {{ entry.title }} :</span><br>{% endif %}{{ entry.content|capitalize_first|cv_bold }}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endif %}
+
+{% if career.field is not empty %}
+    <div class="bar"{% if not synthetic %} style="margin-top: 0;"{% endif %}>&#10148;&nbsp; {{ 'cv.career_section.field'|trans }}</div>
+    {% for xp in career.field %}
+        {% if synthetic %}
+            {# CV synthétique : une ligne par poste (sans la description) #}
+            <div class="field-line"><span class="xp-period">{{ cv_period_numeric(xp) }}</span> | <span class="xp-job">{{ xp.job_title }}</span> — {{ xp.company }}{% if xp.location %} · {{ xp.location }}{% endif %}</div>
+        {% else %}
+        <div class="xp">
+            <table class="xp-head">
+                <tr>
+                    <td><span class="xp-period">{{ cv_period_numeric(xp) }}</span> <span class="xp-company">| {{ xp.company }}</span></td>
+                    {% if xp.location %}<td class="xp-place">{{ xp.location }}</td>{% endif %}
+                </tr>
+            </table>
+            <div class="justify"><span class="xp-job">{{ xp.job_title }}</span>{% if xp.missions is not empty %} – {{ xp.missions|first|lower_first|cv_bold }}{% endif %}</div>
+        </div>
+        {% endif %}
+    {% endfor %}
+{% endif %}
+
+{# CV synthétique : expertises et logiciels (résumés publics) côte à côte #}
+{% if synthetic and (entries.expertise is defined or entries.software is defined) %}
+    <table class="duo">
+        <tr>
+            {% for section in ['expertise', 'software'] %}
+                {% if entries[section] is defined %}
+                    <td class="box">
+                        <div class="box-title">{{ ('cv.section.' ~ section)|trans }}</div>
+                        <ul>{% for entry in entries[section] %}<li>{% if entry.title %}<b>{{ entry.title }} :</b> {% endif %}{{ entry.content|cv_bold }}</li>{% endfor %}</ul>
+                    </td>
+                {% endif %}
+            {% endfor %}
+        </tr>
+    </table>
+{% endif %}
+
+{% for section in synthetic ? [] : ['expertise', 'software'] %}
+    {% if entries[section] is defined %}
+        <div class="box">
+            <div class="box-title">{{ ('cv.section.' ~ section)|trans }}</div>
+            <ul{% if section != 'software' %} class="justify"{% endif %}>
+                {% for entry in entries[section] %}
+                    <li>{% if entry.title %}<b>{{ entry.title }} :</b> {% endif %}{{ entry.content|cv_bold }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+{% endfor %}
+
+{% if not synthetic and (educations is not empty or certifications is not empty) %}
+    <div class="box">
+        <div class="box-title">{{ 'cv.section.educations'|trans }}</div>
+        {# Deux listes, chacune de la plus récente à la plus ancienne (correction de recette n° 3) #}
+        <table class="edu">
+            {% if educations is not empty %}<tr><td colspan="4" class="edu-group">{{ 'cv.section.diplomas'|trans }}</td></tr>{% endif %}
+            {% for education in educations %}
+                <tr><td class="year">{{ education.year }}</td><td>{{ education.title }}</td><td style="width: 20mm;">{{ education.location }}</td><td style="width: 34mm;">{{ education.institution }}</td></tr>
+            {% endfor %}
+            {% if certifications is not empty %}<tr><td colspan="4" class="edu-group">{{ 'cv.section.certifications'|trans }}</td></tr>{% endif %}
+            {% for certification in certifications %}
+                <tr><td class="year">{{ certification.obtainedOn ? certification.obtainedOn|date('Y') : '' }}</td><td>{{ certification.name }}</td><td></td><td>{{ certification.issuer }}</td></tr>
+            {% endfor %}
+        </table>
+    </div>
+{% endif %}
+
+{% if entries.interest is defined %}
+    <div class="box">
+        <div class="box-title">{{ 'cv.section.interest'|trans }}</div>
+        <ul class="justify">
+            {% for entry in entries.interest %}
+                <li>{% if entry.title %}<b>{{ entry.title }} :</b> {% endif %}{{ entry.content|cv_bold }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endif %}
+
+
+{# QR code (v2.0.2) : bas de la colonne de gauche de la dernière page (zone libre, jamais sur le texte), centré sur
+   sa largeur de 48 mm (position absolue mesurée depuis le bord de la page, comme la colonne : position fixed
+   compterait depuis la marge) ; environ 17 mm de côté, lisible à l'impression #}
+<div style="position: absolute; left: 7mm; top: 258mm; width: 48mm;">
+    <div class="qr"><barcode code="{{ qr_code.url }}" type="QR" error="M" size="0.68" disableborder="1" /></div>
+    <div class="qr-caption">{{ qr_code.caption|trans }}</div>
+</div>
+</body>
+</html>

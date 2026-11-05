@@ -1,0 +1,21 @@
+{#
+  Macros de confirmation d'une action importante (fenêtre « notify » avec JavaScript, page de
+  confirmation du serveur sans JavaScript : App\Service\ActionConfirmation).
+  Utilisées par : admin/recruiter/_decision_form.html.twig, admin/recruiter/show.html.twig,
+  admin/dashboard/index.html.twig, admin/site_settings/edit.html.twig, recruiter_area/data.html.twig.
+  Exemple :
+    {% import '_partials/_confirm.html.twig' as confirm %}
+    <form method="post" action="…" {{ confirm.attributes('Supprimer ce recruteur ?', 'Action définitive.', 'Supprimer', true) }}>
+        {{ confirm.field() }} …
+#}
+
+{# Attributs du <form> : contrôleur notify et textes de la fenêtre. if_checked : sélecteur d'une case
+   (la confirmation n'est demandée que si elle vient d'être cochée). #}
+{% macro attributes(title, text = '', label = '', danger = false, if_checked = '') %}
+    data-controller="notify" data-action="submit->notify#confirm" data-notify-title-value="{{ title }}" data-notify-text-value="{{ text }}" data-notify-confirm-label-value="{{ label }}" data-notify-cancel-label-value="{{ 'confirmation.cancel'|trans }}"{% if danger %} data-notify-danger-value="true"{% endif %}{% if if_checked %} data-notify-if-checked-value="{{ if_checked }}"{% endif %}
+{% endmacro %}
+
+{# Champ caché de la confirmation (rempli par la fenêtre ; vide : le serveur demande confirmation). #}
+{% macro field() %}
+    <input type="hidden" name="_confirmed" value="0">
+{% endmacro %}

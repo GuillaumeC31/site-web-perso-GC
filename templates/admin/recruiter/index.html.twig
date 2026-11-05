@@ -1,0 +1,70 @@
+{#
+  Écran : recruteurs (demandes en attente d'abord), filtre par statut.
+  Affiché par : Admin\RecruiterController::index() (route admin_recruiter_index).
+  Variables attendues :
+    - recruiters : liste de Recruiter
+    - status     : RecruiterStatus filtré, ou null
+    - statuses   : tous les statuts (filtres)
+#}
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}{{ 'admin.recruiter.title'|trans }}{% endblock %}
+
+{% block body %}
+    <div class="mb-6 flex flex-wrap items-start justify-between gap-4">
+        <div>
+            <h1 class="text-2xl font-bold dark:text-white">{{ 'admin.recruiter.title'|trans }}</h1>
+            <p class="form-help">{{ 'admin.recruiter.intro'|trans }}</p>
+        </div>
+        <div class="flex flex-wrap gap-2">
+            <twig:Button href="{{ path('admin_recruiter_preview') }}" variant="secondary" size="sm">{{ 'admin.recruiter.preview'|trans }}</twig:Button>
+            <twig:Button href="{{ path('admin_recruiter_new') }}" size="sm">{{ 'admin.recruiter.new'|trans }}</twig:Button>
+        </div>
+    </div>
+
+    <nav class="mb-4 flex flex-wrap gap-2" aria-label="{{ 'admin.recruiter.filter'|trans }}">
+        <a href="{{ path('admin_recruiter_index') }}" class="rounded-full border px-3 py-1 text-sm {{ status is null ? 'border-primary-700 bg-primary-700 text-white' : 'border-secondary-200 dark:border-secondary-700' }}" {% if status is null %}aria-current="page"{% endif %}>{{ 'admin.recruiter.all'|trans }}</a>
+        {% for s in statuses %}
+            <a href="{{ path('admin_recruiter_index', {statut: s.value}) }}" class="rounded-full border px-3 py-1 text-sm {{ status == s ? 'border-primary-700 bg-primary-700 text-white' : 'border-secondary-200 dark:border-secondary-700' }}" {% if status == s %}aria-current="page"{% endif %}>{{ s.translationKey|trans }}</a>
+        {% endfor %}
+    </nav>
+
+    {% if recruiters is empty %}
+        <twig:Card><p class="text-secondary-600 dark:text-secondary-300">{{ 'admin.crud.empty'|trans }}</p></twig:Card>
+    {% else %}
+        <div tabindex="0" role="region" aria-label="{{ 'admin.crud.table_region'|trans }}" class="overflow-x-auto rounded-2xl border border-secondary-200 bg-white dark:border-secondary-700 dark:bg-secondary-800">
+            <table class="min-w-full divide-y divide-secondary-200 text-sm dark:divide-secondary-700">
+                <thead class="bg-secondary-50 dark:bg-secondary-800/80">
+                    <tr>
+                        <th scope="col" class="px-4 py-3 text-left font-semibold">{{ 'admin.recruiter.field.full_name'|trans }}</th>
+                        <th scope="col" class="hidden px-4 py-3 text-left font-semibold sm:table-cell">{{ 'admin.recruiter.field.company'|trans }}</th>
+                        <th scope="col" class="px-4 py-3 text-left font-semibold">{{ 'admin.recruiter.field.status'|trans }}</th>
+                        <th scope="col" class="px-4 py-3 text-right font-semibold">{{ 'admin.recruiter.field.score'|trans }}</th>
+                        <th scope="col" class="hidden px-4 py-3 text-left font-semibold sm:table-cell">{{ 'admin.recruiter.field.requested_at'|trans }}</th>
+                        <th scope="col" class="hidden px-4 py-3 text-left font-semibold sm:table-cell">{{ 'admin.recruiter.field.access_expires_at'|trans }}</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-secondary-100 dark:divide-secondary-700/60">
+                    {% for recruiter in recruiters %}
+                        <tr>
+                            <td class="px-4 py-2">
+                                <a href="{{ path('admin_recruiter_show', {id: recruiter.id}) }}" class="link font-semibold">{{ recruiter.fullName }}</a>
+                                <span class="block text-xs break-all text-secondary-600 dark:text-secondary-400">{{ recruiter.email }}</span>
+                                {# Mobile : l'entreprise passe sous le nom (colonne masquée) #}
+                                <span class="block text-xs text-secondary-600 sm:hidden dark:text-secondary-400">{{ recruiter.company }}</span>
+                            </td>
+                            <td class="hidden px-4 py-2 sm:table-cell">{{ recruiter.company }}</td>
+                            <td class="px-4 py-2 whitespace-nowrap">
+                                {{ include('admin/recruiter/_status_badge.html.twig', {status: recruiter.status}) }}
+                                {% if recruiter.extensionRequestedAt %}<twig:Badge tone="accent">{{ 'admin.recruiter.extension_requested'|trans }}</twig:Badge>{% endif %}
+                            </td>
+                            <td class="px-4 py-2 text-right font-mono">{{ recruiter.score }}</td>
+                            <td class="hidden px-4 py-2 whitespace-nowrap sm:table-cell">{{ recruiter.requestedAt|format_date('short') }}</td>
+                            <td class="hidden px-4 py-2 whitespace-nowrap sm:table-cell">{{ recruiter.accessExpiresAt ? recruiter.accessExpiresAt|format_date('short') : '—' }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+{% endblock %}

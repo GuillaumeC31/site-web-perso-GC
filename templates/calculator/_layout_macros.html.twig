@@ -1,0 +1,200 @@
+{#
+  Mise en page des grands outils de la calculatrice (chambre froide v2, enceinte climatique v2) : sections
+  numérotées avec icône, sous-blocs titrés, choix en cartes, « Hypothèses et formules » repliables, encadrés,
+  navigation interne et résumé collant. Comportement : contrôleur calculator--layout.
+  Importé par : templates/calculator/tools/thermodynamique/chambre-froide.html.twig, enceinte-climatique.html.twig
+    {% import 'calculator/_layout_macros.html.twig' as ui %}
+#}
+
+{#
+  Section numérotée (carte) : en-tête avec numéro, icône et titre (h2, focusable par la navigation), contenu.
+  Paramètres : id (unique dans la page), number, title, icon (tracé SVG 24 × 24), content, formulas (HTML
+  facultatif, affiché dans « Hypothèses et formules »).
+#}
+{% macro section(id, number, title, icon, content, formulas = null) %}
+    <section id="{{ id }}" data-section="{{ number }}" class="card scroll-mt-20 lg:scroll-mt-6" aria-labelledby="{{ id }}-title">
+        <header class="flex items-center gap-3">
+            <span class="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary-50 text-primary-700 dark:bg-primary-500/10 dark:text-primary-300" aria-hidden="true">
+                <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="{{ icon }}"/></svg>
+            </span>
+            <h2 id="{{ id }}-title" tabindex="-1" class="text-lg font-bold text-secondary-900 focus:outline-none dark:text-white">
+                <span class="text-primary-700 dark:text-primary-300">{{ number }}.</span> {{ title }}
+            </h2>
+        </header>
+        <div class="mt-5 space-y-6">{{ content }}</div>
+        {% if formulas %}{{ _self.formulas(formulas) }}{% endif %}
+    </section>
+{% endmacro %}
+
+{#
+  Sous-bloc titré, avec une grille de champs. Paramètres : title (h3, ou null), content, cols (classes de
+  la grille ; par défaut 1 colonne sur mobile, 2 dès sm, 3 sur grand écran).
+#}
+{% macro group(title, content, cols = 'sm:grid-cols-2 xl:grid-cols-3') %}
+    <div>
+        {% if title %}<h3 class="mb-3 text-sm font-semibold tracking-wide text-secondary-500 uppercase dark:text-secondary-400">{{ title }}</h3>{% endif %}
+        <div class="grid gap-4 {{ cols }}">{{ content }}</div>
+    </div>
+{% endmacro %}
+
+{# « Hypothèses et formules » repliable (élément details natif, accessible au clavier). #}
+{% macro formulas(content) %}
+    <details class="group mt-6 rounded-xl border border-secondary-200 dark:border-secondary-700">
+        <summary class="flex cursor-pointer list-none items-center justify-between gap-2 rounded-xl px-4 py-3 text-sm font-semibold text-secondary-800 hover:bg-secondary-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-700 dark:text-secondary-200 dark:hover:bg-secondary-800/60 [&::-webkit-details-marker]:hidden">
+            Hypothèses et formules
+            <svg class="size-4 shrink-0 transition-transform group-open:rotate-180" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 011.06 0L10 11.94l3.72-3.72a.75.75 0 111.06 1.06l-4.25 4.25a.75.75 0 01-1.06 0L5.22 9.28a.75.75 0 010-1.06z" clip-rule="evenodd"/></svg>
+        </summary>
+        <div class="space-y-2 border-t border-secondary-200 px-4 py-3 text-sm text-secondary-700 dark:border-secondary-700 dark:text-secondary-300">{{ content }}</div>
+    </details>
+{% endmacro %}
+
+{# Formule affichée (police à chasse fixe). #}
+{% macro formula(text) %}
+    <p class="inline-block rounded-lg bg-secondary-100 px-3 py-1 font-mono text-xs text-secondary-800 dark:bg-secondary-900 dark:text-secondary-200">{{ text }}</p>
+{% endmacro %}
+
+{#
+  Encadré fixe (mêmes classes que assets/lib/callout.js). Paramètres : kind (« info » ou « warning »),
+  text, attrs (attributs supplémentaires, facultatif).
+#}
+{% macro callout(kind, text, attrs = {}) %}
+    {% set classes = kind == 'warning'
+        ? 'border-amber-300 bg-amber-50 text-amber-900 dark:border-amber-700 dark:bg-amber-950/50 dark:text-amber-100'
+        : 'border-primary-200 bg-primary-50 text-primary-900 dark:border-primary-800 dark:bg-primary-950/50 dark:text-primary-100' %}
+    <p class="rounded-lg border px-3 py-2 text-sm {{ classes }}" {% for name, attr in attrs %} {{ name }}="{{ attr }}"{% endfor %}><strong class="font-semibold">{{ kind == 'warning' ? 'Attention' : 'Information' }} :</strong> {{ text }}</p>
+{% endmacro %}
+
+{#
+  Choix en cartes (boutons radio, au clavier : flèches ; un seul choix). Paramètres : name (groupe radio
+  unique), legend, options (valeur => {label, hint}), selected, attrs (attributs posés sur chaque radio :
+  data-field, data-action).
+#}
+{% macro choiceCards(name, legend, options, selected, attrs) %}
+    <fieldset>
+        <legend class="form-label">{{ legend }}</legend>
+        <div class="grid gap-3 sm:grid-cols-3">
+            {% for value, option in options %}
+                <label class="relative flex cursor-pointer flex-col rounded-xl border border-secondary-200 bg-white p-4 hover:border-primary-700 has-checked:border-primary-700 has-checked:bg-primary-50 has-checked:ring-1 has-checked:ring-primary-700 has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-primary-700 dark:border-secondary-700 dark:bg-secondary-900 dark:hover:border-primary-300 dark:has-checked:border-primary-300 dark:has-checked:bg-primary-500/10 dark:has-checked:ring-primary-300">
+                    <input type="radio" class="sr-only" name="{{ name }}" value="{{ value }}" {% if value == selected %}checked{% endif %} {% for attrName, attr in attrs %} {{ attrName }}="{{ attr }}"{% endfor %}>
+                    <span class="font-semibold text-secondary-900 dark:text-white">{{ option.label }}</span>
+                    <span class="mt-1 text-sm text-secondary-600 dark:text-secondary-300">{{ option.hint }}</span>
+                </label>
+            {% endfor %}
+        </div>
+    </fieldset>
+{% endmacro %}
+
+{#
+  Navigation interne. Paramètres : sections (numéro => {title, short, id}), label (aria-label), prefix (id par
+  défaut des sections : prefix ~ '-section-' ~ numéro, sauf id donné ; le contrôleur vise ensuite le mode affiché).
+#}
+{% macro navList(sections, label, prefix) %}
+    <nav aria-label="{{ label }}" class="hidden lg:block">
+        <ul class="space-y-1">
+            {% for number, s in sections %}
+                <li>
+                    <a href="#{{ s.id ?? (prefix ~ '-section-' ~ number) }}" data-calculator--layout-target="link" data-section-link="{{ number }}" data-action="calculator--layout#go"
+                       class="flex items-center gap-3 rounded-lg px-3 py-1.5 text-sm font-medium text-secondary-700 hover:bg-secondary-100 hover:text-secondary-900 dark:text-secondary-300 dark:hover:bg-secondary-800 dark:hover:text-white aria-[current=true]:bg-primary-50 aria-[current=true]:text-primary-800 dark:aria-[current=true]:bg-primary-500/15 dark:aria-[current=true]:text-primary-200">
+                        <span class="w-5 text-right font-mono text-xs text-secondary-500 dark:text-secondary-400">{{ number }}</span>{{ s.title }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    </nav>
+{% endmacro %}
+
+{# Pastilles collantes (mobile et tablette) : seule cette rangée défile horizontalement. #}
+{% macro navPills(sections, label, prefix) %}
+    <nav aria-label="{{ label }}" class="sticky top-(--header-offset,0px) z-10 -mx-4 mt-4 border-b border-secondary-100 bg-white/95 px-4 py-3 backdrop-blur motion-safe:transition-[top] motion-safe:duration-200 lg:hidden dark:border-secondary-800 dark:bg-secondary-900/95">
+        <ul class="flex gap-2 overflow-x-auto pb-1">
+            {% for number, s in sections %}
+                <li class="shrink-0">
+                    <a href="#{{ s.id ?? (prefix ~ '-section-' ~ number) }}" data-calculator--layout-target="link" data-section-link="{{ number }}" data-action="calculator--layout#go"
+                       class="inline-flex items-center gap-1.5 rounded-full border border-secondary-200 bg-white px-3 py-1.5 text-sm font-medium text-secondary-700 hover:border-primary-700 dark:border-secondary-700 dark:bg-secondary-900 dark:text-secondary-200 aria-[current=true]:border-primary-700 aria-[current=true]:bg-primary-700 aria-[current=true]:text-white dark:aria-[current=true]:border-primary-300 dark:aria-[current=true]:bg-primary-300 dark:aria-[current=true]:text-secondary-950">
+                        <span class="font-mono text-xs">{{ number }}</span>{{ s.short ?? s.title }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    </nav>
+{% endmacro %}
+
+{#
+  Valeur du résumé collant : libellé, valeur (target du contrôleur de l'outil), unité, détail (masqué dans la
+  barre compacte du mobile). Paramètres : label, short (libellé court du mobile), target, detailTarget, unit.
+#}
+{% macro summaryItem(label, short, target, detailTarget, unit = 'W') %}
+    <div class="min-w-0 lg:rounded-xl lg:border lg:border-secondary-200 lg:p-3 lg:dark:border-secondary-700">
+        <dt class="truncate text-xs font-medium text-secondary-600 dark:text-secondary-300"><span class="lg:hidden">{{ short }}</span><span class="max-lg:hidden">{{ label }}</span></dt>
+        <dd class="font-mono text-sm font-bold text-primary-800 tabular-nums lg:text-lg dark:text-primary-200"><output {{ target }} aria-live="polite">—</output> <span class="text-xs font-medium">{{ unit }}</span></dd>
+        {% if detailTarget %}<dd class="mt-0.5 text-xs text-secondary-600 max-lg:hidden dark:text-secondary-300" {{ detailTarget }}></dd>{% endif %}
+    </div>
+{% endmacro %}
+
+{#
+  Bouton « Ajouter » d'une liste (portes, vitrages, apports, produits), avec icône « + ».
+  Paramètres : label, listName (data-list-name), controller (identifiant Stimulus de l'outil).
+#}
+{% macro addButton(label, listName, controller) %}
+    <button type="button" class="btn btn-secondary btn-sm mt-3" data-action="{{ controller }}#addItem" data-list-name="{{ listName }}">
+        <svg class="size-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z"/></svg>
+        {{ label }}
+    </button>
+{% endmacro %}
+
+{#
+  Bouton « Supprimer » d'un élément de liste : discret, rouge au survol, avec confirmation (data-confirm).
+  Paramètres : label (« Supprimer cette porte »), confirm (question posée), controller.
+#}
+{% macro removeButton(label, confirm, controller) %}
+    <button type="button" class="inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-sm font-medium text-secondary-600 hover:bg-red-50 hover:text-red-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-700 dark:text-secondary-300 dark:hover:bg-red-950/50 dark:hover:text-red-300"
+            data-action="{{ controller }}#removeItem" data-confirm="{{ confirm }}">
+        <svg class="size-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M8.75 1A2.75 2.75 0 006 3.75v.443c-.795.077-1.584.176-2.365.298a.75.75 0 10.23 1.482l.149-.022.841 10.518A2.75 2.75 0 007.596 19h4.807a2.75 2.75 0 002.742-2.53l.841-10.52.149.023a.75.75 0 00.23-1.482A41.03 41.03 0 0014 4.193V3.75A2.75 2.75 0 0011.25 1h-2.5zM10 4c.84 0 1.673.025 2.5.075V3.75c0-.69-.56-1.25-1.25-1.25h-2.5c-.69 0-1.25.56-1.25 1.25v.325C8.327 4.025 9.16 4 10 4zM8.58 7.72a.75.75 0 00-1.5.06l.3 7.5a.75.75 0 101.5-.06l-.3-7.5zm4.34.06a.75.75 0 10-1.5-.06l-.3 7.5a.75.75 0 101.5.06l.3-7.5z" clip-rule="evenodd"/></svg>
+        {{ label }}
+    </button>
+{% endmacro %}
+
+{#
+  Champ d'un tableau compact (masses, équipements) : saisie numérique avec son unité, libellé accessible.
+  Paramètres : field (data-field), value, unit, label (aria-label), action (data-action).
+#}
+{% macro cellInput(field, value, unit, label, action) %}
+    <div class="flex">
+        <input type="text" inputmode="decimal" autocomplete="off" class="form-input {{ unit ? 'rounded-r-none' : '' }}" aria-label="{{ label }}" value="{{ value }}" data-field="{{ field }}" data-action="{{ action }}">
+        {% if unit %}<span class="inline-flex min-w-10 items-center justify-center rounded-r-lg border border-l-0 border-secondary-200 bg-secondary-50 px-2 text-xs text-secondary-600 dark:border-secondary-600 dark:bg-secondary-800 dark:text-secondary-300">{{ unit }}</span>{% endif %}
+    </div>
+{% endmacro %}
+
+{#
+  Tableau compact « Élément / Puissance / Durée ». Paramètres : rows (liste de {label, hint, power: {field,
+  value, unit}, duration: {field, value} ou texte fixe, extra: HTML facultatif sous le libellé}), action.
+#}
+{% macro powerTable(rows, action) %}
+    <table class="w-full table-fixed text-sm">
+        <thead>
+            <tr class="text-left text-secondary-700 dark:text-secondary-200">
+                <th scope="col" class="w-2/5 pb-2 font-semibold">Élément</th>
+                <th scope="col" class="pb-2 pl-2 font-semibold">Puissance</th>
+                <th scope="col" class="pb-2 pl-2 font-semibold">Durée</th>
+            </tr>
+        </thead>
+        <tbody class="divide-y divide-secondary-100 dark:divide-secondary-700/60">
+            {% for row in rows %}
+                <tr>
+                    <th scope="row" class="py-2 pr-2 text-left align-top font-medium text-secondary-800 dark:text-secondary-200">
+                        {{ row.label }}{% if row.hint is defined and row.hint %} <span class="block text-xs font-normal text-secondary-500 dark:text-secondary-400">{{ row.hint }}</span>{% endif %}
+                        {% if row.extra is defined %}<div class="mt-1">{{ row.extra }}</div>{% endif %}
+                    </th>
+                    <td class="py-2 pl-2 align-top">{{ _self.cellInput(row.power.field, row.power.value, row.power.unit, row.label ~ ' : ' ~ (row.power.name is defined ? row.power.name : 'puissance') ~ ' (' ~ row.power.unit ~ ')', action) }}</td>
+                    <td class="py-2 pl-2 align-top">
+                        {% if row.duration.field is defined %}
+                            {{ _self.cellInput(row.duration.field, row.duration.value, 'h/j', row.label ~ ' : durée (h/j)', action) }}
+                        {% else %}
+                            <span class="inline-block pt-2 text-sm text-secondary-600 dark:text-secondary-300">{{ row.duration }}</span>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endmacro %}

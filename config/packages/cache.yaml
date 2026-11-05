@@ -1,0 +1,43 @@
+framework:
+    cache:
+        # Unique name of your app: used to compute stable namespaces for cache keys.
+        #prefix_seed: your_vendor_name/app_name
+
+        # The "app" cache stores to the filesystem by default.
+        # The data in this cache should persist between deploys.
+        # Other options include:
+
+        # Redis
+        #app: cache.adapter.redis
+        #default_redis_provider: redis://localhost
+
+        # APCu (not recommended with heavy random-write workloads as memory fragmentation can cause perf issues)
+        #app: cache.adapter.apcu
+
+        # Namespaced pools use the above "app" backend by default
+        pools:
+            # Compteurs des limiteurs des formulaires publics (contact, espace recruteur) : sur fichiers
+            # dans tous les environnements, y compris en test (vidés par les tests, voir
+            # tests/Support/RecruiterTestTrait::clearPublicFormLimits())
+            cache.public_form_limiter:
+                adapter: cache.adapter.filesystem
+            # Assistant IA (lot 7) : débit du site (requêtes par seconde), modèle principal à ménager,
+            # liste des modèles Mistral. Utilisé par AiThrottle et AiModelMonitor.
+            cache.ai:
+                adapter: cache.adapter.filesystem
+            # Tuiles du tableau de bord de l'admin (60 s, vidé à chaque envoi de formulaire)
+            cache.dashboard:
+                adapter: cache.adapter.filesystem
+
+# En test, les compteurs des limiteurs de débit (connexion, étape YubiKey) sont gardés en
+# mémoire : ils repartent de zéro à chaque test au lieu de s'accumuler sur disque.
+when@test:
+    framework:
+        cache:
+            pools:
+                cache.rate_limiter:
+                    adapter: cache.adapter.array
+                cache.ai:
+                    adapter: cache.adapter.array
+                cache.dashboard:
+                    adapter: cache.adapter.array

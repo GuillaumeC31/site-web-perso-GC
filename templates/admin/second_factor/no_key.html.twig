@@ -1,0 +1,18 @@
+{#
+  Page : aucune clé YubiKey enregistrée pour ce compte.
+  Affichée par : Admin\SecondFactorController::verify() (route admin_second_factor), quand le
+  compte n'a aucune clé. Le mot de passe seul ne donne accès à rien : il faut le lien
+  d'enrôlement créé par SSH.
+  Aucune variable attendue.
+#}
+{% extends 'admin/base_minimal.html.twig' %}
+
+{% block title %}{{ 'admin.second_factor.no_key.title'|trans }}{% endblock %}
+
+{% block body %}
+    <p class="text-secondary-700 dark:text-secondary-300">{{ 'admin.second_factor.no_key.text'|trans }}</p>
+    <pre tabindex="0" class="overflow-x-auto rounded-lg bg-secondary-900 p-3 text-sm text-secondary-100"><code>php bin/console app:admin:reset-webauthn {{ app.user.userIdentifier }}</code></pre>
+    <p class="text-sm">
+        <a href="{{ path('admin_logout') }}" class="link" data-turbo="false">{{ 'admin.logout'|trans }}</a>
+    </p>
+{% endblock %}

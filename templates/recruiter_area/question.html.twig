@@ -1,0 +1,32 @@
+{#
+  Page : question à Guillaume depuis l'espace recruteur (formulaire privé, recruteur déjà identifié).
+  Affichée par : RecruiterQuestionController::ask() (route recruiter_question).
+  Variables attendues :
+    - form      : RecruiterQuestionType
+    - recruiter : Recruiter connecté (nom, entreprise et e-mail rappelés, non modifiables)
+#}
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'recruiter_area.question.title'|trans }} · {{ site_owner_name }}{% endblock %}
+{% block robots %}noindex, nofollow{% endblock %}
+
+{% block body %}
+    <div class="container mx-auto px-4 py-12 lg:px-8 lg:py-16 xl:max-w-3xl">
+        <nav class="mb-4 text-sm"><a href="{{ path('recruiter_home') }}" class="link">← {{ 'recruiter_area.home.back'|trans }}</a></nav>
+        <twig:SectionHeading title="{{ 'recruiter_area.question.title'|trans }}" :level="1">
+            {{ 'recruiter_area.question.intro'|trans }}
+        </twig:SectionHeading>
+
+        <twig:Card class="mt-8">
+            <p class="text-sm text-secondary-700 dark:text-secondary-300" data-testid="question-sender">
+                {{ 'recruiter_area.question.sender'|trans({'%name%': recruiter.fullName, '%company%': recruiter.company, '%email%': recruiter.email}) }}
+            </p>
+            {{ form_start(form, {attr: {class: 'mt-4 space-y-4', novalidate: 'novalidate'}}) }}
+                {{ form_errors(form) }}
+                {{ form_row(form.message) }}
+                <twig:Button type="submit">{{ 'recruiter_area.question.submit'|trans }}</twig:Button>
+                {{ include('_partials/_form_privacy_notice.html.twig', {notice: 'question', section: 'contact'}, with_context = false) }}
+            {{ form_end(form) }}
+        </twig:Card>
+    </div>
+{% endblock %}

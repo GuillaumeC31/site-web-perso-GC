@@ -1,0 +1,14 @@
+# Protection CSRF « sans état » pour les formulaires, la connexion et la déconnexion.
+# Le jeton est vérifié par double soumission (assets/csrf_protection.js) ou, à défaut,
+# par les en-têtes Origin / Referer.
+framework:
+    form:
+        csrf_protection:
+            token_id: submit
+
+    csrf_protection:
+        check_header: true
+        stateless_token_ids:
+            - submit
+            - authenticate
+            - logout

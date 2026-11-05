@@ -1,0 +1,19 @@
+{#
+  Page d'erreur générique en production (500 et autres codes).
+  Affichée par : le gestionnaire d'erreurs de Symfony (TwigBundle), uniquement si APP_DEBUG=0.
+  Variables attendues :
+    - status_code : code HTTP de l'erreur
+  Aucun détail technique affiché.
+#}
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'error.title'|trans }} · {{ site_owner_name }}{% endblock %}
+{% block robots %}noindex, nofollow{% endblock %}
+
+{% block body %}
+    {{ include('bundles/TwigBundle/Exception/_error_content.html.twig', {
+        code: status_code,
+        title: 'error.title'|trans,
+        text: 'error.text'|trans,
+    }) }}
+{% endblock %}

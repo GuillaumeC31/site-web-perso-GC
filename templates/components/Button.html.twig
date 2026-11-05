@@ -1,0 +1,18 @@
+{#
+  Composant <twig:Button> : bouton ou lien d'action du design system.
+  Utilisé par : home/index.html.twig, admin/security/login.html.twig, et les futures pages.
+  Propriétés :
+    - variant : primary (défaut), secondary ou danger
+    - size    : md (défaut) ou sm
+    - href    : si renseigné, rend un lien <a> ; sinon un <button>
+    - type    : type du <button> (button par défaut, submit pour un formulaire)
+  Exemple : <twig:Button href="{{ path('cv_show') }}">Voir mon parcours</twig:Button>
+  Classes : .btn, .btn-primary, .btn-secondary, .btn-danger, .btn-sm (assets/styles/app.css).
+#}
+{% props variant = 'primary', size = 'md', href = null, type = 'button' %}
+{% set classes = 'btn btn-' ~ variant ~ (size == 'sm' ? ' btn-sm' : '') %}
+{% if href %}
+    <a href="{{ href }}" {{ attributes.defaults({class: classes}) }}>{% block content %}{% endblock %}</a>
+{% else %}
+    <button type="{{ type }}" {{ attributes.defaults({class: classes}) }}>{{ block('content') }}</button>
+{% endif %}
