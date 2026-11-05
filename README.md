@@ -13,7 +13,7 @@ chaque choix est décidé, vérifié et validé par lui avant la mise en ligne.
 | --- | --- |
 | Guillaume Couget | Chef de projet et expert métier : cahier des charges, découpage en lots, décisions techniques et de sécurité, rédaction et validation des contenus, validation métier des outils de calcul (formules, hypothèses, cas de contrôle), recette complète avant chaque version, et accord final (« TOP ») avant toute mise en ligne. |
 | Claude (assistant conversationnel d'Anthropic) | Conseil et relecture : aide à la conception et aux choix (sécurité, RGPD, hébergement, versionnage), relecture critique de chaque rapport de développement, rédaction des consignes de chaque lot, accompagnement pas à pas de la mise en production. |
-| Claude Code (assistant de développement d'Anthropic) | Développement sous consignes : écriture du code et des tests, documentation, livraison de chaque lot avec un rapport détaillé soumis à validation. |
+| Claude Code (assistant de développement d'Anthropic) | Développement sous consignes : écriture des tests, documentation, livraison de chaque lot avec un rapport détaillé soumis à validation. |
 
 Les décisions, la validation et la responsabilité du résultat restent celles de Guillaume.
 
